@@ -77,7 +77,7 @@ module.exports.loop = function () {
                     });
                     if (creep) {
                         creep.memory.droppedEnergyID = droppedEnergy.id;
-                        console.log("Sending " + creep.name + " (" + creep.memory.roll + ") to pickup " + droppedEnergy.amount + " dropped energy in " + droppedEnergy.room.name);
+                        console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + droppedEnergy.amount + " dropped energy in " + droppedEnergy.room.name);
                     }
                     else {
                         console.log("Noone avaliable to pickup " + droppedEnergy.amount + " dropped energy in " + droppedEnergy.room.name);
@@ -115,6 +115,7 @@ module.exports.loop = function () {
             if (droppedEnergy == undefined) {
                 creep.memory.droppedEnergyID = undefined;
                 console.log(creep.name + " failed to pickup the dropped energy in " + creep.room.name);
+                creep.say("Aww...");
             }
             else if(creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(droppedEnergy);
@@ -123,6 +124,7 @@ module.exports.loop = function () {
             else {
                 creep.memory.droppedEnergyID = undefined;
                 console.log(creep.name + " picked up the dropped energy in " + creep.room.name);
+                creep.say("Yay!");
             }
         }
         else if(creep.memory.role == 'harvester') {
