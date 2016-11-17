@@ -26,7 +26,12 @@ module.exports = {
             }
         }
         else {
-            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+            /*
+            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                filter: (s) => s.id != "57ef9efc86f108ae6e610381"
+            });
+            */
+            var source = Game.getObjectById("57ef9efc86f108ae6e610380");
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source);
             }

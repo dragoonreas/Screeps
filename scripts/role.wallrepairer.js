@@ -18,7 +18,7 @@ module.exports = {
             var wall = undefined;
             if (walls.length > 0) {
                 Memory.wallRepairerCarryCapacity = creep.carryCapacity * 100;
-                var wall = walls.sort(function(a,b){return Math.floor((a.hitsMax-a.hits)/Memory.wallRepairerCarryCapacity) - Math.floor((b.hitsMax-b.hits)/Memory.wallRepairerCarryCapacity)})[0];
+                var wall = walls.sort(function(a,b){return Math.floor((b.hitsMax-b.hits)/Memory.wallRepairerCarryCapacity) - Math.floor((a.hitsMax-a.hits)/Memory.wallRepairerCarryCapacity)})[0];
             }
             if (wall != undefined) {
                 if (creep.repair(wall) == ERR_NOT_IN_RANGE) {
@@ -30,7 +30,12 @@ module.exports = {
             }
         }
         else {
-            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+            /*
+            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                filter: (s) => s.id != "57ef9efc86f108ae6e610381"
+            });
+            */
+            var source = Game.getObjectById("57ef9efc86f108ae6e610380");
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source);
             }
