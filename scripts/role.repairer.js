@@ -1,21 +1,25 @@
-var roleBuilder = require('role.builder');
+var roleBuilder = require("role.builder");
 
-module.exports = {
+var roleRepairer = {
 
     run: function(creep) {
 
         if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
+            creep.memory.structureID = undefined;
         }
         else if (creep.memory.working == false && creep.carry.energy == creep.carryCapacity) {
             creep.memory.working = true;
         }
 
         if (creep.memory.working == true) {
-            var structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL
-            });
-
+            var structure = Game.getObjectById(creep.memory.structureID);
+            if (structure == undefined || structure.hits == structure.hitsMax) {
+                structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL
+                });
+            }
+            
             if (structure != undefined) {
                 if (creep.repair(structure) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(structure);
@@ -38,3 +42,5 @@ module.exports = {
         }
     }
 };
+
+module.exports = roleRepairer;

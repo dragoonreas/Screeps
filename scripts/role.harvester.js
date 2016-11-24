@@ -1,32 +1,39 @@
 var roleHarvester = {
 
     run: function(creep) {
-        if (creep.memory.working == true && creep.carry.energy == 0) {
+        if (creep.memory.working == true 
+            && creep.carry.energy == 0) {
             creep.memory.working = false;
+        }
+        else if (creep.memory.working == false 
+            && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.working = true;
             creep.memory.sourceID = undefined;
         }
-        else if (creep.memory.working == false && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.working = true;
-        }
-        if (!creep.memory.working & creep.memory.sourceID == undefined) {
-            if (Memory.E68N44EnergyAvaliable <= Game.time) {
-                creep.memory.sourceID = "57ef9ee786f108ae6e6101b6";
+
+        if (creep.memory.working == false) {
+            if (creep.memory.sourceID == undefined) {
+                if (Memory.E68N44EnergyAvaliable <= Game.time) {
+                    creep.memory.sourceID = "57ef9ee786f108ae6e6101b6";
+                }
+                else {
+                    creep.memory.sourceID = "57ef9efc86f108ae6e610380";
+                }
             }
-            else {
-                creep.memory.sourceID = "57ef9efc86f108ae6e610380";
-            }
-        }
-        if(creep.memory.working == false) {
-            if (creep.memory.sourceID == "57ef9ee786f108ae6e6101b6" & creep.room.name != "E68N44" & Memory.E68N44EnergyAvaliable <= Game.time) {
+            if (creep.memory.sourceID == "57ef9ee786f108ae6e6101b6" 
+                && creep.room.name != "E68N44" 
+                && Memory.E68N44EnergyAvaliable <= Game.time) {
                 creep.moveTo(new RoomPosition(40, 43, "E68N44"));
             }
-            else if (creep.memory.sourceID == "57ef9efc86f108ae6e610380" & creep.room.name != "E69N44") {
+            else if (creep.memory.sourceID == "57ef9efc86f108ae6e610380" 
+                && creep.room.name != "E69N44") {
                 creep.moveTo(new RoomPosition(37, 11, "E69N44"))
             }
             else {
                 var source = Game.getObjectById(creep.memory.sourceID);
                 if (source.energy == 0) {
-                    if (creep.memory.sourceID == "57ef9ee786f108ae6e6101b6" & Memory.E68N44EnergyAvaliable < Game.time + source.ticksToRegeneration) {
+                    if (creep.memory.sourceID == "57ef9ee786f108ae6e6101b6" 
+                        && Memory.E68N44EnergyAvaliable < Game.time + source.ticksToRegeneration) {
                         Memory.E68N44EnergyAvaliable = Game.time + source.ticksToRegeneration;
                         console.log("E68N44's energy source will regen in " + source.ticksToRegeneration + " ticks");
                     }
@@ -40,17 +47,20 @@ var roleHarvester = {
         else {
             if (creep.room.name != "E69N44") {
                 creep.moveTo(new RoomPosition(18, 20, "E69N44"));
-            } else {
+            }
+            else {
                 var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_EXTENSION ||
-                                structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
+                    filter: (s) => {
+                        return (s.structureType == STRUCTURE_EXTENSION 
+                            || s.structureType == STRUCTURE_SPAWN) 
+                            && s.energy < s.energyCapacity;
                     }
                 });
                 if(target == undefined) {
                     target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+                    filter: (s) => {
+                        return s.structureType == STRUCTURE_TOWER 
+                            && s.energy < s.energyCapacity;
                     }
                 });
                 }
