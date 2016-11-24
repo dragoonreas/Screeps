@@ -1,13 +1,23 @@
 var roleHarvester = {
 
     run: function(creep) {
-        if (creep.memory.working == true && creep.carry.energy == 0) {
+        if (creep.memory.working == true && _.sum(creep.carry) == 0) {
             creep.memory.working = false;
+        }
+        else if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+            creep.memory.working = true;
             creep.memory.sourceID = undefined;
         }
-        else if (creep.memory.working == false && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.working = true;
+        
+        if (creep.room.name == 'E68N44') {
+            var invaders = creep.room.find(FIND_HOSTILE_CREEPS);
+            if (invaders > 0) {
+                invaders.sort(function(a,b){return a.ticksToLive - b.ticksToLive});
+                Memory.E68N44EnergyAvaliable = Game.time + invaders[0].ticksToLive;
+                Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + creep.room.name + " for " + invaders[0].ticksToLive + " ticks.", 4 * invaders[0].ticksToLive);
+            }
         }
+        
         if (!creep.memory.working & creep.memory.sourceID == undefined) {
             if (Memory.E68N44EnergyAvaliable <= Game.time) {
                 creep.memory.sourceID = "57ef9ee786f108ae6e6101b6";

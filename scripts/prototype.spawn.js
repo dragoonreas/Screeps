@@ -1,21 +1,52 @@
 module.exports = function() {
-    // create a new function for StructureSpawn
     StructureSpawn.prototype.createCustomCreep =
-        function(energy, roleName) {
-            // create a balanced body as big as possible with the given energy
-            var numberOfParts = Math.floor(energy / 200);
+        function(roleName, offRoad, harvesterRatio) {
+            
+            var moveRatio = 2;
+            var bodyCost = 250;
+            if (offRoad == false) {
+                moveRatio = 1;
+                bodyCost = 200;
+            }
+            if (roleName == 'claimer') {
+                moveRatio = 1;
+                bodyCost = 650;
+            }
+            
             var body = [];
-            for (let i = 0; i < numberOfParts; i++) {
-                body.push(WORK);
+            var partMultiplier = Math.floor(this.room.energyCapacityAvailable / bodyCost);
+            if (harvesterRatio < 0.5) {
+                partMultiplier = 1;
             }
-            for (let i = 0; i < numberOfParts; i++) {
-                body.push(CARRY);
+            else if (roleName == 'repairer') {
+                partMultiplier = Math.max(Math.floor(this.room.energyCapacityAvailable / bodyCost), 4);
             }
-            for (let i = 0; i < numberOfParts; i++) {
+            else if (roleName != 'upgrader') {
+                /*
+                    Since production peaked with the setup during controller lvl 2, use that energy capacity as the cap for non-upgraders:
+                    max # of controller lvl 2 spawns * spawn.maxEnergyCapacity + max # of controller lvl 2 expansions * expansion.maxEnergyCapacity
+                    = 1*300 + 10*50 
+                    = 800
+                */
+                partMultiplier = Math.floor(Math.min(this.room.energyCapacityAvailable,800) / bodyCost);
+            }
+            if (roleName == 'claimer') {
+                for (let i = 0; i < partMultiplier; i++) {
+                    body.push(CLAIM);
+                }
+            }
+            else {
+                for (let i = 0; i < partMultiplier; i++) {
+                    body.push(WORK);
+                }
+                for (let i = 0; i < partMultiplier; i++) {
+                    body.push(CARRY);
+                }
+            }
+            for (let i = 0; i < partMultiplier * moveRatio; i++) {
                 body.push(MOVE);
             }
-
-            // create creep with the created body and the given role
+            
             return this.createCreep(body, undefined, { role: roleName, working: false });
         };
 };
