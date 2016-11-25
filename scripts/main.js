@@ -20,7 +20,7 @@ var defaultCreepMins = {
     , repairer: 3
     , builder: 1
     , claimer: 0
-};
+}; // NOTE: This also defines the build order
 if (Memory.creepMins == undefined) {
     Memory.creepMins = defaultCreepMins;
 }

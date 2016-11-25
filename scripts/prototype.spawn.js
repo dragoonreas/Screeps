@@ -1,4 +1,9 @@
 // TODO: Use body part constants to calculate bodyCost varients before the function is called
+var repairerStructureTypes = {
+    STRUCTURE_RAMPART
+    , STRUCTURE_ROAD
+    , STRUCTURE_WALL
+}
 
 var prototypeSpawn = function() {
 
@@ -59,7 +64,16 @@ var prototypeSpawn = function() {
             }
             body.push(MOVE); // ensures creep is always able to move
             
-            return this.createCreep(body, undefined, { role: roleName, working: false });
+            if (roleName == "repaier") {
+                var structureType = undefined;
+                if (Memory.creepCounts["repairer"] < repairerStructureTypes.length) {
+                    structureType = repairerStructureTypes[Memory.creepCounts["repairer"]];
+                }
+                return this.createCreep(body, undefined, { "role": roleName, "working": false, "structureType": structureType });
+            }
+            else {
+                return this.createCreep(body, undefined, { "role": roleName, "working": false });
+            }
         };
 };
 
