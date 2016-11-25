@@ -2,10 +2,10 @@ var roleUpgrader = {
 
     run: function(creep) {
 
-        if(creep.memory.working && creep.carry.energy == 0) {
+        if(creep.memory.working && _.sum(creep.carry) == 0) {
             creep.memory.working = false;
         }
-        if(!creep.memory.working && creep.carry.energy == creep.carryCapacity) {
+        if(!creep.memory.working && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }
 

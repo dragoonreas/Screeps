@@ -1,11 +1,11 @@
 var roleAttacker = require("role.attacker");
-var rolePickup = require("role.pickup");
+var roleHoarder = require("role.hoarder");
+var roleCollector = require("role.collector");
 var roleHarvester = require("role.harvester");
 var roleUpgrader = require("role.upgrader");
 var roleRepairer = require("role.repairer");
 var roleBuilder = require("role.builder");
 var roleClaimer = require("role.claimer");
-var roleMason = require("role.mason");
 var roleRecycleable = require("role.recycleable");
 
 var roleAdaptable = {
