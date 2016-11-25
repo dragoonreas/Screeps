@@ -45,6 +45,7 @@ var roleRepairer = {
 				}
 				if (structure != undefined) {
 					creep.memory.structureID = structure.id;
+                }
 				else {
 					creep.memory.structureID = undefined;
 				}

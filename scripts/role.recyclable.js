@@ -1,4 +1,4 @@
-var roleRecycleable = {
+var roleRecyclable = {
     
     run: function(creep) {
         
@@ -12,4 +12,4 @@ var roleRecycleable = {
     }
 };
 
-module.exports = roleRecycleable;
+module.exports = roleRecyclable;

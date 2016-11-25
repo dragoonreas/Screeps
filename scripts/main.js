@@ -8,7 +8,7 @@ var roleAdaptable = require("role.adaptable");
 var roleRepairer = require("role.repairer");
 var roleBuilder = require("role.builder");
 var roleClaimer = require("role.claimer");
-var roleRecycleable = require("role.recycleable");
+var roleRecyclable = require("role.recyclable");
 
 var estSecPerTick = 4;
 
@@ -98,7 +98,7 @@ module.exports.loop = function () {
                             && c.memory.role != "attacker"
                             && c.memory.role != "adaptable"
                             && c.memory.role != "claimer"
-                            && c.memory.role != "recycleable"
+                            && c.memory.role != "recyclable"
                             && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
                     )});
                     if (creep == undefined) {
@@ -108,7 +108,7 @@ module.exports.loop = function () {
                             			 && c.memory.role != "attacker"
                            				 && c.memory.role != "adaptable"
                            				 && c.memory.role != "claimer"
-                           				 && c.memory.role != "recycleable"
+                           				 && c.memory.role != "recyclable"
                                          && c.spawning == false
                         )});
                     }
@@ -194,8 +194,8 @@ module.exports.loop = function () {
             else if (creep.memory.role == "claimer") {
                 roleClaimer.run(creep);
             }
-            else if (creep.memory.role == "recycleable") {
-                roleRecycleable.run(creep);
+            else if (creep.memory.role == "recyclable") {
+                roleRecyclable.run(creep);
             }
         }
     }

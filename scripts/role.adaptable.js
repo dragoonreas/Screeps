@@ -6,7 +6,7 @@ var roleUpgrader = require("role.upgrader");
 var roleRepairer = require("role.repairer");
 var roleBuilder = require("role.builder");
 var roleClaimer = require("role.claimer");
-var roleRecycleable = require("role.recycleable");
+var roleRecyclable = require("role.recyclable");
 
 var roleAdaptable = {
     
