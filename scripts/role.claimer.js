@@ -1,5 +1,7 @@
-module.exports = {
+var roleClaimer = {
+
     run: function(creep) {
+        
         if (creep.room.name != "E68N44") {
             creep.moveTo(new RoomPosition(25, 11, "E68N44"));
         }
@@ -15,11 +17,13 @@ module.exports = {
                     creep.moveTo(creep.room.controller);
                 }
                 else {
-                    creep.memory.role = 'upgrader';
-                    Memory.minimumNumberOfClaimers = 0;
+                    creep.memory.role = "upgrader";
+                    Memory.creepMins.claimers = 0;
                     console.log("No neutral controller in " + creep.room.name);
                 }
             }
         }
     }
 };
+
+module.exports = roleClaimer;

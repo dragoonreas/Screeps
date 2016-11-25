@@ -1,4 +1,4 @@
-var roleHarvester = require('role.harvester');
+var roleHarvester = require("role.harvester");
 
 var roleBuilder = {
 
@@ -27,7 +27,7 @@ var roleBuilder = {
                     }
                 }
                 if (roomConstructionSites.length > 0) {
-                    if (Memory.buildOrderFILO) {
+                    if (Memory.buildOrderFILO == true) {
                         constructionSite = roomConstructionSites[roomConstructionSites.length - 1];
                         creep.memory.constuctionSiteID = constructionSite.id;
                     }
