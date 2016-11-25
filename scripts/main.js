@@ -51,8 +51,9 @@ for (let creepType in defaultCreepMins) {
 	Memory.creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.role == creepType);
 }
 
-if (Memory.checkForDrops == undefined) {
-    Memory.checkForDrops = true;
+Memory.checkForDrops = {};
+for (let roomID in Game.rooms) {
+    Memory.checkForDrops[roomID] = true;
 }
 
 if (Memory.E68N44EnergyAvaliable == undefined) {
@@ -79,47 +80,63 @@ module.exports.loop = function () {
             }
             console.log("Expired " + Memory.creeps[name].role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + name);
             delete Memory.creeps[name];
-            Memory.checkForDrops = true;
+            for (let roomID in Game.rooms) {
+                Memory.checkForDrops[roomID] = true;
+            }
         }
     }
     
     for (let roomID in Game.rooms) {
-        if (Memory.checkForDrops == true) {
-            Memory.checkForDrops = false;
+        if (Memory.checkForDrops[roomID] == true) {
+            Memory.checkForDrops[roomID] = false;
             var droppedResources = Game.rooms[roomID].find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
                 droppedResources.sort(function(a,b){return a.amount - b.amount});
                 for (let droppedResourceID in droppedResources) {
-					// TODO: Filter out resources that already have a creep going to collect them
-                    var droppedResource = droppedResources[droppedResourceID];
-                    var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
-                        filter: (c) => (c.spawning == false 
-                            && c.memory.droppedResourceID == undefined 
-                            && c.memory.role != "attacker"
-                            && c.memory.role != "adaptable"
-                            && c.memory.role != "claimer"
-                            && c.memory.role != "recyclable"
-                            && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
+					var assignedCreeps = Game.rooms[roomID].find(FIND_MY_CREEPS, {
+                        filter: (c) => (c.memory["droppedResourceID"] == droppedResourceID
                     )});
-                    if (creep == undefined) {
+					if (assignedCreeps.length == 0) {
+                        var droppedResource = droppedResources[droppedResourceID];
                         var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
-                            filter: (c) => (_.sum(c.carry) == 0
-                                         && c.memory.droppedResourceID == undefined 
-                            			 && c.memory.role != "attacker"
-                           				 && c.memory.role != "adaptable"
-                           				 && c.memory.role != "claimer"
-                           				 && c.memory.role != "recyclable"
-                                         && c.spawning == false
+                            filter: (c) => (c.spawning == false 
+                                && c.memory.droppedResourceID == undefined 
+                                && c.memory.role != "attacker"
+                                && c.memory.role != "adaptable"
+                                && c.memory.role != "claimer"
+                                && c.memory.role != "recyclable"
+                                && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
                         )});
-                    }
-                    if (creep != undefined) {
-                        creep.memory.droppedResourceID = droppedResource.id;
-                        console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + droppedResource.amount + " dropped resources in " + droppedResource.room.name);
-                    }
-                    else {
-                        //console.log("Noone avaliable to pickup " + droppedResource.amount + " dropped resources in " + droppedResource.room.name);
-                        Memory.checkForDrops = true;
-                    }
+                        if (creep == undefined) {
+                            var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
+                                filter: (c) => (c.spawning == false
+                                    && c.memory.droppedResourceID == undefined 
+                                	&& c.memory.role != "attacker"
+                               	    && c.memory.role != "adaptable"
+                               		&& c.memory.role != "claimer"
+                               		&& c.memory.role != "recyclable"
+                                    && _.sum(c.carry) == 0
+                            )});
+                        }
+                        if (creep == undefined) {
+                            var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
+                                filter: (c) => (c.spawning == false
+                                    && c.memory.droppedResourceID == undefined 
+                                	&& c.memory.role != "attacker"
+                               	    && c.memory.role != "adaptable"
+                               		&& c.memory.role != "claimer"
+                               		&& c.memory.role != "recyclable"
+                            )});
+                        }
+                        if (creep != undefined) {
+                            creep.memory.droppedResourceID = droppedResource.id;
+                            console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + droppedResource.amount + " dropped resources in " + droppedResource.room.name);
+                        }
+                        else {
+                            console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped resources in " + droppedResource.room.name);
+                            Memory.checkForDrops[roomID] = true;
+                    	}
+					}
                 }
             }
         }
@@ -143,8 +160,11 @@ module.exports.loop = function () {
 				}
 			}
         }
-		var towers = Game.rooms[roomID].find(STRUCTURE_TOWER);
-		for (let tower in towers) {
+		var towers = Game.rooms[roomID].find(FIND_MY_STRUCTURES, {
+            filter: (s) => (s.structureType == STRUCTURE_TOWER
+        )});
+		for (let towerID in towers) {
+            var tower = towers[towerID];
 			var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         	if(closestHostile != undefined) {
         	    tower.attack(closestHostile);

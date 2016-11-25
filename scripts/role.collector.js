@@ -14,7 +14,7 @@ var roleCollector = {
         }
         else {
             creep.memory.droppedResourceID = undefined;
-            Memory.checkForDrops = true;
+            Memory.checkForDrops[creep.room.name] = true;
             console.log(creep.name + " picked up the dropped resources in " + creep.room.name);
             creep.say("Yay!");
         }
