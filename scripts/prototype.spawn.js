@@ -6,7 +6,9 @@ var repairerStructureTypes = [
     , STRUCTURE_WALL
 ];
 
-var repairerStructureTypeIndex = 0;
+if (Memory.repairerStructureTypeIndex == undefined) {
+    Memory.repairerStructureTypeIndex = 0;
+}
 
 var prototypeSpawn = function() {
     
@@ -69,14 +71,22 @@ var prototypeSpawn = function() {
             
             if (roleName == "repairer") {
                 var repairerStructureType = undefined;
-                if (repairerStructureTypeIndex < repairerStructureTypes.length) {
-                    repairerStructureType = repairerStructureTypes[repairerStructureTypeIndex];
-                    ++repairerStructureTypeIndex;
+                if (Memory.repairerStructureTypeIndex < repairerStructureTypes.length) {
+                    repairerStructureType = repairerStructureTypes[Memory.repairerStructureTypeIndex];
                 }
-                else {
-                    repairerStructureTypeIndex = 0;
+                var result = this.createCreep(body, undefined, { role: roleName, working: false, structureType: repairerStructureType });
+                if ((result < 0) == false) {
+                    console.log("Repairer Structure Type: { index: " + Memory.repairerStructureTypeIndex + "/" + repairerStructureTypes.length + ", value: " + repairerStructureType + " }");
+                    if (Memory.repairerStructureTypeIndex < repairerStructureTypes.length) {
+                        ++Memory.repairerStructureTypeIndex;
+                        console.log("+1: " + Memory.repairerStructureTypeIndex);
+                    }
+                    else {
+                        repairerStructureTypeIndex = 0;
+                        console.log("=0: " + Memory.repairerStructureTypeIndex);
+                    }
                 }
-                return this.createCreep(body, undefined, { role: roleName, working: false, structureType: repairerStructureType });
+                return result;
             }
             else {
                 return this.createCreep(body, undefined, { "role": roleName, "working": false });

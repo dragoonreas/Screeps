@@ -15,7 +15,7 @@ var roleRepairer = {
         if (creep.memory.working == true) {
             var structure = Game.getObjectById(creep.memory.structureID);
 			if (structure != undefined 
-                && structure.hits < structure.hitsMax) {
+                && structure.hits == structure.hitsMax) {
 				creep.say("Repaired!");
 				structure = undefined;
 			}

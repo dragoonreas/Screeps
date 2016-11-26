@@ -93,11 +93,11 @@ module.exports.loop = function () {
             if (droppedResources.length > 0) {
                 droppedResources.sort(function(a,b){return a.amount - b.amount});
                 for (let droppedResourceID in droppedResources) {
+                    var droppedResource = droppedResources[droppedResourceID];
 					var assignedCreeps = Game.rooms[roomID].find(FIND_MY_CREEPS, {
-                        filter: (c) => (c.memory["droppedResourceID"] == droppedResourceID
+                        filter: (c) => (c.memory.droppedResourceID == droppedResource.id
                     )});
 					if (assignedCreeps.length == 0) {
-                        var droppedResource = droppedResources[droppedResourceID];
                         var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
