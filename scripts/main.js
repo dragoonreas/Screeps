@@ -46,14 +46,60 @@ else {
     }
 }
 
-Memory.creepCounts = {};
-for (let creepType in defaultCreepMins) {
-	Memory.creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.role == creepType);
+if (Memory.creepCounts == undefined) {
+    Memory.creepCounts = {};
+    for (let creepType in defaultCreepMins) {
+    	Memory.creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.role == creepType);
+    }
+}
+else {
+    for (let creepCount in Memory.creepCounts) {
+        var validCreepCount = false;
+        for (let creepType in defaultCreepMins) {
+            if (creepCount == creepType) {
+                validCreepCount = true;
+                break;
+            }
+        }
+
+        if (validCreepCount == false) {
+            delete Memory.creepCounts[creepCount];
+        }
+    }
+
+    for (let creepType in defaultCreepMins) {
+        if (Memory.creepCounts[creepType] == undefined) {
+            Memory.creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.role == creepType);
+        }
+    }
 }
 
-Memory.checkForDrops = {};
-for (let roomID in Game.rooms) {
-    Memory.checkForDrops[roomID] = true;
+if (Memory.checkForDrops == undefined) {
+    Memory.checkForDrops = {};
+    for (let roomID in Game.rooms) {
+        Memory.checkForDrops[roomID] = true;
+    }
+}
+else {
+    for (let roomIDToCheck in Memory.checkForDrops) {
+        var validRoomIDToCheck = false;
+        for (let roomID in Game.rooms) {
+            if (roomIDToCheck == roomID) {
+                validRoomIDToCheck = true;
+                break;
+            }
+        }
+
+        if (validRoomIDToCheck == false) {
+            delete Memory.checkForDrops[roomIDToCheck];
+        }
+    }
+
+    for (let roomID in Game.rooms) {
+        if (Memory.checkForDrops[roomID] == undefined) {
+            Memory.checkForDrops[roomID] = true;
+        }
+    }
 }
 
 if (Memory.E68N44EnergyAvaliable == undefined) {

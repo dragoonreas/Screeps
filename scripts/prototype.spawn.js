@@ -1,8 +1,8 @@
 // TODO: Use body part constants to calculate bodyCost varients
-    
+
 var repairerStructureTypes = [
     STRUCTURE_RAMPART
-    , STRUCTURE_ROAD
+//    , STRUCTURE_ROAD
     , STRUCTURE_WALL
 ];
 
@@ -32,7 +32,7 @@ var prototypeSpawn = function() {
             
             var body = [];
             /*
-                Production seemed to peak with the body sizes used during controller lvl 2 and subsequently fell off at the new couple of higher levels.
+                Production seemed to peak with the body size used during controller lvl 2 and subsequently fell off at the new couple of higher levels.
                 So, use that energy capacity as the default cap: 
                 max # of controller lvl 2 spawns * spawn.maxEnergyCapacity + max # of controller lvl 2 expansions * expansion.maxEnergyCapacity 
                 = 1*300 + 10*50 
@@ -44,7 +44,14 @@ var prototypeSpawn = function() {
                 partMultiplier = 1; // start small if forced to build up from scratch, or if attackers are needed for urgent deployment
             }
             else if (roleName == "upgrader") {
-                partMultiplier = Math.floor(this.room.energyCapacityAvailable / bodyCost); // upgraders don't have any roles to fall back to, so should be the safest to get the maximum amount of efficiency out of using the largest body possible
+                /*
+                    The upgraders were using almost all the energy in their dedicated source almost right as it refreshed with the body size used during controller lvl 5.
+                    So, use that energy capacity as the default cap: 
+                    max # of controller lvl 5 spawns * spawn.maxEnergyCapacity + max # of controller lvl 5 expansions * expansion.maxEnergyCapacity 
+                    = 1*300 + 30*50 
+                    = 1800
+                */
+                partMultiplier = Math.floor(Math.min(this.room.energyCapacityAvailable,1800) / bodyCost);
             }
             for (let i = 0; i < (partMultiplier * moveRatio) - 1; i++) {
                 body.push(MOVE); // use all but one move part as first line of defence
@@ -71,19 +78,17 @@ var prototypeSpawn = function() {
             
             if (roleName == "repairer") {
                 var repairerStructureType = undefined;
-                if (Memory.repairerStructureTypeIndex < repairerStructureTypes.length) {
-                    repairerStructureType = repairerStructureTypes[Memory.repairerStructureTypeIndex];
+                var repairerStructureTypeIndex = Memory.repairerStructureTypeIndex;
+                if (repairerStructureTypeIndex < repairerStructureTypes.length) {
+                    repairerStructureType = repairerStructureTypes[repairerStructureTypeIndex];
                 }
                 var result = this.createCreep(body, undefined, { role: roleName, working: false, structureType: repairerStructureType });
                 if ((result < 0) == false) {
-                    console.log("Repairer Structure Type: { index: " + Memory.repairerStructureTypeIndex + "/" + repairerStructureTypes.length + ", value: " + repairerStructureType + " }");
-                    if (Memory.repairerStructureTypeIndex < repairerStructureTypes.length) {
+                    if (repairerStructureTypeIndex < repairerStructureTypes.length) {
                         ++Memory.repairerStructureTypeIndex;
-                        console.log("+1: " + Memory.repairerStructureTypeIndex);
                     }
                     else {
-                        repairerStructureTypeIndex = 0;
-                        console.log("=0: " + Memory.repairerStructureTypeIndex);
+                        Memory.repairerStructureTypeIndex = 0;
                     }
                 }
                 return result;
