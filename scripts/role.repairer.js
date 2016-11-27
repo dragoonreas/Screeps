@@ -20,30 +20,37 @@ var roleRepairer = {
 				structure = undefined;
 			}
             if (structure == undefined) {
-				if (creep.memory.structureType == STRUCTURE_WALL 
-					|| creep.memory.structureType == STRUCTURE_RAMPART) { // TODO: Make wall repairers help rampart repairers once all walls are repaired
-					var structures = creep.room.find(FIND_STRUCTURES, {
-	                    filter: (s) => (s.hits < s.hitsMax 
-	                        && s.structureType == creep.memory.structureType
-	                )});
-	                if (structures.length > 0) {
-	                    structure = structures.sort(function(s0,s1){return (s1.hitsMax - s1.hits) - (s0.hitsMax - s0.hits)})[0];
-	                }
-				}
-				if (structure == undefined && creep.memory.structureType != undefined) { // assumes only other structure type we're going to assign to repairers apart from walls and ramparts is roads
-					structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    	filter: (s) => (s.hits < s.hitsMax 
-                    	    && s.structureType == STRUCTURE_ROAD
-                	)});
-				}
-				if (structure == undefined) {
-					structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    	filter: (s) => (s.hits < s.hitsMax 
-                    	    && s.structureType != STRUCTURE_WALL
-                    	    && s.structureType != STRUCTURE_RAMPART
-                    	    && s.structureType != STRUCTURE_ROAD
-                	)});
-				}
+                var repairerTypeFound = false;
+                for (let repairerType in Memory.repairerTypeMins) {
+                    if (repairerTypeFound == false && (repairerType == creep.memory.repairerType || repairerType == "all")) {
+                        repairerTypeFound = true;
+                    }
+                    if (repairerTypeFound == true) {
+                        if (repairerType == STRUCTURE_ROAD) {
+        					structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                            	filter: (s) => (s.hits < s.hitsMax 
+                            	    && s.structureType == repairerType
+                        	)});
+                        }
+                        else if (repairerType != "all") {
+        					var structures = creep.room.find(FIND_STRUCTURES, {
+        	                    filter: (s) => (s.hits < s.hitsMax 
+        	                        && s.structureType == repairerType
+        	                )});
+        	                if (structures.length > 0) {
+        	                    structure = structures.sort(function(s0,s1){return (s1.hitsMax - s1.hits) - (s0.hitsMax - s0.hits)})[0];
+        	                }
+                        }
+                        else {
+        					structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                            	filter: (s) => (s.hits < s.hitsMax
+                        	)});
+                        }
+                        if (structure != undefined) {
+                            break;
+                        }
+                    }
+                }
 				if (structure != undefined) {
 					creep.memory.structureID = structure.id;
                 }

@@ -1,15 +1,5 @@
 // TODO: Use body part constants to calculate bodyCost varients
 
-var repairerStructureTypes = [
-    STRUCTURE_RAMPART
-//    , STRUCTURE_ROAD
-    , STRUCTURE_WALL
-];
-
-if (Memory.repairerStructureTypeIndex == undefined) {
-    Memory.repairerStructureTypeIndex = 0;
-}
-
 var prototypeSpawn = function() {
     
     StructureSpawn.prototype.createCustomCreep =
@@ -20,6 +10,10 @@ var prototypeSpawn = function() {
             if (roleName == "attacker") {
                 moveRatio = 1;
                 bodyCost = 130; // 1 attack + 1 move = 1*80 + 1*50 = 130
+            }
+            if (roleName == "powerHarvester") {
+                moveRatio = 1;
+                bodyCost = 430; // 1 attack + 1 heal + 1 carry + 1 move = 1*80 + 1*250 + 1*50 + 1*50 = 430
             }
             else if (roleName == "claimer") {
                 moveRatio = 1;
@@ -53,6 +47,9 @@ var prototypeSpawn = function() {
                 */
                 partMultiplier = Math.floor(Math.min(this.room.energyCapacityAvailable,1800) / bodyCost);
             }
+            else if (roleName == "powerHarvester") {
+                partMultiplier = Math.floor(this.room.energyCapacityAvailable / bodyCost); // go all out since the power banks are only avaliable for a limited time
+            }
             for (let i = 0; i < (partMultiplier * moveRatio) - 1; i++) {
                 body.push(MOVE); // use all but one move part as first line of defence
             }
@@ -66,6 +63,17 @@ var prototypeSpawn = function() {
                     body.push(CLAIM);
                 }
             }
+            else if (roleName == "powerHarvester") {
+                for (let i = 0; i < partMultiplier; i++) {
+                    body.push(CARRY);
+                }
+                for (let i = 0; i < partMultiplier; i++) {
+                    body.push(ATTACK);
+                }
+                for (let i = 0; i < partMultiplier; i++) {
+                    body.push(HEAL);
+                }
+            }
             else {
                 for (let i = 0; i < partMultiplier; i++) {
                     body.push(CARRY);
@@ -77,19 +85,16 @@ var prototypeSpawn = function() {
             body.push(MOVE); // ensures creep is always able to move
             
             if (roleName == "repairer") {
-                var repairerStructureType = undefined;
-                var repairerStructureTypeIndex = Memory.repairerStructureTypeIndex;
-                if (repairerStructureTypeIndex < repairerStructureTypes.length) {
-                    repairerStructureType = repairerStructureTypes[repairerStructureTypeIndex];
+                var repairerType = undefined;
+                for (let repairerTypeMin in Memory.repairerTypeMins) {
+                    if (Memory.repairerTypeCounts[repairerTypeMin] < Memory.repairerTypeMins[repairerTypeMin] || repairerTypeMin == "all") {
+                        repairerType = repairerTypeMin;
+                        break;
+                    }
                 }
-                var result = this.createCreep(body, undefined, { role: roleName, working: false, structureType: repairerStructureType });
+                var result = this.createCreep(body, undefined, { role: roleName, working: false, repairerType: repairerType });
                 if ((result < 0) == false) {
-                    if (repairerStructureTypeIndex < repairerStructureTypes.length) {
-                        ++Memory.repairerStructureTypeIndex;
-                    }
-                    else {
-                        Memory.repairerStructureTypeIndex = 0;
-                    }
+                    ++Memory.repairerTypeCounts[repairerType];
                 }
                 return result;
             }

@@ -19,7 +19,7 @@ var roleBuilder = {
                 if (roomConstructionSites.length == 0) {
                     for (let roomID in Game.rooms) {
                         if (roomID != creep.room.id) {
-                            roomConstructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+                            roomConstructionSites = Game.rooms[roomID].find(FIND_MY_CONSTRUCTION_SITES);
                             if (roomConstructionSites.length > 0) {
                                 break;
                             }
@@ -59,6 +59,9 @@ var roleBuilder = {
                         
                         if (constructionSite != undefined) {
                             creep.memory.constructionSiteID = constructionSite.id;
+                        }
+                        else {
+                            creep.memory.constructionSiteID = undefined;
                         }
                     }
                 }

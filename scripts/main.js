@@ -3,6 +3,7 @@ var roleAttacker = require("role.attacker");
 var roleHoarder = require("role.hoarder");
 var roleCollector = require("role.collector");
 var roleHarvester = require("role.harvester");
+var rolePowerHarvester = require("role.powerHarvester");
 var roleUpgrader = require("role.upgrader");
 var roleAdaptable = require("role.adaptable");
 var roleRepairer = require("role.repairer");
@@ -10,70 +11,34 @@ var roleBuilder = require("role.builder");
 var roleClaimer = require("role.claimer");
 var roleRecyclable = require("role.recyclable");
 
-var estSecPerTick = 4;
+var estSecPerTick = 4; // time between ticks is currently averaging 3-point-something seconds, so round up to 4 seconds
 
-var defaultCreepMins = {
+Memory.repairerTypeMins = {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_RAMPART]: 3
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_WALL]: 1
+    , "all": 0
+}; // NOTE: This also defines the build priority
+
+// get repairer minimum
+var repairerMin = 0;
+for (let repairerTypeMin in Memory.repairerTypeMins) {
+    repairerMin += Memory.repairerTypeMins[repairerTypeMin];
+}
+
+Memory.creepMins = {
     attacker: 0
     , harvester: 6
+    , powerHarvester: 0
     , upgrader: 3
     , adaptable: 0
-    , repairer: 3
+    , repairer: repairerMin
     , builder: 1
     , claimer: 0
-}; // NOTE: This also defines the build order
-if (Memory.creepMins == undefined) {
-    Memory.creepMins = defaultCreepMins;
-}
-else {
-    for (let creepMin in Memory.creepMins) {
-        var validCreepMin = false;
-        for (let creepType in defaultCreepMins) {
-            if (creepMin == creepType) {
-                validCreepMin = true;
-                break;
-            }
-        }
+}; // NOTE: This also defines the build priority
 
-        if (validCreepMin == false) {
-            delete Memory.creepMins[creepMin];
-        }
-    }
-
-    for (let creepType in defaultCreepMins) {
-        if (Memory.creepMins[creepType] == undefined) {
-            Memory.creepMins[creepType] = defaultCreepMins[creepType];
-        }
-    }
-}
-
-if (Memory.creepCounts == undefined) {
-    Memory.creepCounts = {};
-    for (let creepType in defaultCreepMins) {
-    	Memory.creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.role == creepType);
-    }
-}
-else {
-    for (let creepCount in Memory.creepCounts) {
-        var validCreepCount = false;
-        for (let creepType in defaultCreepMins) {
-            if (creepCount == creepType) {
-                validCreepCount = true;
-                break;
-            }
-        }
-
-        if (validCreepCount == false) {
-            delete Memory.creepCounts[creepCount];
-        }
-    }
-
-    for (let creepType in defaultCreepMins) {
-        if (Memory.creepCounts[creepType] == undefined) {
-            Memory.creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.role == creepType);
-        }
-    }
-}
-
+// validate check for drops flags
 if (Memory.checkForDrops == undefined) {
     Memory.checkForDrops = {};
     for (let roomID in Game.rooms) {
@@ -81,20 +46,12 @@ if (Memory.checkForDrops == undefined) {
     }
 }
 else {
-    for (let roomIDToCheck in Memory.checkForDrops) {
-        var validRoomIDToCheck = false;
-        for (let roomID in Game.rooms) {
-            if (roomIDToCheck == roomID) {
-                validRoomIDToCheck = true;
-                break;
-            }
-        }
-
-        if (validRoomIDToCheck == false) {
-            delete Memory.checkForDrops[roomIDToCheck];
+    for (let roomID in Memory.checkForDrops) {
+        if (Game.rooms[roomID] == undefined) {
+            delete Memory.checkForDrops[roomID];
         }
     }
-
+    
     for (let roomID in Game.rooms) {
         if (Memory.checkForDrops[roomID] == undefined) {
             Memory.checkForDrops[roomID] = true;
@@ -102,32 +59,43 @@ else {
     }
 }
 
+// validate time for when E68N44's energy will be avaliable again
 if (Memory.E68N44EnergyAvaliable == undefined) {
     Memory.E68N44EnergyAvaliable = 0;
 }
 
-if (Memory.buildOrderFILO == undefined) {
-    Memory.buildOrderFILO = false;
-}
+Memory.buildOrderFILO = false;
 
 module.exports.loop = function () {
+
+    Memory.creepCounts = {};
+    for (let creepType in Memory.creepMins) {
+    	Memory.creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.role == creepType);
+    }
+    
+    Memory.repairerTypeCounts = {};
+    for (let repairerType in Memory.repairerTypeMins) {
+    	Memory.repairerTypeCounts[repairerType] = _.sum(Game.creeps, (c) => c.memory.repairerType == repairerType);
+    }
 
     var currentSpawnedRole = 0;
     var minimumSpawnedRole = 0;
     
+    var checkingForDrops = false;
     for (let name in Memory.creeps) {
         if (Game.creeps[name] == undefined) {
-            for (let creepType in defaultCreepMins) {
-                if (Memory.creeps[name].role == creepType) {
-                    currentSpawnedRole = --Memory.creepCounts[creepType];
-                    minimumSpawnedRole = Memory.creepMins[creepType];
-                    break;
-                }
+            if (Memory.creeps[name].role != undefined && Memory.creepCounts[Memory.creeps[name].role] != undefined) {
+                currentSpawnedRole = Memory.creepCounts[Memory.creeps[name].role];
+                minimumSpawnedRole = Memory.creepMins[Memory.creeps[name].role];
             }
             console.log("Expired " + Memory.creeps[name].role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + name);
             delete Memory.creeps[name];
-            for (let roomID in Game.rooms) {
-                Memory.checkForDrops[roomID] = true;
+            
+            if (checkingForDrops == false) {
+                for (let roomID in Game.rooms) {
+                    Memory.checkForDrops[roomID] = true;
+                }
+                checkingForDrops = true;
             }
         }
     }
@@ -147,45 +115,52 @@ module.exports.loop = function () {
                         var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
-                                && c.memory.role != "attacker"
-                                && c.memory.role != "adaptable"
-                                && c.memory.role != "claimer"
-                                && c.memory.role != "recyclable"
+                                && c.memory.role != "attacker" 
+                                && c.memory.role != "powerHarvester"
+                                && c.memory.role != "adaptable" 
+                                && c.memory.role != "claimer" 
+                                && c.memory.role != "recyclable" 
                                 && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
                         )});
                         if (creep == undefined) {
                             var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
-                                filter: (c) => (c.spawning == false
+                                filter: (c) => (c.spawning == false 
                                     && c.memory.droppedResourceID == undefined 
-                                	&& c.memory.role != "attacker"
-                               	    && c.memory.role != "adaptable"
-                               		&& c.memory.role != "claimer"
-                               		&& c.memory.role != "recyclable"
-                                    && _.sum(c.carry) == 0
+                                    && c.memory.role != "attacker" 
+                                    && c.memory.role != "powerHarvester"
+                                    && c.memory.role != "adaptable" 
+                                    && c.memory.role != "claimer" 
+                                    && c.memory.role != "recyclable" 
+                                    && c.carryCapacity > 0 
+                                    && _.sum(c.carry) == 0 
                             )});
-                        }
-                        if (creep == undefined) {
-                            var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
-                                filter: (c) => (c.spawning == false
-                                    && c.memory.droppedResourceID == undefined 
-                                	&& c.memory.role != "attacker"
-                               	    && c.memory.role != "adaptable"
-                               		&& c.memory.role != "claimer"
-                               		&& c.memory.role != "recyclable"
-                            )});
+                            if (creep == undefined) {
+                                var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
+                                    filter: (c) => (c.spawning == false 
+                                        && c.memory.droppedResourceID == undefined 
+                                        && c.memory.role != "attacker" 
+                                        && c.memory.role != "powerHarvester"
+                                        && c.memory.role != "adaptable" 
+                                        && c.memory.role != "claimer" 
+                                        && c.memory.role != "recyclable" 
+                                        && c.carryCapacity > 0 
+                                        && _.sum(c.carry) < c.carryCapacity
+                                )});
+                            }
                         }
                         if (creep != undefined) {
                             creep.memory.droppedResourceID = droppedResource.id;
-                            console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + droppedResource.amount + " dropped resources in " + droppedResource.room.name);
+                            console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + droppedResource.room.name);
                         }
                         else {
-                            console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped resources in " + droppedResource.room.name);
+                            console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + droppedResource.room.name);
                             Memory.checkForDrops[roomID] = true;
                     	}
 					}
                 }
             }
         }
+        
         var invaders = Game.rooms[roomID].find(FIND_HOSTILE_CREEPS);
         if (invaders.length > 0) {
 			if (Game.rooms[roomID].name == "E68N44" && Memory.E68N44EnergyAvaliable <= Game.time) {
@@ -206,6 +181,7 @@ module.exports.loop = function () {
 				}
 			}
         }
+        
 		var towers = Game.rooms[roomID].find(FIND_MY_STRUCTURES, {
             filter: (s) => (s.structureType == STRUCTURE_TOWER
         )});
@@ -233,9 +209,19 @@ module.exports.loop = function () {
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         if (!creep.spawning) {
-			if (creep.memory.role == "attacker") {
+            if (creep.memory.role == undefined) {
+                creep.memory.role = "harvester";
+            }
+            if (creep.memory.working == undefined) {
+                creep.memory.working = false;
+            }
+            
+            if (creep.memory.role == "attacker") {
 				roleAttacker.run(creep);
 			}
+            else if (creep.memory.role == "powerHarvester") {
+                rolePowerHarvester.run(creep);
+            }
             else if (creep.carry != undefined && _.sum(creep.carry) > creep.carry.energy) {
                 roleHoarder.run(creep);
             }
@@ -267,7 +253,7 @@ module.exports.loop = function () {
     }
 
     if (Game.spawns.Spawn1.spawning == undefined) {
-        for (let creepType in defaultCreepMins) {
+        for (let creepType in Memory.creepMins) {
             if (Memory.creepCounts[creepType] < Memory.creepMins[creepType]) {
                 var name = Game.spawns.Spawn1.createCustomCreep(creepType);
                 if (name < 0 == false) {
