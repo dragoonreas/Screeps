@@ -18,7 +18,7 @@ var roleBuilder = {
                 var roomConstructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
                 if (roomConstructionSites.length == 0) {
                     for (let roomID in Game.rooms) {
-                        if (roomID != creep.room.id) {
+                        if (roomID != creep.room.name) {
                             roomConstructionSites = Game.rooms[roomID].find(FIND_MY_CONSTRUCTION_SITES);
                             if (roomConstructionSites.length > 0) {
                                 break;
@@ -27,7 +27,7 @@ var roleBuilder = {
                     }
                 }
                 if (roomConstructionSites.length > 0) {
-                    if (Memory.buildOrderFILO == true) {
+                    if (Memory.rooms[creep.room.name].buildOrderFILO == true) {
                         constructionSite = roomConstructionSites[roomConstructionSites.length - 1];
                         creep.memory.constuctionSiteID = constructionSite.id;
                     }
@@ -36,8 +36,8 @@ var roleBuilder = {
                                              STRUCTURE_EXTENSION, 
                                              STRUCTURE_CONTAINER, 
                                              STRUCTURE_STORAGE, 
-                                             STRUCTURE_WALL, 
                                              STRUCTURE_RAMPART, 
+                                             STRUCTURE_WALL, 
                                              STRUCTURE_TOWER, 
                                              STRUCTURE_ROAD, 
                                              STRUCTURE_LINK, 
@@ -79,14 +79,27 @@ var roleBuilder = {
             }
         }
         else {
-            /*
-            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
-                filter: (s) => s.id != "57ef9efc86f108ae6e610381"
-            });
-            */
-            var source = Game.getObjectById("57ef9efc86f108ae6e610380");
-            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
+            if (creep.memory.roomID == "E69N44") {
+                /*
+                var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                    filter: (s) => s.id != "57ef9efc86f108ae6e610381"
+                });
+                */
+                var source = Game.getObjectById("57ef9efc86f108ae6e610380");
+                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source);
+                }
+            }
+            else if (creep.memory.roomID == "E68N45") {
+                /*
+                var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                    filter: (s) => s.id != "57ef9ee786f108ae6e6101b3"
+                });
+                */
+                var source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
+                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source);
+                }
             }
         }
     }

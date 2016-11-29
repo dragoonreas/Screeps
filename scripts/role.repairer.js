@@ -21,7 +21,7 @@ var roleRepairer = {
 			}
             if (structure == undefined) {
                 var repairerTypeFound = false;
-                for (let repairerType in Memory.repairerTypeMins) {
+                for (let repairerType in Memory.rooms[creep.memory.roomID].repairerTypeMins) {
                     if (repairerTypeFound == false && (repairerType == creep.memory.repairerType || repairerType == "all")) {
                         repairerTypeFound = true;
                     }
@@ -69,14 +69,27 @@ var roleRepairer = {
             }
         }
         else {
-            /*
-            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
-                filter: (s) => s.id != "57ef9efc86f108ae6e610381"
-            });
-            */
-            var source = Game.getObjectById("57ef9efc86f108ae6e610380");
-            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
+            if (creep.memory.roomID == "E69N44") {
+                /*
+                var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                    filter: (s) => s.id != "57ef9efc86f108ae6e610381"
+                });
+                */
+                var source = Game.getObjectById("57ef9efc86f108ae6e610380");
+                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source);
+                }
+            }
+            else if (creep.memory.roomID == "E68N45") {
+                /*
+                var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                    filter: (s) => s.id != "57ef9ee786f108ae6e6101b3"
+                });
+                */
+                var source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
+                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source);
+                }
             }
         }
     }

@@ -15,41 +15,61 @@ var prototypeSpawn = function() {
                 moveRatio = 1;
                 bodyCost = 430; // 1 attack + 1 heal + 1 carry + 1 move = 1*80 + 1*250 + 1*50 + 1*50 = 430
             }
+            else if (roleName == "upgrader") {
+                if (this.room.name == "E68N45") {
+                    moveRatio = 0; // source dedicated to upgrading is right next to the controller in this room, and the spawner is very close too, so only need 1 move
+                    bodyCost = 150; // 1 work + 1 carry = 1*100 + 1*50 = 150
+                }
+                else {
+                    moveRatio = 1;
+                    bodyCost = 200; // 1 work + 1 carry + 1 move = 1*100 + 1*50 + 1*50 = 200
+                }
+            }
+            else if (roleName == "scout") {
+                moveRatio = 1;
+                bodyCost = 50; // 1 move = 1*50 = 50
+            }
             else if (roleName == "claimer") {
                 moveRatio = 1;
                 bodyCost = 650; // 1 claim + 1 move = 1*600 + 1*50 = 650
             }
-            else if (roleName == "upgrader") {
-                moveRatio = 1;
-                bodyCost = 200; // 1 work + 1 carry + 1 move = 1*100 + 1*50 + 1*50 = 200
+            
+            var energyAvaliable = this.room.energyCapacityAvailable;
+            if (moveRatio == 0) {
+                energyAvaliable -= 50; // when move ratio is 0, remove 50 energy from the total avaliable to account for the 1 mandatory move part that will be added that's not included in the body cost
             }
             
             var body = [];
             /*
-                Production seemed to peak with the body size used during controller lvl 2 and subsequently fell off at the new couple of higher levels.
+                Production seemed to peak with the body size used during controller lvl 2 and subsequently fell off at the new couple of higher levels in E69N44.
                 So, use that energy capacity as the default cap: 
                 max # of controller lvl 2 spawns * spawn.maxEnergyCapacity + max # of controller lvl 2 expansions * expansion.maxEnergyCapacity 
                 = 1*300 + 10*50 
                 = 800
             */
-            var partMultiplier = Math.floor(Math.min(this.room.energyCapacityAvailable,800) / bodyCost);
+            var partMultiplier = Math.floor(Math.min(energyAvaliable, 800) / bodyCost);
             if (roleName == "attacker" 
-                || (Memory.creepCounts.harvester / Memory.creepMins.harvester) < 0.5) {
-                partMultiplier = 1; // start small if forced to build up from scratch, or if attackers are needed for urgent deployment
+                || roleName == "scout" 
+                || (Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) {
+                partMultiplier = 1; // start small if forced to build up from scratch, or if attackers are needed for urgent deployment, or if it's just a scout
             }
             else if (roleName == "upgrader") {
                 /*
-                    The upgraders were using almost all the energy in their dedicated source almost right as it refreshed with the body size used during controller lvl 5.
+                    The upgraders were using almost all the energy in their dedicated source almost right as it refreshed with the body size used during controller lvl 5 in E69N44.
                     So, use that energy capacity as the default cap: 
                     max # of controller lvl 5 spawns * spawn.maxEnergyCapacity + max # of controller lvl 5 expansions * expansion.maxEnergyCapacity 
                     = 1*300 + 30*50 
                     = 1800
                 */
-                partMultiplier = Math.floor(Math.min(this.room.energyCapacityAvailable,1800) / bodyCost);
+                partMultiplier = Math.floor(Math.min(energyAvaliable, 1800) / bodyCost);
             }
             else if (roleName == "powerHarvester") {
-                partMultiplier = Math.floor(this.room.energyCapacityAvailable / bodyCost); // go all out since the power banks are only avaliable for a limited time
+                partMultiplier = Math.floor(energyAvaliable / bodyCost); // go all out since the power banks are only avaliable for a limited time
             }
+            else if (roleName == "claimer") {
+                partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * 2) / bodyCost); // prefer 2 claim parts to build reserve, but will make do with 1 when not enough energy is avaliable in the room since it still increases ups sources reserves in the room
+            }
+            
             for (let i = 0; i < (partMultiplier * moveRatio) - 1; i++) {
                 body.push(MOVE); // use all but one move part as first line of defence
             }
@@ -74,7 +94,7 @@ var prototypeSpawn = function() {
                     body.push(HEAL);
                 }
             }
-            else {
+            else if (roleName != "scout") {
                 for (let i = 0; i < partMultiplier; i++) {
                     body.push(CARRY);
                 }
@@ -84,23 +104,31 @@ var prototypeSpawn = function() {
             }
             body.push(MOVE); // ensures creep is always able to move
             
+            var creepMemory = { roomID: this.room.name, role: roleName, working: false };
+            
             if (roleName == "repairer") {
-                var repairerType = undefined;
-                for (let repairerTypeMin in Memory.repairerTypeMins) {
-                    if (Memory.repairerTypeCounts[repairerTypeMin] < Memory.repairerTypeMins[repairerTypeMin] || repairerTypeMin == "all") {
-                        repairerType = repairerTypeMin;
+                for (let repairerType in Memory.rooms[this.room.name].repairerTypeMins) {
+                    if (Memory.rooms[this.room.name].repairerTypeCounts[repairerType] < Memory.rooms[this.room.name].repairerTypeMins[repairerType] 
+                        || repairerType == "all") {
+                        creepMemory.repairerType = repairerType;
                         break;
                     }
                 }
-                var result = this.createCreep(body, undefined, { role: roleName, working: false, repairerType: repairerType });
-                if ((result < 0) == false) {
-                    ++Memory.repairerTypeCounts[repairerType];
-                }
-                return result;
             }
-            else {
-                return this.createCreep(body, undefined, { "role": roleName, "working": false });
+            else if (roleName == "claimer") {
+                creepMemory.controllerID == "57ef9ee786f108ae6e6101b5";
             }
+            else if (roleName == "powerHarvester") {
+                creepMemory.harvestRoom = { id: "E70N44", x: 18, y:7 };
+            }
+            
+            var result = this.createCreep(body, undefined, creepMemory);
+            
+            if (roleName == "repairer" && (result < 0) == false) {
+                ++Memory.rooms[creepMemory.roomID].repairerTypeCounts[creepMemory.repairerType];
+            }
+            
+            return result;
         };
 };
 

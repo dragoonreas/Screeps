@@ -7,75 +7,103 @@ var rolePowerHarvester = require("role.powerHarvester");
 var roleUpgrader = require("role.upgrader");
 var roleAdaptable = require("role.adaptable");
 var roleRepairer = require("role.repairer");
+var roleScout = require("role.scout");
 var roleBuilder = require("role.builder");
 var roleClaimer = require("role.claimer");
 var roleRecyclable = require("role.recyclable");
 
 var estSecPerTick = 4; // time between ticks is currently averaging 3-point-something seconds, so round up to 4 seconds
 
-Memory.repairerTypeMins = {
+if (Memory.rooms == undefined) {
+    Memory.rooms = {};
+}
+for (let roomID in Game.rooms) {
+    if (Memory.rooms[roomID] == undefined) {
+        Memory.rooms[roomID] = {};
+    }
+    if (Memory.rooms[roomID].checkForDrops == undefined) {
+        Memory.rooms[roomID].checkForDrops = true;
+    }
+    if (Memory.rooms[roomID].buildOrderFILO == undefined) {
+        Memory.rooms[roomID].buildOrderFILO = false
+    }
+    // TODO: use lastVisited time and persistant flag variables to manage garbage collection here
+}
+
+Memory.rooms["E69N44"].repairerTypeMins = {
     [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 3
+    , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
     , "all": 0
 }; // NOTE: This also defines the build priority
+Memory.rooms["E68N45"].repairerTypeMins = {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_WALL]: 2
+    , "all": 0
+}; // NOTE: This also defines the build priority
 
-// get repairer minimum
-var repairerMin = 0;
-for (let repairerTypeMin in Memory.repairerTypeMins) {
-    repairerMin += Memory.repairerTypeMins[repairerTypeMin];
+var repairerMins = {
+    E69N44: 0
+    , E68N45: 0
+};
+for (let roomID in repairerMins) {
+    for (let repairerTypeMin in Memory.rooms[roomID].repairerTypeMins) {
+        repairerMins[roomID] += Memory.rooms[roomID].repairerTypeMins[repairerTypeMin];
+    }
 }
 
-Memory.creepMins = {
-    attacker: 0
+Memory.rooms["E69N44"].creepMins = {
+    attacker: 4
     , harvester: 6
     , powerHarvester: 0
     , upgrader: 3
     , adaptable: 0
-    , repairer: repairerMin
+    , scout: 0
+    , claimer: 1
+    , repairer: repairerMins["E69N44"]
     , builder: 1
+}; // NOTE: This also defines the build priority
+Memory.rooms["E68N45"].creepMins = {
+    attacker: 1
+    , harvester: 2
+    , powerHarvester: 0
+    , upgrader: 4
+    , adaptable: 0
+    , scout: 1
     , claimer: 0
+    , repairer: repairerMins["E68N45"]
+    , builder: 1
 }; // NOTE: This also defines the build priority
 
-// validate check for drops flags
-if (Memory.checkForDrops == undefined) {
-    Memory.checkForDrops = {};
-    for (let roomID in Game.rooms) {
-        Memory.checkForDrops[roomID] = true;
-    }
-}
-else {
-    for (let roomID in Memory.checkForDrops) {
-        if (Game.rooms[roomID] == undefined) {
-            delete Memory.checkForDrops[roomID];
-        }
-    }
-    
-    for (let roomID in Game.rooms) {
-        if (Memory.checkForDrops[roomID] == undefined) {
-            Memory.checkForDrops[roomID] = true;
-        }
-    }
-}
-
-// validate time for when E68N44's energy will be avaliable again
 if (Memory.E68N44EnergyAvaliable == undefined) {
     Memory.E68N44EnergyAvaliable = 0;
 }
 
-Memory.buildOrderFILO = false;
-
 module.exports.loop = function () {
 
-    Memory.creepCounts = {};
-    for (let creepType in Memory.creepMins) {
-    	Memory.creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.role == creepType);
+    Memory.rooms["E69N44"].creepCounts = {};
+    for (let creepType in Memory.rooms["E69N44"].creepMins) {
+    	Memory.rooms["E69N44"].creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.roomID == "E69N44" 
+    	    && c.memory.role == creepType);
     }
-    
-    Memory.repairerTypeCounts = {};
-    for (let repairerType in Memory.repairerTypeMins) {
-    	Memory.repairerTypeCounts[repairerType] = _.sum(Game.creeps, (c) => c.memory.repairerType == repairerType);
+    Memory.rooms["E68N45"].creepCounts = {};
+    for (let creepType in Memory.rooms["E68N45"].creepMins) {
+    	Memory.rooms["E68N45"].creepCounts[creepType] = _.sum(Game.creeps, (c) => c.memory.roomID == "E68N45" 
+    	    && c.memory.role == creepType);
+    }
+
+    Memory.rooms["E69N44"].repairerTypeCounts = {};
+    for (let repairerType in Memory.rooms["E69N44"].repairerTypeMins) {
+    	Memory.rooms["E69N44"].repairerTypeCounts[repairerType] = _.sum(Game.creeps, (c) => c.memory.roomID == "E69N44" 
+    	    && c.memory.repairerType == repairerType);
+    }
+    Memory.rooms["E68N45"].repairerTypeCounts = {};
+    for (let repairerType in Memory.rooms["E68N45"].repairerTypeMins) {
+    	Memory.rooms["E68N45"].repairerTypeCounts[repairerType] = _.sum(Game.creeps, (c) => c.memory.roomID == "E68N45" 
+    	    && c.memory.repairerType == repairerType);
     }
 
     var currentSpawnedRole = 0;
@@ -84,31 +112,40 @@ module.exports.loop = function () {
     var checkingForDrops = false;
     for (let name in Memory.creeps) {
         if (Game.creeps[name] == undefined) {
-            if (Memory.creeps[name].role != undefined && Memory.creepCounts[Memory.creeps[name].role] != undefined) {
-                currentSpawnedRole = Memory.creepCounts[Memory.creeps[name].role];
-                minimumSpawnedRole = Memory.creepMins[Memory.creeps[name].role];
+            var creepMemory = Memory.creeps[name];
+            if (creepMemory.role != undefined && Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role] != undefined) {
+                currentSpawnedRole = Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role];
+                minimumSpawnedRole = Memory.rooms[creepMemory.roomID].creepMins[creepMemory.role];
             }
-            console.log("Expired " + Memory.creeps[name].role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + name);
+            console.log("Expired " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + name);
             delete Memory.creeps[name];
             
             if (checkingForDrops == false) {
-                for (let roomID in Game.rooms) {
-                    Memory.checkForDrops[roomID] = true;
-                }
                 checkingForDrops = true;
             }
         }
     }
     
     for (let roomID in Game.rooms) {
-        if (Memory.checkForDrops[roomID] == true) {
-            Memory.checkForDrops[roomID] = false;
-            var droppedResources = Game.rooms[roomID].find(FIND_DROPPED_RESOURCES);
+        var theRoom = Game.rooms[roomID];
+        if (Memory.rooms[roomID] == undefined) {
+            Memory.rooms[roomID] = {};
+        }
+        if (Memory.rooms[roomID].checkForDrops == undefined) {
+            Memory.rooms[roomID].checkForDrops = true;
+        }
+        if (Memory.rooms[roomID].buildOrderFILO == undefined) {
+            Memory.rooms[roomID].buildOrderFILO = false
+        }
+        
+        if (Memory.rooms[roomID].checkForDrops == true || checkingForDrops == true) {
+            Memory.rooms[roomID].checkForDrops = false;
+            var droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
                 droppedResources.sort(function(a,b){return a.amount - b.amount});
                 for (let droppedResourceID in droppedResources) {
                     var droppedResource = droppedResources[droppedResourceID];
-					var assignedCreeps = Game.rooms[roomID].find(FIND_MY_CREEPS, {
+					var assignedCreeps = theRoom.find(FIND_MY_CREEPS, {
                         filter: (c) => (c.memory.droppedResourceID == droppedResource.id
                     )});
 					if (assignedCreeps.length == 0) {
@@ -118,6 +155,7 @@ module.exports.loop = function () {
                                 && c.memory.role != "attacker" 
                                 && c.memory.role != "powerHarvester"
                                 && c.memory.role != "adaptable" 
+                                && c.memory.role != "scout"
                                 && c.memory.role != "claimer" 
                                 && c.memory.role != "recyclable" 
                                 && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
@@ -129,6 +167,7 @@ module.exports.loop = function () {
                                     && c.memory.role != "attacker" 
                                     && c.memory.role != "powerHarvester"
                                     && c.memory.role != "adaptable" 
+                                    && c.memory.role != "scout"
                                     && c.memory.role != "claimer" 
                                     && c.memory.role != "recyclable" 
                                     && c.carryCapacity > 0 
@@ -141,6 +180,7 @@ module.exports.loop = function () {
                                         && c.memory.role != "attacker" 
                                         && c.memory.role != "powerHarvester"
                                         && c.memory.role != "adaptable" 
+                                        && c.memory.role != "scout"
                                         && c.memory.role != "claimer" 
                                         && c.memory.role != "recyclable" 
                                         && c.carryCapacity > 0 
@@ -150,35 +190,39 @@ module.exports.loop = function () {
                         }
                         if (creep != undefined) {
                             creep.memory.droppedResourceID = droppedResource.id;
-                            console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + droppedResource.room.name);
+                            console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(droppedResource.amount, creep.carryCapacity - _.sum(creep.carry)) + " of " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
                         }
                         else {
-                            console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + droppedResource.room.name);
-                            Memory.checkForDrops[roomID] = true;
+                            console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
+                            Memory.rooms[roomID].checkForDrops = true;
                     	}
 					}
                 }
             }
         }
         
-        var invaders = Game.rooms[roomID].find(FIND_HOSTILE_CREEPS);
+        var invaders = theRoom.find(FIND_HOSTILE_CREEPS);
         if (invaders.length > 0) {
-			if (Game.rooms[roomID].name == "E68N44" && Memory.E68N44EnergyAvaliable <= Game.time) {
+			if (roomID == "E68N44" && Memory.E68N44EnergyAvaliable <= Game.time) {
 				invaders.sort(function(i0,i1){return i0.ticksToLive - i1.ticksToLive});
                 Memory.E68N44EnergyAvaliable = Game.time + invaders[0].ticksToLive;
-				console.log("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + Game.rooms[roomID].name + " for " + invaders[0].ticksToLive + " ticks.");
-                Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + Game.rooms[roomID].name + " for " + invaders[0].ticksToLive + " ticks.", estSecPerTick * invaders[0].ticksToLive);
+				console.log("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.");
+                Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", estSecPerTick * invaders[0].ticksToLive);
 			}
+			
             for (let invader in invaders) {
 				// TODO: Find out who's invading the room, if they're CPU or player owned
             }
 			// TODO: Store IDs of invader with highest heal part count, or highest attack+work part count in memory for room so towers don't just target the closest one
-			for (let spawnID in Game.spawns) {
-				if (Game.spawns[spawnID].room.name == roomID && Game.spawns[spawnID].room.controller.safeMode == false && Game.spawns[spawnID].room.controller.safeModeAvaliable > 0) {
-					//Game.spawns.Spawn1.room.controller.activateSafeMode();
-					//console.log("Activated Safe Mode in: " + roomID);
-					//Game.notify("Activated Safe Mode in: " + roomID);
-				}
+			
+			var theController = theRoom.controller;
+			if (theController != undefined 
+			    && theController.my == true 
+			    && theController.safeMode == false 
+			    && theController.safeModeAvaliable > 0) {
+				//Game.spawns.Spawn1.room.controller.activateSafeMode();
+				//console.log("Activated Safe Mode in: " + roomID);
+				//Game.notify("Activated Safe Mode in: " + roomID);
 			}
         }
         
@@ -190,14 +234,15 @@ module.exports.loop = function () {
 			var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         	if(closestHostile != undefined) {
         	    tower.attack(closestHostile);
-        	    Game.notify("Tower attacking hostile.", 30);
+        	    Game.notify("Tower in " + roomID + " attacking hostile from " + closestHostile.owner, 30);
         	}
         	else {
         	    var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
         	        filter: (s) => (s.hits < s.hitsMax 
         	        	&& s.structureType != STRUCTURE_WALL
-        	            && s.structureType != STRUCTURE_RAMPART
         	            && s.structureType != STRUCTURE_ROAD
+        	            && s.structureType != STRUCTURE_RAMPART
+        	            && s.structureType != STRUCTURE_CONTAINER
         	    )});
         	    if(closestDamagedStructure != undefined) {
         	        tower.repair(closestDamagedStructure);
@@ -220,7 +265,7 @@ module.exports.loop = function () {
 				roleAttacker.run(creep);
 			}
             else if (creep.memory.role == "powerHarvester") {
-                rolePowerHarvester.run(creep);
+                rolePowerHarvester.run(creep); // NOTE: Runs hoarder role itself, if needed
             }
             else if (creep.carry != undefined && _.sum(creep.carry) > creep.carry.energy) {
                 roleHoarder.run(creep);
@@ -240,6 +285,9 @@ module.exports.loop = function () {
             else if (creep.memory.role == "repairer") {
                 roleRepairer.run(creep);
             }
+            else if (creep.memory.role == "scout") {
+                roleScout.run(creep);
+            }
             else if (creep.memory.role == "builder") {
                 roleBuilder.run(creep);
             }
@@ -251,16 +299,21 @@ module.exports.loop = function () {
             }
         }
     }
-
-    if (Game.spawns.Spawn1.spawning == undefined) {
-        for (let creepType in Memory.creepMins) {
-            if (Memory.creepCounts[creepType] < Memory.creepMins[creepType]) {
-                var name = Game.spawns.Spawn1.createCustomCreep(creepType);
-                if (name < 0 == false) {
-                    Memory.creepCounts[creepType] += 1;
-                    console.log("Spawning " + Game.creeps[name].memory.role + " (" + Memory.creepCounts[creepType] + "/" + Memory.creepMins[creepType] + "): " + name);
+    
+    for (let spawnID in Game.spawns) {
+        var spawn = Game.spawns[spawnID];
+        if (spawn.spawning == undefined) {
+            var roomID = spawn.room.name;
+            var creepMins = Memory.rooms[roomID].creepMins;
+            for (let creepType in creepMins) {
+                if (Memory.rooms[roomID].creepCounts[creepType] < creepMins[creepType]) {
+                    var creepName = spawn.createCustomCreep(creepType);
+                    if (creepName < 0 == false) {
+                        Memory.rooms[roomID].creepCounts[creepType] += 1;
+                        console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
+                    }
+                    break;
                 }
-                break;
             }
         }
     }

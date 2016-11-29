@@ -36,11 +36,11 @@ var rolePowerHarvester = {
                 }
             }
             else {
-                if (creep.room.name == Game.spawns["Spawn1"].room.name) {
+                if (creep.room.name == creep.memory.roomID) {
                     creep.suicide();
                 }
                 else {
-                    creep.moveTo(Game.spawns["Spawn1"]);
+                    creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
                 }
             }
         }
@@ -48,7 +48,7 @@ var rolePowerHarvester = {
             if (creep.carry[RESOURCE_POWER] != 0) {
                 var powerStorage = Game.getObjectById("5830f0cb5e8515625b0b6ee4");
                 if (powerStorage != undefined) {
-                    if (creep.room.name != "E69N44" || creep.transfer(powerStroage, RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
+                    if (creep.room.name != powerStorage.room.name || creep.transfer(powerStroage, RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(powerStorage);
                     }
                 }
