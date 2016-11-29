@@ -1,3 +1,4 @@
+require("prototype.source")();
 require("prototype.spawn")();
 var roleAttacker = require("role.attacker");
 var roleHoarder = require("role.hoarder");
