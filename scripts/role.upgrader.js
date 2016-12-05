@@ -15,22 +15,25 @@ var roleUpgrader = {
             }
         }
         else {
+            var source = undefined;
             if (creep.memory.roomID == "E69N44") {
-                var source = Game.getObjectById("57ef9efc86f108ae6e610381");
-                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(source);
-                }
+                source = Game.getObjectById("57ef9efc86f108ae6e610381");
             }
             else if (creep.memory.roomID == "E68N45") {
-                if (creep.room.name != "E68N45") {
-                    creep.moveTo(new RoomPosition(26, 24, "E68N45"));
-                }
-                else {
-                    var source = Game.getObjectById("57ef9ee786f108ae6e6101b3");
-                    if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(source);
-                    }
-                }
+                source = Game.getObjectById("57ef9ee786f108ae6e6101b3");
+            }
+            
+            var err = undefined;
+            if (source != undefined) {
+                err = creep.harvest(source);
+            }
+            
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source);
+            }
+            else if (err == ERR_NOT_ENOUGH_RESOURCES 
+                && creep.carry.energy > 0) {
+                creep.memory.working = true;
             }
         }
     }

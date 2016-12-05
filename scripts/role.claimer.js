@@ -3,7 +3,7 @@ var roleClaimer = {
     run: function(creep) {
         
         if (creep.room.name != "E68N44" && creep.memory.controllerID == "57ef9ee786f108ae6e6101b5") {
-            creep.moveTo(new RoomPosition(25, 1, "E68N44"));
+            creep.moveTo(new RoomPosition(25, 11, "E68N44"));
         }
         else {
             var theController = Game.getObjectById(creep.memory.controllerID);
@@ -11,15 +11,15 @@ var roleClaimer = {
                 var err = ERR_GCL_NOT_ENOUGH;
                 // TODO: Add if case for when claimer has 5+ claim parts and controller.my == false to attack controller
                 if (creep.memory.controllerID != "57ef9ee786f108ae6e6101b5") {
-                    err = creep.claimController(creep.room.controller);
+                    err = creep.claimController(theController);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(creep.room.controller);
+                        creep.moveTo(theController);
                     }
                 }
                 if (err == ERR_GCL_NOT_ENOUGH) {
-                    err = creep.reserveController(creep.room.controller);
-                    if (creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(creep.room.controller);
+                    err = creep.reserveController(theController);
+                    if (creep.reserveController(theController) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(theController);
                     }
                 }
                 if (err != OK && err != ERR_NOT_IN_RANGE) {

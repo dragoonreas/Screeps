@@ -8,7 +8,7 @@ var roleScout = {
         else {
             var hostiles = creep.room.find(FIND_HOSTILE_CREEPS);
             if (hostiles.length > 0) {
-                Game.notify("Hostiles from " + hostiles[0].owner + " sighted in " + creep.room.name, 5);
+                Game.notify("Hostiles from " + hostiles[0].owner.username + " sighted in " + creep.room.name, 5);
             }
             else {
                 creep.moveTo(new RoomPosition(25, 25, "E67N45"));

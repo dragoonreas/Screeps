@@ -79,27 +79,35 @@ var roleBuilder = {
             }
         }
         else {
+            var source = undefined;
             if (creep.memory.roomID == "E69N44") {
                 /*
-                var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
                     filter: (s) => s.id != "57ef9efc86f108ae6e610381"
                 });
                 */
-                var source = Game.getObjectById("57ef9efc86f108ae6e610380");
-                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(source);
-                }
+                source = Game.getObjectById("57ef9efc86f108ae6e610380");
             }
             else if (creep.memory.roomID == "E68N45") {
                 /*
-                var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
+                source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
                     filter: (s) => s.id != "57ef9ee786f108ae6e6101b3"
                 });
                 */
-                var source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
-                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(source);
-                }
+                source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
+            }
+            
+            var err = undefined;
+            if (source != undefined) {
+                err = creep.harvest(source);
+            }
+            
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source);
+            }
+            else if (err == ERR_NOT_ENOUGH_RESOURCES 
+                && creep.carry.energy > 0) {
+                creep.memory.working = true;
             }
         }
     }

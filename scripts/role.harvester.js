@@ -36,6 +36,10 @@ var roleHarvester = {
                             Memory.E68N44EnergyAvaliable = Game.time + source.ticksToRegeneration;
                             console.log("E68N44's energy source will regen in " + source.ticksToRegeneration + " ticks");
                         }
+                        else if (creep.memory.sourceID == "57ef9efc86f108ae6e610380" 
+                            && creep.carry.energy > 0) {
+                            creep.memory.working = true;
+                        }
                         creep.memory.sourceID = undefined;
                     }
                     else if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
@@ -50,8 +54,13 @@ var roleHarvester = {
                 var source = Game.getObjectById(creep.memory.sourceID);
                 */
                 var source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
-                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                var err = creep.harvest(source);
+                if(err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(source);
+                }
+                else if (err == ERR_NOT_ENOUGH_RESOURCES 
+                    && creep.carry.energy > 0) {
+                    creep.memory.working = true;
                 }
             }
         }

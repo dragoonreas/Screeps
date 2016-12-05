@@ -45,8 +45,8 @@ var roleAttacker = {
                     var entrances = [
 						{ x: 12, y: 30 }
                         , { x: 25, y: 5 }
-                        , { x: 35, y: 5 }
-                        , { x: 47, y: 7 }
+                        , { x: 36, y: 5 }
+                        , { x: 45, y: 7 }
                         , { x: 39, y: 27 }
                     ];
                     for (let i = 0; i < entrances.length; ++i) {
