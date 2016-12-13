@@ -1,18 +1,18 @@
 var prototypeMemory = function() {
     
-    Object.defineProperty(Memory.prototype, "sources", {
+    Object.defineProperty(Memory, "sources", {
 
         get: function() {
             var handler = {
                 get: function(target, sourceID) {
                     var source = Game.getObjectById(sourceID);
                     if (source != undefined) {
-                        return Memory.rooms[source.room.name].sources[sourceID];
+                        return _.get(Memory, ["rooms", source.room.name, "sources", sourceID], undefined);
                     }
                     for (roomID in Memory.rooms) {
-                        var roomMem = Memory.rooms[roomID].sources;
-                        if (roomMem[sourceID] != undefined) {
-                            return roomMem[sourceID];
+                        var sourceMem = _.get(Memory, ["rooms", roomID, "sources", sourceID], undefined);
+                        if (sourceMem != undefined) {
+                            return sourceMem;
                         }
                     }
                     return undefined;
@@ -21,13 +21,13 @@ var prototypeMemory = function() {
                 set: function(target, sourceID, value) {
                     var source = Game.getObjectById(sourceID);
                     if (source != undefined) {
-                        Memory.rooms[source.room.name].sources[sourceID] = value;
+                        _.set(Memory, ["rooms", source.room.name, "sources", sourceID], value);
                         return true;
                     }
                     for (roomID in Memory.rooms) {
-                        var roomMem = Memory.rooms[roomID].sources;
-                        if (roomMem[sourceID] != undefined) {
-                            roomMem[sourceID] = value;
+                        var sourceMem = _.get(Memory, ["rooms", roomID, "sources", sourceID], undefined);
+                        if (sourceMem != undefined) {
+                            sourceMem = value;
                             return true;
                         }
                     }
@@ -44,4 +44,4 @@ var prototypeMemory = function() {
 
 }
 
-module.exports = prototypeSource;
+module.exports = prototypeMemory;

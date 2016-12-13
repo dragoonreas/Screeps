@@ -12,7 +12,7 @@ var roleHarvester = {
         if (creep.memory.working == false) {
             if (creep.memory.roomID == "E69N44") {
                 if (creep.memory.sourceID == undefined) {
-                    if (Memory.sources["57ef9ee786f108ae6e6101b6"].regenAt <= Game.time) {
+                    if (Memory.E68N44EnergyAvaliable <= Game.time) {
                         creep.memory.sourceID = "57ef9ee786f108ae6e6101b6";
                     }
                     else {
@@ -21,7 +21,7 @@ var roleHarvester = {
                 }
                 if (creep.memory.sourceID == "57ef9ee786f108ae6e6101b6" 
                     && creep.room.name != "E68N44" 
-                    && Memory.sources["57ef9ee786f108ae6e6101b6"].regenAt <= Game.time) {
+                    && Memory.E68N44EnergyAvaliable <= Game.time) {
                     creep.moveTo(new RoomPosition(40, 43, "E68N44"));
                 }
                 else if (creep.memory.sourceID == "57ef9efc86f108ae6e610380" 
@@ -32,8 +32,8 @@ var roleHarvester = {
                     var source = Game.getObjectById(creep.memory.sourceID);
                     if (source.energy == 0) {
                         if (creep.memory.sourceID == "57ef9ee786f108ae6e6101b6" 
-                            && Memory.sources["57ef9ee786f108ae6e6101b6"].regenAt < Game.time + source.ticksToRegeneration) {
-                            Memory.sources["57ef9ee786f108ae6e6101b6"].regenAt = Game.time + source.ticksToRegeneration;
+                            && Memory.E68N44EnergyAvaliable < Game.time + source.ticksToRegeneration) {
+                            Memory.E68N44EnergyAvaliable = Game.time + source.ticksToRegeneration;
                             console.log("E68N44's energy source will regen in " + source.ticksToRegeneration + " ticks");
                         }
                         else if (creep.memory.sourceID == "57ef9efc86f108ae6e610380" 
@@ -54,6 +54,20 @@ var roleHarvester = {
                 var source = Game.getObjectById(creep.memory.sourceID);
                 */
                 var source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
+                var err = creep.harvest(source);
+                if(err == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source);
+                }
+                else if (err == ERR_NOT_ENOUGH_RESOURCES 
+                    && creep.carry.energy > 0) {
+                    creep.memory.working = true;
+                }
+            }
+            else if (creep.memory.roomID == "E54N9") {
+                var source = Game.getObjectById("579faa250700be0674d307cb");
+                if (source.energy == 0) {
+                    source.Game.getObjectById("579faa250700be0674d307ca");
+                }
                 var err = creep.harvest(source);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(source);

@@ -105,6 +105,12 @@ var roleRepairer = {
                 */
                 source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
             }
+            else if (creep.memory.roomID == "E54N9") {
+                source = Game.getObjectById("579faa250700be0674d307cb");
+                if (source.energy == 0) {
+                    source.Game.getObjectById("579faa250700be0674d307ca");
+                }
+            }
             
             var err = undefined;
             if (source != undefined) {

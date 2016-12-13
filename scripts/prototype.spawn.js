@@ -46,11 +46,11 @@ var prototypeSpawn = function() {
         }
 
         var bodyCost = 0;
-        for (bodyPart in bodyTemplate) {
-            bodyCost += BODYPART_COST[bodyPart];
+        for (let partIndex in bodyTemplate) {
+            bodyCost += BODYPART_COST[bodyTemplate[partIndex]];
         }
         bodyCost += bodyTemplate.length * moveRatio * BODYPART_COST[MOVE];
-        
+
         var energyAvaliable = this.room.energyCapacityAvailable;
         if (moveRatio == 0) {
             energyAvaliable -= BODYPART_COST[MOVE]; // when move ratio is 0, remove energy from the total avaliable to account for the 1 mandatory move part that will be added that's not included in the body cost
