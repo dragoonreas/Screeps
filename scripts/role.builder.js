@@ -27,7 +27,7 @@ var roleBuilder = {
                     }
                 }
                 if (roomConstructionSites.length > 0) {
-                    if (Memory.rooms[creep.room.name].buildOrderFILO == true) {
+                    if (creep.room.buildOrderFILO == true) {
                         constructionSite = roomConstructionSites[roomConstructionSites.length - 1];
                         creep.memory.constuctionSiteID = constructionSite.id;
                     }

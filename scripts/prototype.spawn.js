@@ -5,38 +5,55 @@ var prototypeSpawn = function() {
     StructureSpawn.prototype.createCustomCreep =
         function(roleName) {
         
+        /*
+            The move ratio is the ratio of move parts to the total of all the other types of parts in the body of the creep.
+            It should only need to be set to one of the following three values:
+            • 5: To maintain a speed of 1 per tick over swamp terrain
+            • 2: To maintain a speed of 1 per tick over plain terrain
+            • 1: To maintain a speed of 1 per tick over roads
+            • 0: To maintain the slowest speed using only a single move part
+        */
         var moveRatio = 2;
-        var bodyCost = 250; // 1 work + 1 carry + 2 move = 1*100 + 1*50 + 2*50 = 250
+
+        /*
+            The body template describes the smallest version of the body the creep will have, minus move parts
+            Except for tough parts and move parts, which are always placed at the front of the creep (except for the last move part, which is placed at the end), parts are placed in the order of the first occurance of that part and in ratios relative to the rest of the parts
+        */
+        var bodyTemplate = [WORK, CARRY];
         if (roleName == "attacker") {
             moveRatio = 1;
-            bodyCost = 130; // 1 attack + 1 move = 1*80 + 1*50 = 130
+            bodyTemplate = [ATTACK];
         }
-        if (roleName == "powerHarvester") {
+        else if (roleName == "powerHarvester") {
             moveRatio = 1;
-            bodyCost = 430; // 1 attack + 1 heal + 1 carry + 1 move = 1*80 + 1*250 + 1*50 + 1*50 = 430
+            bodyTemplate = [ATTACK, HEAL, CARRY];
         }
         else if (roleName == "upgrader") {
             if (this.room.name == "E68N45") {
-                moveRatio = 0; // source dedicated to upgrading is right next to the controller in this room, and the spawner is very close too, so only need 1 move
-                bodyCost = 150; // 1 work + 1 carry = 1*100 + 1*50 = 150
+                moveRatio = 0; // source dedicated to upgrading is right next to the controller in this room, and the spawner is very close too, so only need 1 move part
             }
             else {
-                moveRatio = 1;
-                bodyCost = 200; // 1 work + 1 carry + 1 move = 1*100 + 1*50 + 1*50 = 200
+                moveRatio = 1; // should really be 2, but their current travel times make it so that in combination with the rest of the parameters being used right now they just happen to deplete their source right around the time it refreshes
             }
         }
         else if (roleName == "scout") {
             moveRatio = 1;
-            bodyCost = 50; // 1 move = 1*50 = 50
+            bodyTemplate = [];
         }
         else if (roleName == "claimer") {
             moveRatio = 1;
-            bodyCost = 650; // 1 claim + 1 move = 1*600 + 1*50 = 650
+            bodyTemplate = [CLAIM];
         }
+
+        var bodyCost = 0;
+        for (bodyPart in bodyTemplate) {
+            bodyCost += BODYPART_COST[bodyPart];
+        }
+        bodyCost += bodyTemplate.length * moveRatio * BODYPART_COST[MOVE];
         
         var energyAvaliable = this.room.energyCapacityAvailable;
         if (moveRatio == 0) {
-            energyAvaliable -= 50; // when move ratio is 0, remove 50 energy from the total avaliable to account for the 1 mandatory move part that will be added that's not included in the body cost
+            energyAvaliable -= BODYPART_COST[MOVE]; // when move ratio is 0, remove energy from the total avaliable to account for the 1 mandatory move part that will be added that's not included in the body cost
         }
         
         /*
@@ -65,41 +82,21 @@ var prototypeSpawn = function() {
         else if (roleName == "powerHarvester") {
             partMultiplier = Math.floor(energyAvaliable / bodyCost); // go all out since the power banks are only avaliable for a limited time
         }
-        //else if (roleName == "claimer") {
-            //partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * 2) / bodyCost); // prefer 2 claim parts to build reserve, but will make do with 1 when there's not enough extentions in the room, since it still increases the sources reserves in the room
-        //}
         
+        var bodyPartCounts = _.countBy(bodyTemplate);
+
         var body = [];
-        for (let i = 0; i < (partMultiplier * moveRatio) - 1; i++) { // use all but one move part as first line of defence, when not using tough parts
+        for (let i = 0; i < (partMultiplier * (bodyPartCounts[TOUGH] || 0)); i++) { // add any tough parts first
+            body.push(TOUGH);
+        }
+        for (let i = 0; i < (partMultiplier * moveRatio) - 1; i++) { // use all but one move part as first line of defence, after any tough parts
             body.push(MOVE);
         }
-        if (roleName == "attacker") {
-            for (let i = 0; i < partMultiplier; i++) {
-                body.push(ATTACK);
-            }
-        }
-        else if (roleName == "claimer") {
-            for (let i = 0; i < partMultiplier; i++) {
-                body.push(CLAIM);
-            }
-        }
-        else if (roleName == "powerHarvester") {
-            for (let i = 0; i < partMultiplier; i++) {
-                body.push(CARRY);
-            }
-            for (let i = 0; i < partMultiplier; i++) {
-                body.push(ATTACK);
-            }
-            for (let i = 0; i < partMultiplier; i++) {
-                body.push(HEAL);
-            }
-        }
-        else if (roleName != "scout") {
-            for (let i = 0; i < partMultiplier; i++) {
-                body.push(CARRY);
-            }
-            for (let i = 0; i < partMultiplier; i++) {
-                body.push(WORK);
+        for (bodyPart in bodyPartCounts) { // add any remaining parts in the order they first occured
+            if (bodyPart != TOUGH) {
+                for (let i = 0; i < (partMultiplier * bodyPartCounts[bodyPart]); i++) {
+                    body.push(bodyPart);
+                }
             }
         }
         body.push(MOVE); // ensures creep is always able to move

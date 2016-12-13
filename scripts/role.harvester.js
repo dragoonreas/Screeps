@@ -12,7 +12,7 @@ var roleHarvester = {
         if (creep.memory.working == false) {
             if (creep.memory.roomID == "E69N44") {
                 if (creep.memory.sourceID == undefined) {
-                    if (Memory.E68N44EnergyAvaliable <= Game.time) {
+                    if (Memory.sources["57ef9ee786f108ae6e6101b6"].regenAt <= Game.time) {
                         creep.memory.sourceID = "57ef9ee786f108ae6e6101b6";
                     }
                     else {
@@ -21,7 +21,7 @@ var roleHarvester = {
                 }
                 if (creep.memory.sourceID == "57ef9ee786f108ae6e6101b6" 
                     && creep.room.name != "E68N44" 
-                    && Memory.E68N44EnergyAvaliable <= Game.time) {
+                    && Memory.sources["57ef9ee786f108ae6e6101b6"].regenAt <= Game.time) {
                     creep.moveTo(new RoomPosition(40, 43, "E68N44"));
                 }
                 else if (creep.memory.sourceID == "57ef9efc86f108ae6e610380" 
@@ -32,8 +32,8 @@ var roleHarvester = {
                     var source = Game.getObjectById(creep.memory.sourceID);
                     if (source.energy == 0) {
                         if (creep.memory.sourceID == "57ef9ee786f108ae6e6101b6" 
-                            && Memory.E68N44EnergyAvaliable < Game.time + source.ticksToRegeneration) {
-                            Memory.E68N44EnergyAvaliable = Game.time + source.ticksToRegeneration;
+                            && Memory.sources["57ef9ee786f108ae6e6101b6"].regenAt < Game.time + source.ticksToRegeneration) {
+                            Memory.sources["57ef9ee786f108ae6e6101b6"].regenAt = Game.time + source.ticksToRegeneration;
                             console.log("E68N44's energy source will regen in " + source.ticksToRegeneration + " ticks");
                         }
                         else if (creep.memory.sourceID == "57ef9efc86f108ae6e610380" 
