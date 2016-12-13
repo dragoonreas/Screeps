@@ -159,7 +159,8 @@ module.exports.loop = function () {
     }
 
     for (let roomID in Memory.rooms) {
-        if (Game.rooms[roomID] == undefined && Memory.rooms[roomID].memoryExpiration < Game.time) {
+        if (Game.rooms[roomID] == undefined 
+            && (Memory.rooms[roomID].memoryExpiration || 0) < Game.time) {
             console.log("Running garbage collection on room memory: " + roomID);
             delete Memory.rooms[roomID];
         }

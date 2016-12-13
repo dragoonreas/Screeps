@@ -66,7 +66,7 @@ var roleHarvester = {
             else if (creep.memory.roomID == "E54N9") {
                 var source = Game.getObjectById("579faa250700be0674d307cb");
                 if (source.energy == 0) {
-                    source.Game.getObjectById("579faa250700be0674d307ca");
+                    source = Game.getObjectById("579faa250700be0674d307ca");
                 }
                 var err = creep.harvest(source);
                 if(err == ERR_NOT_IN_RANGE) {
