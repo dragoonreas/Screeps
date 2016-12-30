@@ -1,4 +1,5 @@
-﻿var roleAttacker = require("role.attacker");
+﻿
+var roleAttacker = require("role.attacker");
 var roleHoarder = require("role.hoarder");
 var roleCollector = require("role.collector");
 var roleHarvester = require("role.harvester");
