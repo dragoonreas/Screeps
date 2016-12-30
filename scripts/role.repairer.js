@@ -1,4 +1,5 @@
 var roleBuilder = require("role.builder");
+var roleHarvester = require("role.harvester");
 
 var roleRepairer = {
 	
@@ -6,34 +7,30 @@ var roleRepairer = {
 		
         if (creep.memory.working == true && _.sum(creep.carry) == 0) {
             creep.memory.working = false;
-            creep.memory.structureID = undefined;
+            creep.memory.repairStructureID = undefined;
         }
         else if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }
         
         if (creep.memory.working == true) {
-            var structure = Game.getObjectById(creep.memory.structureID);
+            var structure = Game.getObjectById(creep.memory.repairStructureID);
 			if (structure != undefined 
 			    && structure.structureType != STRUCTURE_TOWER 
                 && structure.hits == structure.hitsMax) {
 				structure = undefined;
-				creep.say("Repaired!");
 			}
 			else if (structure != undefined 
 			    && structure.structureType == STRUCTURE_TOWER 
 			    && structure.energy == structure.energyCapacity) {
 			    structure = undefined;
-			    creep.say("Full!");
 		    }
 		    
             if(structure == undefined) {
                 structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (s) => {
-                    return s.structureType == STRUCTURE_TOWER 
-                        && s.energy < s.energyCapacity;
-                    }
-                });
+                filter: (s) => (s.structureType == STRUCTURE_TOWER 
+                    && s.energy < s.energyCapacity
+                )});
             }
             
             if (structure == undefined) {
@@ -42,6 +39,11 @@ var roleRepairer = {
                     if (repairerTypeFound == false && (repairerType == creep.memory.repairerType || repairerType == "all")) {
                         repairerTypeFound = true;
                     }
+                    
+                    if (creep.memory.roomID == "E39N17" && repairerType != creep.memory.repairerType) {
+                        continue;
+                    }
+                    
                     if (repairerTypeFound == true) {
                         if (repairerType == STRUCTURE_ROAD) {
         					structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -71,58 +73,113 @@ var roleRepairer = {
 			}
             
             if (structure != undefined) {
-				creep.memory.structureID = structure.id;
+				creep.memory.repairStructureID = structure.id;
+				
+                var err = undefined;
+                var actionIcon = "?";
                 if(structure.structureType == STRUCTURE_TOWER 
                     && structure.energy < structure.energyCapacity) {
-                    if(creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(structure);
-                    }
+                    err = creep.transfer(structure, RESOURCE_ENERGY);
+                    actionIcon = "⬆";
                 }
-                else if (creep.repair(structure) == ERR_NOT_IN_RANGE) {
+                else {
+                    err = creep.repair(structure);
+                    actionIcon = "🔧";
+                }
+                
+                var structureIcon = "?";
+                switch (structure.structureType) {
+                    case STRUCTURE_SPAWN: structureIcon = "🏥"; break;
+                    case STRUCTURE_EXTENSION: structureIcon = "🏘"; break;
+                    case STRUCTURE_CONTAINER: structureIcon = "🛢"; break;
+                    case STRUCTURE_STORAGE: structureIcon = "🏦"; break;
+                    case STRUCTURE_RAMPART: structureIcon = "🚧"; break;
+                    case STRUCTURE_WALL: structureIcon = "⛰"; break;
+                    case STRUCTURE_TOWER: structureIcon = "🔫"; break;
+                    case STRUCTURE_ROAD: structureIcon = "🛣"; break;
+                    case STRUCTURE_LINK: structureIcon = "🏤"; break;
+                    case STRUCTURE_EXTRACTOR: structureIcon = "🏭"; break;
+                    case STRUCTURE_LAB: structureIcon = "⚗"; break;
+                    case STRUCTURE_TERMINAL: structureIcon = "🏬"; break;
+                    case STRUCTURE_OBSERVER: structureIcon = "📡"; break;
+                    case STRUCTURE_POWER_SPAWN: structureIcon = "🏛"; break;
+                    case STRUCTURE_NUKER: structureIcon = "☢"; break;
+                }
+                
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.say("➡" + structureIcon, true);
                     creep.moveTo(structure);
+                }
+                else if (err == OK) {
+                    creep.say(actionIcon + structureIcon, true);
                 }
             }
             else {
-				creep.memory.structureID = undefined;
+				creep.memory.repairStructureID = undefined;
                 roleBuilder.run(creep);
             }
         }
         else {
             var source = undefined;
-            if (creep.memory.roomID == "E69N44") {
-                /*
-                source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
-                    filter: (s) => s.id != "57ef9efc86f108ae6e610381"
-                });
-                */
-                source = Game.getObjectById("57ef9efc86f108ae6e610380");
+            switch (creep.memory.roomID) {
+                case "E69N44": source = Game.getObjectById("57ef9efc86f108ae6e610380"); break;
+                case "E68N45": source = Game.getObjectById("57ef9ee786f108ae6e6101b2"); break;
+                case "E54N9": {
+                    source = Game.getObjectById("579faa250700be0674d307cb");
+                    if (source.energy == 0) {
+                        source = Game.getObjectById("579faa250700be0674d307ca");
+                    }
+                } break;
+                case "E68N45": roleHarvester.run(creep); return;
+                case "E39N17": roleHarvester.run(creep); return;
+                case "E43N18": roleHarvester.run(creep); return;
+                case "W53N32": roleHarvester.run(creep); return;
             }
-            else if (creep.memory.roomID == "E68N45") {
-                /*
-                source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE, {
-                    filter: (s) => s.id != "57ef9ee786f108ae6e6101b3"
-                });
-                */
-                source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
-            }
-            else if (creep.memory.roomID == "E54N9") {
-                source = Game.getObjectById("579faa250700be0674d307cb");
-                if (source.energy == 0) {
-                    source = Game.getObjectById("579faa250700be0674d307ca");
+            
+            if (source != undefined) {
+                var err = creep.harvest(source);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.say("➡⛏", true);
+                    creep.moveTo(source);
+                }
+                else if (err == ERR_NOT_ENOUGH_RESOURCES 
+                    && creep.carry.energy > 0) {
+                    creep.memory.working = true;
+                }
+                else if (err == OK) {
+                    creep.say("⛏", true);
+                }
+                else {
+                    switch (creep.saying) {
+                        case "🕛⛏": creep.say("🕧⛏", true); break;
+                        case "🕧⛏": creep.say("🕐⛏", true); break;
+                        case "🕐⛏": creep.say("🕜⛏", true); break;
+                        case "🕜⛏": creep.say("🕑⛏", true); break;
+                        case "🕑⛏": creep.say("🕝⛏", true); break;
+                        case "🕝⛏": creep.say("🕒⛏", true); break;
+                        case "🕒⛏": creep.say("🕞⛏", true); break;
+                        case "🕞⛏": creep.say("🕓⛏", true); break;
+                        case "🕓⛏": creep.say("🕟⛏", true); break;
+                        case "🕟⛏": creep.say("🕔⛏", true); break;
+                        case "🕔⛏": creep.say("🕠⛏", true); break;
+                        case "🕠⛏": creep.say("🕕⛏", true); break;
+                        case "🕕⛏": creep.say("🕡⛏", true); break;
+                        case "🕡⛏": creep.say("🕖⛏", true); break;
+                        case "🕖⛏": creep.say("🕢⛏", true); break;
+                        case "🕢⛏": creep.say("🕗⛏", true); break;
+                        case "🕗⛏": creep.say("🕣⛏", true); break;
+                        case "🕣⛏": creep.say("🕘⛏", true); break;
+                        case "🕘⛏": creep.say("🕤⛏", true); break;
+                        case "🕤⛏": creep.say("🕙⛏", true); break;
+                        case "🕙⛏": creep.say("🕥⛏", true); break;
+                        case "🕥⛏": creep.say("🕚⛏", true); break;
+                        case "🕚⛏": creep.say("🕦⛏", true); break;
+                        default: creep.say("🕛⛏", true);
+                    }
                 }
             }
-            
-            var err = undefined;
-            if (source != undefined) {
-                err = creep.harvest(source);
-            }
-            
-            if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
-            }
-            else if (err == ERR_NOT_ENOUGH_RESOURCES 
-                && creep.carry.energy > 0) {
-                creep.memory.working = true;
+            else {
+                creep.say("⛏?", true);
             }
         }
     }
