@@ -37,7 +37,7 @@ var roleMiner = {
             if (source != undefined) {
                 var err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say("➡⛏", true);
+                    creep.say("\u27A1\u26CF", true);
                     creep.moveTo(source);
                 }
                 else if (err == ERR_NOT_ENOUGH_RESOURCES 
@@ -45,39 +45,39 @@ var roleMiner = {
                     creep.memory.working = true;
                 }
                 else if (err == OK) {
-                    creep.say("⛏", true);
+                    creep.say("\u26CF", true);
                 }
                 else {
                     switch (creep.saying) {
-                        case "🕛⛏": creep.say("🕧⛏", true); break;
-                        case "🕧⛏": creep.say("🕐⛏", true); break;
-                        case "🕐⛏": creep.say("🕜⛏", true); break;
-                        case "🕜⛏": creep.say("🕑⛏", true); break;
-                        case "🕑⛏": creep.say("🕝⛏", true); break;
-                        case "🕝⛏": creep.say("🕒⛏", true); break;
-                        case "🕒⛏": creep.say("🕞⛏", true); break;
-                        case "🕞⛏": creep.say("🕓⛏", true); break;
-                        case "🕓⛏": creep.say("🕟⛏", true); break;
-                        case "🕟⛏": creep.say("🕔⛏", true); break;
-                        case "🕔⛏": creep.say("🕠⛏", true); break;
-                        case "🕠⛏": creep.say("🕕⛏", true); break;
-                        case "🕕⛏": creep.say("🕡⛏", true); break;
-                        case "🕡⛏": creep.say("🕖⛏", true); break;
-                        case "🕖⛏": creep.say("🕢⛏", true); break;
-                        case "🕢⛏": creep.say("🕗⛏", true); break;
-                        case "🕗⛏": creep.say("🕣⛏", true); break;
-                        case "🕣⛏": creep.say("🕘⛏", true); break;
-                        case "🕘⛏": creep.say("🕤⛏", true); break;
-                        case "🕤⛏": creep.say("🕙⛏", true); break;
-                        case "🕙⛏": creep.say("🕥⛏", true); break;
-                        case "🕥⛏": creep.say("🕚⛏", true); break;
-                        case "🕚⛏": creep.say("🕦⛏", true); break;
-                        default: creep.say("🕛⛏", true);
+                        case "\u1f55b\u26CF": creep.say("\u1f567\u26CF", true); break;
+                        case "\u1f567\u26CF": creep.say("\u1f550\u26CF", true); break;
+                        case "\u1f550\u26CF": creep.say("\u1f55c\u26CF", true); break;
+                        case "\u1f55c\u26CF": creep.say("\u1f551\u26CF", true); break;
+                        case "\u1f551\u26CF": creep.say("\u1f55d\u26CF", true); break;
+                        case "\u1f55d\u26CF": creep.say("\u1f552\u26CF", true); break;
+                        case "\u1f552\u26CF": creep.say("\u1f55e\u26CF", true); break;
+                        case "\u1f55e\u26CF": creep.say("\u1f553\u26CF", true); break;
+                        case "\u1f553\u26CF": creep.say("\u1f55f\u26CF", true); break;
+                        case "\u1f55f\u26CF": creep.say("\u1f554\u26CF", true); break;
+                        case "\u1f554\u26CF": creep.say("\u1f560\u26CF", true); break;
+                        case "\u1f560\u26CF": creep.say("\u1f555\u26CF", true); break;
+                        case "\u1f555\u26CF": creep.say("\u1f561\u26CF", true); break;
+                        case "\u1f561\u26CF": creep.say("\u1f556\u26CF", true); break;
+                        case "\u1f556\u26CF": creep.say("\u1f562\u26CF", true); break;
+                        case "\u1f562\u26CF": creep.say("\u1f557\u26CF", true); break;
+                        case "\u1f557\u26CF": creep.say("\u1f563\u26CF", true); break;
+                        case "\u1f563\u26CF": creep.say("\u1f558\u26CF", true); break;
+                        case "\u1f558\u26CF": creep.say("\u1f564\u26CF", true); break;
+                        case "\u1f564\u26CF": creep.say("\u1f559\u26CF", true); break;
+                        case "\u1f559\u26CF": creep.say("\u1f565\u26CF", true); break;
+                        case "\u1f565\u26CF": creep.say("\u1f55a\u26CF", true); break;
+                        case "\u1f55a\u26CF": creep.say("\u1f566\u26CF", true); break;
+                        default: creep.say("\u1f55b\u26CF", true);
                     }
                 }
             }
             else {
-                creep.say("⛏?", true);
+                creep.say("\u26CF?", true);
             }
         }
     }

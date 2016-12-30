@@ -1,6 +1,7 @@
 var roleHoarder = require("role.hoarder");
 var roleHarvester = require("role.harvester");
 
+// TODO: Creep.say emotes
 var rolePowerHarvester = {
     
     run: function(creep) {

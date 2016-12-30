@@ -13,7 +13,6 @@ var roleAttacker = {
             invader = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             if (invader != undefined) {
                 creep.memory.invaderID = invader.id;
-                creep.say("Attack!");
             }
             else {
                 creep.memory.invaderID = undefined;
@@ -21,8 +20,13 @@ var roleAttacker = {
         }
         
         if (invader != undefined) {
-            if (creep.attack(invader) == ERR_NOT_IN_RANGE) {
+            var err = creep.attack(invader);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.say("\u27A1\1F5E1");
                 creep.moveTo(invader);
+            }
+            else if (err == OK) {
+                creep.say("\1F5E1");
             }
         }
         else {
@@ -31,7 +35,6 @@ var roleAttacker = {
                 structure = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
                 if (structure != undefined) {
                     creep.memory.structureID = structure.id;
-                    creep.say("Attack!");
                 }
                 else {
                     creep.memory.structureID = undefined;
@@ -39,8 +42,13 @@ var roleAttacker = {
             }
             
             if (structure != undefined) {
-                if (creep.attack(structure) == ERR_NOT_IN_RANGE) {
+                var err = creep.attack(structure);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.say("\u27A1\1F5E1");
                     creep.moveTo(structure);
+                }
+                else if (err == OK) {
+                    creep.say("\1F5E1");
                 }
             }
             else if (creep.room.name == "E68N45") {
@@ -56,6 +64,7 @@ var roleAttacker = {
                         break;
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
+                        creep.say("\u27A1\u1f6a7");
                         creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "E68N45"));
                         break;
                     }

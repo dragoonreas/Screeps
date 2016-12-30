@@ -86,30 +86,30 @@ var roleBuilder = {
             if(constructionSite != undefined) {
                 var structureIcon = "?";
                 switch (constructionSite.structureType) {
-                    case STRUCTURE_SPAWN: structureIcon = "🏥"; break;
-                    case STRUCTURE_EXTENSION: structureIcon = "🏪"; break;
-                    case STRUCTURE_CONTAINER: structureIcon = "📤"; break;
-                    case STRUCTURE_STORAGE: structureIcon = "🏦"; break;
-                    case STRUCTURE_RAMPART: structureIcon = "🚧"; break;
-                    case STRUCTURE_WALL: structureIcon = "⛰"; break;
-                    case STRUCTURE_TOWER: structureIcon = "🔫"; break
-                    case STRUCTURE_ROAD: structureIcon = "🛣"; break;
-                    case STRUCTURE_LINK: structureIcon = "📮"; break;
-                    case STRUCTURE_EXTRACTOR: structureIcon = "🏭"; break;
-                    case STRUCTURE_LAB: structureIcon = "⚗"; break;
-                    case STRUCTURE_TERMINAL: structureIcon = "🏬"; break;
-                    case STRUCTURE_OBSERVER: structureIcon = "📡"; break;
-                    case STRUCTURE_POWER_SPAWN: structureIcon = "🏛"; break;
-                    case STRUCTURE_NUKER: structureIcon = "☢"; break;
+                    case STRUCTURE_SPAWN: structureIcon = "\u1f3e5"; break;
+                    case STRUCTURE_EXTENSION: structureIcon = "\u1f3ea"; break;
+                    case STRUCTURE_CONTAINER: structureIcon = "\u1f4e4"; break;
+                    case STRUCTURE_STORAGE: structureIcon = "\u1F3E6"; break;
+                    case STRUCTURE_RAMPART: structureIcon = "\u1f6a7"; break;
+                    case STRUCTURE_WALL: structureIcon = "\u26f0"; break;
+                    case STRUCTURE_TOWER: structureIcon = "\u1f52b"; break
+                    case STRUCTURE_ROAD: structureIcon = "\u1f6e3"; break;
+                    case STRUCTURE_LINK: structureIcon = "\u1f4ee"; break;
+                    case STRUCTURE_EXTRACTOR: structureIcon = "\u1f3ed"; break;
+                    case STRUCTURE_LAB: structureIcon = "\u2697"; break;
+                    case STRUCTURE_TERMINAL: structureIcon = "\u1f3ec"; break;
+                    case STRUCTURE_OBSERVER: structureIcon = "\u1f4e1"; break;
+                    case STRUCTURE_POWER_SPAWN: structureIcon = "\u1f3db"; break;
+                    case STRUCTURE_NUKER: structureIcon = "\u2622"; break;
                 }
                 
                 var err = creep.build(constructionSite);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(constructionSite);
-                    creep.say("➡🏗" + structureIcon, true);
+                    creep.say("\u27A1\u1F3D7" + structureIcon, true);
                 }
                 else if (err == OK) {
-                    creep.say("🔨🏗" + structureIcon, true);
+                    creep.say("\u1f528\u1F3D7" + structureIcon, true);
                 }
             }
             else {
@@ -173,11 +173,11 @@ var roleBuilder = {
                     creep.memory.wallID = source.id;
                     var err = creep.dismantle(source);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("➡⛰", true);
+                        creep.say("\u27A1\u26f0", true);
                         creep.moveTo(source);
                     }
                     else if (err == OK) {
-                        creep.say("⚒⛰", true);
+                        creep.say("\u2692\u26f0", true);
                     }
                     return;
                 }
@@ -201,11 +201,11 @@ var roleBuilder = {
                     creep.memory.wallID = source.id;
                     var err = creep.dismantle(source);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("➡⛰", true);
+                        creep.say("\u27A1\u26f0", true);
                         creep.moveTo(source);
                     }
                     else if (err == OK) {
-                        creep.say("⚒⛰", true);
+                        creep.say("\u2692\u26f0", true);
                     }
                     return;
                 }
@@ -222,7 +222,7 @@ var roleBuilder = {
             if (source != undefined) {
                 err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say("➡⛏", true);
+                    creep.say("\u27A1\u26CF", true);
                     creep.moveTo(source);
                 }
                 else if (err == ERR_NOT_ENOUGH_RESOURCES 
@@ -230,39 +230,39 @@ var roleBuilder = {
                     creep.memory.working = true;
                 }
                 else if (err == OK) {
-                    creep.say("⛏", true);
+                    creep.say("\u26CF", true);
                 }
                 else {
                     switch (creep.saying) {
-                        case "🕛⛏": creep.say("🕧⛏", true); break;
-                        case "🕧⛏": creep.say("🕐⛏", true); break;
-                        case "🕐⛏": creep.say("🕜⛏", true); break;
-                        case "🕜⛏": creep.say("🕑⛏", true); break;
-                        case "🕑⛏": creep.say("🕝⛏", true); break;
-                        case "🕝⛏": creep.say("🕒⛏", true); break;
-                        case "🕒⛏": creep.say("🕞⛏", true); break;
-                        case "🕞⛏": creep.say("🕓⛏", true); break;
-                        case "🕓⛏": creep.say("🕟⛏", true); break;
-                        case "🕟⛏": creep.say("🕔⛏", true); break;
-                        case "🕔⛏": creep.say("🕠⛏", true); break;
-                        case "🕠⛏": creep.say("🕕⛏", true); break;
-                        case "🕕⛏": creep.say("🕡⛏", true); break;
-                        case "🕡⛏": creep.say("🕖⛏", true); break;
-                        case "🕖⛏": creep.say("🕢⛏", true); break;
-                        case "🕢⛏": creep.say("🕗⛏", true); break;
-                        case "🕗⛏": creep.say("🕣⛏", true); break;
-                        case "🕣⛏": creep.say("🕘⛏", true); break;
-                        case "🕘⛏": creep.say("🕤⛏", true); break;
-                        case "🕤⛏": creep.say("🕙⛏", true); break;
-                        case "🕙⛏": creep.say("🕥⛏", true); break;
-                        case "🕥⛏": creep.say("🕚⛏", true); break;
-                        case "🕚⛏": creep.say("🕦⛏", true); break;
-                        default: creep.say("🕛⛏", true);
+                        case "\u1f55b\u26CF": creep.say("\u1f567\u26CF", true); break;
+                        case "\u1f567\u26CF": creep.say("\u1f550\u26CF", true); break;
+                        case "\u1f550\u26CF": creep.say("\u1f55c\u26CF", true); break;
+                        case "\u1f55c\u26CF": creep.say("\u1f551\u26CF", true); break;
+                        case "\u1f551\u26CF": creep.say("\u1f55d\u26CF", true); break;
+                        case "\u1f55d\u26CF": creep.say("\u1f552\u26CF", true); break;
+                        case "\u1f552\u26CF": creep.say("\u1f55e\u26CF", true); break;
+                        case "\u1f55e\u26CF": creep.say("\u1f553\u26CF", true); break;
+                        case "\u1f553\u26CF": creep.say("\u1f55f\u26CF", true); break;
+                        case "\u1f55f\u26CF": creep.say("\u1f554\u26CF", true); break;
+                        case "\u1f554\u26CF": creep.say("\u1f560\u26CF", true); break;
+                        case "\u1f560\u26CF": creep.say("\u1f555\u26CF", true); break;
+                        case "\u1f555\u26CF": creep.say("\u1f561\u26CF", true); break;
+                        case "\u1f561\u26CF": creep.say("\u1f556\u26CF", true); break;
+                        case "\u1f556\u26CF": creep.say("\u1f562\u26CF", true); break;
+                        case "\u1f562\u26CF": creep.say("\u1f557\u26CF", true); break;
+                        case "\u1f557\u26CF": creep.say("\u1f563\u26CF", true); break;
+                        case "\u1f563\u26CF": creep.say("\u1f558\u26CF", true); break;
+                        case "\u1f558\u26CF": creep.say("\u1f564\u26CF", true); break;
+                        case "\u1f564\u26CF": creep.say("\u1f559\u26CF", true); break;
+                        case "\u1f559\u26CF": creep.say("\u1f565\u26CF", true); break;
+                        case "\u1f565\u26CF": creep.say("\u1f55a\u26CF", true); break;
+                        case "\u1f55a\u26CF": creep.say("\u1f566\u26CF", true); break;
+                        default: creep.say("\u1f55b\u26CF", true);
                     }
                 }
             }
             else {
-                creep.say("⛏?", true);
+                creep.say("\u26CF?", true);
             }
         }
     }
