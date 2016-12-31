@@ -3,13 +3,13 @@ var roleUpgrader = require("role.upgrader");
 var roleHarvester = {
 
     run: function(creep) {
-        if (creep.memory.working == true && _.sum(creep.carry) == 0) {
-            creep.memory.working = false;
-            creep.memory.depositeStructureID = undefined;
-        }
-        else if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined;
+        }
+        else if (creep.memory.working == true && creep.carry.energy == 0) {
+            creep.memory.working = false;
+            creep.memory.depositeStructureID = undefined;
         }
         
         if (creep.memory.working == false) {
@@ -29,11 +29,11 @@ var roleHarvester = {
                 creep.memory.wallID = source.id;
                 var err = creep.dismantle(source);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say("\u27A1\u26f0", true);
+                    creep.say("\u27A1\u26F0", true);
                     creep.moveTo(source);
                 }
                 else if (err == OK) {
-                    creep.say("\u2692\u26f0", true);
+                    creep.say("\u2692\u26F0", true);
                 }
                 return;
             }
@@ -89,7 +89,7 @@ var roleHarvester = {
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
                         var sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);
-                        if (source != undefined && source.energy > 0) { // TODO: Also check if there's space around the source (also determine if this check may be better done elsewhere)
+                        if (source != undefined && source.energy > 0) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
                             creep.memory.sourceID = sourceID;
                             break;
                         }
@@ -129,30 +129,30 @@ var roleHarvester = {
             }
             else {
                 switch (creep.saying) {
-                    case "\u1f55b\u26CF": creep.say("\u1f567\u26CF", true); break;
-                    case "\u1f567\u26CF": creep.say("\u1f550\u26CF", true); break;
-                    case "\u1f550\u26CF": creep.say("\u1f55c\u26CF", true); break;
-                    case "\u1f55c\u26CF": creep.say("\u1f551\u26CF", true); break;
-                    case "\u1f551\u26CF": creep.say("\u1f55d\u26CF", true); break;
-                    case "\u1f55d\u26CF": creep.say("\u1f552\u26CF", true); break;
-                    case "\u1f552\u26CF": creep.say("\u1f55e\u26CF", true); break;
-                    case "\u1f55e\u26CF": creep.say("\u1f553\u26CF", true); break;
-                    case "\u1f553\u26CF": creep.say("\u1f55f\u26CF", true); break;
-                    case "\u1f55f\u26CF": creep.say("\u1f554\u26CF", true); break;
-                    case "\u1f554\u26CF": creep.say("\u1f560\u26CF", true); break;
-                    case "\u1f560\u26CF": creep.say("\u1f555\u26CF", true); break;
-                    case "\u1f555\u26CF": creep.say("\u1f561\u26CF", true); break;
-                    case "\u1f561\u26CF": creep.say("\u1f556\u26CF", true); break;
-                    case "\u1f556\u26CF": creep.say("\u1f562\u26CF", true); break;
-                    case "\u1f562\u26CF": creep.say("\u1f557\u26CF", true); break;
-                    case "\u1f557\u26CF": creep.say("\u1f563\u26CF", true); break;
-                    case "\u1f563\u26CF": creep.say("\u1f558\u26CF", true); break;
-                    case "\u1f558\u26CF": creep.say("\u1f564\u26CF", true); break;
-                    case "\u1f564\u26CF": creep.say("\u1f559\u26CF", true); break;
-                    case "\u1f559\u26CF": creep.say("\u1f565\u26CF", true); break;
-                    case "\u1f565\u26CF": creep.say("\u1f55a\u26CF", true); break;
-                    case "\u1f55a\u26CF": creep.say("\u1f566\u26CF", true); break;
-                    default: creep.say("\u1f55b\u26CF", true);
+                    case "\uD83D\uDD5B\u26CF": creep.say("\uD83D\uDD67\u26CF", true); break;
+                    case "\uD83D\uDD67\u26CF": creep.say("\uD83D\uDD50\u26CF", true); break;
+                    case "\uD83D\uDD50\u26CF": creep.say("\uD83D\uDD5C\u26CF", true); break;
+                    case "\uD83D\uDD5C\u26CF": creep.say("\uD83D\uDD51\u26CF", true); break;
+                    case "\uD83D\uDD51\u26CF": creep.say("\uD83D\uDD5D\u26CF", true); break;
+                    case "\uD83D\uDD5D\u26CF": creep.say("\uD83D\uDD52\u26CF", true); break;
+                    case "\uD83D\uDD52\u26CF": creep.say("\uD83D\uDD5E\u26CF", true); break;
+                    case "\uD83D\uDD5E\u26CF": creep.say("\uD83D\uDD53\u26CF", true); break;
+                    case "\uD83D\uDD53\u26CF": creep.say("\uD83D\uDD5F\u26CF", true); break;
+                    case "\uD83D\uDD5F\u26CF": creep.say("\uD83D\uDD54\u26CF", true); break;
+                    case "\uD83D\uDD54\u26CF": creep.say("\uD83D\uDD60\u26CF", true); break;
+                    case "\uD83D\uDD60\u26CF": creep.say("\uD83D\uDD55\u26CF", true); break;
+                    case "\uD83D\uDD55\u26CF": creep.say("\uD83D\uDD61\u26CF", true); break;
+                    case "\uD83D\uDD61\u26CF": creep.say("\uD83D\uDD56\u26CF", true); break;
+                    case "\uD83D\uDD56\u26CF": creep.say("\uD83D\uDD62\u26CF", true); break;
+                    case "\uD83D\uDD62\u26CF": creep.say("\uD83D\uDD57\u26CF", true); break;
+                    case "\uD83D\uDD57\u26CF": creep.say("\uD83D\uDD63\u26CF", true); break;
+                    case "\uD83D\uDD63\u26CF": creep.say("\uD83D\uDD58\u26CF", true); break;
+                    case "\uD83D\uDD58\u26CF": creep.say("\uD83D\uDD64\u26CF", true); break;
+                    case "\uD83D\uDD64\u26CF": creep.say("\uD83D\uDD59\u26CF", true); break;
+                    case "\uD83D\uDD59\u26CF": creep.say("\uD83D\uDD65\u26CF", true); break;
+                    case "\uD83D\uDD65\u26CF": creep.say("\uD83D\uDD5A\u26CF", true); break;
+                    case "\uD83D\uDD5A\u26CF": creep.say("\uD83D\uDD66\u26CF", true); break;
+                    default: creep.say("\uD83D\uDD5B\u26CF", true);
                 }
             }
         }
@@ -163,7 +163,7 @@ var roleHarvester = {
             }
             else { // TODO: Store creep.memory.structureID and only check if it still requires energy each tick
                 var structure = Game.getObjectById(creep.memory.depositeStructureID);
-                if (structure == undefined || structure.energy < structure.energyCapacity) {
+                if (structure == undefined || structure.energy == structure.energyCapacity) {
                     structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                         filter: (s) => {
                             return (s.structureType == STRUCTURE_EXTENSION 
@@ -186,9 +186,9 @@ var roleHarvester = {
                 if (structure != undefined) {
                     var structureIcon = "?";
                     switch (structure.structureType) {
-                        case STRUCTURE_SPAWN: structureIcon = "\u1f3e5"; break;
-                        case STRUCTURE_EXTENSION: structureIcon = "\u1f3ea"; break;
-                        case STRUCTURE_TOWER: structureIcon = "\u1f52b"; break;
+                        case STRUCTURE_SPAWN: structureIcon = "\uD83C\uDFE5"; break;
+                        case STRUCTURE_EXTENSION: structureIcon = "\uD83C\uDFEA"; break;
+                        case STRUCTURE_TOWER: structureIcon = "\uD83D\uDD2B"; break;
                     }
                     var err = creep.transfer(structure, RESOURCE_ENERGY);
                     if(err == ERR_NOT_IN_RANGE) {
@@ -201,36 +201,36 @@ var roleHarvester = {
                         }
                     }
                 }
-                else if (creep.memory.roomID == "E69N44" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
-                    var err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
-                    if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\u1f3ec", true);
-                        creep.moveTo(theTerminal);
-                    }
-                    else if (err == OK) {
-                        creep.say("\u2B06\u1f3ec", true);
-                        console.log("TooAngle dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy)) + "/" + Memory.TooAngleDealings.totalCost);
-                    }
-                }
                 else if (theTerminal != undefined && theTerminal.store.energy < (theTerminal.storeCapacity / 2)) {
                     var err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\u1f3ec", true);
+                        creep.say("\u27A1\uD83C\uDFEC", true);
                         creep.moveTo(theTerminal);
                     }
                     else if (err == OK) {
-                        creep.say("\u2B06\u1f3ec", true);
+                        creep.say("\u2B06\uD83C\uDFEC", true);
                         console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)) + "/" + (theTerminal.storeCapacity / 2));
+                    }
+                }
+                else if (creep.memory.roomID == "E69N44" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
+                    var err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.say("\u27A1\uD83C\uDFEC", true);
+                        creep.moveTo(theTerminal);
+                    }
+                    else if (err == OK) {
+                        creep.say("\u2B06\uD83C\uDFEC", true);
+                        console.log("TooAngle dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy)) + "/" + Memory.TooAngleDealings.totalCost);
                     }
                 }
                 else if (theStorage != undefined && theStorage.store.energy < (theStorage.storeCapacity / 2)) {
                     var err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\u1F3E6", true);
+                        creep.say("\u27A1\uD83C\uDFE6", true);
                         creep.moveTo(theStorage);
                     }
                     else if (err == OK) {
-                        creep.say("\u2B06\u1F3E6", true);
+                        creep.say("\u2B06\uD83C\uDFE6", true);
                         console.log(theStorage.room.name + " storage reserve at: " + (theStorage.store.energy + Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy)) + "/" + (theStorage.storeCapacity / 2));
                     }
                 }

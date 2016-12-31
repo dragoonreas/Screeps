@@ -3,6 +3,7 @@ var roleAttacker = {
     
     run: function(creep) {
         if (creep.room.name != creep.memory.roomID) {
+            creep.say("\u27A1" + creep.memory.roomID);
             creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
             return;
         }
@@ -22,11 +23,11 @@ var roleAttacker = {
         if (invader != undefined) {
             var err = creep.attack(invader);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.say("\u27A1\1F5E1");
+                creep.say("\u27A1\uD83D\uDDE1");
                 creep.moveTo(invader);
             }
             else if (err == OK) {
-                creep.say("\1F5E1");
+                creep.say("\uD83D\uDDE1");
             }
         }
         else {
@@ -44,11 +45,11 @@ var roleAttacker = {
             if (structure != undefined) {
                 var err = creep.attack(structure);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say("\u27A1\1F5E1");
+                    creep.say("\u27A1\uD83D\uDDE1");
                     creep.moveTo(structure);
                 }
                 else if (err == OK) {
-                    creep.say("\1F5E1");
+                    creep.say("\uD83D\uDDE1");
                 }
             }
             else if (creep.room.name == "E68N45") {
@@ -64,7 +65,7 @@ var roleAttacker = {
                         break;
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
-                        creep.say("\u27A1\u1f6a7");
+                        creep.say("\u27A1\uD83D\uDEA7");
                         creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "E68N45"));
                         break;
                     }

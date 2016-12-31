@@ -4,15 +4,15 @@ var roleBuilder = {
 
     run: function(creep) {
 
-        if (creep.memory.working == true && _.sum(creep.carry) == 0) {
-            creep.memory.working = false;
-            creep.memory.constructionSiteID = undefined;
-        }
-        else if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.checkedForDrops = undefined;
             creep.room.checkForDrops = true;
             creep.memory.wallID = undefined;
+        }
+        else if (creep.memory.working == true && creep.carry.energy == 0) {
+            creep.memory.working = false;
+            creep.memory.constructionSiteID = undefined;
         }
         
         if (false && creep.memory.roomID == "E39N17") {
@@ -28,7 +28,7 @@ var roleBuilder = {
             var constructionSite = Game.getObjectById(creep.memory.constructionSiteID);
             if (constructionSite == undefined) {
                 var roomConstructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
-                if (roomConstructionSites.length == 0) {
+                if (roomConstructionSites.length == 0) { // TODO: Change this block to check if there's any construction sites at all, then check if there's any in rooms the creep can reasonably reach
                     for (let roomID in Game.rooms) {
                         if (roomID != creep.room.name) {
                             roomConstructionSites = Game.rooms[roomID].find(FIND_MY_CONSTRUCTION_SITES);
@@ -86,30 +86,30 @@ var roleBuilder = {
             if(constructionSite != undefined) {
                 var structureIcon = "?";
                 switch (constructionSite.structureType) {
-                    case STRUCTURE_SPAWN: structureIcon = "\u1f3e5"; break;
-                    case STRUCTURE_EXTENSION: structureIcon = "\u1f3ea"; break;
-                    case STRUCTURE_CONTAINER: structureIcon = "\u1f4e4"; break;
-                    case STRUCTURE_STORAGE: structureIcon = "\u1F3E6"; break;
-                    case STRUCTURE_RAMPART: structureIcon = "\u1f6a7"; break;
-                    case STRUCTURE_WALL: structureIcon = "\u26f0"; break;
-                    case STRUCTURE_TOWER: structureIcon = "\u1f52b"; break
-                    case STRUCTURE_ROAD: structureIcon = "\u1f6e3"; break;
-                    case STRUCTURE_LINK: structureIcon = "\u1f4ee"; break;
-                    case STRUCTURE_EXTRACTOR: structureIcon = "\u1f3ed"; break;
+                    case STRUCTURE_SPAWN: structureIcon = "\uD83C\uDFE5"; break;
+                    case STRUCTURE_EXTENSION: structureIcon = "\uD83C\uDFEA"; break;
+                    case STRUCTURE_CONTAINER: structureIcon = "\uD83D\uDCE4"; break;
+                    case STRUCTURE_STORAGE: structureIcon = "\uD83C\uDFE6"; break;
+                    case STRUCTURE_RAMPART: structureIcon = "\uD83D\uDEA7"; break;
+                    case STRUCTURE_WALL: structureIcon = "\u26F0"; break;
+                    case STRUCTURE_TOWER: structureIcon = "\uD83D\uDD2B"; break
+                    case STRUCTURE_ROAD: structureIcon = "\uD83D\uDEE3"; break;
+                    case STRUCTURE_LINK: structureIcon = "\uD83D\uDCEE"; break;
+                    case STRUCTURE_EXTRACTOR: structureIcon = "\uD83C\uDFED"; break;
                     case STRUCTURE_LAB: structureIcon = "\u2697"; break;
-                    case STRUCTURE_TERMINAL: structureIcon = "\u1f3ec"; break;
-                    case STRUCTURE_OBSERVER: structureIcon = "\u1f4e1"; break;
-                    case STRUCTURE_POWER_SPAWN: structureIcon = "\u1f3db"; break;
+                    case STRUCTURE_TERMINAL: structureIcon = "\uD83C\uDFEC"; break;
+                    case STRUCTURE_OBSERVER: structureIcon = "\uD83D\uDCE1"; break;
+                    case STRUCTURE_POWER_SPAWN: structureIcon = "\uD83C\uDFDB"; break;
                     case STRUCTURE_NUKER: structureIcon = "\u2622"; break;
                 }
                 
                 var err = creep.build(constructionSite);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(constructionSite);
-                    creep.say("\u27A1\u1F3D7" + structureIcon, true);
+                    creep.say("\u27A1\uD83C\uDFD7" + structureIcon, true);
                 }
                 else if (err == OK) {
-                    creep.say("\u1f528\u1F3D7" + structureIcon, true);
+                    creep.say("\uD83D\uDD28\uD83C\uDFD7" + structureIcon, true);
                 }
             }
             else {
@@ -173,11 +173,11 @@ var roleBuilder = {
                     creep.memory.wallID = source.id;
                     var err = creep.dismantle(source);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\u26f0", true);
+                        creep.say("\u27A1\u26F0", true);
                         creep.moveTo(source);
                     }
                     else if (err == OK) {
-                        creep.say("\u2692\u26f0", true);
+                        creep.say("\u2692\u26F0", true);
                     }
                     return;
                 }
@@ -201,11 +201,11 @@ var roleBuilder = {
                     creep.memory.wallID = source.id;
                     var err = creep.dismantle(source);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\u26f0", true);
+                        creep.say("\u27A1\u26F0", true);
                         creep.moveTo(source);
                     }
                     else if (err == OK) {
-                        creep.say("\u2692\u26f0", true);
+                        creep.say("\u2692\u26F0", true);
                     }
                     return;
                 }
@@ -234,30 +234,30 @@ var roleBuilder = {
                 }
                 else {
                     switch (creep.saying) {
-                        case "\u1f55b\u26CF": creep.say("\u1f567\u26CF", true); break;
-                        case "\u1f567\u26CF": creep.say("\u1f550\u26CF", true); break;
-                        case "\u1f550\u26CF": creep.say("\u1f55c\u26CF", true); break;
-                        case "\u1f55c\u26CF": creep.say("\u1f551\u26CF", true); break;
-                        case "\u1f551\u26CF": creep.say("\u1f55d\u26CF", true); break;
-                        case "\u1f55d\u26CF": creep.say("\u1f552\u26CF", true); break;
-                        case "\u1f552\u26CF": creep.say("\u1f55e\u26CF", true); break;
-                        case "\u1f55e\u26CF": creep.say("\u1f553\u26CF", true); break;
-                        case "\u1f553\u26CF": creep.say("\u1f55f\u26CF", true); break;
-                        case "\u1f55f\u26CF": creep.say("\u1f554\u26CF", true); break;
-                        case "\u1f554\u26CF": creep.say("\u1f560\u26CF", true); break;
-                        case "\u1f560\u26CF": creep.say("\u1f555\u26CF", true); break;
-                        case "\u1f555\u26CF": creep.say("\u1f561\u26CF", true); break;
-                        case "\u1f561\u26CF": creep.say("\u1f556\u26CF", true); break;
-                        case "\u1f556\u26CF": creep.say("\u1f562\u26CF", true); break;
-                        case "\u1f562\u26CF": creep.say("\u1f557\u26CF", true); break;
-                        case "\u1f557\u26CF": creep.say("\u1f563\u26CF", true); break;
-                        case "\u1f563\u26CF": creep.say("\u1f558\u26CF", true); break;
-                        case "\u1f558\u26CF": creep.say("\u1f564\u26CF", true); break;
-                        case "\u1f564\u26CF": creep.say("\u1f559\u26CF", true); break;
-                        case "\u1f559\u26CF": creep.say("\u1f565\u26CF", true); break;
-                        case "\u1f565\u26CF": creep.say("\u1f55a\u26CF", true); break;
-                        case "\u1f55a\u26CF": creep.say("\u1f566\u26CF", true); break;
-                        default: creep.say("\u1f55b\u26CF", true);
+                        case "\uD83D\uDD5B\u26CF": creep.say("\uD83D\uDD67\u26CF", true); break;
+                        case "\uD83D\uDD67\u26CF": creep.say("\uD83D\uDD50\u26CF", true); break;
+                        case "\uD83D\uDD50\u26CF": creep.say("\uD83D\uDD5C\u26CF", true); break;
+                        case "\uD83D\uDD5C\u26CF": creep.say("\uD83D\uDD51\u26CF", true); break;
+                        case "\uD83D\uDD51\u26CF": creep.say("\uD83D\uDD5D\u26CF", true); break;
+                        case "\uD83D\uDD5D\u26CF": creep.say("\uD83D\uDD52\u26CF", true); break;
+                        case "\uD83D\uDD52\u26CF": creep.say("\uD83D\uDD5E\u26CF", true); break;
+                        case "\uD83D\uDD5E\u26CF": creep.say("\uD83D\uDD53\u26CF", true); break;
+                        case "\uD83D\uDD53\u26CF": creep.say("\uD83D\uDD5F\u26CF", true); break;
+                        case "\uD83D\uDD5F\u26CF": creep.say("\uD83D\uDD54\u26CF", true); break;
+                        case "\uD83D\uDD54\u26CF": creep.say("\uD83D\uDD60\u26CF", true); break;
+                        case "\uD83D\uDD60\u26CF": creep.say("\uD83D\uDD55\u26CF", true); break;
+                        case "\uD83D\uDD55\u26CF": creep.say("\uD83D\uDD61\u26CF", true); break;
+                        case "\uD83D\uDD61\u26CF": creep.say("\uD83D\uDD56\u26CF", true); break;
+                        case "\uD83D\uDD56\u26CF": creep.say("\uD83D\uDD62\u26CF", true); break;
+                        case "\uD83D\uDD62\u26CF": creep.say("\uD83D\uDD57\u26CF", true); break;
+                        case "\uD83D\uDD57\u26CF": creep.say("\uD83D\uDD63\u26CF", true); break;
+                        case "\uD83D\uDD63\u26CF": creep.say("\uD83D\uDD58\u26CF", true); break;
+                        case "\uD83D\uDD58\u26CF": creep.say("\uD83D\uDD64\u26CF", true); break;
+                        case "\uD83D\uDD64\u26CF": creep.say("\uD83D\uDD59\u26CF", true); break;
+                        case "\uD83D\uDD59\u26CF": creep.say("\uD83D\uDD65\u26CF", true); break;
+                        case "\uD83D\uDD65\u26CF": creep.say("\uD83D\uDD5A\u26CF", true); break;
+                        case "\uD83D\uDD5A\u26CF": creep.say("\uD83D\uDD66\u26CF", true); break;
+                        default: creep.say("\uD83D\uDD5B\u26CF", true);
                     }
                 }
             }

@@ -25,7 +25,7 @@ var prototypeSource = function() {
             }
         });
     }
-
+    
     if (Source.prototype.regenAt == undefined) {
         Object.defineProperty(Source.prototype, "regenAt", {
     

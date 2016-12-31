@@ -518,6 +518,8 @@ module.exports.loop = function () {
                 , working: false
                 , speed: (creep.body.length - _.countBy(creep.body, (bp) => bp.type)[MOVE]) / _.countBy(creep.body, (bp) => bp.type)[MOVE] // TODO: Use this algorithm to calculate the speed in the spawn code
             });
+
+            var theStorage = Game.rooms[creep.memory.roomID].storage;
             
             if (creep.memory.role == "attacker") {
 				roleAttacker.run(creep);
@@ -528,7 +530,11 @@ module.exports.loop = function () {
             else if (creep.memory.droppedResourceID != undefined) {
                 roleCollector.run(creep);
             }
-            else if (_.sum(creep.carry) > creep.carry.energy) {
+            else if (_.sum(creep.carry) > creep.carry.energy 
+                && theStorage != undefined 
+                && theStorage.my == true 
+                && _.sum(theStorage.store) < theStorage.storeCapacity 
+                && theStorage.isActive() == true) {
                 roleHoarder.run(creep);
             }
             else if (creep.memory.role == "harvester") {

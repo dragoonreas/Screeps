@@ -6,12 +6,12 @@ var rolePowerHarvester = {
     
     run: function(creep) {
         
-        if (creep.memory.working == true && _.sum(creep.carry) == 0) {
-            creep.memory.working = false;
-        }
-        else if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined;
+        }
+        else if (creep.memory.working == true && creep.carry[RESOURCE_POWER] == 0) {
+            creep.memory.working = false;
         }
         
         if (creep.memory.working == false) {
