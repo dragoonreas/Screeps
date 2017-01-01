@@ -56,7 +56,7 @@ var roleUpgrader = {
                     var err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
-                        creep.moveTo(source);
+                        creep.moveTo(theStorage);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
                         && creep.carry.energy > 0) {
