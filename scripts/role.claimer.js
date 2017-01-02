@@ -10,41 +10,6 @@ var roleClaimer = {
                 creep.say("\u27A1E68N44", true);
                 creep.moveTo(new RoomPosition(25, 11, "E68N44"));
             }
-            else if (creep.memory.controllerID == "576a9cd257110ab231d89c71") {
-                if (creep.room.name == "E35N25" && creep.memory.warped != true) {
-                    creep.memory.warped = true;
-                }
-                else if (creep.room.name == "E65N45" && creep.memory.warped == true) {
-                    creep.memory.warped = false;
-                }
-                
-                if (creep.memory.warped != true) {
-                    creep.say("\u27A1E65N45", true);
-                    if (creep.room.name == "E66N45" && creep.pos.x < 20 && creep.pos.x > 4) {
-                        creep.moveTo(new RoomPosition(4, 27, "E66N45"));
-                    }
-                    else {
-                        creep.moveTo(new RoomPosition(13, 9, "E65N45"));
-                    }
-                }
-                else {
-                    creep.say("\u27A1E39N24", true);
-                    creep.moveTo(new RoomPosition(29, 13, "E39N24"));
-                }
-            }
-            else if (creep.memory.controllerID == "576a9cc757110ab231d89b66") {
-                creep.say("\u27A1E38N24", true);
-                creep.moveTo(new RoomPosition(43, 38, "E38N24"));
-            }
-            else if (creep.memory.controllerID == "576a9cd357110ab231d89c85") {
-                roleScout.run(creep);
-            }
-            else if (creep.memory.controllerID == "577b94120f9d51615fa490f9") {
-                roleScout.run(creep);
-            }
-            else if (creep.memory.controllerID == "579fa8b50700be0674d2e295") {
-                roleScout.run(creep);
-            }
             else {
                 creep.say("\uD83C\uDFF0?");
             }
@@ -52,7 +17,7 @@ var roleClaimer = {
         else {
             var err = ERR_GCL_NOT_ENOUGH;
             // TODO: Add if case for when claimer has 5+ claim parts and controller.my == false to attack controller
-            if (creep.memory.controllerID != "57ef9ee786f108ae6e6101b5" && creep.memory.controllerID != "576a9cc757110ab231d89b66") {
+            if (creep.memory.controllerID != "57ef9ee786f108ae6e6101b5") {
                 err = creep.claimController(theController);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\uD83C\uDFF0", true);
@@ -75,7 +40,7 @@ var roleClaimer = {
                 }
             }
             if (err != OK && err != ERR_NOT_IN_RANGE) {
-                if (creep.memory.roomID == "E39N24") {
+                if (creep.memory.controllerID != "57ef9ee786f108ae6e6101b5") {
                     Memory.rooms[creep.memory.roomID].creepMins.claimer = 0;
                 }
                 creep.memory.controllerID = undefined;

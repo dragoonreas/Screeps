@@ -40,10 +40,6 @@ var roleRepairer = {
                         repairerTypeFound = true;
                     }
                     
-                    if (creep.memory.roomID == "E39N17" && repairerType != creep.memory.repairerType) {
-                        continue;
-                    }
-                    
                     if (repairerTypeFound == true) {
                         if (repairerType == STRUCTURE_ROAD) {
         					structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -123,16 +119,7 @@ var roleRepairer = {
             var source = undefined;
             switch (creep.memory.roomID) {
                 case "E69N44": source = Game.getObjectById("57ef9efc86f108ae6e610380"); break;
-                case "E68N45": source = Game.getObjectById("57ef9ee786f108ae6e6101b2"); break;
-                case "E54N9": {
-                    source = Game.getObjectById("579faa250700be0674d307cb");
-                    if (source.energy == 0) {
-                        source = Game.getObjectById("579faa250700be0674d307ca");
-                    }
-                } break;
                 case "E68N45": roleHarvester.run(creep); return;
-                case "E39N17": roleHarvester.run(creep); return;
-                case "E43N18": roleHarvester.run(creep); return;
                 case "W53N32": roleHarvester.run(creep); return;
             }
             

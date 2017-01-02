@@ -13,31 +13,7 @@ var roleHarvester = {
         }
         
         if (creep.memory.working == false) {
-            var source = undefined;
-            if (creep.memory.roomID == "E43N18" && _.countBy(creep.body, (bp) => bp.type)[WORK] >= 4) {
-                source = Game.getObjectById(creep.memory.wallID);
-                if (source == undefined) {
-                    source = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (s) => (s.structureType == STRUCTURE_WALL && s.hits > 1) });
-                }
-            }
-            
-            if (source == undefined) {
-                creep.memory.wallID = undefined;
-                source = Game.getObjectById(creep.memory.sourceID);
-            }
-            else {
-                creep.memory.wallID = source.id;
-                var err = creep.dismantle(source);
-                if (err == ERR_NOT_IN_RANGE) {
-                    creep.say("\u27A1\u26F0", true);
-                    creep.moveTo(source);
-                }
-                else if (err == OK) {
-                    creep.say("\u2692\u26F0", true);
-                }
-                return;
-            }
-
+            var source = Game.getObjectById(creep.memory.sourceID);
             if (source == undefined || source.energy == 0) {
                 if (source != undefined) {
                     creep.memory.sourceID = undefined;
@@ -60,25 +36,6 @@ var roleHarvester = {
                         , "E68N45": [
                             "57ef9ee786f108ae6e6101b2"
                             , "57ef9ee786f108ae6e6101b6"
-                        ]
-                        , "E54N9": [
-                            "579faa250700be0674d307cb"
-                            , "579faa250700be0674d307ca"
-                        ]
-                        , "E39N24": [
-                            "577b93f30f9d51615fa48e56"
-                            , "577b93f30f9d51615fa48e57"
-                        ]
-                        , "E39N17": [
-                            "576a9cd357110ab231d89c86"
-                            , "576a9cd357110ab231d89c87"
-                            , "576a9cd357110ab231d89c83"
-                        ]
-                        , "E43N18": [
-                            "577b94120f9d51615fa490f8"
-                            , "577b94220f9d51615fa49272"
-                            , "577b94210f9d51615fa4926f"
-                            , "577b94210f9d51615fa4926e"
                         ]
                         , "W53N32": [
                             "579fa8b50700be0674d2e297"
@@ -106,9 +63,6 @@ var roleHarvester = {
                                 creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
                                 return;
                             }
-                        }
-                        else if (sourceID == "577b94220f9d51615fa49272") {
-                            creep.moveTo(new RoomPosition(25, 25, "E44N18"));
                         }
                     }
                 }

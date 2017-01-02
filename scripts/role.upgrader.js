@@ -25,15 +25,6 @@ var roleUpgrader = {
             switch (creep.memory.roomID) {
                 case "E69N44": source = Game.getObjectById("57ef9efc86f108ae6e610381"); break;
                 case "E68N45": source = Game.getObjectById("57ef9ee786f108ae6e6101b3"); break;
-                case "E54N9": {
-                    source = Game.getObjectById("579faa250700be0674d307cb");
-                    if (source.energy == 0) {
-                        source = Game.getObjectById("579faa250700be0674d307ca");
-                    }
-                } break;
-                case "E68N45": source = Game.getObjectById("576a9cd257110ab231d89c70"); break;
-                case "E39N17": source = Game.getObjectById("576a9cd357110ab231d89c87"); break;
-                case "E43N18": source = Game.getObjectById("577b94120f9d51615fa490fa"); break;
                 case "W53N32": source = Game.getObjectById("579fa8b50700be0674d2e296"); break;
             }
             

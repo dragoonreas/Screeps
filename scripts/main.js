@@ -82,36 +82,6 @@ Memory.rooms["E68N45"].repairerTypeMins = {
     , [STRUCTURE_WALL]: 1
     , "all": 0
 }; // NOTE: This also defines the build priority
-/*
-Memory.rooms["E54N9"].repairerTypeMins = {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 0
-    , "all": 0
-}; // NOTE: This also defines the build priority
-Memory.rooms["E39N24"].repairerTypeMins = {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 0
-    , "all": 0
-}; // NOTE: This also defines the build priority
-Memory.rooms["E39N17"].repairerTypeMins = {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 0
-    , "all": 0
-}; // NOTE: This also defines the build priority
-Memory.rooms["E43N18"].repairerTypeMins = {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 0
-    , "all": 0
-}; // NOTE: This also defines the build priority
-*/
 Memory.rooms["W53N32"].repairerTypeMins = {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 1
@@ -150,52 +120,6 @@ Memory.rooms["E68N45"].creepMins = {
     , repairer: repairerMins["E68N45"]
     , builder: 1
 }; // NOTE: This also defines the build priority
-/*
-Memory.rooms["E54N9"].creepMins = {
-    attacker: 0
-    , harvester: 0
-    , powerHarvester: 0
-    , upgrader: 0
-    , adaptable: 0
-    , scout: 0
-    , claimer: 0
-    , repairer: repairerMins["E54N9"]
-    , builder: 0
-}; // NOTE: This also defines the build priority
-Memory.rooms["E39N24"].creepMins = {
-    attacker: 0
-    , harvester: 0
-    , powerHarvester: 0
-    , upgrader: 0
-    , adaptable: 0
-    , scout: 0
-    , claimer: 0
-    , repairer: repairerMins["E39N24"]
-    , builder: 0
-}; // NOTE: This also defines the build priority
-Memory.rooms["E39N17"].creepMins = {
-    attacker: 0
-    , harvester: 0
-    , powerHarvester: 0
-    , upgrader: 0
-    , adaptable: 0
-    , scout: 0
-    , claimer: 0
-    , repairer: repairerMins["E39N17"]
-    , builder: 0
-}; // NOTE: This also defines the build priority
-Memory.rooms["E43N18"].creepMins = {
-    attacker: 0
-    , harvester: 0
-    , powerHarvester: 0
-    , upgrader: 0
-    , adaptable: 0
-    , scout: 0
-    , claimer: 0
-    , repairer: repairerMins["E43N18"]
-    , builder: 0
-}; // NOTE: This also defines the build priority
-*/
 Memory.rooms["W53N32"].creepMins = {
     attacker: 0
     , harvester: 3
@@ -214,15 +138,6 @@ Memory.rooms["E69N44"].harvestRooms = [
 Memory.rooms["E68N45"].harvestRooms = [
     "E68N44"
 ];
-/*
-Memory.rooms["E39N24"].harvestRooms = [
-    "E38N24"
-    , "E37N24"
-];
-Memory.rooms["E39N17"].harvestRooms = [
-    "E39N18"
-];
-*/
 Memory.rooms["W53N32"].harvestRooms = [
     "W53N33"
 ];
@@ -288,7 +203,8 @@ module.exports.loop = function () {
             if (creepMemory.role != undefined && Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role] != undefined) {
                 currentSpawnedRole = Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role];
                 minimumSpawnedRole = Memory.rooms[creepMemory.roomID].creepMins[creepMemory.role];
-                if (creepMemory.role == "adaptable") {
+                if (creepMemory.role == "adaptable") { // Currently just using the adapatable role to send reinforcement workers to new rooms and setting their new role when they get there, so none should end up dying with this role unless they fail to make it to their destination
+                    console.log("Adaptable failed to make it to it's destination");
                     Game.notify("Adaptable failed to make it to it's destination");
                 }
             }
@@ -347,7 +263,7 @@ module.exports.loop = function () {
                 theRoom.checkForDrops = false;
             }
             
-            // TODO: Spawn attackers to defend instead of this in harvestRooms
+            // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
 			if (roomID == "E68N44" && theRoom.sources["57ef9ee786f108ae6e6101b6"].regenAt <= Game.time) {
 				invaders.sort(function(i0,i1){return i0.ticksToLive - i1.ticksToLive});
                 theRoom.sources["57ef9ee786f108ae6e6101b6"].regenAt = Game.time + invaders[0].ticksToLive;
@@ -363,8 +279,8 @@ module.exports.loop = function () {
             }
 			// TODO: Store IDs of invader with highest heal part count, or highest attack+work part count in memory for room so towers don't just target the closest one
 			
-            // Only activate safemode when we're in real trouble, the current definition of which is a spawn taking damage
-			if (roomID == "W53N32" && justNPCs == false) {
+            // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
+			if (roomID == "W53N32" && justNPCs == false) { // Special rule for this base since there are no nearby bases to rebuild it with
 				theController.activateSafeMode();
 				console.log("Activated Safe Mode in: " + roomID);
 				Game.notify("Activated Safe Mode in: " + roomID);
@@ -392,10 +308,10 @@ module.exports.loop = function () {
             theRoom.checkForDrops = true;
         }
         
-        if (theRoom.hasHostileTower == true || roomID == "E54N9") {
+        if (theRoom.hasHostileTower == true) {
             theRoom.checkForDrops = false;
         }
-        else if (theController != undefined && theController.my == false && theController.level > _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (maxBuildable) => maxBuildable > 0)) {
+        else if (theController != undefined && theController.my == false && theController.level >= _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (maxBuildable) => maxBuildable > 0)) {
             var hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER);
             if (hostileTowers.length > 0) {
                 theRoom.hasHostileTower = true;
@@ -403,7 +319,7 @@ module.exports.loop = function () {
             }
         }
 
-        if (theRoom.checkForDrops == true || (checkingForDrops == true && (theRoom.hasHostileCreep == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false) && roomID != "E54N9") {
+        if (theRoom.checkForDrops == true || (checkingForDrops == true && (theRoom.hasHostileCreep == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) {
             theRoom.checkForDrops = false;
             var droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
@@ -499,9 +415,6 @@ module.exports.loop = function () {
         	        target = tower.pos.findClosestByRange(FIND_MY_CREEPS, { 
         	            filter: (c) => (c.hits < c.hitsMax
         	        )});
-        	        if (roomID == "E39N17") {
-        	            console.log(JSON.stringify(target));
-        	        }
         	        if (target != undefined) {
         	            tower.heal(target);
         	        }
@@ -518,7 +431,7 @@ module.exports.loop = function () {
                 , working: false
                 , speed: (creep.body.length - _.countBy(creep.body, (bp) => bp.type)[MOVE]) / _.countBy(creep.body, (bp) => bp.type)[MOVE] // TODO: Use this algorithm to calculate the speed in the spawn code
             });
-
+            
             var theStorage = Game.rooms[creep.memory.roomID].storage;
             
             if (creep.memory.role == "attacker") {

@@ -145,15 +145,6 @@ var prototypeSpawn = function() {
             if (this.room.name == "E69N44" || this.room.name == "E68N45") {
                 creepMemory.controllerID = "57ef9ee786f108ae6e6101b5";
             }
-            else if (this.room.name == "E39N24") {
-                creepMemory.controllerID = "576a9cd357110ab231d89c85";
-            }
-            else if (this.room.name == "E39N17") {
-                creepMemory.controllerID = "577b94120f9d51615fa490f9";
-            }
-            else if (this.room.name == "E43N18") {
-                creepMemory.controllerID = "579fa8b50700be0674d2e295";
-            }
         }
         else if (roleName == "powerHarvester") {
             creepMemory.harvestRoom = { id: "E70N44", x: 18, y:7 };
