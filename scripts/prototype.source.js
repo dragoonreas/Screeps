@@ -5,9 +5,6 @@ var prototypeSource = function() {
         Object.defineProperty(Source.prototype, "memory", {
             
             get: function() {
-                if (this.room.sources == undefined) {
-                    this.room.sources = {};
-                }
                 if (_.isObject(this.room.sources) == false) {
                     return undefined;
                 }
@@ -15,9 +12,6 @@ var prototypeSource = function() {
             },
             
             set: function(value) {
-                if (this.room.sources == undefined) {
-                    this.room.sources = {};
-                }
                 if (_.isObject(this.room.sources) == false) {
                     throw new Error("Could not set memory source property");
                 }
@@ -30,9 +24,8 @@ var prototypeSource = function() {
         Object.defineProperty(Source.prototype, "regenAt", {
     
             get: function() {
-                console.log("test");
-                if (this.memory.regenAt == undefined) {
-                    this.memory.regenAt = 0;
+                if (_.get(this.memory, "regenAt", undefined) == undefined) {
+                    _.set(this.memory, "regenAt", Game.time + (this.energy == 0 ? this.ticksToRegeneration : 0));
                 }
                 if (_.isNumber(this.memory.regenAt) == false) {
                     return undefined;
@@ -41,8 +34,8 @@ var prototypeSource = function() {
             },
             
             set: function(value) {
-                if (this.memory.regenAt == undefined) {
-                    this.memory.regenAt = 0;
+                if (_.get(this.memory, "regenAt", undefined) == undefined) {
+                    _.set(this.memory, "regenAt", Game.time + (this.energy == 0 ? this.ticksToRegeneration : 0));
                 }
                 if (_.isNumber(this.memory.regenAt) == false) {
                     throw new Error("Could not set regenAt source property");
@@ -56,8 +49,8 @@ var prototypeSource = function() {
         Object.defineProperty(Source.prototype, "upgraderOnly", {
     
             get: function() {
-                if (this.memory.upgraderOnly == undefined) {
-                    this.memory.upgraderOnly = false;
+                if (_.get(this.memory, "upgraderOnly", undefined) == undefined) {
+                    _.set(this.memory, "upgraderOnly", false);
                 }
                 if (_.isBoolean(this.memory.upgraderOnly) == false) {
                     return undefined;
@@ -66,8 +59,8 @@ var prototypeSource = function() {
             },
             
             set: function(value) {
-                if (this.memory.upgraderOnly == undefined) {
-                    this.memory.upgraderOnly = false;
+                if (_.get(this.memory, "upgraderOnly", undefined) == undefined) {
+                    _.set(this.memory, "upgraderOnly", false);
                 }
                 if (_.isBoolean(this.memory.upgraderOnly) == false) {
                     throw new Error("Could not set upgraderOnly source property");

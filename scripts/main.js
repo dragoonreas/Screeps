@@ -32,7 +32,7 @@ _.defaultsDeep(Memory, {
         "rysade"
         , "roncli" // turns out they were just using my lower RCL rooms as a low-risk targets to improve their combat code with
     ]
-    , "nonAgressivePlayers": [ // nice players that have added "dragoonreas" to their own non-agressive list
+    , "nonAgressivePlayers": [ // nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them)
         "Bovius"
     ]
 });
@@ -56,13 +56,15 @@ for (let roomID in Game.rooms) {
         for (let sourceID in sources) {
             var source = sources[sourceID];
             _.defaults(Memory.sources[source.id], {
-                roomID: source.room.name
-                , pos: source.pos
+                pos: source.pos
             });
             
-            if (_.get(Memory, ["sources", source.id, "regenAt"], undefined) == undefined || source.energy == 0) {
-                _.set(Memory, ["sources", source.id, "regenAt"], Game.time + (source.ticksToRegeneration || 0)); // TODO: Check this is working as intended
-                //console.log("Energy source " + source.id + " in " + source.room.name + " will regen in " + source.ticksToRegeneration + " ticks");
+            var sourceRegenAt = _.get(Memory, ["sources", source.id, "regenAt"], undefined);
+            if (sourceRegenAt == undefined || (source.energy == 0 && sourceRegenAt < (Game.time + source.ticksToRegeneration))) {
+                _.set(Memory, ["sources", source.id, "regenAt"], Game.time + (source.ticksToRegeneration || 0));
+                if (source.ticksToRegeneration != undefined) {
+                    console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
+                }
             }
         }
     }
@@ -124,7 +126,7 @@ Memory.rooms["W53N32"].creepMins = {
     attacker: 0
     , harvester: 3
     , powerHarvester: 0
-    , upgrader: 5
+    , upgrader: 4
     , adaptable: 0
     , scout: 0
     , claimer: 0
@@ -246,17 +248,22 @@ module.exports.loop = function () {
             for (let sourceID in sources) {
                 var source = sources[sourceID];
                 _.defaults(Memory.sources[source.id], {
-                    roomID: source.room.name
-                    , pos: source.pos
+                    pos: source.pos
                 });
-                if (_.get(Memory, ["sources", source.id, "regenAt"], undefined) == undefined || source.energy == 0) {
-                    _.set(Memory, ["sources", source.id, "regenAt"], Game.time + (source.ticksToRegeneration || 0)); // TODO: Check this is working as intended
-                    //console.log("Energy source " + source.id + " in " + source.room.name + " will regen in " + source.ticksToRegeneration + " ticks");
+                
+                var sourceRegenAt = _.get(Memory, ["sources", source.id, "regenAt"], undefined);
+                if (sourceRegenAt == undefined || (source.energy == 0 && sourceRegenAt < (Game.time + source.ticksToRegeneration))) {
+                    _.set(Memory, ["sources", source.id, "regenAt"], Game.time + (source.ticksToRegeneration || 0));
+                    if (source.ticksToRegeneration != undefined) {
+                        console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
+                    }
                 }
             }
         }
-
-        var invaders = theRoom.find(FIND_HOSTILE_CREEPS);
+        
+        var invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
+            filter: (i) => (_.includes(Memory.nonAgressivePlayers, i.owner.username) == false
+        )});
         if (invaders.length > 0) {
             theRoom.hasHostileCreep = true;
             if (theController == undefined || theController.my == false || theController.safeMode == undefined) {
@@ -264,8 +271,8 @@ module.exports.loop = function () {
             }
             
             // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
-			if (roomID == "E68N44" && theRoom.sources["57ef9ee786f108ae6e6101b6"].regenAt <= Game.time) {
-				invaders.sort(function(i0,i1){return i0.ticksToLive - i1.ticksToLive});
+			if (roomID == "E68N44" && theRoom.sources["57ef9ee786f108ae6e6101b6"].regenAt < Game.time) {
+				invaders.sort( (i0, i1) => (i0.ticksToLive - i1.ticksToLive) );
                 theRoom.sources["57ef9ee786f108ae6e6101b6"].regenAt = Game.time + invaders[0].ticksToLive;
 				console.log("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.");
                 Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", estSecPerTick * invaders[0].ticksToLive);
@@ -394,7 +401,7 @@ module.exports.loop = function () {
 		for (let towerID in towers) {
             var tower = towers[towerID];
 
-            var target = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            var target = tower.pos.findClosestByRange(invaders);
             if (target != undefined) {
         	    tower.attack(target);
         	    console.log("Tower in " + roomID + " attacking hostile from " + target.owner.username);

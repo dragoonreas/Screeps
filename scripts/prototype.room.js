@@ -4,13 +4,11 @@ var prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "sources", {
             
             get: function() {
-                if (this.memory.sources == undefined) {
-                    if (Game.rooms[this.name] != undefined) {
-                        this.memory.sources = this.find(FIND_SOURCES); // TODO: Fix this to only save relevent properties with the ID as the hash, instead of an array of objects as it is now
-                    }
-                    else {
-                        this.memory.sources = {};
-                    }
+                if (_.get(this.memory, "sources", undefined) == undefined) {
+                    _.forEach(this.find(FIND_SOURCES), (source) => (_.set(this.memory, ["sources", source.id], { 
+                        pos: source.pos
+                        , regenAt: Game.time + (source.energy == 0 ? source.ticksToRegeneration : 0) 
+                    })));
                 }
                 if (_.isObject(this.memory.sources) == false) {
                     return undefined;
@@ -19,16 +17,11 @@ var prototypeRoom = function() {
             },
             
             set: function(value) {
-                if (this.memory == undefined) {
-                    this.memory = {};
-                }
-                if (this.memory.sources == undefined) {
-                    if (Game.rooms[this.name] != undefined) {
-                        this.memory.sources = this.find(FIND_SOURCES); // TODO: Fix this to only save relevent properties with the ID as the hash, instead of an array of objects as it is now
-                    }
-                    else {
-                        this.memory.sources = {};
-                    }
+                if (_.get(this.memory, "sources", undefined) == undefined) {
+                    _.forEach(this.find(FIND_SOURCES), (source) => (_.set(this.memory, ["sources", source.id], { 
+                        pos: source.pos
+                        , regenAt: Game.time + (source.energy == 0 ? source.ticksToRegeneration : 0) 
+                    })));
                 }
                 if (_.isObject(this.memory.sources) == false) {
                     throw new Error("Could not set sources room property");
@@ -42,8 +35,8 @@ var prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "harvestRooms", {
             
             get: function() {
-                if (this.memory.harvestRooms == undefined) {
-                    this.memory.harvestRooms = [];
+                if (_.get(this.memory, "harvestRooms", unedfined) == undefined) {
+                    _set(this.memory, "harvestRooms", []);
                 }
                 if (_.isArray(this.memory.harvestRooms) == false) {
                     return undefined;
@@ -52,11 +45,8 @@ var prototypeRoom = function() {
             },
             
             set: function(value) {
-                if (this.memory == undefined) {
-                    this.memory = {};
-                }
-                if (this.memory.harvestRooms == undefined) {
-                    this.memory.harvestRooms = [];
+                if (_.get(this.memory, "harvestRooms", unedfined) == undefined) {
+                    _set(this.memory, "harvestRooms", []);
                 }
                 if (_.isArray(this.memory.harvestRooms) == false) {
                     throw new Error("Could not set harvestRooms room property");
@@ -70,8 +60,8 @@ var prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "checkForDrops", {
             
             get: function() {
-                if (this.memory.checkForDrops == undefined) {
-                    this.memory.checkForDrops = true;
+                if (_.get(this.memory, "checkForDrops", undefined) == undefined) {
+                    _.set(this.memory, "checkForDrops", true);
                 }
                 if (_.isBoolean(this.memory.checkForDrops) == false) {
                     return undefined;
@@ -80,11 +70,8 @@ var prototypeRoom = function() {
             },
             
             set: function(value) {
-                if (this.memory == undefined) {
-                    this.memory = {};
-                }
-                if (this.memory.checkForDrops == undefined) {
-                    this.memory.checkForDrops = true;
+                if (_.get(this.memory, "checkForDrops", undefined) == undefined) {
+                    _.set(this.memory, "checkForDrops", true);
                 }
                 if (_.isBoolean(this.memory.checkForDrops) == false) {
                     throw new Error("Could not set checkForDrops room property");
@@ -98,8 +85,8 @@ var prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "buildOrderFILO", {
             
             get: function() {
-                if (this.memory.buildOrderFILO == undefined) {
-                    this.memory.buildOrderFILO = false;
+                if (_.get(this.memory, "buildOrderFILO", undefined) == undefined) {
+                    _.set(this.memory, "buildOrderFILO", false);
                 }
                 if (_.isBoolean(this.memory.buildOrderFILO) == false) {
                     return undefined;
@@ -108,11 +95,8 @@ var prototypeRoom = function() {
             },
             
             set: function(value) {
-                if (this.memory == undefined) {
-                    this.memory = {};
-                }
-                if (this.memory.buildOrderFILO == undefined) {
-                    this.memory.buildOrderFILO = false;
+                if (_.get(this.memory, "buildOrderFILO", undefined) == undefined) {
+                    _.set(this.memory, "buildOrderFILO", false);
                 }
                 if (_.isBoolean(this.memory.buildOrderFILO) == false) {
                     throw new Error("Could not set buildOrderFILO room property");
@@ -126,8 +110,8 @@ var prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "hasHostileCreep", {
             
             get: function() {
-                if (this.memory.hasHostileCreep == undefined) {
-                    this.memory.hasHostileCreep = false;
+                if (_.get(this.memory, "hasHostileCreep", undefined) == undefined) {
+                    _.set(this.memory, "hasHostileCreep", false);
                 }
                 if (_.isBoolean(this.memory.hasHostileCreep) == false) {
                     return undefined;
@@ -136,11 +120,8 @@ var prototypeRoom = function() {
             },
             
             set: function(value) {
-                if (this.memory == undefined) {
-                    this.memory = {};
-                }
-                if (this.memory.hasHostileCreep == undefined) {
-                    this.memory.hasHostileCreep = false;
+                if (_.get(this.memory, "hasHostileCreep", undefined) == undefined) {
+                    _.set(this.memory, "hasHostileCreep", false);
                 }
                 if (_.isBoolean(this.memory.hasHostileCreep) == false) {
                     throw new Error("Could not set hasHostileCreep room property");
@@ -154,8 +135,8 @@ var prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "hasHostileTower", {
             
             get: function() {
-                if (this.memory.hasHostileTower == undefined) {
-                    this.memory.hasHostileTower = false;
+                if (_.get(this.memory, "hasHostileTower", undefined) == undefined) {
+                    _.set(this.memory, "hasHostileTower", false);
                 }
                 if (_.isBoolean(this.memory.hasHostileTower) == false) {
                     return undefined;
@@ -164,11 +145,8 @@ var prototypeRoom = function() {
             },
             
             set: function(value) {
-                if (this.memory == undefined) {
-                    this.memory = {};
-                }
-                if (this.memory.hasHostileTower == undefined) {
-                    this.memory.hasHostileTower = false;
+                if (_.get(this.memory, "hasHostileTower", undefined) == undefined) {
+                    _.set(this.memory, "hasHostileTower", false);
                 }
                 if (_.isBoolean(this.memory.hasHostileTower) == false) {
                     throw new Error("Could not set hasHostileTower room property");

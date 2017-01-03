@@ -20,7 +20,7 @@ var roleHarvester = {
                 }
                 
                 var sourceMem = Memory.sources[creep.memory.sourceID];
-                if (sourceMem != undefined && sourceMem.regenAt <= Game.time && creep.room.name != sourceMem.roomID) {
+                if (sourceMem != undefined && sourceMem.regenAt <= Game.time && creep.room.name != sourceMem.pos.roomName) {
                     creep.say("\u27A1" + sourceMem.pos.roomName, true);
                     creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
                     return;
@@ -42,26 +42,25 @@ var roleHarvester = {
                             , "579fa8b50700be0674d2e293"
                             , "579fa8b50700be0674d2e296"
                         ]
-                    };
+                    }; // TODO: Create these lists from the sources stored in the memory of the harvest rooms, which in turn are stored in the memory of the creeps spawn room
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
                         var sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);
-                        if (source != undefined && source.energy > 0) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
-                            creep.memory.sourceID = sourceID;
-                            break;
-                        }
-
-                        sourceMem = Memory.sources[sourceID];
-                        if (sourceMem != undefined) {
-                            if (source != undefined && source.energy == 0 && sourceMem.regenAt < (Game.time + source.ticksToRegeneration)) {
-                                sourceMem.regenAt = Game.time + source.ticksToRegeneration;
-                                console.log("Energy source " + sourceID + " in " + source.room.name + " will regen in " + source.ticksToRegeneration + " ticks");
-                            }
-                            else if (source == undefined && sourceMem.regenAt <= Game.time) {
+                        if (source != undefined) {
+                            if (source.energy > 0) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
                                 creep.memory.sourceID = sourceID;
-                                creep.say("\u27A1" + sourceMem.pos.roomName, true);
-                                creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
-                                return;
+                                break;
+                            }
+                        }
+                        else {
+                            sourceMem = Memory.sources[sourceID];
+                            if (sourceMem != undefined) {
+                                if (sourceMem.regenAt <= Game.time) {
+                                    creep.memory.sourceID = sourceID;
+                                    creep.say("\u27A1" + sourceMem.pos.roomName, true);
+                                    creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
+                                    return;
+                                }
                             }
                         }
                     }
