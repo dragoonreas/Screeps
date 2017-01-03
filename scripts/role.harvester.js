@@ -40,7 +40,6 @@ var roleHarvester = {
                         , "W53N32": [
                             "579fa8b50700be0674d2e297"
                             , "579fa8b50700be0674d2e293"
-                            , "579fa8b50700be0674d2e296"
                         ]
                     }; // TODO: Create these lists from the sources stored in the memory of the harvest rooms, which in turn are stored in the memory of the creeps spawn room
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -54,13 +53,11 @@ var roleHarvester = {
                         }
                         else {
                             sourceMem = Memory.sources[sourceID];
-                            if (sourceMem != undefined) {
-                                if (sourceMem.regenAt <= Game.time) {
-                                    creep.memory.sourceID = sourceID;
-                                    creep.say("\u27A1" + sourceMem.pos.roomName, true);
-                                    creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
-                                    return;
-                                }
+                            if (sourceMem != undefined && sourceMem.regenAt <= Game.time) {
+                                creep.memory.sourceID = sourceID;
+                                creep.say("\u27A1" + sourceMem.pos.roomName, true);
+                                creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
+                                return;
                             }
                         }
                     }

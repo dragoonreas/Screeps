@@ -8,9 +8,9 @@ var prototypeMemory = function() {
                     return _.get(Memory, ["rooms", source.room.name, "sources", sourceID], undefined);
                 }
                 
-                var memorisedRooms = _.filter(Memory.rooms, (v, k) => (Game.rooms[k] == undefined));
-                for (let roomIndex in memorisedRooms) {
-                    var sourceMem = _.get(Memory, ["rooms", memorisedRooms[roomIndex.roomName], "sources", sourceID], undefined);
+                var memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
+                for (let roomIndex in memorisedRoomIDs) {
+                    var sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", sourceID], undefined);
                     if (sourceMem != undefined) {
                         return sourceMem;
                     }
@@ -26,9 +26,9 @@ var prototypeMemory = function() {
                     return true;
                 }
                 
-                var memorisedRooms = _.filter(Memory.rooms, (v, k) => (Game.rooms[k] == undefined));
-                for (let roomIndex in memorisedRooms) {
-                    var sourceMem = _.get(Memory, ["rooms", memorisedRooms[roomIndex.roomName], "sources", sourceID], undefined);
+                var memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
+                for (let roomIndex in memorisedRoomIDs) {
+                    var sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", sourceID], undefined);
                     if (sourceMem != undefined) {
                         sourceMem = value;
                         return true;
