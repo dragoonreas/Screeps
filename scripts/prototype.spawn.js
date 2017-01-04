@@ -132,7 +132,8 @@ var prototypeSpawn = function() {
             , ["2"]: Math.min(Math.ceil((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2), 1)
             , ["10"]: Math.min(Math.ceil((body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2), 1)
         };
-		for (let moveSpeed of moveSpeeds) {
+		for (let moveSpeedKey in moveSpeeds) {
+            var moveSpeed = moveSpeeds[moveSpeedKey];
 			moveSpeed = ((moveSpeed == 0) ? 1 : moveSpeed);
 		}
 		
