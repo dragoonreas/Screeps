@@ -8,6 +8,7 @@ var roleHoarder = require("role.hoarder");
 var roleCollector = require("role.collector");
 var roleHarvester = require("role.harvester");
 var roleMiner = require("role.miner");
+var roleHauler = require("role.hauler");
 var rolePowerHarvester = require("role.powerHarvester");
 var roleUpgrader = require("role.upgrader");
 var roleAdaptable = require("role.adaptable");
@@ -136,7 +137,7 @@ Memory.rooms["W53N32"].creepMins = {
     attacker: 0
     , harvester: 3
     , powerHarvester: 0
-    , upgrader: 4
+    , upgrader: 3
     , adaptable: 0
     , scout: 0
     , claimer: 0
@@ -350,7 +351,7 @@ module.exports.loop = function () {
                         var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
-                                && c.memory.speed <= 2
+                                && c.memory.speeds["2"] <= 2
                                 && c.memory.role != "attacker" 
                                 && c.memory.role != "powerHarvester"
                                 && c.memory.role != "adaptable" 
@@ -363,7 +364,7 @@ module.exports.loop = function () {
                             var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                 filter: (c) => (c.spawning == false 
                                     && c.memory.droppedResourceID == undefined 
-                                    && c.memory.speed <= 2
+                                    && c.memory.speeds["2"] <= 2
                                     && c.memory.role != "attacker" 
                                     && c.memory.role != "powerHarvester"
                                     && c.memory.role != "adaptable" 
@@ -377,7 +378,7 @@ module.exports.loop = function () {
                                 var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                     filter: (c) => (c.spawning == false 
                                         && c.memory.droppedResourceID == undefined 
-                                        && c.memory.speed <= 2
+                                        && c.memory.speeds["2"] <= 2
                                         && c.memory.role != "attacker" 
                                         && c.memory.role != "powerHarvester"
                                         && c.memory.role != "adaptable" 

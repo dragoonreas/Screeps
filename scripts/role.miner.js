@@ -10,8 +10,13 @@ var roleMiner = {
 
         if(creep.memory.working == true) {
             var theController = Game.rooms[creep.memory.roomID].controller;
-            if(creep.upgradeController(theController) == ERR_NOT_IN_RANGE) {
+            var err = creep.upgradeController(theController);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.say("\u27A1\uD83C\uDFF0", true);
                 creep.moveTo(theController);
+            }
+            else if (err == OK) {
+                creep.say("\u2B06\uD83C\uDFF0", true);
             }
         }
         else {
@@ -19,10 +24,11 @@ var roleMiner = {
             switch (creep.memory.roomID) {
                 case "E69N44": source = Game.getObjectById("57ef9efc86f108ae6e610381"); break;
                 case "E68N45": source = Game.getObjectById("57ef9ee786f108ae6e6101b3"); break;
-                case "W53N32": roleHarvester.run(creep); return;
+                case "W53N32": source = Game.getObjectById("579fa8b50700be0674d2e296"); break;
             }
             
             if (source != undefined) {
+                var theStorage = creep.room.storage;
                 var err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
@@ -34,6 +40,21 @@ var roleMiner = {
                 }
                 else if (err == OK) {
                     creep.say("\u26CF", true);
+                }
+                else if (theStorage != undefined && theStorage.store.energy > 0) {
+                    creep.cancelOrder("harvest");
+                    var err = creep.withdraw(theStorage, RESOURCE_ENERGY);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.say("\u27A1\uD83C\uDFE6", true);
+                        creep.moveTo(theStorage);
+                    }
+                    else if (err == ERR_NOT_ENOUGH_RESOURCES 
+                        && creep.carry.energy > 0) {
+                        creep.memory.working = true;
+                    }
+                    else if (err == OK) {
+                        creep.say("\u2B07\uD83C\uDFE6", true);
+                    }
                 }
                 else {
                     switch (creep.saying) {
