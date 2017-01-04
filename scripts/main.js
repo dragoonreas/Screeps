@@ -347,11 +347,12 @@ module.exports.loop = function () {
 					var assignedCreeps = theRoom.find(FIND_MY_CREEPS, {
                         filter: (c) => (c.memory.droppedResourceID == droppedResource.id
                     )});
-					if (assignedCreeps.length == 0) {
+					if (assignedCreeps.length == 0) { // TODO: remove transitional speed checks
                         var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
-                                && c.memory.speeds["2"] <= 2
+                                && (_.get(c.memory, "speeds.2", MAX_CREEP_SIZE - 1) <= 2
+                                || _.get(c.memory, "speed", MAX_CREEP_SIZE - 1) <= 2)
                                 && c.memory.role != "attacker" 
                                 && c.memory.role != "powerHarvester"
                                 && c.memory.role != "adaptable" 
@@ -364,7 +365,8 @@ module.exports.loop = function () {
                             var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                 filter: (c) => (c.spawning == false 
                                     && c.memory.droppedResourceID == undefined 
-                                    && c.memory.speeds["2"] <= 2
+                                    && (_.get(c.memory, "speeds.2", MAX_CREEP_SIZE - 1) <= 2
+                                    || _.get(c.memory, "speed", MAX_CREEP_SIZE - 1) <= 2)
                                     && c.memory.role != "attacker" 
                                     && c.memory.role != "powerHarvester"
                                     && c.memory.role != "adaptable" 
@@ -378,7 +380,8 @@ module.exports.loop = function () {
                                 var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                     filter: (c) => (c.spawning == false 
                                         && c.memory.droppedResourceID == undefined 
-                                        && c.memory.speeds["2"] <= 2
+                                        && (_.get(c.memory, "speeds.2", MAX_CREEP_SIZE - 1) <= 2
+                                        || _.get(c.memory, "speed", MAX_CREEP_SIZE - 1) <= 2)
                                         && c.memory.role != "attacker" 
                                         && c.memory.role != "powerHarvester"
                                         && c.memory.role != "adaptable" 
