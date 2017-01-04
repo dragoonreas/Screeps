@@ -1,7 +1,5 @@
 var roleCollector = {
-    
     run: function(creep) {
-        
         var droppedResource = Game.getObjectById(creep.memory.droppedResourceID);
         if (droppedResource == undefined) {
             console.log(creep.name + " failed to pickup the dropped resources in " + creep.room.name);

@@ -1,6 +1,4 @@
-// TODO: Add emoji speech for this creep role
 var roleAttacker = {
-    
     run: function(creep) {
         if (creep.room.name != creep.memory.roomID) {
             creep.say("\u27A1" + creep.memory.roomID);
@@ -11,7 +9,7 @@ var roleAttacker = {
         // TODO: Get hostile info from global memory, after main loop has been setup to supply it
         var invader = Game.getObjectById(creep.memory.invaderID);
         if (invader == undefined) {
-            invader = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            invader = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS); // TODO: Filter out creeps from players on the non-agressive list
             if (invader != undefined) {
                 creep.memory.invaderID = invader.id;
             }

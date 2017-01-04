@@ -1,7 +1,4 @@
-// TODO: Use body part constants to calculate bodyCost varients
-
 var prototypeSpawn = function() {
-    
     StructureSpawn.prototype.createCustomCreep =
         function(roleName) {
         

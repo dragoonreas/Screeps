@@ -1,7 +1,6 @@
 var roleUpgrader = require("role.upgrader");
 
 var roleHarvester = {
-
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
@@ -28,6 +27,11 @@ var roleHarvester = {
                 else {
                     creep.memory.sourceID = undefined;
                     
+                    /*
+                        TODO:
+                        Create these lists from the sources stored in the memory of the harvest rooms, which in turn are stored in the memory of the creeps spawn room.
+                        Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
+                    */
                     var sourceIDs = {
                         "E69N44": [
                             "57ef9ee786f108ae6e6101b6"
@@ -41,7 +45,7 @@ var roleHarvester = {
                             "579fa8b50700be0674d2e297"
                             , "579fa8b50700be0674d2e293"
                         ]
-                    }; // TODO: Create these lists from the sources stored in the memory of the harvest rooms, which in turn are stored in the memory of the creeps spawn room
+                    };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
                         var sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);

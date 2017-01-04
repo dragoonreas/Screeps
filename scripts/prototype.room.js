@@ -1,8 +1,6 @@
 var prototypeRoom = function() {
-    
     if (Room.prototype.sources == undefined) {
         Object.defineProperty(Room.prototype, "sources", {
-            
             get: function() {
                 if (_.get(this.memory, "sources", undefined) == undefined) {
                     _.forEach(this.find(FIND_SOURCES), (source) => (_.set(this.memory, ["sources", source.id], { 
@@ -33,7 +31,6 @@ var prototypeRoom = function() {
     
     if (Room.prototype.harvestRooms == undefined) {
         Object.defineProperty(Room.prototype, "harvestRooms", {
-            
             get: function() {
                 if (_.get(this.memory, "harvestRooms", unedfined) == undefined) {
                     _set(this.memory, "harvestRooms", []);
@@ -58,7 +55,6 @@ var prototypeRoom = function() {
 
     if (Room.prototype.checkForDrops == undefined) {
         Object.defineProperty(Room.prototype, "checkForDrops", {
-            
             get: function() {
                 if (_.get(this.memory, "checkForDrops", undefined) == undefined) {
                     _.set(this.memory, "checkForDrops", true);
@@ -83,7 +79,6 @@ var prototypeRoom = function() {
 
     if (Room.prototype.buildOrderFILO == undefined) {
         Object.defineProperty(Room.prototype, "buildOrderFILO", {
-            
             get: function() {
                 if (_.get(this.memory, "buildOrderFILO", undefined) == undefined) {
                     _.set(this.memory, "buildOrderFILO", false);
@@ -108,7 +103,6 @@ var prototypeRoom = function() {
 
     if (Room.prototype.hasHostileCreep == undefined) {
         Object.defineProperty(Room.prototype, "hasHostileCreep", {
-            
             get: function() {
                 if (_.get(this.memory, "hasHostileCreep", undefined) == undefined) {
                     _.set(this.memory, "hasHostileCreep", false);
@@ -133,7 +127,6 @@ var prototypeRoom = function() {
 
     if (Room.prototype.hasHostileTower == undefined) {
         Object.defineProperty(Room.prototype, "hasHostileTower", {
-            
             get: function() {
                 if (_.get(this.memory, "hasHostileTower", undefined) == undefined) {
                     _.set(this.memory, "hasHostileTower", false);

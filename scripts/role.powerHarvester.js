@@ -3,9 +3,7 @@ var roleHarvester = require("role.harvester");
 
 // TODO: Creep.say emotes
 var rolePowerHarvester = {
-    
     run: function(creep) {
-        
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined;

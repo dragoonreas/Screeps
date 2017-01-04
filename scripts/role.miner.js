@@ -1,7 +1,6 @@
+// TODO: Make this role (currently just a copy of upgrader)
 var roleMiner = {
-    // TODO: Make this role (currently just a copy of upgrader)
     run: function(creep) {
-
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }

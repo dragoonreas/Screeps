@@ -1,7 +1,5 @@
 var roleUpgrader = {
-
     run: function(creep) {
-
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }

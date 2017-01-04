@@ -1,9 +1,7 @@
 var roleScout = require("role.scout");
 
 var roleClaimer = {
-
-    run: function(creep) {
-        
+   run: function(creep) {
         var theController = Game.getObjectById(creep.memory.controllerID);
         if (theController == undefined || creep.room.name != theController.room.name) {
             if (creep.memory.controllerID == "57ef9ee786f108ae6e6101b5") {

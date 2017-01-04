@@ -1,41 +1,43 @@
 var prototypeMemory = function() {
-    
     if (Memory.sources == undefined) {
         var handler = {
-            get: function(target, sourceID) {
-                var source = Game.getObjectById(sourceID);
-                if (source != undefined) {
-                    return _.get(Memory, ["rooms", source.room.name, "sources", sourceID], undefined);
-                }
-                
-                var memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
-                for (let roomIndex in memorisedRoomIDs) {
-                    var sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", sourceID], undefined);
-                    if (sourceMem != undefined) {
-                        return sourceMem;
+            get: function(target, property) {
+                if (_.isString(property) == true) {
+                    var source = Game.getObjectById(property);
+                    if (_.get(source, "room.name", undefined) != undefined) {
+                        return _.get(Memory, ["rooms", source.room.name, "sources", property], undefined);
+                    }
+                    
+                    var memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
+                    for (let roomIndex in memorisedRoomIDs) {
+                        var sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", property], undefined);
+                        if (sourceMem != undefined) {
+                            return sourceMem;
+                        }
                     }
                 }
-                
-                return undefined;
+                return this[property];
             },
             
-            set: function(target, sourceID, value) {
-                var source = Game.getObjectById(sourceID);
-                if (source != undefined) {
-                    _.set(Memory, ["rooms", source.room.name, "sources", sourceID], value);
-                    return true;
-                }
-                
-                var memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
-                for (let roomIndex in memorisedRoomIDs) {
-                    var sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", sourceID], undefined);
-                    if (sourceMem != undefined) {
-                        sourceMem = value;
+            set: function(target, property, value) {
+                if (_.isString(property) == true) {
+                    var source = Game.getObjectById(property);
+                    if (_.get(source, "room.name", undefined) != undefined) {
+                        _.set(Memory, ["rooms", source.room.name, "sources", property], value);
                         return true;
                     }
+                    
+                    var memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
+                    for (let roomIndex in memorisedRoomIDs) {
+                        var sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", property], undefined);
+                        if (sourceMem != undefined) {
+                            sourceMem = value;
+                            return true;
+                        }
+                    }
                 }
-                
-                return false;
+                this[property] = value;
+                return true;
             }
         };
         var sourceProxy = new Proxy({}, handler);
@@ -49,8 +51,15 @@ var prototypeMemory = function() {
                 sourceProxy = value;
             }
         });
+        
+        Memory.sources[Symbol.iterator] = function*() {
+            for (let roomID in Memory.rooms) {
+                for (let sourceID in Memory.rooms[roomID].sources) {
+                    yield Memory.rooms[roomID].sources[sourceID];
+                }
+            }
+        }
     }
-
 }
 
 module.exports = prototypeMemory;

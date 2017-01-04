@@ -1,9 +1,7 @@
 var roleHarvester = require("role.harvester");
 
 var roleBuilder = {
-
     run: function(creep) {
-
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.checkedForDrops = undefined;
@@ -68,7 +66,7 @@ var roleBuilder = {
                             });
                             ++i;
                         }
-                        while (i < priorityQueue.length && constructionSite == undefined)
+                        while (i < priorityQueue.length && constructionSite == undefined) // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined
                         
                         if (constructionSite != undefined) {
                             creep.memory.constructionSiteID = constructionSite.id;

@@ -2,9 +2,7 @@ var roleBuilder = require("role.builder");
 var roleHarvester = require("role.harvester");
 
 var roleRepairer = {
-	
     run: function(creep) {
-		
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }
@@ -35,7 +33,7 @@ var roleRepairer = {
             
             if (structure == undefined) {
                 var repairerTypeFound = false;
-                for (let repairerType in Memory.rooms[creep.memory.roomID].repairerTypeMins) {
+                for (let repairerType in Memory.rooms[creep.memory.roomID].repairerTypeMins) { // TODO: Change to for...of once Memory.rooms[creep.memory.roomID].repairerTypeMins is changed to an array
                     if (repairerTypeFound == false && (repairerType == creep.memory.repairerType || repairerType == "all")) {
                         repairerTypeFound = true;
                     }

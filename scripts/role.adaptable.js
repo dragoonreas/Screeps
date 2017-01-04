@@ -11,9 +11,7 @@ var roleScout = require("role.scout");
 
 // role to use when doing ad-hoc stuff
 var roleAdaptable = {
-    
     run: function(creep) {
-        
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }

@@ -3,7 +3,6 @@ var prototypeSource = function() {
     // Based off: http://stackoverflow.com/a/38445167
     if (Source.prototype.memory == undefined) {
         Object.defineProperty(Source.prototype, "memory", {
-            
             get: function() {
                 if (_.isObject(this.room.sources) == false) {
                     return undefined;
@@ -22,7 +21,6 @@ var prototypeSource = function() {
     
     if (Source.prototype.regenAt == undefined) {
         Object.defineProperty(Source.prototype, "regenAt", {
-    
             get: function() {
                 if (_.get(this.memory, "regenAt", undefined) == undefined) {
                     _.set(this.memory, "regenAt", Game.time + (this.energy == 0 ? this.ticksToRegeneration : 0));
@@ -47,7 +45,6 @@ var prototypeSource = function() {
 
     if (Source.prototype.upgraderOnly == undefined) {
         Object.defineProperty(Source.prototype, "upgraderOnly", {
-    
             get: function() {
                 if (_.get(this.memory, "upgraderOnly", undefined) == undefined) {
                     _.set(this.memory, "upgraderOnly", false);
@@ -72,7 +69,6 @@ var prototypeSource = function() {
 
     if (Source.prototype.miner == undefined) {
         Object.defineProperty(Source.prototype, "miner", {
-    
             get: function() {
                 if (_.isString(this.memory.minerName) == false) {
                     return undefined;
@@ -98,7 +94,6 @@ var prototypeSource = function() {
 
     if (Source.prototype.container == undefined) {
         Object.defineProperty(Source.prototype, "container", {
-    
             get: function() {
                 if (_.isString(this.memory.containerID) == false) {
                     return undefined;
@@ -124,7 +119,6 @@ var prototypeSource = function() {
 
     if (Source.prototype.link == undefined) {
         Object.defineProperty(Source.prototype, "link", {
-    
             get: function() {
                 if (_.isString(this.memory.linkID) == false) {
                     return undefined;

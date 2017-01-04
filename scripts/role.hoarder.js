@@ -1,8 +1,6 @@
 // Transfer any non-energy resources to storage
 var roleHoarder = {
-    
     run: function(creep) {
-        
         var theStorage = Game.getObjectById(creep.memory.storageID);
         if (theStorage == undefined) {
             theStorage = Game.rooms[creep.memory.roomID].storage;

@@ -1,5 +1,4 @@
 var roleRecyclable = {
-    
     run: function(creep) {
         
 		/*

@@ -51,7 +51,7 @@ for (let roomID in Game.rooms) {
         || (theRoom.controller.reservation != undefined 
         && theRoom.controller.reservation.username == "dragoonreas") 
         || (theRoom.controller.reservation == undefined 
-        && theRoom.controller.level == 0))) {
+        && theRoom.controller.level == 0))) { // TODO: Change this to just ignore rooms owned by other players
         var sources = theRoom.find(FIND_SOURCES);
         for (let sourceID in sources) {
             var source = sources[sourceID];
@@ -70,27 +70,32 @@ for (let roomID in Game.rooms) {
     }
 }
 
+/*
+    TODO:
+    These should be stored in an array instead of an object since their order also defines the build priority.
+    Also be sure to use for...of instead of for..in where their order is important
+*/
 Memory.rooms["E69N44"].repairerTypeMins = {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
     , "all": 0
-}; // NOTE: This also defines the build priority
+};
 Memory.rooms["E68N45"].repairerTypeMins = {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
     , "all": 0
-}; // NOTE: This also defines the build priority
+};
 Memory.rooms["W53N32"].repairerTypeMins = {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
     , "all": 0
-}; // NOTE: This also defines the build priority
+};
 
 var repairerMins = {};
 for (let roomID in Game.rooms) {
@@ -100,6 +105,11 @@ for (let roomID in Game.rooms) {
     }
 }
 
+/*
+    TODO:
+    These should be stored in an array instead of an object since their order also defines the build priority.
+    Also be sure to use for...of instead of for..in where their order is important
+*/
 Memory.rooms["E69N44"].creepMins = {
     attacker: 0
     , harvester: 6
@@ -110,7 +120,7 @@ Memory.rooms["E69N44"].creepMins = {
     , claimer: 1
     , repairer: repairerMins["E69N44"]
     , builder: 1
-}; // NOTE: This also defines the build priority
+};
 Memory.rooms["E68N45"].creepMins = {
     attacker: 0
     , harvester: 2
@@ -121,7 +131,7 @@ Memory.rooms["E68N45"].creepMins = {
     , claimer: 1
     , repairer: repairerMins["E68N45"]
     , builder: 1
-}; // NOTE: This also defines the build priority
+};
 Memory.rooms["W53N32"].creepMins = {
     attacker: 0
     , harvester: 3
@@ -132,7 +142,7 @@ Memory.rooms["W53N32"].creepMins = {
     , claimer: 0
     , repairer: repairerMins["W53N32"]
     , builder: 1
-}; // NOTE: This also defines the build priority
+};
 
 Memory.rooms["E69N44"].harvestRooms = [
     "E68N44"
@@ -243,7 +253,7 @@ module.exports.loop = function () {
             || (theController.reservation != undefined 
             && theController.reservation.username == "dragoonreas") 
             || (theController.reservation == undefined 
-            && theController.level == 0))) {
+            && theController.level == 0))) { // TODO: Change this to just ignore rooms owned by other players
             var sources = theRoom.find(FIND_SOURCES);
             for (let sourceID in sources) {
                 var source = sources[sourceID];
@@ -330,8 +340,8 @@ module.exports.loop = function () {
             theRoom.checkForDrops = false;
             var droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
-                droppedResources.sort(function(a,b){return b.amount - a.amount});
-                for (let droppedResourceID in droppedResources) {
+                droppedResources.sort(function(a,b){return b.amount - a.amount}); // TODO: Prioritise minerals in accending order and then energy in decending order
+                for (let droppedResourceID in droppedResources) { // TODO: Use for..of instead of for...in here since the order matters
                     var droppedResource = droppedResources[droppedResourceID];
 					var assignedCreeps = theRoom.find(FIND_MY_CREEPS, {
                         filter: (c) => (c.memory.droppedResourceID == droppedResource.id
