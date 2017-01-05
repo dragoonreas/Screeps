@@ -116,6 +116,9 @@ var prototypeSpawn = function() {
             body.push(MOVE);
             bodyPartCounts[MOVE] = 1;
         }
+        else if (bodyPartCounts[MOVE] == bodyTemplate.length) {
+            body = _.fill(Array(bodyTemplate.length * partMultiplier), MOVE);
+        }
         else {
             var chunckSize = ((moveRatio == 0.5) ? 2 : 1); // move parts will be added at the apropriate intervales to maintain the move ratio
             body = _.chunk(body.reverse(), chunckSize).reverse(); // since we want the execess chunks at the front, we need to reverse the array before and after creating the chuncks
@@ -126,17 +129,15 @@ var prototypeSpawn = function() {
             body = _.flattenDeep(body);
         }
         
+        bodyPartCounts = _.countBy(body);
+        
 		// Worst case (full carry parts & HP) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
         var moveSpeeds = {
-            ["1"]: Math.min(Math.ceil((body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2), 1)
-            , ["2"]: Math.min(Math.ceil((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2), 1)
-            , ["10"]: Math.min(Math.ceil((body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2), 1)
+            ["1"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
+            , ["2"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)
+            , ["10"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1)
         };
-		for (let moveSpeedKey in moveSpeeds) {
-            var moveSpeed = moveSpeeds[moveSpeedKey];
-			moveSpeed = ((moveSpeed == 0) ? 1 : moveSpeed);
-		}
-		
+        
         var creepMemory = { roomID: this.room.name, speeds: moveSpeeds, role: roleName, working: false }; // TODO: Only apply the working property to creeps with carry parts
         
         if (roleName == "repairer") {
@@ -156,7 +157,7 @@ var prototypeSpawn = function() {
         else if (roleName == "powerHarvester") {
             creepMemory.harvestRoom = { id: "E70N44", x: 18, y:7 };
         }
-
+        
         var result = this.createCreep(body, undefined, creepMemory); // TODO: Work out a custom naming scheme
         
         if (roleName == "repairer" && _.isString(result) == true) {

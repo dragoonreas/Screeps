@@ -137,7 +137,7 @@ Memory.rooms["W53N32"].creepMins = {
     attacker: 0
     , harvester: 3
     , powerHarvester: 0
-    , upgrader: 3
+    , upgrader: 4
     , adaptable: 0
     , scout: 0
     , claimer: 0
@@ -217,8 +217,13 @@ module.exports.loop = function () {
                 currentSpawnedRole = Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role];
                 minimumSpawnedRole = Memory.rooms[creepMemory.roomID].creepMins[creepMemory.role];
                 if (creepMemory.role == "adaptable") { // Currently just using the adapatable role to send reinforcement workers to new rooms and setting their new role when they get there, so none should end up dying with this role unless they fail to make it to their destination
-                    console.log("Adaptable failed to make it to it's destination");
-                    Game.notify("Adaptable failed to make it to it's destination");
+                    console.log("Adaptable from " + creepMemory.roomID + " only made it past waypoint " + _.get(creepMemory, "waypoint", 0));
+                    Game.notify("Adaptable from " + creepMemory.roomID + " only made it past waypoint " + _.get(creepMemory, "waypoint", 0));
+                }
+                else if (creepMemory.role == "scout" && creepMemory.goalReached != true) {
+                    console.log("Scout from " + creepMemory.roomID + " only made it past waypoint " + creepMemory.waypoint);
+                    Game.notify("Scout from " + creepMemory.roomID + " only made it past waypoint " + creepMemory.waypoint);
+                    Memory.rooms[creepMemory.roomID].creepMins[creepMemory.role] = 0;
                 }
             }
             console.log("Expired " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + name);
@@ -347,12 +352,11 @@ module.exports.loop = function () {
 					var assignedCreeps = theRoom.find(FIND_MY_CREEPS, {
                         filter: (c) => (c.memory.droppedResourceID == droppedResource.id
                     )});
-					if (assignedCreeps.length == 0) { // TODO: remove transitional speed checks
+					if (assignedCreeps.length == 0) {
                         var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
-                                && (_.get(c.memory, "speeds.2", MAX_CREEP_SIZE - 1) <= 2
-                                || _.get(c.memory, "speed", MAX_CREEP_SIZE - 1) <= 2)
+                                && c.memory.speeds["2"] <= 2 
                                 && c.memory.role != "attacker" 
                                 && c.memory.role != "powerHarvester"
                                 && c.memory.role != "adaptable" 
@@ -365,8 +369,7 @@ module.exports.loop = function () {
                             var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                 filter: (c) => (c.spawning == false 
                                     && c.memory.droppedResourceID == undefined 
-                                    && (_.get(c.memory, "speeds.2", MAX_CREEP_SIZE - 1) <= 2
-                                    || _.get(c.memory, "speed", MAX_CREEP_SIZE - 1) <= 2)
+                                    && c.memory.speeds["2"] <= 2 
                                     && c.memory.role != "attacker" 
                                     && c.memory.role != "powerHarvester"
                                     && c.memory.role != "adaptable" 
@@ -380,8 +383,7 @@ module.exports.loop = function () {
                                 var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                     filter: (c) => (c.spawning == false 
                                         && c.memory.droppedResourceID == undefined 
-                                        && (_.get(c.memory, "speeds.2", MAX_CREEP_SIZE - 1) <= 2
-                                        || _.get(c.memory, "speed", MAX_CREEP_SIZE - 1) <= 2)
+                                        && c.memory.speeds["2"] <= 2 
                                         && c.memory.role != "attacker" 
                                         && c.memory.role != "powerHarvester"
                                         && c.memory.role != "adaptable" 
