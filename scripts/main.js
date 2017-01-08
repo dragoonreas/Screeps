@@ -347,12 +347,11 @@ module.exports.loop = function () {
             var droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
                 droppedResources.sort(function(a,b){return b.amount - a.amount}); // TODO: Prioritise minerals in accending order and then energy in decending order
-                for (let droppedResourceID in droppedResources) { // TODO: Use for..of instead of for...in here since the order matters
-                    var droppedResource = droppedResources[droppedResourceID];
-					var assignedCreeps = theRoom.find(FIND_MY_CREEPS, {
-                        filter: (c) => (c.memory.droppedResourceID == droppedResource.id
-                    )});
-					if (assignedCreeps.length == 0) {
+                for (let droppedResource of droppedResources) {
+					var hasAssignedCreep = _.some(Game.creeps, (c) => (
+					    c.memory.droppedResourceID == droppedResource.id
+                    ));
+					if (hasAssignedCreep == false) {
                         var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
