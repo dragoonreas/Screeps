@@ -146,10 +146,10 @@ _.set(Memory.rooms, ["E69N44", "harvestRooms"], [
 ]);
 _.set(Memory.rooms, ["E68N45", "harvestRooms"], [
     "E68N44"
-];
+]);
 _.set(Memory.rooms, ["W53N32", "harvestRooms"], [
     "W53N33"
-];
+]);
 
 module.exports.loop = function () {
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
@@ -262,7 +262,7 @@ module.exports.loop = function () {
                 _.defaults(Memory.sources[source.id], {
                     pos: source.pos
                 });
-                
+
                 // Made sure the getter for Source.regenAt initialises the value properly
                 if (source.regenAt == undefined) {
                     console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
@@ -358,7 +358,7 @@ module.exports.loop = function () {
                                 && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
                         )});
                         if (creep == undefined) {
-                            var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
+                            creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                 filter: (c) => (c.spawning == false 
                                     && c.memory.droppedResourceID == undefined 
                                     && c.memory.speeds["2"] <= 2 
@@ -372,7 +372,7 @@ module.exports.loop = function () {
                                     && _.sum(c.carry) == 0 
                             )});
                             if (creep == undefined) {
-                                var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
+                                creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                     filter: (c) => (c.spawning == false 
                                         && c.memory.droppedResourceID == undefined 
                                         && c.memory.speeds["2"] <= 2 
@@ -438,7 +438,8 @@ module.exports.loop = function () {
 		}
     }
 
-    for(let creep of Game.creeps) {
+    for(let creepName in Game.creeps) {
+        let creep = Game.creeps[creepName];
         if (creep.spawning == false) {
             let bodyPartCounts = _.countBy(creep.body);
             _.defaults(creep.memory, {
@@ -497,7 +498,8 @@ module.exports.loop = function () {
     }
 
     let nothingToSpawn = [];
-    for (let spawn of Game.spawns) {
+    for (let spawnID in Game.spawns) {
+        let spawn = Game.spawns[spawnID];
         let roomID = spawn.room.name;
         if (spawn.spawning == undefined && _.includes(nothingToSpawn, roomID) == false && spawn.isActive() == true) {
             let creepName = undefined;
