@@ -105,7 +105,7 @@ var roleRepairer = {
                     creep.moveTo(structure);
                 }
                 else if (err == OK) {
-                    if (creep.pos.roomName == "W53N32" && creep.pos.x == 32 && creep.pos.y == 7) { // TODO: Program creeps to move others blocking their path so this kind of thing isn't needed
+                    if (creep.pos.roomName == "W53N32" && creep.pos.isEqualTo(32, 7)) { // TODO: Program creeps to move others blocking their path so this kind of thing isn't needed
                         creep.move(BOTTOM);
                     }
                     creep.say(actionIcon + structureIcon, true);

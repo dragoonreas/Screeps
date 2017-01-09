@@ -54,18 +54,14 @@ for (let roomID in Game.rooms) {
         || (theRoom.controller.reservation == undefined 
         && theRoom.controller.level == 0))) { // TODO: Change this to just ignore rooms owned by other players
         var sources = theRoom.find(FIND_SOURCES);
-        for (let sourceID in sources) {
-            var source = sources[sourceID];
+        for (let source of sources) {
             _.defaults(Memory.sources[source.id], {
                 pos: source.pos
             });
-            
-            var sourceRegenAt = _.get(Memory, ["sources", source.id, "regenAt"], undefined);
-            if (sourceRegenAt == undefined || (source.energy == 0 && sourceRegenAt < (Game.time + source.ticksToRegeneration))) {
-                _.set(Memory, ["sources", source.id, "regenAt"], Game.time + (source.ticksToRegeneration || 0));
-                if (source.ticksToRegeneration != undefined) {
-                    console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
-                }
+
+            // Made sure the getter for Source.regenAt initialises the value properly
+            if (source.regenAt == undefined) {
+                console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
             }
         }
     }
@@ -76,27 +72,27 @@ for (let roomID in Game.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-Memory.rooms["E69N44"].repairerTypeMins = {
+_.set(Memory.rooms, ["E69N44", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
     , "all": 0
-};
-Memory.rooms["E68N45"].repairerTypeMins = {
+});
+_.set(Memory.rooms, ["E68N45", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
     , "all": 0
-};
-Memory.rooms["W53N32"].repairerTypeMins = {
+});
+_.set(Memory.rooms, ["W53N32", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
     , "all": 0
-};
+});
 
 var repairerMins = {};
 for (let roomID in Game.rooms) {
@@ -111,7 +107,7 @@ for (let roomID in Game.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-Memory.rooms["E69N44"].creepMins = {
+_.set(Memory.rooms, ["E69N44", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
@@ -121,8 +117,8 @@ Memory.rooms["E69N44"].creepMins = {
     , claimer: 1
     , repairer: repairerMins["E69N44"]
     , builder: 1
-};
-Memory.rooms["E68N45"].creepMins = {
+});
+_.set(Memory.rooms, ["E68N45", "creepMins"], {
     attacker: 0
     , harvester: 2
     , powerHarvester: 0
@@ -132,8 +128,8 @@ Memory.rooms["E68N45"].creepMins = {
     , claimer: 1
     , repairer: repairerMins["E68N45"]
     , builder: 1
-};
-Memory.rooms["W53N32"].creepMins = {
+});
+_.set(Memory.rooms, ["W53N32", "creepMins"], {
     attacker: 0
     , harvester: 3
     , powerHarvester: 0
@@ -143,15 +139,15 @@ Memory.rooms["W53N32"].creepMins = {
     , claimer: 0
     , repairer: repairerMins["W53N32"]
     , builder: 1
-};
+});
 
-Memory.rooms["E69N44"].harvestRooms = [
+_.set(Memory.rooms, ["E69N44", "harvestRooms"], [
+    "E68N44"
+]);
+_.set(Memory.rooms, ["E68N45", "harvestRooms"], [
     "E68N44"
 ];
-Memory.rooms["E68N45"].harvestRooms = [
-    "E68N44"
-];
-Memory.rooms["W53N32"].harvestRooms = [
+_.set(Memory.rooms, ["W53N32", "harvestRooms"], [
     "W53N33"
 ];
 
@@ -267,12 +263,9 @@ module.exports.loop = function () {
                     pos: source.pos
                 });
                 
-                var sourceRegenAt = _.get(Memory, ["sources", source.id, "regenAt"], undefined);
-                if (sourceRegenAt == undefined || (source.energy == 0 && sourceRegenAt < (Game.time + source.ticksToRegeneration))) {
-                    _.set(Memory, ["sources", source.id, "regenAt"], Game.time + (source.ticksToRegeneration || 0));
-                    if (source.ticksToRegeneration != undefined) {
-                        console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
-                    }
+                // Made sure the getter for Source.regenAt initialises the value properly
+                if (source.regenAt == undefined) {
+                    console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
                 }
             }
         }
@@ -352,7 +345,7 @@ module.exports.loop = function () {
 					    c.memory.droppedResourceID == droppedResource.id
                     ));
 					if (hasAssignedCreep == false) {
-                        var creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
+                        let creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
                                 && c.memory.speeds["2"] <= 2 
@@ -445,16 +438,20 @@ module.exports.loop = function () {
 		}
     }
 
-    for(var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        if (!creep.spawning) {
+    for(let creep of Game.creeps) {
+        if (creep.spawning == false) {
+            let bodyPartCounts = _.countBy(creep.body);
             _.defaults(creep.memory, {
                 role: "harvester"
                 , working: false
-                , speed: (creep.body.length - _.countBy(creep.body, (bp) => bp.type)[MOVE]) / _.countBy(creep.body, (bp) => bp.type)[MOVE] // TODO: Use this algorithm to calculate the speed in the spawn code
+                , speeds: {
+                    ["1"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
+                    , ["2"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)
+                    , ["10"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1)
+                }
             });
             
-            var theStorage = Game.rooms[creep.memory.roomID].storage;
+            let theStorage = Game.rooms[creep.memory.roomID].storage;
             
             if (creep.memory.role == "attacker") {
 				roleAttacker.run(creep);
@@ -498,22 +495,26 @@ module.exports.loop = function () {
             }
         }
     }
-    
-    // TODO: Redo this to loop through spawn rooms, then if spawns are avaliable loop through roles while breaking once no more spawns are avaliable
-    for (let spawnID in Game.spawns) {
-        var spawn = Game.spawns[spawnID];
-        if (spawn.spawning == undefined && spawn.isActive() == true) {
-            var roomID = spawn.room.name;
-            var creepMins = Memory.rooms[roomID].creepMins;
+
+    let nothingToSpawn = [];
+    for (let spawn of Game.spawns) {
+        let roomID = spawn.room.name;
+        if (spawn.spawning == undefined && _.includes(nothingToSpawn, roomID) == false && spawn.isActive() == true) {
+            let creepName = undefined;
+            let creepMins = Memory.rooms[roomID].creepMins;
             for (let creepType in creepMins) {
                 if (Memory.rooms[roomID].creepCounts[creepType] < creepMins[creepType]) {
-                    var creepName = spawn.createCustomCreep(creepType);
+                    creepName = spawn.createCustomCreep(creepType);
                     if (_.isString(creepName) == true) {
                         Memory.rooms[roomID].creepCounts[creepType] += 1;
                         console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
                     }
                     break;
                 }
+            }
+
+            if (creepName == undefined || creepName == ERR_NOT_ENOUGH_ENERGY || _.isString(creepName) == true) {
+                nothingToSpawn.push(roomID);
             }
         }
     }

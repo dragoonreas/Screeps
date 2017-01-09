@@ -121,7 +121,7 @@ var prototypeSpawn = function() {
         }
         else {
             var chunckSize = ((moveRatio == 0.5) ? 2 : 1); // move parts will be added at the apropriate intervales to maintain the move ratio
-            body = _.chunk(body.reverse(), chunckSize).reverse(); // since we want the execess chunks at the front, we need to reverse the array before and after creating the chuncks
+            body = _.chunk(body.reverse(), chunckSize).reverse(); // since we want the execess chunks at the front, we need to reverse the array before and after creating the chuncks (although this will reverse the part order in chuncks with different types of parts, it's probably not worth worrying about)
             var moveTemplate = _.fill(Array(Math.ceil(moveRatio)), MOVE);
             for (let bodyChunk of body) {
                 bodyChunk.push(moveTemplate);
@@ -131,7 +131,7 @@ var prototypeSpawn = function() {
         
         bodyPartCounts = _.countBy(body);
         
-		// Worst case (full carry parts & HP) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
+		// Worst case (full carry parts) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
         var moveSpeeds = {
             ["1"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
             , ["2"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)

@@ -12,7 +12,7 @@ var prototypeSource = function() {
             
             set: function(value) {
                 if (_.isObject(this.room.sources) == false) {
-                    throw new Error("Could not set memory source property");
+                    throw new Error("Could not set Source.memory property");
                 }
                 this.room.sources[this.id] = value;
             }
@@ -36,7 +36,7 @@ var prototypeSource = function() {
                     _.set(this.memory, "regenAt", Game.time + (this.energy == 0 ? this.ticksToRegeneration : 0));
                 }
                 if (_.isNumber(this.memory.regenAt) == false) {
-                    throw new Error("Could not set regenAt source property");
+                    throw new Error("Could not set Source.regenAt property");
                 }
                 this.memory.regenAt = value;
             }
@@ -60,7 +60,7 @@ var prototypeSource = function() {
                     _.set(this.memory, "upgraderOnly", false);
                 }
                 if (_.isBoolean(this.memory.upgraderOnly) == false) {
-                    throw new Error("Could not set upgraderOnly source property");
+                    throw new Error("Could not set Source.upgraderOnly property");
                 }
                 this.memory.upgraderOnly = value;
             }
@@ -86,7 +86,7 @@ var prototypeSource = function() {
                     this.memory.miner = value;
                 }
                 else {
-                    throw new Error("Could not set miner source property");
+                    throw new Error("Could not set Source.miner property");
                 }
             }
         });
@@ -111,7 +111,7 @@ var prototypeSource = function() {
                     this.memory.containerID = value;
                 }
                 else {
-                    throw new Error("Could not set container source property");
+                    throw new Error("Could not set Source.container property");
                 }
             }
         });
@@ -136,7 +136,7 @@ var prototypeSource = function() {
                     this.memory.linkID = value;
                 }
                 else {
-                    throw new Error("Could not set link source property");
+                    throw new Error("Could not set Source.link property");
                 }
             }
         });

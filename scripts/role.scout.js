@@ -36,7 +36,7 @@ var roleScout = {
                     creep.say("\u27A1W20S34", true);
                     creep.moveTo(new RoomPosition(25, 48, "W20S34"), { reusePath: 0 }); // need to react quick to evade enemy patrols
                 }
-                else if (creep.memory.waypoint == 2 || (creep.room.name == "W19S36" && creep.pos.x == 8 && creep.pos.y == 34) == false) {
+                else if (creep.memory.waypoint == 2 || (creep.room.name == "W19S36" && creep.pos.isEqualTo(8, 34) == true) == false) {
                     creep.say("\u27A1W19S36", true);
                     creep.moveTo(new RoomPosition(8, 34, "W19S36"));
                 }

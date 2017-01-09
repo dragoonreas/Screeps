@@ -59,7 +59,7 @@ var roleAttacker = {
                     , { x: 39, y: 27 }
                 ];
                 for (let i = 0; i < entrances.length; ++i) {
-                	if (creep.pos.x == entrances[i].x && creep.pos.y == entrances[i].y) {
+                	if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
                         break;
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {

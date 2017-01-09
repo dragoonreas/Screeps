@@ -115,7 +115,7 @@ var roleHarvester = {
                 creep.say("\u27A1" + creep.memory.roomID, true);
                 creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
             }
-            else { // TODO: Store creep.memory.structureID and only check if it still requires energy each tick
+            else {
                 var structure = Game.getObjectById(creep.memory.depositeStructureID);
                 if (structure == undefined || structure.energy == structure.energyCapacity) {
                     structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -132,6 +132,9 @@ var roleHarvester = {
                                     && s.energy < s.energyCapacity;
                             }
                         });
+                    }
+                    if (structure != undefined) {
+                        creep.memory.depositeStructureID = structure.id;
                     }
                 }
                 
