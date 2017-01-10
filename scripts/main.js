@@ -53,13 +53,12 @@ for (let roomID in Game.rooms) {
             pos: source.pos
         });
 
-            if (source.regenAt == undefined) {
-                console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
-            }
-            else if (source.energy == 0 && source.regenAt < (Game.time + source.ticksToRegeneration)) {
-                source.regenAt = Game.time + source.ticksToRegeneration;
-                console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
-            }
+        if (source.regenAt == undefined) {
+            console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
+        }
+        else if (source.energy == 0 && source.regenAt < (Game.time + source.ticksToRegeneration)) {
+            source.regenAt = Game.time + source.ticksToRegeneration;
+            console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
         }
     }
 }
