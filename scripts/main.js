@@ -39,7 +39,7 @@ _.defaultsDeep(Memory, {
 });
 
 for (let roomID in Game.rooms) {
-    var theRoom = Game.rooms[roomID];
+    let theRoom = Game.rooms[roomID];
     _.defaults(theRoom, {
         "buildOrderFILO": false
         , "checkForDrops": true
@@ -47,21 +47,18 @@ for (let roomID in Game.rooms) {
         , "memoryExpiration": Game.time + estTicksPerDay
     });
     
-    if (theRoom.controller != undefined 
-        && (theRoom.controller.my == true 
-        || (theRoom.controller.reservation != undefined 
-        && theRoom.controller.reservation.username == "dragoonreas") 
-        || (theRoom.controller.reservation == undefined 
-        && theRoom.controller.level == 0))) { // TODO: Change this to just ignore rooms owned by other players
-        var sources = theRoom.find(FIND_SOURCES);
-        for (let source of sources) {
-            _.defaults(Memory.sources[source.id], {
-                pos: source.pos
-            });
+    let sources = theRoom.find(FIND_SOURCES);
+    for (let source of sources) {
+        _.defaults(Memory.sources[source.id], {
+            pos: source.pos
+        });
 
-            // Made sure the getter for Source.regenAt initialises the value properly
             if (source.regenAt == undefined) {
                 console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
+            }
+            else if (source.energy == 0 && source.regenAt < (Game.time + source.ticksToRegeneration)) {
+                source.regenAt = Game.time + source.ticksToRegeneration;
+                console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
             }
         }
     }
@@ -96,7 +93,7 @@ _.set(Memory.rooms, ["W53N32", "repairerTypeMins"], {
 
 var repairerMins = {};
 for (let roomID in Game.rooms) {
-    var theRoom = Game.rooms[roomID];
+    let theRoom = Game.rooms[roomID];
     if (theRoom.memory.repairerTypeMins != undefined) {
         repairerMins[roomID] = _.reduce(theRoom.memory.repairerTypeMins, (sum, count) => (sum + count), 0);
     }
@@ -177,11 +174,11 @@ module.exports.loop = function () {
         Memory.TooAngleDealings.isFriendly == false 
         && Memory.TooAngleDealings.lastIdiotRating != Memory.TooAngleDealings.idiotRating
     ) {
-        var energySellOrders = Game.market.getAllOrders({
+        let energySellOrders = Game.market.getAllOrders({
           type: ORDER_SELL
           , resourceType: RESOURCE_ENERGY
         });
-        var energyPrice = _.sortBy(energySellOrders, (o) => (
+        let energyPrice = _.sortBy(energySellOrders, (o) => (
             o.price
         ))[0].price;
         Memory.TooAngleDealings.energyToFriendly = (parseInt(Memory.TooAngleDealings.idiotRating) + 1) / energyPrice;
@@ -189,7 +186,7 @@ module.exports.loop = function () {
         Memory.TooAngleDealings.lastIdiotRating = Memory.TooAngleDealings.idiotRating;
     }
     
-    var dealingsTerminal = Game.rooms["E69N44"].terminal;
+    let dealingsTerminal = Game.rooms["E69N44"].terminal;
     if (Memory.TooAngleDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store.energy >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngleDealings.totalCost)) {
         if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngleDealings.energyToFriendly, "E33N15", "brain.isFriend('Dragoonreas') == true?") == OK) {
             console.log("Used " + Memory.TooAngleDealings.totalCost + " energy to lose " + Memory.TooAngleDealings.idiotRating + " to be friendly with TooAngle");
@@ -199,13 +196,13 @@ module.exports.loop = function () {
         }
     }
     
-    var currentSpawnedRole = 0;
-    var minimumSpawnedRole = 0;
+    let currentSpawnedRole = 0;
+    let minimumSpawnedRole = 0;
     
-    var checkingForDrops = false;
+    let checkingForDrops = false;
     for (let name in Memory.creeps) {
         if (Game.creeps[name] == undefined) {
-            var creepMemory = Memory.creeps[name];
+            let creepMemory = Memory.creeps[name];
             if (creepMemory.roomID != "E69N44" && creepMemory.roomID != "E68N45" && creepMemory.roomID != "E54N9" && creepMemory.roomID != "E39N24" && creepMemory.roomID != "E39N17" && creepMemory.roomID != "E43N18" && creepMemory.roomID != "W53N32") {
                 creepMemory.roomID = "E69N44";
             }
@@ -240,7 +237,7 @@ module.exports.loop = function () {
     }
     
     for (let roomID in Game.rooms) {
-        var theRoom = Game.rooms[roomID];
+        let theRoom = Game.rooms[roomID];
 
         _.defaults(theRoom.memory, {
             "buildOrderFILO": false
@@ -249,28 +246,24 @@ module.exports.loop = function () {
         });
         theRoom.memory.memoryExpiration = Game.time + estTicksPerDay;
         
-        var theController = theRoom.controller;
-        if (theController != undefined 
-            && (theController.my == true 
-            || (theController.reservation != undefined 
-            && theController.reservation.username == "dragoonreas") 
-            || (theController.reservation == undefined 
-            && theController.level == 0))) { // TODO: Change this to just ignore rooms owned by other players
-            var sources = theRoom.find(FIND_SOURCES);
-            for (let sourceID in sources) {
-                var source = sources[sourceID];
-                _.defaults(Memory.sources[source.id], {
-                    pos: source.pos
-                });
+        let sources = theRoom.find(FIND_SOURCES);
+        for (let sourceID in sources) {
+            let source = sources[sourceID];
+            _.defaults(Memory.sources[source.id], {
+                pos: source.pos
+            });
 
-                // Made sure the getter for Source.regenAt initialises the value properly
-                if (source.regenAt == undefined) {
-                    console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
-                }
+            if (source.regenAt == undefined) {
+                console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
+            }
+            else if (source.energy == 0 && source.regenAt < (Game.time + source.ticksToRegeneration)) {
+                source.regenAt = Game.time + source.ticksToRegeneration;
+                console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
             }
         }
-        
-        var invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
+
+        let theController = theRoom.controller;
+        let invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
             filter: (i) => (_.includes(Memory.nonAgressivePlayers, i.owner.username) == false
         )});
         if (invaders.length > 0) {
@@ -287,7 +280,7 @@ module.exports.loop = function () {
                 Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", estSecPerTick * invaders[0].ticksToLive);
 			}
 			
-			var justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
+			let justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
 			
             for (let invader in invaders) {
 				// TODO: Find out what type of creeps are invading the room
@@ -328,7 +321,7 @@ module.exports.loop = function () {
             theRoom.checkForDrops = false;
         }
         else if (theController != undefined && theController.my == false && theController.level >= _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (maxBuildable) => maxBuildable > 0)) {
-            var hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER);
+            let hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER);
             if (hostileTowers.length > 0) {
                 theRoom.hasHostileTower = true;
                 theRoom.checkForDrops = false;
@@ -337,11 +330,11 @@ module.exports.loop = function () {
 
         if (theRoom.checkForDrops == true || (checkingForDrops == true && (theRoom.hasHostileCreep == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) {
             theRoom.checkForDrops = false;
-            var droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
+            let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
                 droppedResources.sort(function(a,b){return b.amount - a.amount}); // TODO: Prioritise minerals in accending order and then energy in decending order
                 for (let droppedResource of droppedResources) {
-					var hasAssignedCreep = _.some(Game.creeps, (c) => (
+					let hasAssignedCreep = _.some(Game.creeps, (c) => (
 					    c.memory.droppedResourceID == droppedResource.id
                     ));
 					if (hasAssignedCreep == false) {
@@ -400,16 +393,16 @@ module.exports.loop = function () {
             }
         }
         
-		var towers = theRoom.find(FIND_MY_STRUCTURES, {
+		let towers = theRoom.find(FIND_MY_STRUCTURES, {
             filter: (s) => (
                 s.structureType == STRUCTURE_TOWER 
 				&& s.energy > 0 
                 && s.isActive() == true
         )});
 		for (let towerID in towers) {
-            var tower = towers[towerID];
+            let tower = towers[towerID];
 
-            var target = tower.pos.findClosestByRange(invaders);
+            let target = tower.pos.findClosestByRange(invaders);
             if (target != undefined) {
         	    tower.attack(target);
         	    console.log("Tower in " + roomID + " attacking hostile from " + target.owner.username);
