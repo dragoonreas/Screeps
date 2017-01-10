@@ -45,6 +45,9 @@ var prototypeSpawn = function() {
             moveRatio = 0.5;
             bodyTemplate = [CLAIM];
         }
+        else if (roleName == "adaptable") {
+            bodyTemplate = [CARRY];
+        }
         
         if (bodyTemplate.length == 0) {
             moveRatio = 5; // since only using move parts will allow movement each tick no matter the terrain the moveRatio is automatically set to 5, mainly to ensure that the moveRatio == 0 sections aren't run accidently
@@ -94,7 +97,7 @@ var prototypeSpawn = function() {
         }
         else if (roleName == "powerHarvester"
             || roleName == "adaptable") {
-            partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor(MAX_CREEP_SIZE / (bodyTemplate.length + ((bodyTemplate.length * moveRatio > 0) ? (bodyTemplate.length * moveRatio) : 1)))); // go all out since the power banks are only avaliable for a limited time, and adaptables usually carry out high priority tasks that need to be completed quickly
+            partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor(MAX_CREEP_SIZE / (bodyTemplate.length + ((moveRatio == 0) ? 1 : 0)))); // go all out since the power banks are only avaliable for a limited time, and adaptables usually carry out high priority tasks that need to be completed quickly
         }
         
         var bodyPartCounts = _.countBy(bodyTemplate);
