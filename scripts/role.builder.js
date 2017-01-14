@@ -7,6 +7,7 @@ var roleBuilder = {
             creep.memory.checkedForDrops = undefined;
             creep.room.checkForDrops = true;
             creep.memory.wallID = undefined;
+            creep.memory.sourceID = undefined;
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
@@ -108,7 +109,7 @@ var roleBuilder = {
                 }
                 else if (err == OK) {
                     creep.say("\uD83D\uDD28\uD83C\uDFD7" + structureIcon, true);
-                }
+                } // TODO: go back to towers for repairs when can't work
             }
             else {
                 roleHarvester.run(creep);

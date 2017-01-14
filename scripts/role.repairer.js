@@ -5,6 +5,7 @@ var roleRepairer = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
+            creep.memory.sourceID = undefined;
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
@@ -46,12 +47,12 @@ var roleRepairer = {
                         	)});
                         }
                         else if (repairerType != "all") {
-        					var structures = creep.room.find(FIND_STRUCTURES, {
+        					var theStructures = creep.room.find(FIND_STRUCTURES, {
         	                    filter: (s) => (s.hits < s.hitsMax 
         	                        && s.structureType == repairerType
         	                )});
-        	                if (structures.length > 0) {
-        	                    structure = structures.sort(function(s0,s1){return (s1.hitsMax - s1.hits) - (s0.hitsMax - s0.hits)})[0];
+        	                if (theStructures.length > 0) {
+        	                    structure = theStructures.sort(function(s0,s1){return (s1.hitsMax - s1.hits) - (s0.hitsMax - s0.hits)})[0];
         	                }
                         }
                         else {

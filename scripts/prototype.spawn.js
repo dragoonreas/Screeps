@@ -97,7 +97,7 @@ var prototypeSpawn = function() {
         }
         else if (roleName == "powerHarvester"
             || roleName == "adaptable") {
-            partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor(MAX_CREEP_SIZE / (bodyTemplate.length + ((moveRatio == 0) ? 1 : 0)))); // go all out since the power banks are only avaliable for a limited time, and adaptables usually carry out high priority tasks that need to be completed quickly
+            partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor((MAX_CREEP_SIZE - ((moveRatio == 0) ? 1 : 0)) / bodyTemplate.length)); // go all out since the power banks are only avaliable for a limited time, and adaptables usually carry out high priority tasks that need to be completed quickly
         }
         
         var bodyPartCounts = _.countBy(bodyTemplate);
@@ -122,7 +122,7 @@ var prototypeSpawn = function() {
         else if (bodyPartCounts[MOVE] == bodyTemplate.length) {
             body = _.fill(Array(bodyTemplate.length * partMultiplier), MOVE);
         }
-        else {
+        else { // TODO: just put all move parts at the end since inactive parts still generate fatigue
             var chunckSize = ((moveRatio == 0.5) ? 2 : 1); // move parts will be added at the apropriate intervales to maintain the move ratio
             body = _.chunk(body.reverse(), chunckSize).reverse(); // since we want the execess chunks at the front, we need to reverse the array before and after creating the chuncks (although this will reverse the part order in chuncks with different types of parts, it's probably not worth worrying about)
             var moveTemplate = _.fill(Array(Math.ceil(moveRatio)), MOVE);

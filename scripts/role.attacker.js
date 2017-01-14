@@ -50,13 +50,14 @@ var roleAttacker = {
                     creep.say("\uD83D\uDDE1");
                 }
             }
-            else if (creep.room.name == "E68N45") {
+            else if (creep.room.name == "E69N44") {
                 var entrances = [
-					{ x: 12, y: 30 }
-                    , { x: 25, y: 5 }
-                    , { x: 36, y: 5 }
-                    , { x: 45, y: 7 }
-                    , { x: 39, y: 27 }
+					{ x: 1, y: 5 }
+                    , { x: 2, y: 6 }
+                    , { x: 2, y: 8 }
+                    , { x: 2, y: 10 }
+                    , { x: 40, y: 23 }
+                    , { x: 41, y: 38 }
                 ];
                 for (let i = 0; i < entrances.length; ++i) {
                 	if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
@@ -64,7 +65,7 @@ var roleAttacker = {
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
                         creep.say("\u27A1\uD83D\uDEA7");
-                        creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "E68N45"));
+                        creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "E69N44"));
                         break;
                     }
                 }

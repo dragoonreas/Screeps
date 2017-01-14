@@ -18,6 +18,13 @@ var roleBuilder = require("role.builder");
 var roleClaimer = require("role.claimer");
 var roleRecyclable = require("role.recyclable");
 
+/*
+    TODO:
+    Look into good practices for using global variables in JS, and check if their scope extends across different files
+    Make these two tick variables glabal constants
+    Also make global constants for emoji characters
+    See if it would be wise to make all the roles global
+*/
 var estSecPerTick = 3.5; // time between ticks is currently averaging ~3.5 seconds (as of 2016/12/07)
 var estTicksPerDay = Math.floor(86400 / estSecPerTick); // 24h * 60m * 60s = 86400s
 
@@ -32,6 +39,7 @@ _.defaultsDeep(Memory, {
     , "agressivePlayers": [ // these players attack first and ask questions later (if at all)
         "rysade"
         , "roncli" // turns out they were just using my lower RCL rooms as a low-risk targets to improve their combat code with
+        , "rudykocur"
     ]
     , "nonAgressivePlayers": [ // nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them)
         "Bovius"
@@ -110,7 +118,7 @@ _.set(Memory.rooms, ["E69N44", "creepMins"], {
     , upgrader: 3
     , adaptable: 0
     , scout: 0
-    , claimer: 1
+    , claimer: 0
     , repairer: repairerMins["E69N44"]
     , builder: 1
 });
@@ -118,7 +126,7 @@ _.set(Memory.rooms, ["E68N45", "creepMins"], {
     attacker: 0
     , harvester: 2
     , powerHarvester: 0
-    , upgrader: 2
+    , upgrader: 1
     , adaptable: 0
     , scout: 0
     , claimer: 1
@@ -129,7 +137,7 @@ _.set(Memory.rooms, ["W53N32", "creepMins"], {
     attacker: 0
     , harvester: 3
     , powerHarvester: 0
-    , upgrader: 4
+    , upgrader: 3
     , adaptable: 0
     , scout: 0
     , claimer: 0
@@ -138,10 +146,7 @@ _.set(Memory.rooms, ["W53N32", "creepMins"], {
 });
 
 _.set(Memory.rooms, ["E69N44", "harvestRooms"], [
-    "E68N44"
-]);
-_.set(Memory.rooms, ["E68N45", "harvestRooms"], [
-    "E68N44"
+    "E71N46"
 ]);
 _.set(Memory.rooms, ["W53N32", "harvestRooms"], [
     "W53N33"
@@ -233,6 +238,14 @@ module.exports.loop = function () {
             console.log("Running garbage collection on room memory: " + roomID);
             delete Memory.rooms[roomID];
         }
+        else if (_.get(Memory.rooms[roomID], "invaderWeightings.length", undefined) > 0) {
+            for (let invaderID in Memory.rooms[roomID].invaderWeightings) {
+                if (Memory.rooms[roomID].invaderWeightings[invaderID].expiresAt < Game.time) {
+                    console.log("Running garbage collection on invaderWeightings for " + invaderID + " in room memory: " + roomID);
+                    delete Memory.rooms[roomID].invaderWeightings[invaderID];
+                }
+            }
+        }
     }
     
     for (let roomID in Game.rooms) {
@@ -262,6 +275,10 @@ module.exports.loop = function () {
         }
 
         let theController = theRoom.controller;
+        
+        let priorityTargets = undefined;
+        let priorityTarget = undefined;
+        
         let invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
             filter: (i) => (_.includes(Memory.nonAgressivePlayers, i.owner.username) == false
         )});
@@ -272,20 +289,62 @@ module.exports.loop = function () {
             }
             
             // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
-			if (roomID == "E68N44" && theRoom.sources["57ef9ee786f108ae6e6101b6"].regenAt < Game.time) {
+			if (roomID == "E71N46" && theRoom.sources["5836b88a8b8b9619519f230f"].regenAt < Game.time) {
 				invaders.sort( (i0, i1) => (i0.ticksToLive - i1.ticksToLive) );
-                theRoom.sources["57ef9ee786f108ae6e6101b6"].regenAt = Game.time + invaders[0].ticksToLive;
+                theRoom.sources["5836b88a8b8b9619519f230f"].regenAt = Game.time + invaders[0].ticksToLive;
 				console.log("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.");
                 Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", estSecPerTick * invaders[0].ticksToLive);
 			}
 			
 			let justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
 			
-            for (let invader in invaders) {
-				// TODO: Find out what type of creeps are invading the room
-				
+            if (justNPCs == true) {
+                priorityTargets = invaders;
             }
-			// TODO: Store IDs of invader with highest heal part count, or highest attack+work part count in memory for room so towers don't just target the closest one
+            else {
+                /*
+                    NOTE:
+                    Don't attack player targets blinking on the borders as this is a common strat to drain towers.
+                    This should be safe to do since you can't build walls/ramparts close enough to exits for creeps with ATTACK/WORK parts to damage them while blinking.
+                    Creeps with RANGED_ATTACK/HEAL parts (hopefully) shouldn't do enough ranged damage/healing to worry about while blinking.
+                */
+                priorityTargets = _.filter(invaders, (i) => (
+                    i.owner.username == "Invader" 
+                    || (i.pos.x % 49 != 0 
+                    && i.pos.y % 49 != 0)
+                ));
+                
+                let priorityTargetID = undefined;
+                let highestTargetWeighting = -1;
+                for (let aPriorityTarget of priorityTargets) {
+                    let targetWeighting = 0;
+                    if (aPriorityTarget.owner.username != "Invader") {
+                        targetWeighting = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "weighting"], undefined);
+                        if (targetWeighting == undefined) {
+                            let bodyPartCounts = _.countBy(aPriorityTarget.body, 'type');
+                            targetWeighting = 0 + (
+                                (bodyPartCounts[HEAL] || 0) * 5 
+                                + (bodyPartCounts[WORK] || 0) * 4 
+                                + (bodyPartCounts[ATTACK] || 0) * 3 
+                                + (bodyPartCounts[RANGED_ATTACK] || 0) * 2 
+                                + (bodyPartCounts[CLAIM] || 0) * 1
+                            ); // TODO: Take into account boosted parts
+
+                            _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id], {
+                                weighting: targetWeighting
+                                , expiresAt: (Game.time + aPriorityTarget.ticksToLive)
+                            });
+                        }
+                    }
+                    
+                    if (targetWeighting > highestTargetWeighting) {
+                        highestTargetWeighting = targetWeighting;
+                        priorityTargetID = aPriorityTarget.id;
+                    }
+                }
+                
+                priorityTarget = Game.getObjectById(priorityTargetID);
+            }
 			
             // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
 			if (roomID == "W53N32" && justNPCs == false) { // Special rule for this base since there are no nearby bases to rebuild it with
@@ -293,9 +352,13 @@ module.exports.loop = function () {
 				console.log("Activated Safe Mode in: " + roomID);
 				Game.notify("Activated Safe Mode in: " + roomID);
 			}
+			else if (roomID == "E68N45") {
+			    // counting this as a lost cause...
+			}
 			else if (theController != undefined 
 			    && theController.my == true 
 			    && theController.safeMode == undefined 
+			    && theController.safeModeCooldown == undefined 
 			    && theController.safeModeAvaliable > 0
 			    && (_.some(Game.spawns, (s) => (
 			        s.room.name == roomID 
@@ -303,9 +366,9 @@ module.exports.loop = function () {
 			        && s.isActive() == true)) == true
 	            || _.some(invaders, (i) => (
 	                _.some(Memory.agressivePlayers, (aP) => (
-	                    i.owner.username == aP)))) == true)) { // TODO: Check that this is working
+	                    i.owner.username == aP)))) == true)) { // TODO: Check that the agressivePlayers part is working
 				//console.log("Attempting to activate Safe Mode in: " + roomID);
-				//Game.notify("Attempting to activate Safe Mode in: " + roomID);
+				//Game.notify("Attempting to activate Safe Mode in: " + roomID, 30);
 				theController.activateSafeMode();
 				console.log("Activated Safe Mode in: " + roomID);
 				Game.notify("Activated Safe Mode in: " + roomID);
@@ -331,7 +394,7 @@ module.exports.loop = function () {
             theRoom.checkForDrops = false;
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
-                droppedResources.sort(function(a,b){return b.amount - a.amount}); // TODO: Prioritise minerals in accending order and then energy in decending order
+                droppedResources.sort(function(a,b){return b.amount - a.amount}); // TODO: Prioritise minerals in accending order (since invaders seem to drop the best stuff in the smallest quantities) and then energy in decending order
                 for (let droppedResource of droppedResources) {
 					let hasAssignedCreep = _.some(Game.creeps, (c) => (
 					    c.memory.droppedResourceID == droppedResource.id
@@ -395,13 +458,17 @@ module.exports.loop = function () {
 		let towers = theRoom.find(FIND_MY_STRUCTURES, {
             filter: (s) => (
                 s.structureType == STRUCTURE_TOWER 
-				&& s.energy > 0 
+				&& s.energy >= TOWER_ENERGY_COST 
                 && s.isActive() == true
         )});
 		for (let towerID in towers) {
             let tower = towers[towerID];
-
-            let target = tower.pos.findClosestByRange(invaders);
+            
+            let target = priorityTarget;
+            if (target == undefined && priorityTargets != undefined) {
+                target = tower.pos.findClosestByRange(priorityTargets);
+            }
+            
             if (target != undefined) {
         	    tower.attack(target);
         	    console.log("Tower in " + roomID + " attacking hostile from " + target.owner.username);
@@ -429,7 +496,7 @@ module.exports.loop = function () {
         	}
 		}
     }
-
+    
     for(let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
         if (creep.spawning == false) {
