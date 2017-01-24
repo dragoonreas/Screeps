@@ -110,19 +110,9 @@ var roleBuilder = {
             var source = undefined;
             var theStorage = Game.rooms[creep.memory.roomID].storage;
             var theTerminal = Game.rooms[creep.memory.roomID].terminal;
-            if (creep.memory.roomID == "E69N44") {
-                source = Game.getObjectById("57ef9efc86f108ae6e610380");
-                if (source != undefined && source.energy == 0 && theStorage != undefined && theStorage.store.energy == 0) {
-                    roleHarvester.run(creep);
-                    return;
-                }
-            }
-            else if (creep.memory.roomID == "E68N45") {
-                source = Game.getObjectById("57ef9ee786f108ae6e6101b2");
-            }
-            else if (creep.memory.roomID == "W53N32") {
+            if (creep.memory.roomID == "W53N32") {
                 source = Game.getObjectById("579fa8b50700be0674d2e297");
-                if (source != undefined && source.energy == 0) {
+                if (source != undefined && source.energy == 0 && theStorage != undefined && theStorage.store.energy == 0 && theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
                     roleHarvester.run(creep);
                     return;
                 }
@@ -157,7 +147,7 @@ var roleBuilder = {
                         creep.say("\u2B07\uD83C\uDFE6", true);
                     }
                 }
-                else if (creep.room.name == "E69N44" && theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
+                else if (theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
                     creep.cancelOrder("harvest");
                     err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {

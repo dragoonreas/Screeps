@@ -9,6 +9,7 @@ var roleScout = {
             Game.notify("CLAIMER RUN TEST: Claimer would only make it to (" + creep.pos.x + ", " + creep.pos.y + ") in " + creep.room.name);
         }
         
+        // TODO: Change path and destination to scout out a controller on the other side of the portal at W55N35
         if (creep.memory.goalReached != true) {
             if (creep.memory.roomID == "E69N44") {
                 var waypoints = [

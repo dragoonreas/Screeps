@@ -33,14 +33,6 @@ var roleHarvester = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     var sourceIDs = {
-                        "E69N44": [
-                            "57ef9efc86f108ae6e610380"
-                            , "5836b88a8b8b9619519f230f"
-                        ]
-                        , "E68N45": [
-                            "57ef9ee786f108ae6e6101b2"
-                            , "57ef9ee786f108ae6e6101b6"
-                        ]
                         , "W53N32": [
                             "579fa8b50700be0674d2e297"
                             , "579fa8b50700be0674d2e293"
@@ -169,7 +161,7 @@ var roleHarvester = {
                         console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)) + "/" + (theTerminal.storeCapacity / 2));
                     }
                 }
-                else if (creep.memory.roomID == "E69N44" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
+                else if (creep.memory.roomID == "W53N32" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
                     var err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);

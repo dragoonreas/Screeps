@@ -4,9 +4,9 @@ var roleClaimer = {
    run: function(creep) {
         var theController = Game.getObjectById(creep.memory.controllerID);
         if (theController == undefined || creep.room.name != theController.room.name) {
-            if (creep.memory.controllerID == "57ef9ee786f108ae6e6101b5") {
-                creep.say("\u27A1E68N44", true);
-                creep.moveTo(new RoomPosition(25, 11, "E68N44"));
+            if (creep.memory.controllerID == "ffffffffffffffffffffffff") { // TODO: Set to a controller on the other side of the portal at W55N35
+                creep.say("\u27A1W53N32", true);
+                creep.moveTo(new RoomPosition(25, 11, "W53N32"));
             }
             else {
                 creep.say("\uD83C\uDFF0?");
@@ -15,7 +15,7 @@ var roleClaimer = {
         else {
             var err = ERR_GCL_NOT_ENOUGH;
             // TODO: Add if case for when claimer has 5+ claim parts and controller.my == false to attack controller
-            if (creep.memory.controllerID != "57ef9ee786f108ae6e6101b5") {
+            if (creep.memory.controllerID != "ffffffffffffffffffffffff") { // TODO: Get an array of controller.id from harvest rooms to check against here
                 err = creep.claimController(theController);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\uD83C\uDFF0", true);
@@ -38,7 +38,7 @@ var roleClaimer = {
                 }
             }
             if (err != OK && err != ERR_NOT_IN_RANGE) {
-                if (creep.memory.controllerID != "57ef9ee786f108ae6e6101b5") {
+                if (creep.memory.controllerID != "ffffffffffffffffffffffff") { // TODO: Get an array of controller.id from harvest rooms to check against here
                     Memory.rooms[creep.memory.roomID].creepMins.claimer = 0;
                 }
                 creep.memory.controllerID = undefined;

@@ -34,14 +34,6 @@ var roleHauler = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     var sourceIDs = {
-                        "E69N44": [
-                            "57ef9ee786f108ae6e6101b6"
-                            , "57ef9efc86f108ae6e610380"
-                        ]
-                        , "E68N45": [
-                            "57ef9ee786f108ae6e6101b2"
-                            , "57ef9ee786f108ae6e6101b6"
-                        ]
                         , "W53N32": [
                             "579fa8b50700be0674d2e297"
                             , "579fa8b50700be0674d2e293"
@@ -116,7 +108,7 @@ var roleHauler = {
                 creep.say("\u27A1" + creep.memory.roomID, true);
                 creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
             }
-            else { // TODO: Store creep.memory.structureID and only check if it still requires energy each tick
+            else {
                 var structure = Game.getObjectById(creep.memory.depositeStructureID);
                 if (structure == undefined || structure.energy == structure.energyCapacity) {
                     structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -133,6 +125,9 @@ var roleHauler = {
                                     && s.energy < s.energyCapacity;
                             }
                         });
+                    }
+                    if (structure != undefined) {
+                        creep.memory.depositeStructureID = structure.id;
                     }
                 }
                 
@@ -167,7 +162,7 @@ var roleHauler = {
                         console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)) + "/" + (theTerminal.storeCapacity / 2));
                     }
                 }
-                else if (creep.memory.roomID == "E69N44" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
+                else if (creep.memory.roomID == "W53N32" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
                     var err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
@@ -190,7 +185,7 @@ var roleHauler = {
                     }
                 }
                 else {
-                    roleRepairer.run(creep);
+                    roleUpgrader.run(creep);
                 }
             }
         }

@@ -81,20 +81,6 @@ for (let roomID in Game.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["E69N44", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 1
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 1
-    , "all": 0
-});
-_.set(Memory.rooms, ["E68N45", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 1
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 1
-    , "all": 0
-});
 _.set(Memory.rooms, ["W53N32", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 1
@@ -116,28 +102,6 @@ for (let roomID in Game.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["E69N44", "creepMins"], {
-    attacker: 0
-    , harvester: 6
-    , powerHarvester: 0
-    , upgrader: 3
-    , adaptable: 0
-    , scout: 0
-    , claimer: 0
-    , repairer: repairerMins["E69N44"]
-    , builder: 1
-});
-_.set(Memory.rooms, ["E68N45", "creepMins"], {
-    attacker: 0
-    , harvester: 2
-    , powerHarvester: 0
-    , upgrader: 1
-    , adaptable: 0
-    , scout: 0
-    , claimer: 1
-    , repairer: repairerMins["E68N45"]
-    , builder: 1
-});
 _.set(Memory.rooms, ["W53N32", "creepMins"], {
     attacker: 0
     , harvester: 3
@@ -150,9 +114,6 @@ _.set(Memory.rooms, ["W53N32", "creepMins"], {
     , builder: 1
 });
 
-_.set(Memory.rooms, ["E69N44", "harvestRooms"], [
-    "E71N46"
-]);
 _.set(Memory.rooms, ["W53N32", "harvestRooms"], [
     "W53N33"
 ]);
@@ -193,13 +154,13 @@ module.exports.loop = function () {
             o.price
         ))[0].price;
         Memory.TooAngleDealings.energyToFriendly = (parseInt(Memory.TooAngleDealings.idiotRating) + 1) / energyPrice;
-        Memory.TooAngleDealings.totalCost = Memory.TooAngleDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngleDealings.energyToFriendly, "E69N44", "E33N15"); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
+        Memory.TooAngleDealings.totalCost = Memory.TooAngleDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngleDealings.energyToFriendly, "W53N32", "E33N15"); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
         Memory.TooAngleDealings.lastIdiotRating = Memory.TooAngleDealings.idiotRating;
     }
     
-    let dealingsTerminal = Game.rooms["E69N44"].terminal;
+    let dealingsTerminal = Game.rooms["W53N32"].terminal;
     if (Memory.TooAngleDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store.energy >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngleDealings.totalCost)) {
-        if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngleDealings.energyToFriendly, "E33N15", "brain.isFriend('Dragoonreas') == true?") == OK) {
+        if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngleDealings.energyToFriendly, "E33N15", "brain.isFriend('dragoonreas') == true?") == OK) {
             console.log("Used " + Memory.TooAngleDealings.totalCost + " energy to lose " + Memory.TooAngleDealings.idiotRating + " to be friendly with TooAngle");
             Game.notify("Used " + Memory.TooAngleDealings.totalCost + " energy to lose " + Memory.TooAngleDealings.idiotRating + " to be friendly with TooAngle");
             Memory.TooAngleDealings.idiotRating = -1;
@@ -207,24 +168,16 @@ module.exports.loop = function () {
         }
     }
     
-    let currentSpawnedRole = 0;
-    let minimumSpawnedRole = 0;
-    
     let checkingForDrops = false;
     for (let name in Memory.creeps) {
         if (Game.creeps[name] == undefined) {
             let creepMemory = Memory.creeps[name];
-            if (creepMemory.roomID != "E69N44" && creepMemory.roomID != "E68N45" && creepMemory.roomID != "E54N9" && creepMemory.roomID != "E39N24" && creepMemory.roomID != "E39N17" && creepMemory.roomID != "E43N18" && creepMemory.roomID != "W53N32") {
-                creepMemory.roomID = "E69N44";
-            }
-            if (creepMemory.role != undefined && Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role] != undefined) {
+            let currentSpawnedRole = 0;
+            let minimumSpawnedRole = 0;
+            if (_.get(Memory.rooms, [creepMemory.roomID, "creepCounts", creepMemory.role], undefined) != undefined) {
                 currentSpawnedRole = Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role];
                 minimumSpawnedRole = Memory.rooms[creepMemory.roomID].creepMins[creepMemory.role];
-                if (creepMemory.role == "adaptable") { // Currently just using the adapatable role to send reinforcement workers to new rooms and setting their new role when they get there, so none should end up dying with this role unless they fail to make it to their destination
-                    console.log("Adaptable from " + creepMemory.roomID + " only made it past waypoint " + _.get(creepMemory, "waypoint", 0));
-                    Game.notify("Adaptable from " + creepMemory.roomID + " only made it past waypoint " + _.get(creepMemory, "waypoint", 0));
-                }
-                else if (creepMemory.role == "scout" && creepMemory.goalReached != true) {
+                if (creepMemory.role == "scout" && creepMemory.goalReached != true) {
                     console.log("Scout from " + creepMemory.roomID + " only made it past waypoint " + creepMemory.waypoint);
                     Game.notify("Scout from " + creepMemory.roomID + " only made it past waypoint " + creepMemory.waypoint);
                     Memory.rooms[creepMemory.roomID].creepMins[creepMemory.role] = 0;
@@ -238,16 +191,16 @@ module.exports.loop = function () {
             }
         }
     }
-
+    
     for (let roomID in Memory.rooms) {
         if (Game.rooms[roomID] == undefined 
             && (Memory.rooms[roomID].memoryExpiration || 0) < Game.time) {
             console.log("Running garbage collection on room memory: " + roomID);
             delete Memory.rooms[roomID];
         }
-        else if (_.get(Memory.rooms[roomID], "invaderWeightings.length", undefined) > 0) {
+        else if (_.get(Memory.rooms[roomID], "invaderWeightings.length", 0) > 0) {
             for (let invaderID in Memory.rooms[roomID].invaderWeightings) {
-                if (Memory.rooms[roomID].invaderWeightings[invaderID].expiresAt < Game.time) {
+                if ((Memory.rooms[roomID].invaderWeightings[invaderID].expiresAt || 0) < Game.time) {
                     console.log("Running garbage collection on invaderWeightings for " + invaderID + " in room memory: " + roomID);
                     delete Memory.rooms[roomID].invaderWeightings[invaderID];
                 }
@@ -257,7 +210,7 @@ module.exports.loop = function () {
     
     for (let roomID in Game.rooms) {
         let theRoom = Game.rooms[roomID];
-
+        
         _.defaults(theRoom.memory, {
             "buildOrderFILO": false
             , "checkForDrops": true
@@ -300,9 +253,9 @@ module.exports.loop = function () {
             }
             
             // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
-			if (roomID == "E71N46" && theRoom.sources["5836b88a8b8b9619519f230f"].regenAt < Game.time) {
+			if (roomID == "W53N33" && theRoom.sources["579fa8b50700be0674d2e293"].regenAt < Game.time) {
 				invaders.sort( (i0, i1) => (i0.ticksToLive - i1.ticksToLive) );
-                theRoom.sources["5836b88a8b8b9619519f230f"].regenAt = Game.time + invaders[0].ticksToLive;
+                theRoom.sources["579fa8b50700be0674d2e293"].regenAt = Game.time + invaders[0].ticksToLive;
 				console.log("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.");
                 Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", estSecPerTick * invaders[0].ticksToLive);
 			}
@@ -361,7 +314,7 @@ module.exports.loop = function () {
                 priorityTarget = Game.getObjectById(priorityTargetID);
                 
                 if (theRoom.memory.creepMins != undefined) {
-                    theRoom.memory.creepMins.attacker = 2;
+                    theRoom.memory.creepMins.attacker = 1; // TODO: Set based on number of ramparts near attackers
                 }
             }
 			
@@ -528,10 +481,10 @@ module.exports.loop = function () {
                     ["1"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
                     , ["2"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)
                     , ["10"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1)
-                }
+                } // TODO: Add default for closest active spawn room to be set as creep.memory.roomID
             });
             
-            let theStorage = Game.rooms[creep.memory.roomID].storage;
+            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
             
             if (creep.memory.role == "attacker") {
 				roleAttacker.run(creep);

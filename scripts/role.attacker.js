@@ -6,14 +6,10 @@ var roleAttacker = {
             return;
         }
         
-        if (creep.room.name == "E69N44") {
+        // TODO: Automate based on ramparts with no building under them near attackers
+        if (creep.room.name == "W53N32") {
             var entrances = [
-                { x: 2, y: 8 }
-                , { x: 2, y: 6 }
-				, { x: 1, y: 5 }
-                , { x: 2, y: 10 }
-                , { x: 40, y: 23 }
-                , { x: 41, y: 38 }
+                { x: 2, y: 8 } // TODO: Update this position
             ];
             for (let i = 0; i < entrances.length; ++i) {
             	if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
@@ -21,7 +17,7 @@ var roleAttacker = {
                 }
                 if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
                     creep.say("\u27A1\uD83D\uDEA7", true);
-                    creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "E69N44"));
+                    creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "W53N32"));
                     return;
                 }
             }
@@ -30,7 +26,7 @@ var roleAttacker = {
         var invader = Game.getObjectById(creep.memory.invaderID);
         if (invader == undefined) {
             
-            // TODO: Check that this code block works
+            // TODO: Change this to only consider invaders in melee range
             var invaders = _.get(Memory.rooms[creep.room.name], ["invaderWeightings"], undefined);
             if (invaders != undefined) {
                 invader = _.sortBy(invaders, (i) => (
@@ -39,7 +35,7 @@ var roleAttacker = {
             }
             
             if (invader == undefined) {
-                invader = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS); // TODO: Filter out creeps from players on the non-agressive list
+                invader = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS); // TODO: Only include NPCs (since that is the only time this should run, but allies still need to be filtered out)
             }
             
             if (invader != undefined) {
@@ -53,7 +49,8 @@ var roleAttacker = {
         if (invader != undefined) {
             var err = creep.attack(invader);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.say("\u27A1\uD83D\uDDE1", true);
+                // NOTE: Shouldn't need to move, just hold ground in the rampart
+                //creep.say("\u27A1\uD83D\uDDE1", true);
                 //creep.moveTo(invader);
             }
             else if (err == OK) {
@@ -82,14 +79,9 @@ var roleAttacker = {
                     creep.say("\uD83D\uDDE1", true);
                 }
             }
-            else if (creep.room.name == "E69N44") {
+            else if (creep.room.name == "W53N32") { // TODO: Automate based on ramparts with no building under them near attackers
                 var entrances = [
-                    { x: 2, y: 8 }
-                    , { x: 2, y: 6 }
-					, { x: 1, y: 5 }
-                    , { x: 2, y: 10 }
-                    , { x: 40, y: 23 }
-                    , { x: 41, y: 38 }
+                    { x: 2, y: 8 } // TODO: Update this position
                 ];
                 for (let i = 0; i < entrances.length; ++i) {
                 	if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
@@ -97,7 +89,7 @@ var roleAttacker = {
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
                         creep.say("\u27A1\uD83D\uDEA7", true);
-                        creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "E69N44"));
+                        creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "W53N32"));
                         break;
                     }
                 }

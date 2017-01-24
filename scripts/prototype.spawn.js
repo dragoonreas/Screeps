@@ -108,7 +108,7 @@ var prototypeSpawn = function() {
             body.push(TOUGH);
         }
         for (let bodyPart in bodyPartCounts) { // add any remaining (non-move) parts in the order they first occured
-            if (bodyPart != TOUGH && bodyPart != MOVE) {
+            if (bodyPart != TOUGH && bodyPart != MOVE) { // TODO: also exclude heal parts to add them just before heal parts
                 for (let i = 0; i < (partMultiplier * bodyPartCounts[bodyPart]); i++) {
                     body.push(bodyPart);
                 }
@@ -154,12 +154,12 @@ var prototypeSpawn = function() {
             }
         }
         else if (roleName == "claimer") {
-            if (this.room.name == "E69N44" || this.room.name == "E68N45") {
-                creepMemory.controllerID = "57ef9ee786f108ae6e6101b5";
+            if (this.room.name == "W53N32") {
+                creepMemory.controllerID = "ffffffffffffffffffffffff"; // TODO: Set to a controller on the other side of the portal at W55N35
             }
         }
         else if (roleName == "powerHarvester") {
-            creepMemory.harvestRoom = { id: "E70N44", x: 18, y:7 };
+            creepMemory.harvestRoom = { id: "W53N32", x: 25, y: 25 };
         }
         
         var result = this.createCreep(body, undefined, creepMemory); // TODO: Work out a custom naming scheme

@@ -120,8 +120,6 @@ var roleRepairer = {
         else {
             var source = undefined;
             switch (creep.memory.roomID) {
-                case "E69N44": source = Game.getObjectById("57ef9efc86f108ae6e610380"); break;
-                case "E68N45": roleHarvester.run(creep); return;
                 case "W53N32": roleHarvester.run(creep); return;
             }
             
@@ -155,7 +153,7 @@ var roleRepairer = {
                         creep.say("\u2B07\uD83C\uDFE6", true);
                     }
                 }
-                else if (creep.room.name == "E69N44" && theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
+                else if (theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
                     creep.cancelOrder("harvest");
                     err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {

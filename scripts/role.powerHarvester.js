@@ -45,7 +45,7 @@ var rolePowerHarvester = {
         }
         else {
             if (creep.carry[RESOURCE_POWER] != 0) {
-                var powerStorage = Game.getObjectById("5830f0cb5e8515625b0b6ee4");
+                var powerStorage = Game.getObjectById("ffffffffffffffffffffffff"); // TODO: Replace with room.find
                 if (powerStorage != undefined) {
                     if (creep.room.name != powerStorage.room.name || creep.transfer(powerStroage, RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(powerStorage);
