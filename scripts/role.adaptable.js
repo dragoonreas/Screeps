@@ -21,11 +21,23 @@ var roleAdaptable = {
             creep.memory.structureID = undefined;
         }
         
+        
+        // TODO: remove this
+        if (creep.room.name != creep.memory.roomID) {
+            creep.say("\u27A1" + creep.memory.roomID, true);
+            creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
+        }
+        else {
+            creep.suicide();
+        }
+        return;
+        
+        /*
         if (creep.memory.roomID == "E69N44") {
             if (creep.memory.working == true) {
-                if (creep.room.name != "E68N45") {
-                    creep.say("\u27A1E68N45", true);
-                    creep.moveTo(new RoomPosition(25, 25, "E68N45"));
+                if (creep.room.name != "E69N44") {
+                    creep.say("\u27A1E69N44", true);
+                    creep.moveTo(new RoomPosition(25, 25, "E69N44"));
                 }
                 else {
                     let tower = Game.getObjectById(creep.memory.towerID);
@@ -58,7 +70,7 @@ var roleAdaptable = {
                 }
             }
             else {
-                if ((creep.room.name == "E68N45" && (creep.room.storage == undefined || creep.room.storage.store.energy == 0)) && creep.room.name != "E69N44") {
+                if ((creep.room.name == "E69N44" && (creep.room.storage == undefined || creep.room.storage.store.energy == 0)) && creep.room.name != "E69N44") {
                     creep.say("\u27A1E69N44", true);
                     creep.moveTo(new RoomPosition(25, 25, "E69N44"));
                 }
@@ -108,7 +120,8 @@ var roleAdaptable = {
                 }
             }
         }
-        /*
+        */
+        
         if (creep.memory.roomID == "E69N44") {
             if (creep.memory.working == false) {
                 if (creep.room.name != "E71N47") {
@@ -176,7 +189,7 @@ var roleAdaptable = {
                 roleHarvester.run(creep);
             }
         }
-        */
+        
     }
 };
 

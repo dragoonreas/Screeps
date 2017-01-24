@@ -21,6 +21,7 @@ var prototypeSpawn = function() {
         */
         var bodyTemplate = [WORK, CARRY];
         if (roleName == "attacker") {
+            moveRatio = 0.5;
             bodyTemplate = [ATTACK];
         }
         else if (roleName == "miner") {
@@ -79,8 +80,7 @@ var prototypeSpawn = function() {
             = 800
         */
         var partMultiplier = Math.floor(Math.min(energyAvaliable, 800) / bodyCost);
-        if (roleName == "attacker" 
-            || roleName == "miner" 
+        if (roleName == "miner" 
             || roleName == "scout" 
             || (Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) {
             partMultiplier = 1; // start small if forced to build up from scratch, or if the creep doesn't scale with energy avaliable
@@ -95,7 +95,8 @@ var prototypeSpawn = function() {
             */
             partMultiplier = Math.floor(Math.min(energyAvaliable, 1800) / bodyCost);
         }
-        else if (roleName == "powerHarvester"
+        else if (roleName == "attacker" 
+            || roleName == "powerHarvester"
             || roleName == "adaptable") {
             partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor((MAX_CREEP_SIZE - ((moveRatio == 0) ? 1 : 0)) / bodyTemplate.length)); // go all out since the power banks are only avaliable for a limited time, and adaptables usually carry out high priority tasks that need to be completed quickly
         }

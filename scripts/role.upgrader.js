@@ -42,7 +42,7 @@ var roleUpgrader = {
                 }
                 else if (theStorage != undefined && theStorage.store.energy > 0) {
                     creep.cancelOrder("harvest");
-                    var err = creep.withdraw(theStorage, RESOURCE_ENERGY);
+                    err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
                         creep.moveTo(theStorage);

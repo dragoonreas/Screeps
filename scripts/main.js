@@ -3,6 +3,11 @@ require("prototype.room")();
 require("prototype.source")();
 require("prototype.spawn")();
 
+const resourcesInfo = require("resources");
+const screepsPlus = require("screepsplus");
+
+require("traveler")({exportTraveler: false, installPrototype: true});
+
 var roleAttacker = require("role.attacker");
 var roleHoarder = require("role.hoarder");
 var roleCollector = require("role.collector");
@@ -25,7 +30,7 @@ var roleRecyclable = require("role.recyclable");
     Also make global constants for emoji characters
     See if it would be wise to make all the roles global
 */
-var estSecPerTick = 3.5; // time between ticks is currently averaging ~3.5 seconds (as of 2016/12/07)
+var estSecPerTick = 3.85; // time between ticks is currently averaging ~3.85 seconds (as of 2017/01/24)
 var estTicksPerDay = Math.floor(86400 / estSecPerTick); // 24h * 60m * 60s = 86400s
 
 _.defaultsDeep(Memory, {
@@ -154,6 +159,8 @@ _.set(Memory.rooms, ["W53N32", "harvestRooms"], [
 
 module.exports.loop = function () {
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
+    
+    resourcesInfo.summarize_rooms();
 
     for (let roomID in repairerMins) {
         Memory.rooms[roomID].creepCounts = {};
@@ -273,8 +280,12 @@ module.exports.loop = function () {
                 console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
             }
         }
-
+        
+        // TODO: Check for nukes and make sure only 1 notification is sent (for the lifetime of that nuke) when the nuke is found
+		
         let theController = theRoom.controller;
+        
+        let justNPCs = undefined;
         
         let priorityTargets = undefined;
         let priorityTarget = undefined;
@@ -296,10 +307,14 @@ module.exports.loop = function () {
                 Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", estSecPerTick * invaders[0].ticksToLive);
 			}
 			
-			let justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
+			justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
 			
             if (justNPCs == true) {
                 priorityTargets = invaders;
+                
+                if (theRoom.memory.creepMins != undefined) {
+                    theRoom.memory.creepMins.attacker = 0;
+                }
             }
             else {
                 /*
@@ -344,16 +359,15 @@ module.exports.loop = function () {
                 }
                 
                 priorityTarget = Game.getObjectById(priorityTargetID);
+                
+                if (theRoom.memory.creepMins != undefined) {
+                    theRoom.memory.creepMins.attacker = 2;
+                }
             }
 			
             // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
-			if (roomID == "W53N32" && justNPCs == false) { // Special rule for this base since there are no nearby bases to rebuild it with
-				theController.activateSafeMode();
-				console.log("Activated Safe Mode in: " + roomID);
-				Game.notify("Activated Safe Mode in: " + roomID);
-			}
-			else if (roomID == "E68N45") {
-			    // counting this as a lost cause...
+			if (roomID == "E68N45" || roomID == "E69N45") {
+			    // counting these as a lost cause...
 			}
 			else if (theController != undefined 
 			    && theController.my == true 
@@ -377,6 +391,10 @@ module.exports.loop = function () {
         else if (theRoom.hasHostileCreep == true) {
             theRoom.hasHostileCreep == false;
             theRoom.checkForDrops = true;
+            
+            if (theRoom.memory.creepMins != undefined) {
+                theRoom.memory.creepMins.attacker = 0;
+            }
         }
         
         if (theRoom.hasHostileTower == true) {
@@ -472,7 +490,9 @@ module.exports.loop = function () {
             if (target != undefined) {
         	    tower.attack(target);
         	    console.log("Tower in " + roomID + " attacking hostile from " + target.owner.username);
-        	    Game.notify("Tower in " + roomID + " attacking hostile from " + target.owner.username, 30);
+        	    if (justNPCs == false) {
+        	        Game.notify("Tower in " + roomID + " attacking hostile from " + target.owner.username, 30);
+        	    }
             }
         	else {
         	    target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -579,4 +599,6 @@ module.exports.loop = function () {
             }
         }
     }
+    
+    screepsPlus.collect_stats();
 }
