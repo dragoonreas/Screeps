@@ -198,7 +198,7 @@ module.exports.loop = function () {
             console.log("Running garbage collection on room memory: " + roomID);
             delete Memory.rooms[roomID];
         }
-        else if (_.get(Memory.rooms[roomID], "invaderWeightings.length", 0) > 0) {
+        else if (_.size(_.get(Memory.rooms[roomID], "invaderWeightings", {})) > 0) {
             for (let invaderID in Memory.rooms[roomID].invaderWeightings) {
                 if ((Memory.rooms[roomID].invaderWeightings[invaderID].expiresAt || 0) < Game.time) {
                     console.log("Running garbage collection on invaderWeightings for " + invaderID + " in room memory: " + roomID);
