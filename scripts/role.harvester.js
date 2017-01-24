@@ -33,7 +33,7 @@ var roleHarvester = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     var sourceIDs = {
-                        , "W53N32": [
+                        "W53N32": [
                             "579fa8b50700be0674d2e297"
                             , "579fa8b50700be0674d2e293"
                         ]
