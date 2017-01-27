@@ -3,14 +3,14 @@ var prototypeMemory = function() {
         var handler = {
             get: function(target, property) {
                 if (_.isString(property) == true) {
-                    var source = Game.getObjectById(property);
+                    let source = Game.getObjectById(property);
                     if (_.get(source, "room.name", undefined) != undefined) {
                         return _.get(Memory, ["rooms", source.room.name, "sources", property], undefined);
                     }
                     
-                    var memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
+                    let memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
                     for (let roomIndex in memorisedRoomIDs) {
-                        var sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", property], undefined);
+                        let sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", property], undefined);
                         if (sourceMem != undefined) {
                             return sourceMem;
                         }
@@ -21,15 +21,15 @@ var prototypeMemory = function() {
             
             set: function(target, property, value) {
                 if (_.isString(property) == true) {
-                    var source = Game.getObjectById(property);
+                    let source = Game.getObjectById(property);
                     if (_.get(source, "room.name", undefined) != undefined) {
                         _.set(Memory, ["rooms", source.room.name, "sources", property], value);
                         return true;
                     }
                     
-                    var memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
+                    let memorisedRoomIDs = _.filter(_.keys(Memory.rooms), (v) => (Game.rooms[v] == undefined));
                     for (let roomIndex in memorisedRoomIDs) {
-                        var sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", property], undefined);
+                        let sourceMem = _.get(Memory, ["rooms", memorisedRoomIDs[roomIndex], "sources", property], undefined);
                         if (sourceMem != undefined) {
                             sourceMem = value;
                             return true;

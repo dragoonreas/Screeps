@@ -46,8 +46,13 @@ _.defaultsDeep(Memory, {
         , "roncli" // turns out they were just using my lower RCL rooms as a low-risk targets to improve their combat code with
         , "rudykocur"
     ]
-    , "nonAgressivePlayers": [ // nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them)
+    , "nonAgressivePlayers": [ // nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
         "Bovius"
+        , "Cade" // PINK alliance
+        , "Palle" // PINK alliance
+        , "Kendalor" // PINK alliance
+        , "InfiniteJoe" // PINK alliance
+        , "bobinhed" // PINK alliance
     ]
 });
 
@@ -88,6 +93,13 @@ _.set(Memory.rooms, ["W53N32", "repairerTypeMins"], {
     , [STRUCTURE_WALL]: 1
     , "all": 0
 });
+_.set(Memory.rooms, ["W65N17", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_WALL]: 1
+    , "all": 0
+});
 
 var repairerMins = {};
 for (let roomID in Game.rooms) {
@@ -104,18 +116,32 @@ for (let roomID in Game.rooms) {
 */
 _.set(Memory.rooms, ["W53N32", "creepMins"], {
     attacker: 0
-    , harvester: 3
+    , harvester: 2
     , powerHarvester: 0
     , upgrader: 3
-    , adaptable: 0
+    , adaptable: 1
     , scout: 0
     , claimer: 0
     , repairer: repairerMins["W53N32"]
     , builder: 1
 });
+_.set(Memory.rooms, ["W65N17", "creepMins"], {
+    attacker: 0
+    , harvester: 3
+    , powerHarvester: 0
+    , upgrader: 1
+    , adaptable: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: repairerMins["W65N17"]
+    , builder: 1
+});
 
 _.set(Memory.rooms, ["W53N32", "harvestRooms"], [
     "W53N33"
+]);
+_.set(Memory.rooms, ["W65N17", "harvestRooms"], [
+    "W64N17"
 ]);
 
 module.exports.loop = function () {
@@ -319,18 +345,16 @@ module.exports.loop = function () {
             }
 			
             // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
-			if (roomID == "E68N45" || roomID == "E69N45") {
-			    // counting these as a lost cause...
-			}
-			else if (theController != undefined 
+			if (theController != undefined 
 			    && theController.my == true 
 			    && theController.safeMode == undefined 
 			    && theController.safeModeCooldown == undefined 
 			    && theController.safeModeAvaliable > 0
-			    && (_.some(Game.spawns, (s) => (
+			    && (theController.level < 3 
+			    || _.some(Game.spawns, (s) => (
 			        s.room.name == roomID 
 			        && s.hits < s.hitsMax 
-			        && s.isActive() == true)) == true
+			        && s.isActive() == true)) == true 
 	            || _.some(invaders, (i) => (
 	                _.some(Memory.agressivePlayers, (aP) => (
 	                    i.owner.username == aP)))) == true)) { // TODO: Check that the agressivePlayers part is working
@@ -339,6 +363,13 @@ module.exports.loop = function () {
 				theController.activateSafeMode();
 				console.log("Activated Safe Mode in: " + roomID);
 				Game.notify("Activated Safe Mode in: " + roomID);
+			}
+			else if (roomID == "W65N17" && justNPCs == false) {
+				let err = theController.activateSafeMode();
+				if (err == OK) {
+				    console.log("Activated (backup) Safe Mode in: " + roomID);
+				    Game.notify("Activated (backup) Safe Mode in: " + roomID);
+				}
 			}
         }
         else if (theRoom.hasHostileCreep == true) {

@@ -13,7 +13,7 @@ var roleRepairer = {
         }
         
         if (creep.memory.working == true) {
-            var structure = Game.getObjectById(creep.memory.repairStructureID);
+            let structure = Game.getObjectById(creep.memory.repairStructureID);
 			if (structure != undefined 
 			    && structure.structureType != STRUCTURE_TOWER 
                 && structure.hits == structure.hitsMax) {
@@ -33,7 +33,7 @@ var roleRepairer = {
             }
             
             if (structure == undefined) {
-                var repairerTypeFound = false;
+                let repairerTypeFound = false;
                 for (let repairerType in Memory.rooms[creep.memory.roomID].repairerTypeMins) { // TODO: Change to for...of once Memory.rooms[creep.memory.roomID].repairerTypeMins is changed to an array
                     if (repairerTypeFound == false && (repairerType == creep.memory.repairerType || repairerType == "all")) {
                         repairerTypeFound = true;
@@ -41,24 +41,28 @@ var roleRepairer = {
                     
                     if (repairerTypeFound == true) {
                         if (repairerType == STRUCTURE_ROAD) {
-        					structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                            structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                             	filter: (s) => (s.hits < s.hitsMax 
                             	    && s.structureType == repairerType
-                        	)});
-                        }
-                        else if (repairerType != "all") {
-        					var theStructures = creep.room.find(FIND_STRUCTURES, {
-        	                    filter: (s) => (s.hits < s.hitsMax 
-        	                        && s.structureType == repairerType
-        	                )});
-        	                if (theStructures.length > 0) {
-        	                    structure = theStructures.sort(function(s0,s1){return (s1.hitsMax - s1.hits) - (s0.hitsMax - s0.hits)})[0];
-        	                }
+                            )});
                         }
                         else {
-        					structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                            	filter: (s) => (s.hits < s.hitsMax
-                        	)});
+                            let theStructures = undefined;
+                            if (repairerType != "all") {
+                                theStructures = creep.room.find(FIND_STRUCTURES, {
+                                    filter: (s) => (s.hits < s.hitsMax 
+                                        && s.structureType == repairerType
+                                )});
+                            }
+                            else {
+                                theStructures = creep.room.find(FIND_STRUCTURES, {
+                                    filter: (s) => (s.hits < s.hitsMax
+                                )});
+                            }
+                            
+                            if (theStructures.length > 0) {
+                                structure = theStructures.sort(function(s0,s1){return (s0.hits - s1.hits);})[0];
+                            }
                         }
                         if (structure != undefined) {
                             break;
@@ -70,8 +74,8 @@ var roleRepairer = {
             if (structure != undefined) {
 				creep.memory.repairStructureID = structure.id;
 				
-                var err = undefined;
-                var actionIcon = "?";
+                let err = undefined;
+                let actionIcon = "?";
                 if(structure.structureType == STRUCTURE_TOWER 
                     && structure.energy < structure.energyCapacity) {
                     err = creep.transfer(structure, RESOURCE_ENERGY);
@@ -82,7 +86,7 @@ var roleRepairer = {
                     actionIcon = "\uD83D\uDD27";
                 }
                 
-                var structureIcon = "?";
+                let structureIcon = "?";
                 switch (structure.structureType) {
                     case STRUCTURE_SPAWN: structureIcon = "\uD83C\uDFE5"; break;
                     case STRUCTURE_EXTENSION: structureIcon = "\uD83C\uDFEA"; break;
@@ -118,15 +122,26 @@ var roleRepairer = {
             }
         }
         else {
-            var source = undefined;
-            switch (creep.memory.roomID) {
-                case "W53N32": roleHarvester.run(creep); return;
+            let source = undefined;
+            let theStorage = Game.rooms[creep.memory.roomID].storage;
+            let theTerminal = Game.rooms[creep.memory.roomID].terminal;
+            if (creep.memory.roomID == "W53N32") {
+                source = Game.getObjectById("579fa8b50700be0674d2e297");
+                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy > (theTerminal.storeCapacity / 2))) {
+                    roleHarvester.run(creep);
+                    return;
+                }
+            }
+            if (creep.memory.roomID == "W65N17") {
+                source = Game.getObjectById("57ef9c9986f108ae6e60c811");
+                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy > (theTerminal.storeCapacity / 2))) {
+                    roleHarvester.run(creep);
+                    return;
+                }
             }
             
             if (source != undefined) {
-                var theStorage = Game.rooms[creep.memory.roomID].storage;
-                var theTerminal = Game.rooms[creep.memory.roomID].terminal;
-                var err = creep.harvest(source);
+                let err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
                     creep.moveTo(source);

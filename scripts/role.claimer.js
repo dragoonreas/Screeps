@@ -2,18 +2,21 @@ var roleScout = require("role.scout");
 
 var roleClaimer = {
    run: function(creep) {
-        var theController = Game.getObjectById(creep.memory.controllerID);
+        let theController = Game.getObjectById(creep.memory.controllerID);
         if (theController == undefined || creep.room.name != theController.room.name) {
-            if (creep.memory.controllerID == "ffffffffffffffffffffffff") { // TODO: Set to a controller on the other side of the portal at W55N35
+            if (creep.memory.controllerID == "ffffffffffffffffffffffff") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.say("\u27A1W53N32", true);
-                creep.moveTo(new RoomPosition(25, 11, "W53N32"));
+                creep.moveTo(new RoomPosition(25, 25, "W53N32"));
+            }
+            else if (creep.memory.controllerID == "57ef9c9986f108ae6e60c810") {
+                roleScout.run(creep);
             }
             else {
                 creep.say("\uD83C\uDFF0?");
             }
         }
         else {
-            var err = ERR_GCL_NOT_ENOUGH;
+            let err = ERR_GCL_NOT_ENOUGH;
             // TODO: Add if case for when claimer has 5+ claim parts and controller.my == false to attack controller
             if (creep.memory.controllerID != "ffffffffffffffffffffffff") { // TODO: Get an array of controller.id from harvest rooms to check against here
                 err = creep.claimController(theController);

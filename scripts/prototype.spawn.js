@@ -10,7 +10,7 @@ var prototypeSpawn = function() {
             0.5: To maintain a speed of 1 per tick over roads
             0.0: To maintain the slowest speed, using only a single move part
         */
-        var moveRatio = 1;
+        let moveRatio = 1;
         
         /*
             The body template describes the smallest version of the body the creep will have, minus move parts
@@ -19,7 +19,7 @@ var prototypeSpawn = function() {
             All other parts are placed in the order of the first occurance of that part
             All parts are added in ratios relative to the rest of the parts that appear in the body template
         */
-        var bodyTemplate = [WORK, CARRY];
+        let bodyTemplate = [WORK, CARRY];
         if (roleName == "attacker") {
             moveRatio = 0.5;
             bodyTemplate = [ATTACK];
@@ -32,7 +32,7 @@ var prototypeSpawn = function() {
             bodyTemplate = [ATTACK, HEAL, CARRY];
         }
         else if (roleName == "upgrader") {
-            if (this.room.name == "E68N45") {
+            if (this.room.name == "W65N17") {
                 moveRatio = 0; // source dedicated to upgrading is right next to the controller in this room, and the spawner is very close too, so only need 1 move part
             }
             else {
@@ -46,28 +46,25 @@ var prototypeSpawn = function() {
             moveRatio = 0.5;
             bodyTemplate = [CLAIM];
         }
-        else if (roleName == "adaptable") {
-            bodyTemplate = [CARRY];
-        }
         
         if (bodyTemplate.length == 0) {
             moveRatio = 5; // since only using move parts will allow movement each tick no matter the terrain the moveRatio is automatically set to 5, mainly to ensure that the moveRatio == 0 sections aren't run accidently
             bodyTemplate = [MOVE];
         }
         else if (moveRatio > 0) {
-            var moveInterval = ((moveRatio == 0.5) ? 2 : 1); // move parts will be added at the apropriate intervales to maintain the move ratio
-            var numOfMoveParts = Math.ceil(bodyTemplate.length / moveInterval) * Math.ceil(moveRatio)
-            var moveTemplate = _.fill(Array(numOfMoveParts), MOVE);
+            let moveInterval = ((moveRatio == 0.5) ? 2 : 1); // move parts will be added at the apropriate intervales to maintain the move ratio
+            let numOfMoveParts = Math.ceil(bodyTemplate.length / moveInterval) * Math.ceil(moveRatio)
+            let moveTemplate = _.fill(Array(numOfMoveParts), MOVE);
             bodyTemplate.push(moveTemplate);
             bodyTemplate = _.flattenDeep(bodyTemplate);
         }
         
-        var bodyCost = 0;
+        let bodyCost = 0;
         for (let bodyPart of bodyTemplate) {
             bodyCost += BODYPART_COST[bodyPart];
         }
         
-        var energyAvaliable = this.room.energyCapacityAvailable;
+        let energyAvaliable = this.room.energyCapacityAvailable;
         if (moveRatio == 0) {
             energyAvaliable -= BODYPART_COST[MOVE]; // when move ratio is 0, remove energy from the total avaliable to account for the 1 mandatory move part that will be added that's not included in the body cost
         }
@@ -79,7 +76,7 @@ var prototypeSpawn = function() {
             = 1*300 + 10*50 
             = 800
         */
-        var partMultiplier = Math.floor(Math.min(energyAvaliable, 800) / bodyCost);
+        let partMultiplier = Math.floor(Math.min(energyAvaliable, 800) / bodyCost);
         if (roleName == "miner" 
             || roleName == "scout" 
             || (Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) {
@@ -101,9 +98,9 @@ var prototypeSpawn = function() {
             partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor((MAX_CREEP_SIZE - ((moveRatio == 0) ? 1 : 0)) / bodyTemplate.length)); // go all out since the power banks are only avaliable for a limited time, and adaptables usually carry out high priority tasks that need to be completed quickly
         }
         
-        var bodyPartCounts = _.countBy(bodyTemplate);
+        let bodyPartCounts = _.countBy(bodyTemplate);
         
-        var body = [];
+        let body = [];
         for (let i = 0; i < (partMultiplier * (bodyPartCounts[TOUGH] || 0)); i++) { // add any tough parts first
             body.push(TOUGH);
         }
@@ -124,9 +121,9 @@ var prototypeSpawn = function() {
             body = _.fill(Array(bodyTemplate.length * partMultiplier), MOVE);
         }
         else { // TODO: just put all move parts at the end since inactive parts still generate fatigue
-            var chunckSize = ((moveRatio == 0.5) ? 2 : 1); // move parts will be added at the apropriate intervales to maintain the move ratio
+            let chunckSize = ((moveRatio == 0.5) ? 2 : 1); // move parts will be added at the apropriate intervales to maintain the move ratio
             body = _.chunk(body.reverse(), chunckSize).reverse(); // since we want the execess chunks at the front, we need to reverse the array before and after creating the chuncks (although this will reverse the part order in chuncks with different types of parts, it's probably not worth worrying about)
-            var moveTemplate = _.fill(Array(Math.ceil(moveRatio)), MOVE);
+            let moveTemplate = _.fill(Array(Math.ceil(moveRatio)), MOVE);
             for (let bodyChunk of body) {
                 bodyChunk.push(moveTemplate);
             }
@@ -136,13 +133,13 @@ var prototypeSpawn = function() {
         bodyPartCounts = _.countBy(body);
         
 		// Worst case (full carry parts) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
-        var moveSpeeds = {
+        let moveSpeeds = {
             ["1"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
             , ["2"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)
             , ["10"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1)
         };
         
-        var creepMemory = { roomID: this.room.name, speeds: moveSpeeds, role: roleName, working: false }; // TODO: Only apply the working property to creeps with carry parts
+        let creepMemory = { roomID: this.room.name, speeds: moveSpeeds, role: roleName, working: false }; // TODO: Only apply the working property to creeps with carry parts
         
         if (roleName == "repairer") {
             for (let repairerType in Memory.rooms[this.room.name].repairerTypeMins) {
@@ -155,14 +152,14 @@ var prototypeSpawn = function() {
         }
         else if (roleName == "claimer") {
             if (this.room.name == "W53N32") {
-                creepMemory.controllerID = "ffffffffffffffffffffffff"; // TODO: Set to a controller on the other side of the portal at W55N35
+                creepMemory.controllerID = "57ef9c9986f108ae6e60c810";
             }
         }
         else if (roleName == "powerHarvester") {
-            creepMemory.harvestRoom = { id: "W53N32", x: 25, y: 25 };
+            creepMemory.harvestRoom = { id: "W53N32", x: 25, y: 25 }; // TODO: Populate this automatically
         }
         
-        var result = this.createCreep(body, undefined, creepMemory); // TODO: Work out a custom naming scheme
+        let result = this.createCreep(body, undefined, creepMemory); // TODO: Work out a custom naming scheme
         
         if (roleName == "repairer" && _.isString(result) == true) {
             ++Memory.rooms[creepMemory.roomID].repairerTypeCounts[creepMemory.repairerType];

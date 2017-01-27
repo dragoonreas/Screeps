@@ -15,7 +15,7 @@ var rolePowerHarvester = {
         if (creep.memory.working == false) {
             if (creep.memory.harvestRoom != undefined) {
                 if (creep.room.name == creep.memory.harvestRoom.id) {
-                    var powerBank = creep.room.find(FIND_STRUCTURES, {
+                    let powerBank = creep.room.find(FIND_STRUCTURES, {
                         filter: (s) => (s.structureType == STRUCTURE_POWER_BANK
                         )})[0];
                     if (powerBank != undefined) {
@@ -45,7 +45,7 @@ var rolePowerHarvester = {
         }
         else {
             if (creep.carry[RESOURCE_POWER] != 0) {
-                var powerStorage = Game.getObjectById("ffffffffffffffffffffffff"); // TODO: Replace with room.find
+                let powerStorage = Game.getObjectById("ffffffffffffffffffffffff"); // TODO: Replace with room.find
                 if (powerStorage != undefined) {
                     if (creep.room.name != powerStorage.room.name || creep.transfer(powerStroage, RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(powerStorage);

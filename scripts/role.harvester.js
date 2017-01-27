@@ -12,13 +12,13 @@ var roleHarvester = {
         }
         
         if (creep.memory.working == false) {
-            var source = Game.getObjectById(creep.memory.sourceID);
+            let source = Game.getObjectById(creep.memory.sourceID);
             if (source == undefined || source.energy == 0) {
                 if (source != undefined) {
                     creep.memory.sourceID = undefined;
                 }
                 
-                var sourceMem = Memory.sources[creep.memory.sourceID];
+                let sourceMem = Memory.sources[creep.memory.sourceID];
                 if (sourceMem != undefined && sourceMem.regenAt <= Game.time && creep.room.name != sourceMem.pos.roomName) {
                     creep.say("\u27A1" + sourceMem.pos.roomName, true);
                     creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
@@ -32,14 +32,18 @@ var roleHarvester = {
                         Create these lists from the sources stored in the memory of the harvest rooms, which in turn are stored in the memory of the creeps spawn room.
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
-                    var sourceIDs = {
+                    let sourceIDs = {
                         "W53N32": [
                             "579fa8b50700be0674d2e297"
                             , "579fa8b50700be0674d2e293"
                         ]
+                        , "W65N17": [
+                            "57ef9cb086f108ae6e60ca8e"
+                            , "57ef9cb086f108ae6e60ca8f"
+                        ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
-                        var sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
+                        let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);
                         if (source != undefined) {
                             if (source.energy > 0) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
@@ -61,7 +65,7 @@ var roleHarvester = {
             }
             
             if (creep.memory.sourceID != undefined) {
-                var err = creep.harvest(source);
+                let err = creep.harvest(source);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
                     creep.moveTo(source);
@@ -108,7 +112,7 @@ var roleHarvester = {
                 creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
             }
             else {
-                var structure = Game.getObjectById(creep.memory.depositeStructureID);
+                let structure = Game.getObjectById(creep.memory.depositeStructureID);
                 if (structure == undefined || structure.energy == structure.energyCapacity) {
                     structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                         filter: (s) => {
@@ -130,16 +134,16 @@ var roleHarvester = {
                     }
                 }
                 
-                var theTerminal = creep.room.terminal;
-                var theStorage = creep.room.storage;
+                let theTerminal = creep.room.terminal;
+                let theStorage = creep.room.storage;
                 if (structure != undefined) {
-                    var structureIcon = "?";
+                    let structureIcon = "?";
                     switch (structure.structureType) {
                         case STRUCTURE_SPAWN: structureIcon = "\uD83C\uDFE5"; break;
                         case STRUCTURE_EXTENSION: structureIcon = "\uD83C\uDFEA"; break;
                         case STRUCTURE_TOWER: structureIcon = "\uD83D\uDD2B"; break;
                     }
-                    var err = creep.transfer(structure, RESOURCE_ENERGY);
+                    let err = creep.transfer(structure, RESOURCE_ENERGY);
                     if(err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1" + structureIcon, true);
                         creep.moveTo(structure);
@@ -151,7 +155,7 @@ var roleHarvester = {
                     }
                 }
                 else if (theTerminal != undefined && theTerminal.store.energy < (theTerminal.storeCapacity / 2)) {
-                    var err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy));
+                    let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
                         creep.moveTo(theTerminal);
@@ -162,7 +166,7 @@ var roleHarvester = {
                     }
                 }
                 else if (creep.memory.roomID == "W53N32" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
-                    var err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
+                    let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
                         creep.moveTo(theTerminal);
@@ -173,7 +177,7 @@ var roleHarvester = {
                     }
                 }
                 else if (theStorage != undefined && theStorage.store.energy < (theStorage.storeCapacity / 2)) {
-                    var err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy));
+                    let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
                         creep.moveTo(theStorage);

@@ -9,8 +9,8 @@ var roleMiner = {
         }
         
         if(creep.memory.working == true) {
-            var theController = Game.rooms[creep.memory.roomID].controller;
-            var err = creep.upgradeController(theController);
+            let theController = Game.rooms[creep.memory.roomID].controller;
+            let err = creep.upgradeController(theController);
             if (err == ERR_NOT_IN_RANGE) {
                 creep.say("\u27A1\uD83C\uDFF0", true);
                 creep.moveTo(theController);
@@ -20,14 +20,15 @@ var roleMiner = {
             }
         }
         else {
-            var source = undefined;
+            let source = undefined;
             switch (creep.memory.roomID) {
                 case "W53N32": source = Game.getObjectById("579fa8b50700be0674d2e296"); break;
+                case "W65N17": source = Game.getObjectById("57ef9c9986f108ae6e60c80f"); break;
             }
             
             if (source != undefined) {
-                var theStorage = creep.room.storage;
-                var err = creep.harvest(source);
+                let theStorage = creep.room.storage;
+                let err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
                     creep.moveTo(source);

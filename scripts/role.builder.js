@@ -15,9 +15,9 @@ var roleBuilder = {
         }
         
         if(creep.memory.working == true) {
-            var constructionSite = Game.getObjectById(creep.memory.constructionSiteID);
+            let constructionSite = Game.getObjectById(creep.memory.constructionSiteID);
             if (constructionSite == undefined) {
-                var roomConstructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+                let roomConstructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
                 if (roomConstructionSites.length == 0) { // TODO: Change this block to check if there's any construction sites at all, then check if there's any in rooms the creep can reasonably reach
                     for (let roomID in Game.rooms) {
                         if (roomID != creep.room.name) {
@@ -35,7 +35,7 @@ var roleBuilder = {
                         creep.memory.constructionSiteID = constructionSite.id;
                     }
                     else {
-                        var priorityQueue = [STRUCTURE_SPAWN, 
+                        let priorityQueue = [STRUCTURE_SPAWN, 
                                              STRUCTURE_EXTENSION, 
                                              STRUCTURE_CONTAINER, 
                                              STRUCTURE_STORAGE, 
@@ -50,7 +50,7 @@ var roleBuilder = {
                                              STRUCTURE_OBSERVER, 
                                              STRUCTURE_POWER_SPAWN, 
                                              STRUCTURE_NUKER];
-                        var i = 0;
+                        let i = 0;
                         do {
                             Memory.constructionStructureToFind = priorityQueue[i];
                             constructionSite = creep.pos.findClosestByRange(roomConstructionSites, {
@@ -74,7 +74,7 @@ var roleBuilder = {
             }
             
             if(constructionSite != undefined) {
-                var structureIcon = "?";
+                let structureIcon = "?";
                 switch (constructionSite.structureType) {
                     case STRUCTURE_SPAWN: structureIcon = "\uD83C\uDFE5"; break;
                     case STRUCTURE_EXTENSION: structureIcon = "\uD83C\uDFEA"; break;
@@ -93,7 +93,7 @@ var roleBuilder = {
                     case STRUCTURE_NUKER: structureIcon = "\u2622"; break;
                 }
                 
-                var err = creep.build(constructionSite);
+                let err = creep.build(constructionSite);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(constructionSite);
                     creep.say("\u27A1\uD83C\uDFD7" + structureIcon, true);
@@ -107,20 +107,26 @@ var roleBuilder = {
             }
         }
         else {
-            var source = undefined;
-            var theStorage = Game.rooms[creep.memory.roomID].storage;
-            var theTerminal = Game.rooms[creep.memory.roomID].terminal;
+            let source = undefined;
+            let theStorage = Game.rooms[creep.memory.roomID].storage;
+            let theTerminal = Game.rooms[creep.memory.roomID].terminal;
             if (creep.memory.roomID == "W53N32") {
                 source = Game.getObjectById("579fa8b50700be0674d2e297");
-                if (source != undefined && source.energy == 0 && theStorage != undefined && theStorage.store.energy == 0 && theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
+                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy > (theTerminal.storeCapacity / 2))) {
+                    roleHarvester.run(creep);
+                    return;
+                }
+            }
+            if (creep.memory.roomID == "W65N17") {
+                source = Game.getObjectById("57ef9c9986f108ae6e60c811");
+                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy > (theTerminal.storeCapacity / 2))) {
                     roleHarvester.run(creep);
                     return;
                 }
             }
             
-            var err = undefined;
             if (source != undefined) {
-                err = creep.harvest(source);
+                let err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
                     creep.moveTo(source);
