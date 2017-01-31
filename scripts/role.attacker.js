@@ -1,15 +1,16 @@
-var roleAttacker = {
+let roleAttacker = {
     run: function(creep) {
         if (creep.room.name != creep.memory.roomID) {
             creep.say("\u27A1" + creep.memory.roomID, true);
-            creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
+            creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
             return;
         }
         
         // TODO: Automate based on ramparts with no building under them near attackers
-        if (creep.room.name == "W53N32") {
+        /*
+        if (creep.room.name == "W87N29") {
             let entrances = [
-                { x: 32, y: 7 }
+                { x: 32, y: 7 } // TODO: Update this position
             ];
             for (let i = 0; i < entrances.length; ++i) {
             	if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
@@ -17,12 +18,12 @@ var roleAttacker = {
                 }
                 if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
                     creep.say("\u27A1\uD83D\uDEA7", true);
-                    creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "W53N32"));
+                    creep.travelTo(new RoomPosition(entrances[i].x, entrances[i].y, "W87N29"));
                     return;
                 }
             }
         }
-        
+        */
         let invader = Game.getObjectById(creep.memory.invaderID);
         if (invader == undefined) {
             
@@ -52,7 +53,7 @@ var roleAttacker = {
             let err = creep.attack(invader);
             if (err == ERR_NOT_IN_RANGE) { // TODO: Make creep stay in rampart closest to invader
                 creep.say("\u27A1\uD83D\uDDE1", true);
-                creep.moveTo(invader);
+                creep.travelTo(invader);
             }
             else if (err == OK) {
                 creep.say("\uD83D\uDDE1", true);
@@ -74,13 +75,13 @@ var roleAttacker = {
                 let err = creep.attack(structure);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\uD83D\uDDE1", true);
-                    creep.moveTo(structure);
+                    creep.travelTo(structure);
                 }
                 else if (err == OK) {
                     creep.say("\uD83D\uDDE1", true);
                 }
-            }
-            else if (creep.room.name == "W53N32") { // TODO: Automate based on ramparts with no building under them near attackers
+            }/*
+            else if (creep.room.name == "W87N29") { // TODO: Automate based on ramparts with no building under them near attackers
                 let entrances = [
                     { x: 32, y: 7 } // TODO: Update this position
                 ];
@@ -90,11 +91,11 @@ var roleAttacker = {
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
                         creep.say("\u27A1\uD83D\uDEA7", true);
-                        creep.moveTo(new RoomPosition(entrances[i].x, entrances[i].y, "W53N32"));
+                        creep.travelTo(new RoomPosition(entrances[i].x, entrances[i].y, "W87N29"));
                         break;
                     }
                 }
-            }
+            }*/
             else {
                 creep.room.memory.creepMins.attacker = 0;
             }

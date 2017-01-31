@@ -1,24 +1,11 @@
-var roleAttacker = require("role.attacker");
-var roleHoarder = require("role.hoarder");
-var roleCollector = require("role.collector");
-var roleHarvester = require("role.harvester");
-var roleUpgrader = require("role.upgrader");
-var roleRepairer = require("role.repairer");
-var roleBuilder = require("role.builder");
-var roleClaimer = require("role.claimer");
-var roleRecyclable = require("role.recyclable");
-var roleScout = require("role.scout");
-
 // role to use when doing ad-hoc stuff
-var roleAdaptable = {
+let roleAdaptable = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
-            creep.memory.sourceID = undefined;
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
-            creep.memory.structureID = undefined;
         }
         
         if (creep.memory.roomID == "W53N32") {
@@ -29,7 +16,7 @@ var roleAdaptable = {
                     let err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
-                        creep.moveTo(theTerminal);
+                        creep.travelTo(theTerminal);
                     }
                     else if (err == OK) {
                         creep.say("\u2B07\uD83C\uDFEC", true);
@@ -39,7 +26,7 @@ var roleAdaptable = {
                     let err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
-                        creep.moveTo(theStorage);
+                        creep.travelTo(theStorage);
                     }
                     else if (err == OK) {
                         creep.say("\u2B07\uD83C\uDFE6", true);
@@ -47,7 +34,7 @@ var roleAdaptable = {
                 }
             }
             else if (creep.room.name != "W65N17") {
-                roleScout.run(creep);
+                ROLES["scout"].run(creep);
             }
             else {
                 creep.memory.roomID = "W65N17";

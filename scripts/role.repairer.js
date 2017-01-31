@@ -1,7 +1,5 @@
-var roleBuilder = require("role.builder");
-var roleHarvester = require("role.harvester");
-
-var roleRepairer = {
+// TODO: Repair ally structures and help fill their towers
+let roleRepairer = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
@@ -26,7 +24,7 @@ var roleRepairer = {
 		    }
 		    
             if(structure == undefined) {
-                structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                 filter: (s) => (s.structureType == STRUCTURE_TOWER 
                     && s.energy < s.energyCapacity
                 )});
@@ -107,35 +105,25 @@ var roleRepairer = {
                 
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1" + structureIcon, true);
-                    creep.moveTo(structure);
+                    creep.travelTo(structure);
                 }
                 else if (err == OK) {
-                    if (creep.pos.roomName == "W53N32" && creep.pos.isEqualTo(32, 7)) { // TODO: Program creeps to move others blocking their path so this kind of thing isn't needed
-                        creep.move(BOTTOM);
-                    }
                     creep.say(actionIcon + structureIcon, true);
                 }
             }
             else {
 				creep.memory.repairStructureID = undefined;
-                roleBuilder.run(creep);
+                ROLES["builder"].run(creep);
             }
         }
         else {
             let source = undefined;
             let theStorage = Game.rooms[creep.memory.roomID].storage;
             let theTerminal = Game.rooms[creep.memory.roomID].terminal;
-            if (creep.memory.roomID == "W53N32") {
-                source = Game.getObjectById("579fa8b50700be0674d2e297");
+            if (creep.memory.roomID == "W87N29") {
+                source = Game.getObjectById("5873bb9511e3e4361b4d6159");
                 if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy > (theTerminal.storeCapacity / 2))) {
-                    roleHarvester.run(creep);
-                    return;
-                }
-            }
-            if (creep.memory.roomID == "W65N17") {
-                source = Game.getObjectById("57ef9c9986f108ae6e60c811");
-                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy > (theTerminal.storeCapacity / 2))) {
-                    roleHarvester.run(creep);
+                    ROLES["harvester"].run(creep);
                     return;
                 }
             }
@@ -144,7 +132,7 @@ var roleRepairer = {
                 let err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
-                    creep.moveTo(source);
+                    creep.travelTo(source);
                 }
                 else if (err == ERR_NOT_ENOUGH_RESOURCES 
                     && creep.carry.energy > 0) {
@@ -158,7 +146,7 @@ var roleRepairer = {
                     err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
-                        creep.moveTo(theStorage);
+                        creep.travelTo(theStorage);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
                         && creep.carry.energy > 0) {
@@ -173,7 +161,7 @@ var roleRepairer = {
                     err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
-                        creep.moveTo(theTerminal);
+                        creep.travelTo(theTerminal);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
                         && creep.carry.energy > 0) {

@@ -1,38 +1,16 @@
+require("globals")();
 require("prototype.memory")();
 require("prototype.room")();
 require("prototype.source")();
 require("prototype.spawn")();
 
+require("traveler")({ exportTraveler: false, installPrototype: true });
+
 const resourcesInfo = require("resources");
 const screepsPlus = require("screepsplus");
+const visualiser = require("visualiser"); // must be called before globals
 
-require("traveler")({exportTraveler: false, installPrototype: true});
-
-var roleAttacker = require("role.attacker");
-var roleHoarder = require("role.hoarder");
-var roleCollector = require("role.collector");
-var roleHarvester = require("role.harvester");
-var roleMiner = require("role.miner");
-var roleHauler = require("role.hauler");
-var rolePowerHarvester = require("role.powerHarvester");
-var roleUpgrader = require("role.upgrader");
-var roleAdaptable = require("role.adaptable");
-var roleRepairer = require("role.repairer");
-var roleScout = require("role.scout");
-var roleBuilder = require("role.builder");
-var roleClaimer = require("role.claimer");
-var roleRecyclable = require("role.recyclable");
-
-/*
-    TODO:
-    Look into good practices for using global variables in JS, and check if their scope extends across different files
-    Make these two tick variables glabal constants
-    Also make global constants for emoji characters
-    See if it would be wise to make all the roles global
-*/
-var estSecPerTick = 3.85; // time between ticks is currently averaging ~3.85 seconds (as of 2017/01/24)
-var estTicksPerDay = Math.floor(86400 / estSecPerTick); // 24h * 60m * 60s = 86400s
-
+// TODO: Impliment the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngle AI users, potentual agressive players, potential allies and allies
 _.defaultsDeep(Memory, {
     "creeps": {}
     , "rooms": {}
@@ -43,8 +21,11 @@ _.defaultsDeep(Memory, {
     }
     , "agressivePlayers": [ // these players attack first and ask questions later (if at all)
         "rysade"
-        , "roncli" // turns out they were just using my lower RCL rooms as a low-risk targets to improve their combat code with
+        , "roncli" // turns out they were just using my RCL6 and lower rooms as low-risk targets to improve their combat code with
         , "rudykocur"
+        , "McGnomington" // open to negotiations
+        , "Archangel"
+        , "Vultured"
     ]
     , "nonAgressivePlayers": [ // nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
         "Bovius"
@@ -52,7 +33,7 @@ _.defaultsDeep(Memory, {
         , "Palle" // PINK alliance
         , "Kendalor" // PINK alliance
         , "InfiniteJoe" // PINK alliance
-        , "bobinhed" // PINK alliance
+        , "bobinhed" // PINK alliance (may have defected)
     ]
 });
 
@@ -61,8 +42,9 @@ for (let roomID in Game.rooms) {
     _.defaults(theRoom, {
         "buildOrderFILO": false
         , "checkForDrops": true
-        , "hasHostileCreep": true
-        , "memoryExpiration": Game.time + estTicksPerDay
+        , "hasHostileCreep": false
+        , "memoryExpiration": Game.time + EST_TICKS_PER_DAY
+        , "avoidTravel": false
     });
     
     let sources = theRoom.find(FIND_SOURCES);
@@ -86,19 +68,12 @@ for (let roomID in Game.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["W53N32", "repairerTypeMins"], {
+_.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 1
-    , "all": 0
-});
-_.set(Memory.rooms, ["W65N17", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 1
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 1
-    , "all": 0
+    , [STRUCTURE_WALL]: 0
+    , "all": 1
 });
 
 var repairerMins = {};
@@ -114,34 +89,20 @@ for (let roomID in Game.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["W53N32", "creepMins"], {
+_.set(Memory.rooms, ["W87N29", "creepMins"], {
     attacker: 0
-    , harvester: 2
-    , powerHarvester: 0
-    , upgrader: 3
-    , adaptable: 1
-    , scout: 0
-    , claimer: 0
-    , repairer: repairerMins["W53N32"]
-    , builder: 1
-});
-_.set(Memory.rooms, ["W65N17", "creepMins"], {
-    attacker: 0
-    , harvester: 3
+    , harvester: 6
     , powerHarvester: 0
     , upgrader: 1
     , adaptable: 0
     , scout: 0
     , claimer: 0
-    , repairer: repairerMins["W65N17"]
+    , repairer: repairerMins["W87N29"]
     , builder: 1
 });
 
-_.set(Memory.rooms, ["W53N32", "harvestRooms"], [
-    "W53N33"
-]);
-_.set(Memory.rooms, ["W65N17", "harvestRooms"], [
-    "W64N17"
+_.set(Memory.rooms, ["W87N29", "harvestRooms"], [
+    "W88N29"
 ]);
 
 module.exports.loop = function () {
@@ -167,6 +128,7 @@ module.exports.loop = function () {
         }
     }
     
+    // TODO: Since more than just TooAngle uses this AI, need to setup an array of players to use this with
     Memory.TooAngleDealings.isFriendly = (Memory.TooAngleDealings.idiotRating < 0);
     if (
         Memory.TooAngleDealings.isFriendly == false 
@@ -180,12 +142,12 @@ module.exports.loop = function () {
             o.price
         ))[0].price;
         Memory.TooAngleDealings.energyToFriendly = (parseInt(Memory.TooAngleDealings.idiotRating) + 1) / energyPrice;
-        Memory.TooAngleDealings.totalCost = Memory.TooAngleDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngleDealings.energyToFriendly, "W53N32", "E33N15"); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
+        Memory.TooAngleDealings.totalCost = Memory.TooAngleDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngleDealings.energyToFriendly, "W87N29", "E33N15"); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
         Memory.TooAngleDealings.lastIdiotRating = Memory.TooAngleDealings.idiotRating;
     }
     
-    let dealingsTerminal = Game.rooms["W53N32"].terminal;
-    if (Memory.TooAngleDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store.energy >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngleDealings.totalCost)) {
+    let dealingsTerminal = Game.rooms["W87N29"].terminal;
+    if (dealingsTerminal != undefined && Memory.TooAngleDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store.energy >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngleDealings.totalCost)) {
         if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngleDealings.energyToFriendly, "E33N15", "brain.isFriend('dragoonreas') == true?") == OK) {
             console.log("Used " + Memory.TooAngleDealings.totalCost + " energy to lose " + Memory.TooAngleDealings.idiotRating + " to be friendly with TooAngle");
             Game.notify("Used " + Memory.TooAngleDealings.totalCost + " energy to lose " + Memory.TooAngleDealings.idiotRating + " to be friendly with TooAngle");
@@ -240,9 +202,10 @@ module.exports.loop = function () {
         _.defaults(theRoom.memory, {
             "buildOrderFILO": false
             , "checkForDrops": true
-            , "hasHostileCreep": true
+            , "hasHostileCreep": false
+            , "avoidTravel": false
         });
-        theRoom.memory.memoryExpiration = Game.time + estTicksPerDay;
+        theRoom.memory.memoryExpiration = Game.time + EST_TICKS_PER_DAY;
         
         let sources = theRoom.find(FIND_SOURCES);
         for (let sourceID in sources) {
@@ -279,12 +242,14 @@ module.exports.loop = function () {
             }
             
             // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
-			if (roomID == "W53N33" && theRoom.sources["579fa8b50700be0674d2e293"].regenAt < Game.time) {
+            /*
+			if (roomID == "W88N29" && theRoom.sources["5873bb7f11e3e4361b4b5f14"].regenAt < Game.time) {
 				invaders.sort( (i0, i1) => (i0.ticksToLive - i1.ticksToLive) );
-                theRoom.sources["579fa8b50700be0674d2e293"].regenAt = Game.time + invaders[0].ticksToLive;
+                theRoom.sources["5873bb7f11e3e4361b4b5f14"].regenAt = Game.time + invaders[0].ticksToLive;
 				console.log("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.");
-                Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", estSecPerTick * invaders[0].ticksToLive);
+                Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", EST_SEC_PER_TICK * invaders[0].ticksToLive);
 			}
+			*/
 			
 			justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
 			
@@ -364,7 +329,7 @@ module.exports.loop = function () {
 				console.log("Activated Safe Mode in: " + roomID);
 				Game.notify("Activated Safe Mode in: " + roomID);
 			}
-			else if (roomID == "W65N17" && justNPCs == false) {
+			else if (roomID == "W87N29" && justNPCs == false) {
 				let err = theController.activateSafeMode();
 				if (err == OK) {
 				    console.log("Activated (backup) Safe Mode in: " + roomID);
@@ -385,13 +350,15 @@ module.exports.loop = function () {
             theRoom.checkForDrops = false;
         }
         else if (theController != undefined && theController.my == false && theController.level >= _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (maxBuildable) => maxBuildable > 0)) {
-            let hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER);
+            let hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER && _.includes(Memory.nonAgressivePlayers, s.owner.username) == false);
             if (hostileTowers.length > 0) {
                 theRoom.hasHostileTower = true;
                 theRoom.checkForDrops = false;
             }
         }
-
+        
+        // TODO: Set theRoom.memory.avoidTravel based on the check for if it's safe to assign dropped energy for creeps to pickup
+        
         if (theRoom.checkForDrops == true || (checkingForDrops == true && (theRoom.hasHostileCreep == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) {
             theRoom.checkForDrops = false;
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
@@ -449,13 +416,14 @@ module.exports.loop = function () {
                             console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(droppedResource.amount, creep.carryCapacity - _.sum(creep.carry)) + " of " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
                         }
                         else {
-                            console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
+                            //console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
                             theRoom.checkForDrops = true;
                     	}
 					}
                 }
             }
         }
+        // TODO: Else case for unassigning dropped resources from creeps in a room when it's unsafe to try and collect them
         
 		let towers = theRoom.find(FIND_MY_STRUCTURES, {
             filter: (s) => (
@@ -489,7 +457,7 @@ module.exports.loop = function () {
         	    if(target != undefined) {
         	        tower.repair(target);
         	    }
-        	    else {
+        	    else { // TODO: Heal ally creeps
         	        target = tower.pos.findClosestByRange(FIND_MY_CREEPS, { 
         	            filter: (c) => (c.hits < c.hitsMax
         	        )});
@@ -517,49 +485,33 @@ module.exports.loop = function () {
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
             
-            if (creep.memory.role == "attacker") {
-				roleAttacker.run(creep);
-			}
-            else if (creep.memory.role == "powerHarvester") {
-                rolePowerHarvester.run(creep); // NOTE: Runs hoarder role itself, if needed
-            } // TODO: add extra role here to retreat to nearest room with a tower to repair if hits < hitsMax
-            else if (creep.memory.droppedResourceID != undefined) {
-                roleCollector.run(creep);
+            let runningRole = false;
+            if (creep.memory.role != "attacker" && creep.memory.role != "powerHarvester") {
+                if (creep.memory.droppedResourceID != undefined) {
+                    ROLES["collector"].run(creep);
+                    runningRole = true;
+                }
+                else if (_.sum(creep.carry) > creep.carry.energy 
+                    && theStorage != undefined 
+                    && theStorage.my == true 
+                    && _.sum(theStorage.store) < theStorage.storeCapacity 
+                    && theStorage.isActive() == true) {
+                    ROLES["hoarder"].run(creep);
+                    runningRole = true;
+                }
             }
-            else if (_.sum(creep.carry) > creep.carry.energy 
-                && theStorage != undefined 
-                && theStorage.my == true 
-                && _.sum(theStorage.store) < theStorage.storeCapacity 
-                && theStorage.isActive() == true) {
-                roleHoarder.run(creep);
-            }
-            else if (creep.memory.role == "harvester") {
-                roleHarvester.run(creep);
-            }
-            else if (creep.memory.role == "upgrader") {
-                roleUpgrader.run(creep);
-            }
-            else if (creep.memory.role == "adaptable") {
-                roleAdaptable.run(creep);
-            }
-            else if (creep.memory.role == "repairer") {
-                roleRepairer.run(creep);
-            }
-            else if (creep.memory.role == "scout") {
-                roleScout.run(creep);
-            }
-            else if (creep.memory.role == "builder") {
-                roleBuilder.run(creep);
-            }
-            else if (creep.memory.role == "claimer") {
-                roleClaimer.run(creep);
-            }
-            else if (creep.memory.role == "recyclable") {
-                roleRecyclable.run(creep);
+            
+            if (runningRole == false) {
+                if (_.some(ROLES, (v,k) => (k == creep.memory.role)) == true) {
+                    ROLES[creep.memory.role].run(creep);
+                }
+                else {
+                    console.log(creep.name + " has unknown role: " + creep.memory.role);
+                }
             }
         }
     }
-
+    
     let nothingToSpawn = [];
     for (let spawnID in Game.spawns) {
         let spawn = Game.spawns[spawnID];
@@ -585,4 +537,8 @@ module.exports.loop = function () {
     }
     
     screepsPlus.collect_stats();
+    
+    // For Screeps Visual: https://github.com/screepers/screeps-visual
+    visualiser.movePaths();
+    RawVisual.commit();
 }

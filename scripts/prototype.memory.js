@@ -1,6 +1,6 @@
-var prototypeMemory = function() {
+let prototypeMemory = function() {
     if (Memory.sources == undefined) {
-        var handler = {
+        let handler = {
             get: function(target, property) {
                 if (_.isString(property) == true) {
                     let source = Game.getObjectById(property);
@@ -16,6 +16,7 @@ var prototypeMemory = function() {
                         }
                     }
                 }
+                
                 return this[property];
             },
             
@@ -36,11 +37,12 @@ var prototypeMemory = function() {
                         }
                     }
                 }
+                
                 this[property] = value;
                 return true;
             }
         };
-        var sourceProxy = new Proxy({}, handler);
+        let sourceProxy = new Proxy({}, handler);
         
         Object.defineProperty(Memory, "sources", {
             get: function() {

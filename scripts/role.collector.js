@@ -1,4 +1,4 @@
-var roleCollector = {
+let roleCollector = {
     run: function(creep) {
         let droppedResource = Game.getObjectById(creep.memory.droppedResourceID);
         if (droppedResource == undefined) {
@@ -8,7 +8,7 @@ var roleCollector = {
             creep.say("\uD83D\uDEE2?", true);
         }
         else if(creep.pickup(droppedResource) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(droppedResource);
+            creep.travelTo(droppedResource);
             creep.say("\u27A1\uD83D\uDEE2", true);
         }
         else {

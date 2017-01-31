@@ -1,4 +1,4 @@
-var roleScout = {
+let roleScout = {
     run: function(creep) {
         _.defaults(creep.memory, {
             waypoint: 0
@@ -23,35 +23,35 @@ var roleScout = {
                 
                 if (creep.memory.waypoint == 0) {
                     creep.say("\u27A1" + waypoints[creep.memory.waypoint], true);
-                    creep.moveTo(new RoomPosition(48, 9, "W54N34"));
+                    creep.travelTo(new RoomPosition(48, 9, "W54N34"));
                 }
                 else if (creep.memory.waypoint == 1 || creep.room.name == "W55N35") { // extra check to make sure the creep didn't step back through the portal
                     creep.say("\u27A1" + waypoints[creep.memory.waypoint], true);
                     if (creep.room.name == "W54N35" && creep.pos.x > 16) {
                         if (creep.pos.x > 32) {
-                            creep.moveTo(new RoomPosition(32, 47, "W54N35"));
+                            creep.travelTo(new RoomPosition(32, 47, "W54N35"));
                         }
                         else if (creep.pos.y > 35 && creep.pos.x >= 26) {
-                            creep.moveTo(new RoomPosition(26, 35, "W54N35"));
+                            creep.travelTo(new RoomPosition(26, 35, "W54N35"));
                         }
                         else if (creep.pos.y > 31 && creep.pos.x >= 21) {
-                            creep.moveTo(new RoomPosition(22, 31, "W54N35"));
+                            creep.travelTo(new RoomPosition(22, 31, "W54N35"));
                         }
                         else {
-                            creep.moveTo(new RoomPosition(16, 29, "W54N35"));
+                            creep.travelTo(new RoomPosition(16, 29, "W54N35"));
                         }
                     }
                     else {
-                        creep.moveTo(new RoomPosition(42, 29, "W55N35"));
+                        creep.travelTo(new RoomPosition(42, 29, "W55N35"));
                     }
                 }
                 else if (creep.memory.waypoint == 2) {
                     creep.say("\u27A1" + waypoints[creep.memory.waypoint], true);
-                    creep.moveTo(new RoomPosition(40, 48, "W65N16"));
+                    creep.travelTo(new RoomPosition(40, 48, "W65N16"));
                 }
                 else if (creep.memory.waypoint == 3 || creep.room.name == "W65N17" && creep.pos.isEqualTo(22, 40) == false) {
                     creep.say("\u27A1W65N17", true);
-                    creep.moveTo(new RoomPosition(22, 40, "W65N17"));
+                    creep.travelTo(new RoomPosition(22, 40, "W65N17"));
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say("\uD83C\uDF89", true);

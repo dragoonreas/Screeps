@@ -1,5 +1,5 @@
 // Transfer any non-energy resources to storage
-var roleHoarder = {
+let roleHoarder = {
     run: function(creep) {
         let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
         if (theStorage != undefined) {
@@ -8,7 +8,7 @@ var roleHoarder = {
                     let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
-                        creep.moveTo(theStorage);
+                        creep.travelTo(theStorage);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFE6", true);

@@ -1,4 +1,4 @@
-var prototypeSpawn = function() {
+let prototypeSpawn = function() {
     StructureSpawn.prototype.createCustomCreep =
         function(roleName) {
         

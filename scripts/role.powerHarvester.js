@@ -1,8 +1,5 @@
-var roleHoarder = require("role.hoarder");
-var roleHarvester = require("role.harvester");
-
 // TODO: Creep.say emotes
-var rolePowerHarvester = {
+let rolePowerHarvester = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
@@ -23,7 +20,7 @@ var rolePowerHarvester = {
                             creep.heal(creep);
                         }
                         else if (creep.attack(powerBank) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(powerBank);
+                            creep.travelTo(powerBank);
                         }
                     }
                     else {
@@ -31,7 +28,7 @@ var rolePowerHarvester = {
                     }
                 }
                 else {
-                    creep.moveTo(new RoomPosition(creep.memory.harvestRoom.x, creep.memory.harvestRoom.y, creep.memory.harvestRoom.id));
+                    creep.travelTo(new RoomPosition(creep.memory.harvestRoom.x, creep.memory.harvestRoom.y, creep.memory.harvestRoom.id));
                 }
             }
             else {
@@ -39,7 +36,7 @@ var rolePowerHarvester = {
                     creep.suicide();
                 }
                 else {
-                    creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
+                    creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
                 }
             }
         }
@@ -48,16 +45,16 @@ var rolePowerHarvester = {
                 let powerStorage = Game.getObjectById("ffffffffffffffffffffffff"); // TODO: Replace with room.find
                 if (powerStorage != undefined) {
                     if (creep.room.name != powerStorage.room.name || creep.transfer(powerStroage, RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(powerStorage);
+                        creep.travelTo(powerStorage);
                     }
                 }
             }
             else {
                 if (creep.carry.energy != _.sum(creep.carry)) {
-                    roleHoarder.run(creep);
+                    ROLES["hoarder"].run(creep);
                 }
                 else if (creep.carry.energy > 0) {
-                    roleHarvester.run(creep);
+                    ROLES["harvester"].run(creep);
                 }
             }
         }

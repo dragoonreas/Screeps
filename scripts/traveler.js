@@ -15,7 +15,7 @@
  *   reportThreshold:   integer    The mimimum CPU used on pathing to console.log() warnings on CPU usage. Defaults to 50
  * 
  * Examples: var Traveler = require('Traveler')();
- *           require('Traveler')({exportTraveler: false, installTraveler: false, installPrototype: true, defaultStuckValue: 5});
+ *           require('util.traveler')({exportTraveler: false, installTraveler: false, installPrototype: true, defaultStuckValue: 2});
  */
 "use strict";
 module.exports = function(globalOpts = {}){
@@ -74,7 +74,7 @@ module.exports = function(globalOpts = {}){
                 }
             });
             if (!_.isArray(ret)) {
-                console.log(`couldn't findRoute to ${destination}`);
+                console.log("couldn't findRoute to ${destination}");
                 return;
             }
             for (let value of ret) {
@@ -89,10 +89,11 @@ module.exports = function(globalOpts = {}){
                 obstacles: [],
                 maxOps: gOpts.maxOps,
             });
+            let origPos = (origin.pos || origin), destPos = (destination.pos || destination);
             let allowedRooms;
             if (options.useFindRoute || (options.useFindRoute === undefined &&
-                Game.map.getRoomLinearDistance(origin.pos.roomName, destination.pos.roomName) > 2)) {
-                allowedRooms = this.findAllowedRooms(origin.pos.roomName, destination.pos.roomName, options);
+                Game.map.getRoomLinearDistance(origPos.roomName, destPos.roomName) > 2)) {
+                allowedRooms = this.findAllowedRooms(origPos.roomName, destPos.roomName, options);
             }
             let callback = (roomName) => {
                 if (options.roomCallback) {
@@ -130,7 +131,7 @@ module.exports = function(globalOpts = {}){
                 }
                 return matrix;
             };
-            return PathFinder.search(origin.pos, { pos: destination.pos, range: options.range }, {
+            return PathFinder.search(origPos, { pos: destPos, range: options.range }, {
                 swampCost: options.ignoreRoads ? 5 : 10,
                 plainCost: options.ignoreRoads ? 1 : 2,
                 maxOps: options.maxOps,
@@ -139,6 +140,7 @@ module.exports = function(globalOpts = {}){
         }
         travelTo(creep, destination, options = {}) {
             // register hostile rooms entered
+            let creepPos = creep.pos, destPos = (destination.pos || destination);
             if (creep.room.controller) {
                 if (creep.room.controller.owner && !creep.room.controller.my) {
                     this.memory.hostileRooms[creep.room.name] = creep.room.controller.level;
@@ -160,14 +162,14 @@ module.exports = function(globalOpts = {}){
                 return ERR_INVALID_ARGS;
             }
             // manage case where creep is nearby destination
-            let rangeToDestination = creep.pos.getRangeTo(destination);
+            let rangeToDestination = creep.pos.getRangeTo(destPos);
             if (rangeToDestination <= 1) {
                 let outcome = OK;
                 if (rangeToDestination === 1) {
-                    outcome = creep.move(creep.pos.getDirectionTo(destination));
+                    outcome = creep.move(creep.pos.getDirectionTo(destPos));
                 }
                 if (options.returnPosition && outcome === OK) {
-                    return destination.pos;
+                    return destPos;
                 }
                 else {
                     return outcome;
@@ -177,7 +179,7 @@ module.exports = function(globalOpts = {}){
             let hasMoved = true;
             if (travelData.prev) {
                 travelData.prev = new RoomPosition(travelData.prev.x, travelData.prev.y, travelData.prev.roomName);
-                if (creep.pos.inRangeTo(travelData.prev, 0)) {
+                if (creepPos.inRangeTo(travelData.prev, 0)) {
                     hasMoved = false;
                     travelData.stuck++;
                 }
@@ -190,7 +192,7 @@ module.exports = function(globalOpts = {}){
                 if (options.ignoreStuck) {
                     if (options.returnPosition && travelData.path && travelData.path.length > 0) {
                         let direction = parseInt(travelData.path[0]);
-                        return Traveler.positionAtDirection(creep.pos, direction);
+                        return Traveler.positionAtDirection(creepPos, direction);
                     }
                     else {
                         return OK;
@@ -207,29 +209,29 @@ module.exports = function(globalOpts = {}){
             }
             travelData.tick = Game.time;
             // delete path cache if destination is different
-            if (!travelData.dest || travelData.dest.x !== destination.pos.x || travelData.dest.y !== destination.pos.y ||
-                travelData.dest.roomName !== destination.pos.roomName) {
+            if (!travelData.dest || travelData.dest.x !== destPos.x || travelData.dest.y !== destPos.y ||
+                travelData.dest.roomName !== destPos.roomName) {
                 delete travelData.path;
             }
             // pathfinding
             if (!travelData.path) {
                 if (creep.spawning)
                     return ERR_BUSY;
-                travelData.dest = destination.pos;
+                travelData.dest = destPos;
                 travelData.prev = undefined;
                 let cpu = Game.cpu.getUsed();
-                let ret = this.findTravelPath(creep, destination, options);
+                let ret = this.findTravelPath(creep, destPos, options);
                 travelData.cpu += (Game.cpu.getUsed() - cpu);
                 travelData.count++;
                 if (travelData.cpu > gOpts.reportThreshold) {
-                    console.log(`TRAVELER: heavy cpu use: ${creep.name}, cpu: ${_.round(travelData.cpu, 2)}, pos: ${creep.pos}`);
+                    //console.log(`TRAVELER: heavy cpu use: ${creep.name}, cpu: ${_.round(travelData.cpu, 2)}, pos: ${creep.pos}`);
                 }
                 if (ret.incomplete) {
-                    console.log(`TRAVELER: incomplete path for ${creep.name}`);
+                    //console.log(`TRAVELER: incomplete path for ${creep.name}`);
                     if (ret.ops < 2000 && options.useFindRoute === undefined && travelData.stuck < gOpts.defaultStuckValue) {
                         options.useFindRoute = false;
-                        ret = this.findTravelPath(creep, destination, options);
-                        console.log(`attempting path without findRoute was ${ret.incomplete ? "not" : ""} successful`);
+                        ret = this.findTravelPath(creep, destPos, options);
+                        //console.log(`attempting path without findRoute was ${ret.incomplete ? "not" : ""} successful`);
                     }
                 }
                 travelData.path = Traveler.serializePath(creep.pos, ret.path);
@@ -283,10 +285,15 @@ module.exports = function(globalOpts = {}){
                 }
             }
             for (let site of room.find(FIND_CONSTRUCTION_SITES)) {
-                if (site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) {
+                if (site.my == true) {
+                    matrix.set(site.pos.x, site.pos.y, 0x06);
+                }
+                else if (site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) {
                     continue;
                 }
-                matrix.set(site.pos.x, site.pos.y, 0xff);
+                else { // TODO: Make hostile construction sites walkable (but not ally ones)
+                    matrix.set(site.pos.x, site.pos.y, 0xff);
+                }
             }
             return matrix;
         }

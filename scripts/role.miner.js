@@ -1,5 +1,5 @@
 // TODO: Make this role (currently just a copy of upgrader)
-var roleMiner = {
+let roleMiner = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
@@ -13,7 +13,7 @@ var roleMiner = {
             let err = creep.upgradeController(theController);
             if (err == ERR_NOT_IN_RANGE) {
                 creep.say("\u27A1\uD83C\uDFF0", true);
-                creep.moveTo(theController);
+                creep.travelTo(theController);
             }
             else if (err == OK) {
                 creep.say("\u2B06\uD83C\uDFF0", true);
@@ -31,7 +31,7 @@ var roleMiner = {
                 let err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
-                    creep.moveTo(source);
+                    creep.travelTo(source);
                 }
                 else if (err == ERR_NOT_ENOUGH_RESOURCES 
                     && creep.carry.energy > 0) {
@@ -45,7 +45,7 @@ var roleMiner = {
                     err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
-                        creep.moveTo(theStorage);
+                        creep.travelTo(theStorage);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
                         && creep.carry.energy > 0) {
@@ -60,7 +60,7 @@ var roleMiner = {
                     err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
-                        creep.moveTo(theTerminal);
+                        creep.travelTo(theTerminal);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
                         && creep.carry.energy > 0) {

@@ -1,9 +1,10 @@
-var prototypeSource = function() {
+let prototypeSource = function() {
     
     // Based off: http://stackoverflow.com/a/38445167
     if (Source.prototype.memory == undefined) {
         Object.defineProperty(Source.prototype, "memory", {
             get: function() {
+    			if(this === Source.prototype || this == undefined) { return; }
                 if (_.isObject(this.room.sources) == false) {
                     return undefined;
                 }
@@ -22,6 +23,7 @@ var prototypeSource = function() {
     if (Source.prototype.regenAt == undefined) {
         Object.defineProperty(Source.prototype, "regenAt", {
             get: function() {
+    			if(this === Source.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "regenAt", undefined) == undefined) {
                     _.set(this.memory, "regenAt", Game.time + (this.energy == 0 ? this.ticksToRegeneration : 0));
                 }
@@ -42,10 +44,12 @@ var prototypeSource = function() {
             }
         });
     }
-
+    
+    // TODO: In claimed rooms with two sources, automatically set the source with the closest path to the controller. All other sources should be set to false.
     if (Source.prototype.upgraderOnly == undefined) {
         Object.defineProperty(Source.prototype, "upgraderOnly", {
             get: function() {
+    			if(this === Source.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "upgraderOnly", undefined) == undefined) {
                     _.set(this.memory, "upgraderOnly", false);
                 }
@@ -66,10 +70,11 @@ var prototypeSource = function() {
             }
         });
     }
-
+    
     if (Source.prototype.miner == undefined) {
         Object.defineProperty(Source.prototype, "miner", {
             get: function() {
+    			if(this === Source.prototype || this == undefined) { return; }
                 if (_.isString(this.memory.minerName) == false) {
                     return undefined;
                 }
@@ -95,10 +100,11 @@ var prototypeSource = function() {
     if (Source.prototype.container == undefined) {
         Object.defineProperty(Source.prototype, "container", {
             get: function() {
+    			if(this === Source.prototype || this == undefined) { return; }
                 if (_.isString(this.memory.containerID) == false) {
                     return undefined;
                 }
-                return Game.getObjectById[this.memory.containerID];
+                return Game.getObjectById(this.memory.containerID);
             },
             
             set: function(value) {
@@ -120,10 +126,11 @@ var prototypeSource = function() {
     if (Source.prototype.link == undefined) {
         Object.defineProperty(Source.prototype, "link", {
             get: function() {
+    			if(this === Source.prototype || this == undefined) { return; }
                 if (_.isString(this.memory.linkID) == false) {
                     return undefined;
                 }
-                return Game.getObjectById[this.memory.linkID];
+                return Game.getObjectById(this.memory.linkID);
             },
             
             set: function(value) {

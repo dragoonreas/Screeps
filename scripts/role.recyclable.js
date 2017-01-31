@@ -1,4 +1,4 @@
-var roleRecyclable = {
+let roleRecyclable = {
     run: function(creep) {
         
 		/*

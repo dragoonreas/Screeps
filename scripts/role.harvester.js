@@ -1,6 +1,4 @@
-var roleUpgrader = require("role.upgrader");
-
-var roleHarvester = {
+let roleHarvester = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
@@ -21,7 +19,7 @@ var roleHarvester = {
                 let sourceMem = Memory.sources[creep.memory.sourceID];
                 if (sourceMem != undefined && sourceMem.regenAt <= Game.time && creep.room.name != sourceMem.pos.roomName) {
                     creep.say("\u27A1" + sourceMem.pos.roomName, true);
-                    creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
+                    creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
                     return;
                 }
                 else {
@@ -33,13 +31,9 @@ var roleHarvester = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     let sourceIDs = {
-                        "W53N32": [
-                            "579fa8b50700be0674d2e297"
-                            , "579fa8b50700be0674d2e293"
-                        ]
-                        , "W65N17": [
-                            "57ef9cb086f108ae6e60ca8e"
-                            , "57ef9cb086f108ae6e60ca8f"
+                        "W87N29": [
+                            "5873bb7f11e3e4361b4d5f14"
+                            , "5873bb9511e3e4361b4d6159"
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -56,7 +50,7 @@ var roleHarvester = {
                             if (sourceMem != undefined && sourceMem.regenAt <= Game.time) {
                                 creep.memory.sourceID = sourceID;
                                 creep.say("\u27A1" + sourceMem.pos.roomName, true);
-                                creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
+                                creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
                                 return;
                             }
                         }
@@ -68,7 +62,7 @@ var roleHarvester = {
                 let err = creep.harvest(source);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
-                    creep.moveTo(source);
+                    creep.travelTo(source);
                 }
                 else if (err == OK) {
                     creep.say("\u26CF", true);
@@ -109,7 +103,7 @@ var roleHarvester = {
         else {
             if (creep.room.name != creep.memory.roomID) {
                 creep.say("\u27A1" + creep.memory.roomID, true);
-                creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
+                creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
             }
             else {
                 let structure = Game.getObjectById(creep.memory.depositeStructureID);
@@ -146,7 +140,7 @@ var roleHarvester = {
                     let err = creep.transfer(structure, RESOURCE_ENERGY);
                     if(err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1" + structureIcon, true);
-                        creep.moveTo(structure);
+                        creep.travelTo(structure);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06" + structureIcon, true);
@@ -158,18 +152,18 @@ var roleHarvester = {
                     let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
-                        creep.moveTo(theTerminal);
+                        creep.travelTo(theTerminal);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFEC", true);
                         console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)) + "/" + (theTerminal.storeCapacity / 2));
                     }
                 }
-                else if (creep.memory.roomID == "W53N32" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
+                else if (creep.memory.roomID == "W87N29" && theTerminal != undefined && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
                     let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
-                        creep.moveTo(theTerminal);
+                        creep.travelTo(theTerminal);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFEC", true);
@@ -180,7 +174,7 @@ var roleHarvester = {
                     let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
-                        creep.moveTo(theStorage);
+                        creep.travelTo(theStorage);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFE6", true);
@@ -188,7 +182,7 @@ var roleHarvester = {
                     }
                 }
                 else {
-                    roleUpgrader.run(creep);
+                    ROLES["upgrader"].run(creep);
                 }
             }
         }

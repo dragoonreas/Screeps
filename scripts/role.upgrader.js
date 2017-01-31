@@ -1,4 +1,4 @@
-var roleUpgrader = {
+let roleUpgrader = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
@@ -12,7 +12,7 @@ var roleUpgrader = {
             let err = creep.upgradeController(theController);
             if (err == ERR_NOT_IN_RANGE) {
                 creep.say("\u27A1\uD83C\uDFF0", true);
-                creep.moveTo(theController);
+                creep.travelTo(theController);
             }
             else if (err == OK) {
                 creep.say("\u2B06\uD83C\uDFF0", true);
@@ -21,8 +21,7 @@ var roleUpgrader = {
         else {
             let source = undefined;
             switch (creep.memory.roomID) {
-                case "W53N32": source = Game.getObjectById("579fa8b50700be0674d2e296"); break;
-                case "W65N17": source = Game.getObjectById("57ef9c9986f108ae6e60c80f"); break;
+                case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6157"); break;
             }
             
             if (source != undefined) {
@@ -30,7 +29,7 @@ var roleUpgrader = {
                 let err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
-                    creep.moveTo(source);
+                    creep.travelTo(source);
                 }
                 else if (err == ERR_NOT_ENOUGH_RESOURCES 
                     && creep.carry.energy > 0) {
@@ -44,7 +43,7 @@ var roleUpgrader = {
                     err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
-                        creep.moveTo(theStorage);
+                        creep.travelTo(theStorage);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
                         && creep.carry.energy > 0) {
@@ -59,7 +58,7 @@ var roleUpgrader = {
                     err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
-                        creep.moveTo(theTerminal);
+                        creep.travelTo(theTerminal);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
                         && creep.carry.energy > 0) {

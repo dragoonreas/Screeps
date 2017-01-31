@@ -1,7 +1,5 @@
-var roleRepairer = require("role.repairer");
-
 // TODO: Make this role (currently just a copy of harvester)
-var roleHauler = {
+let roleHauler = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
@@ -22,7 +20,7 @@ var roleHauler = {
                 let sourceMem = Memory.sources[creep.memory.sourceID];
                 if (sourceMem != undefined && sourceMem.regenAt <= Game.time && creep.room.name != sourceMem.pos.roomName) {
                     creep.say("\u27A1" + sourceMem.pos.roomName, true);
-                    creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
+                    creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
                     return;
                 }
                 else {
@@ -57,13 +55,13 @@ var roleHauler = {
                             if (sourceMem != undefined && sourceMem.regenAt <= Game.time) {
                                 creep.memory.sourceID = sourceID;
                                 creep.say("\u27A1" + sourceMem.pos.roomName, true);
-                                creep.moveTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
+                                creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
                                 return;
                             }
                             else if (sourceID == "57ef9cb086f108ae6e60ca8e" || sourceID == "57ef9cb086f108ae6e60ca8f") { // TODO: Remove this once the sources have been cached in Memory
                                 creep.memory.sourceID = sourceID;
                                 creep.say("\u27A1W64N17", true);
-                                creep.moveTo(new RoomPosition(9, 13, "W64N17"));
+                                creep.travelTo(new RoomPosition(9, 13, "W64N17"));
                                 return;
                             }
                         }
@@ -75,7 +73,7 @@ var roleHauler = {
                 let err = creep.harvest(source);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
-                    creep.moveTo(source);
+                    creep.travelTo(source);
                 }
                 else if (err == OK) {
                     creep.say("\u26CF", true);
@@ -116,7 +114,7 @@ var roleHauler = {
         else {
             if (creep.room.name != creep.memory.roomID) {
                 creep.say("\u27A1" + creep.memory.roomID, true);
-                creep.moveTo(new RoomPosition(25, 25, creep.memory.roomID));
+                creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
             }
             else {
                 let structure = Game.getObjectById(creep.memory.depositeStructureID);
@@ -153,7 +151,7 @@ var roleHauler = {
                     let err = creep.transfer(structure, RESOURCE_ENERGY);
                     if(err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1" + structureIcon, true);
-                        creep.moveTo(structure);
+                        creep.travelTo(structure);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06" + structureIcon, true);
@@ -165,7 +163,7 @@ var roleHauler = {
                     let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
-                        creep.moveTo(theTerminal);
+                        creep.travelTo(theTerminal);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFEC", true);
@@ -176,7 +174,7 @@ var roleHauler = {
                     let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
-                        creep.moveTo(theTerminal);
+                        creep.travelTo(theTerminal);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFEC", true);
@@ -187,7 +185,7 @@ var roleHauler = {
                     let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
-                        creep.moveTo(theStorage);
+                        creep.travelTo(theStorage);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFE6", true);
@@ -195,7 +193,7 @@ var roleHauler = {
                     }
                 }
                 else {
-                    roleUpgrader.run(creep);
+                    ROLES["upgrader"].run(creep);
                 }
             }
         }
