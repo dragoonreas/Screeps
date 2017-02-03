@@ -131,6 +131,13 @@ let roleBuilder = {
                     return;
                 }
             }
+            else if (creep.memory.roomID == "W86N29") {
+                source = Game.getObjectById("5873bbab11e3e4361b4d63fc");
+                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy > (theTerminal.storeCapacity / 2))) {
+                    ROLES["harvester"].run(creep);
+                    return;
+                }
+            }
             
             if (source != undefined) {
                 let err = creep.harvest(source);

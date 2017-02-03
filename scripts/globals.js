@@ -18,6 +18,7 @@ let globals = function() {
     }
     
     global.EST_SEC_PER_TICK = 3.85; // time between ticks is currently averaging ~3.85 seconds (as of 2017/01/24)
+    global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     
     /*

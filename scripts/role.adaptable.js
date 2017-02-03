@@ -8,11 +8,11 @@ let roleAdaptable = {
             creep.memory.working = false;
         }
         
-        if (creep.memory.roomID == "W53N32") {
+        if (creep.memory.roomID == "W87N29") {
             let theStorage = Game.rooms[creep.memory.roomID].storage;
             let theTerminal = Game.rooms[creep.memory.roomID].terminal;
             if (creep.room.name == creep.memory.roomID && _.sum(creep.carry) < creep.carryCapacity && ((theTerminal != undefined && theTerminal.store.energy > 0) || (theStorage != undefined && theStorage.store.energy > 0))) {
-                if (theTerminal.store.energy > 0) {
+                if (theTerminal != undefined && theTerminal.store.energy > 0) {
                     let err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
@@ -22,7 +22,7 @@ let roleAdaptable = {
                         creep.say("\u2B07\uD83C\uDFEC", true);
                     }
                 }
-                else if (theStorage.store.energy > 0) {
+                else if (theStorage != undefined && theStorage.store.energy > 0) {
                     let err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFE6", true);
@@ -33,14 +33,14 @@ let roleAdaptable = {
                     }
                 }
             }
-            else if (creep.room.name != "W65N17") {
+            else if (creep.room.name != "W86N29") {
                 ROLES["scout"].run(creep);
             }
             else {
-                creep.memory.roomID = "W65N17";
-                if (_.get(Memory, ["rooms", "W65N17", "creepCounts", "builder"], 0) > 0) {
+                creep.memory.roomID = "W86N29";
+                if (_.get(Memory, ["rooms", "W86N29", "creepCounts", "builder"], 0) > 0) {
                     let builders = _.filter(Game.creeps, (c) => (
-                        c.memory.roomID == "W65N17" 
+                        c.memory.roomID == "W86N29" 
                         && c.memory.role == "builder"
                     ));
                     _.forEach(builders, function(b) {

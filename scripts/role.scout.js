@@ -63,6 +63,10 @@ let roleScout = {
                     }
                 }
             }
+            else if (creep.memory.roomID == "W87N29") {
+                creep.say("\u27A1W86N29", true);
+                creep.travelTo(new RoomPosition(9, 39, "W86N29"));
+            }
             else {
                 creep.say("?", true);
             }

@@ -1,13 +1,20 @@
 let roleClaimer = {
    run: function(creep) {
         let theController = Game.getObjectById(creep.memory.controllerID);
-        let reservedControllerIDs = ["5873bb7f11e3e4361b4d5f13"];
+        let reservedControllerIDs = [
+            "5873bb7f11e3e4361b4d5f13"
+            , "5873bbab11e3e4361b4d6401"
+        ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (theController == undefined || creep.room.name != theController.room.name) {
             if (creep.memory.controllerID == "5873bb7f11e3e4361b4d5f13") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.say("\u27A1W88N29", true);
                 creep.travelTo(new RoomPosition(13, 32, "W88N29"));
             }
-            else if (creep.memory.controllerID == "ffffffffffffffffffffffff") { // TODO: Assume any controller not in reservedControllerIDs can be reached by running the scout role until code for storing controller position in memory is implemented
+            else if (creep.memory.controllerID == "5873bbab11e3e4361b4d6401") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.say("\u27A1W86N28", true);
+                creep.travelTo(new RoomPosition(31, 12, "W86N28"));
+            }
+            else if (creep.memory.controllerID == "5873bbab11e3e4361b4d63fe") { // TODO: Change this to use the controller position in memory once it's implemented, but for now assume any controller not in reservedControllerIDs can be reached by running the scout role
                 ROLES["scout"].run(creep);
             }
             else {
@@ -17,7 +24,7 @@ let roleClaimer = {
         else {
             let err = ERR_GCL_NOT_ENOUGH;
             // TODO: Add if case for when claimer has 5+ claim parts and controller.my == false to attack controller
-            if (_.some(reservedControllerIDs, (cID) => (cID == creep.memory.controllerID)) == false) { // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
+            if (_.some(reservedControllerIDs, (cID) => (cID == creep.memory.controllerID)) == false) { // NOTE: Using _.some in this way breaks earlier than _.each when false
                 err = creep.claimController(theController);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\uD83C\uDFF0", true);

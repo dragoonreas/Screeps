@@ -43,7 +43,6 @@ let prototypeSpawn = function() {
             bodyTemplate = []; // moveRatio is set automatically when an empty body template is used, so no use setting it here
         }
         else if (roleName == "claimer") {
-            moveRatio = 0.5;
             bodyTemplate = [CLAIM];
         }
         
@@ -77,9 +76,13 @@ let prototypeSpawn = function() {
             = 800
         */
         let partMultiplier = Math.floor(Math.min(energyAvaliable, 800) / bodyCost);
-        if (roleName == "miner" 
+        if (roleName == "claimer" && _.get(Memory.rooms[this.room.name], "harvestRooms", undefined) != undefined) { // rooms use other rooms to harvest send out claimers to reserve those harvest rooms and need up to two claim parts to keep the room reservation up
+            partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * 2) / bodyCost);
+        }
+        else if (roleName == "miner" 
             || roleName == "scout" 
-            || (Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) {
+            || (Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5 
+            || roleName =="claimer") {
             partMultiplier = 1; // start small if forced to build up from scratch, or if the creep doesn't scale with energy avaliable
         }
         else if (roleName == "upgrader") {
@@ -92,10 +95,10 @@ let prototypeSpawn = function() {
             */
             partMultiplier = Math.floor(Math.min(energyAvaliable, 1800) / bodyCost);
         }
-        else if (roleName == "attacker" 
-            || roleName == "powerHarvester"
-            || roleName == "adaptable") {
-            partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor((MAX_CREEP_SIZE - ((moveRatio == 0) ? 1 : 0)) / bodyTemplate.length)); // go all out since the power banks are only avaliable for a limited time, and adaptables usually carry out high priority tasks that need to be completed quickly
+        else if (roleName == "adaptable" 
+            || roleName == "attacker" 
+            || roleName == "powerHarvester") {
+            partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor((MAX_CREEP_SIZE - ((moveRatio == 0) ? 1 : 0)) / bodyTemplate.length)); // go all out if we're under attack, going after a power bank or doing some ad-hoc stuff
         }
         
         let bodyPartCounts = _.countBy(bodyTemplate);
@@ -151,8 +154,11 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "claimer") {
-            if (this.room.name == "W53N32") {
-                creepMemory.controllerID = "57ef9c9986f108ae6e60c810";
+            if (this.room.name == "W87N29") {
+                creepMemory.controllerID = "5873bb7f11e3e4361b4d5f13";
+            }
+            else if (this.room.name == "W86N29") {
+                creepMemory.controllerID = "5873bbab11e3e4361b4d6401";
             }
         }
         else if (roleName == "powerHarvester") {

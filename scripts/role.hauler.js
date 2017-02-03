@@ -32,13 +32,14 @@ let roleHauler = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     let sourceIDs = {
-                        "W53N32": [
-                            "579fa8b50700be0674d2e297"
-                            , "579fa8b50700be0674d2e293"
+                        "W87N29": [
+                            "5873bb7f11e3e4361b4d5f14"
+                            , "5873bb9511e3e4361b4d6159"
                         ]
-                        , "W65N17": [
-                            "57ef9cb086f108ae6e60ca8e"
-                            , "57ef9cb086f108ae6e60ca8f"
+                        , "W86N29": [
+                            "5873bbab11e3e4361b4d6400"
+                            , "5873bb9511e3e4361b4d615c"
+                            , "5873bbab11e3e4361b4d63fc"
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -58,10 +59,16 @@ let roleHauler = {
                                 creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
                                 return;
                             }
-                            else if (sourceID == "57ef9cb086f108ae6e60ca8e" || sourceID == "57ef9cb086f108ae6e60ca8f") { // TODO: Remove this once the sources have been cached in Memory
+                            else if (sourceID == "5873bb7f11e3e4361b4d5f17") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.say("\u27A1W64N17", true);
-                                creep.travelTo(new RoomPosition(9, 13, "W64N17"));
+                                creep.say("\u27A1W88N28", true);
+                                creep.travelTo(new RoomPosition(24, 40, "W88N28"));
+                                return;
+                            }
+                            else if (sourceID == "5873bb9511e3e4361b4d615c") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say("\u27A1W87N28", true);
+                                creep.travelTo(new RoomPosition(20, 26, "W87N28"));
                                 return;
                             }
                         }
@@ -170,15 +177,15 @@ let roleHauler = {
                         console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)) + "/" + (theTerminal.storeCapacity / 2));
                     }
                 }
-                else if (creep.memory.roomID == "W53N32" && Memory.TooAngleDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngleDealings.totalCost) {
-                    let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy));
+                else if (creep.memory.roomID == "W87N29" && theTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngelDealings.totalCost) {
+                    let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say("\u27A1\uD83C\uDFEC", true);
                         creep.travelTo(theTerminal);
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFEC", true);
-                        console.log("TooAngle dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngleDealings.totalCost - theTerminal.store.energy)) + "/" + Memory.TooAngleDealings.totalCost);
+                        console.log("TooAngel dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy)) + "/" + Memory.TooAngelDealings.totalCost);
                     }
                 }
                 else if (theStorage != undefined && theStorage.store.energy < (theStorage.storeCapacity / 2)) {

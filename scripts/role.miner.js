@@ -22,8 +22,8 @@ let roleMiner = {
         else {
             let source = undefined;
             switch (creep.memory.roomID) {
-                case "W53N32": source = Game.getObjectById("579fa8b50700be0674d2e296"); break;
-                case "W65N17": source = Game.getObjectById("57ef9c9986f108ae6e60c80f"); break;
+                case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6157"); break;
+                case "W86N29": source = Game.getObjectById("5873bbab11e3e4361b4d63fd"); break;
             }
             
             if (source != undefined) {

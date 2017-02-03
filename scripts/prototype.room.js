@@ -180,6 +180,16 @@ let prototypeRoom = function() {
         });
     }
     
+    if (Room.prototype.isHarvestRoom == undefined) {
+        defineCachedGetter(Room.prototype, 'isHarvestRoom', (r) => {
+            return (_.some(Memory.rooms, (rm) => {
+                let harvestRooms = _.get(rm, "harvestRooms", undefined);
+                if (harvestRooms == undefined) { return false; }
+                return (_.some(harvestRooms, this.name) == true);
+            }) == true);
+        });
+    }
+    
     if (Room.prototype.memoryExpiration == undefined) {
         Object.defineProperty(Room.prototype, "memoryExpiration", {
             get: function() {
