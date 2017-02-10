@@ -3,12 +3,13 @@ let roleBuilder = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
-            creep.memory.sourceID = undefined;
+            creep.memory.sourceID = undefined; // can be a harvester when not working
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
             creep.memory.constructionSiteID = undefined;
-            creep.memory.repairStructureID = undefined;
+            creep.memory.repairStructureID = undefined; // can be a repairer when working
+            creep.memory.depositeStructureID = undefined; // can be a harvester when working
         }
         
         if(creep.memory.working == true) {
@@ -20,6 +21,7 @@ let roleBuilder = {
                 )});
                 if (newRampart != undefined) {
                     creep.memory.repairStructureID = newRampart.id;
+                    creep.say("\uD83D\uDD5B\uD83D\uDD27\uD83D\uDEA7", true);
                     return; // need to wait till next tick to repair it for some reason
                 }
             }
@@ -45,7 +47,7 @@ let roleBuilder = {
                 */
                 if (roomConstructionSites.length > 0) {
                     if (Memory.rooms[creep.room.name].buildOrderFILO == true) {
-                        constructionSite = roomConstructionSites[roomConstructionSites.length - 1];
+                        constructionSite = roomConstructionSites[roomConstructionSites.length - 1]; // TODO: Get max based on id instead
                         creep.memory.constructionSiteID = constructionSite.id;
                     }
                     else {

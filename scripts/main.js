@@ -1,15 +1,22 @@
 // Setup globals and prototypes
 require("globals")(); // NOTE: All globals not from an external resource should be declared here
 require("prototype.memory")();
-require("prototype.room")();
-require("prototype.source")();
+require("prototype.room")(); // NOTE: Must be required after prototype.memory.js
+require("prototype.source")(); // NOTE: Must be required after prototype.room.js and prototype.memory.js
 require("prototype.spawn")();
-require("traveler")({ exportTraveler: false, installPrototype: true }); // TODO: Make a custom version of Creep.moveTo and remove this stopgap solution
+require("prototype.creep")();
+require("traveler")({ 
+    exportTraveler: false
+    , installPrototype: true
+    , visualisePathStyle: { 
+        lineStyle: "solid"
+        , strokeWidth: .1 
+}}); // TODO: Make a custom version of Creep.moveTo and remove this stopgap solution
 
 // Setup constants
 const resourcesInfo = require("resources"); // Used by screepsPlus to generate stats
 const screepsPlus = require("screepsplus"); // Used to put stats in memory for agent to collect and push to Grafana dashboard
-const visualiser = require("visualiser"); // NOTE: Must be called after globals initialisation
+//const visualiser = require("visualiser"); // NOTE: Must be called after globals initialisation
 
 // Make sure all required root memory objects exist
 _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngel AI users, potentual agressive players, potential allies and allies
@@ -34,7 +41,6 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
         , "Palle" // PINK alliance
         , "Kendalor" // PINK alliance
         , "InfiniteJoe" // PINK alliance
-        , "bobinhed" // PINK alliance (may have defected)
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
 });
 
@@ -46,15 +52,15 @@ for (let roomID in Game.rooms) {
         , "checkForDrops": true
         , "hasHostileCreep": false
         , "memoryExpiration": Game.time + EST_TICKS_PER_DAY
-        , "avoidTravel": false
-    });
+        , "avoidTravelUntil": 0
+    }); // TODO: Implement sparse memory storage for rooms (assume a default value for undefined keys)
     
     let sources = theRoom.find(FIND_SOURCES);
     for (let source of sources) {
         _.defaults(Memory.sources[source.id], {
             pos: source.pos
         });
-
+        
         if (source.regenAt == undefined) {
             console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
         }
@@ -66,6 +72,15 @@ for (let roomID in Game.rooms) {
 }
 
 // Setup room memory objects for owned rooms
+_.set(Memory.rooms, ["W87N29", "harvestRooms"], [
+    "W88N29"
+    , "W88N28"
+]);
+_.set(Memory.rooms, ["W86N29", "harvestRooms"], [
+    "W86N28"
+    , "W87N28"
+]);
+
 /*
     TODO:
     These should be stored in an array instead of an object since their order also defines the build priority.
@@ -76,21 +91,20 @@ _.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 0
-    , "all": 1
+    , all: 1
 });
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_RAMPART]: 2
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
-    , "all": 1
+    , all: 1
 });
 
-var repairerMins = {};
+let managedRooms = [];
 for (let roomID in Game.rooms) {
-    let theRoom = Game.rooms[roomID];
-    if (theRoom.memory.repairerTypeMins != undefined) {
-        repairerMins[roomID] = _.reduce(theRoom.memory.repairerTypeMins, (sum, count) => (sum + count), 0);
+    if (Memory.rooms[roomID].repairerTypeMins != undefined) {
+        managedRooms.push(roomID);
     }
 }
 
@@ -104,10 +118,11 @@ _.set(Memory.rooms, ["W87N29", "creepMins"], {
     , harvester: 6
     , powerHarvester: 0
     , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W87N29", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
     , claimer: 1
-    , repairer: repairerMins["W87N29"]
+    , repairer: _.reduce(_.get(Memory.rooms, ["W87N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
 _.set(Memory.rooms, ["W86N29", "creepMins"], {
@@ -115,21 +130,13 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , harvester: 6
     , powerHarvester: 0
     , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
     , claimer: 1
-    , repairer: repairerMins["W86N29"]
+    , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
-
-_.set(Memory.rooms, ["W87N29", "harvestRooms"], [
-    "W88N29"
-    , "W88N28"
-]);
-_.set(Memory.rooms, ["W86N29", "harvestRooms"], [
-    "W86N28"
-    , "W87N28"
-]);
 
 module.exports.loop = function () {
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
@@ -137,7 +144,7 @@ module.exports.loop = function () {
     resourcesInfo.summarize_rooms(); // Generate stats for screepsplus to retrieve at end of loop
     
     // Get current creep counts
-    for (let roomID in repairerMins) {
+    for (let roomID of managedRooms) {
         Memory.rooms[roomID].creepCounts = {};
         for (let creepType in Memory.rooms[roomID].creepMins) {
             Memory.rooms[roomID].creepCounts[creepType] = _.sum(Game.creeps, (c) => (
@@ -155,7 +162,8 @@ module.exports.loop = function () {
         }
     }
     
-    //Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W86N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W86N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W87N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Update TooAngel 
     Memory.TooAngelDealings.isFriendly = (Memory.TooAngelDealings.idiotRating < 0); // TODO: Since more than just TooAngel uses this AI, need to setup an array of players to use this with
@@ -167,9 +175,7 @@ module.exports.loop = function () {
           type: ORDER_SELL
           , resourceType: RESOURCE_ENERGY
         });
-        let energyPrice = _.sortBy(energySellOrders, (o) => (
-            o.price
-        ))[0].price;
+        let energyPrice = _.get(_.min(energySellOrders, "price"), "price", 0);
         Memory.TooAngelDealings.energyToFriendly = (parseInt(Memory.TooAngelDealings.idiotRating) + 1) / energyPrice;
         Memory.TooAngelDealings.totalCost = Memory.TooAngelDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngelDealings.energyToFriendly, "W87N29", "E33N15"); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
         Memory.TooAngelDealings.lastIdiotRating = Memory.TooAngelDealings.idiotRating;
@@ -188,22 +194,27 @@ module.exports.loop = function () {
     let checkingForDrops = false;
     
     // Garbage collection for creep memory
-    for (let name in Memory.creeps) {
-        if (Game.creeps[name] == undefined) {
-            let creepMemory = Memory.creeps[name];
+    for (let creepName in Memory.creeps) {
+        if (Game.creeps[creepName] == undefined) {
+            let creepMemory = Memory.creeps[creepName];
             let currentSpawnedRole = 0;
             let minimumSpawnedRole = 0;
             if (_.get(Memory.rooms, [creepMemory.roomID, "creepCounts", creepMemory.role], undefined) != undefined) {
                 currentSpawnedRole = Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role];
                 minimumSpawnedRole = Memory.rooms[creepMemory.roomID].creepMins[creepMemory.role];
+                
                 if (creepMemory.role == "scout" && creepMemory.goalReached != true) {
                     console.log("Scout from " + creepMemory.roomID + " only made it past waypoint " + creepMemory.waypoint);
                     Game.notify("Scout from " + creepMemory.roomID + " only made it past waypoint " + creepMemory.waypoint);
                     Memory.rooms[creepMemory.roomID].creepMins[creepMemory.role] = 0;
                 }
+                else if (creepMemory.role == "miner" && _.get(Memory.sources, [creepMemory.sourceID, "minerName"], undefined) == creepName) {
+                    delete Memory.sources[creepMemory.sourceID].miner;
+                }
             }
-            console.log("Expired " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + name);
-            delete Memory.creeps[name];
+            let ticksSinceBirth = Game.time - (creepMemory.spawnTick || (Game.time - (creepMemory.role == "claimer" ? CREEP_CLAIM_LIFE_TIME : CREEP_LIFE_TIME)));
+            console.log("Expired " + ticksSinceBirth + " tick, " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + creepName);
+            delete Memory.creeps[creepName];
             
             if (checkingForDrops == false) {
                 checkingForDrops = true;
@@ -242,7 +253,7 @@ module.exports.loop = function () {
             "buildOrderFILO": false
             , "checkForDrops": true
             , "hasHostileCreep": false
-            , "avoidTravel": false
+            , "avoidTravelUntil": 0
         });
         theRoom.memory.memoryExpiration = Game.time + EST_TICKS_PER_DAY; // Update scheduled time for room memory garbage collection
         
@@ -285,15 +296,28 @@ module.exports.loop = function () {
 			justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
 			
             // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
-			if (theRoom.isHarvestRoom == true && _.some(_.get(theRoom, sources, [{ regenAt: Game.time }]), (s) => (s.regenAt < Game.time))) {
-				invaders.sort( (i0, i1) => (i0.ticksToLive - i1.ticksToLive) );
-                _.forEach(theRoom.sources, (s) => {
-                    s.regenAt = Game.time + invaders[0].ticksToLive;
-                }); // TODO: Also clear Creep.memory.sourceID if it's set to one of the sources
-				console.log("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.");
-				if (justNPCs == false) {
-                    Game.notify("Enemy creep owned by " + invaders[0].owner.username + " shutting down harvesting from " + roomID + " for " + invaders[0].ticksToLive + " ticks.", invaders[0].ticksToLive / EST_TICKS_PER_MIN);
-				}
+			if (theRoom.isHarvestRoom == true) {
+				let youngestInvader = _.max(invaders, "ticksToLive");
+                if (theRoom.avoidTravelUntil < Game.time) {
+                    theRoom.avoidTravelUntil = Game.time + youngestInvader.ticksToLive;
+                    console.log("Enemy creep owned by " + youngestInvader.owner.username + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
+                }
+                
+                if (_.some(_.get(theRoom, "sources", {"000000000000000000000000":{ regenAt: Game.time }}), (s) => (s.regenAt < Game.time + youngestInvader.ticksToLive))) {
+                    _.forEach(theRoom.sources, (s,sID) => {
+                        if (s.regenAt < Game.time + youngestInvader.ticksToLive) {
+                            s.regenAt = Game.time + youngestInvader.ticksToLive;
+                        }
+                        let assignedCreeps = _.filter(Game.creeps, (c) => (
+                            _.get(c.memory, "sourceID", undefined) == sID
+                        ));
+                        
+                    }); // TODO: Also clear Creep.memory.sourceID if it's set to one of the sources
+                    console.log("Enemy creep owned by " + youngestInvader.owner.username + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
+                    if (justNPCs == false) {
+                        Game.notify("Enemy creep owned by " + youngestInvader.owner.username + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
+                    }
+			    }
 			}
 			
             /*
@@ -428,7 +452,52 @@ module.exports.loop = function () {
             theRoom.checkForDrops = false;
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
-                droppedResources.sort(function(a,b){return b.amount - a.amount}); // TODO: Prioritise minerals in accending order (since invaders seem to drop the best stuff in the smallest quantities) and then energy in decending order
+                _.sortByOrder(droppedResources, (dr) => {
+                    switch (dr.resourceType) {
+                        case RESOURCE_ENERGY:
+                        default: return dr.amount; // amount * 10^0
+                        case RESOURCE_HYDROGEN:
+                        case RESOURCE_OXYGEN:
+                        case RESOURCE_UTRIUM:
+                        case RESOURCE_LEMERGIUM:
+                        case RESOURCE_KEANIUM:
+                        case RESOURCE_ZYNTHIUM:
+                        case RESOURCE_CATALYST: return dr.amount * 10; // amount * 10^1
+                        case RESOURCE_HYDROXIDE:
+                        case RESOURCE_ZYNTHIUM_KEANITE:
+                        case RESOURCE_UTRIUM_LEMERGITE: return dr.amount * 100; // amount * 10^2
+                        case RESOURCE_UTRIUM_HYDRIDE:
+                        case RESOURCE_UTRIUM_OXIDE:
+                        case RESOURCE_KEANIUM_HYDRIDE:
+                        case RESOURCE_KEANIUM_OXIDE:
+                        case RESOURCE_LEMERGIUM_HYDRIDE:
+                        case RESOURCE_LEMERGIUM_OXIDE:
+                        case RESOURCE_ZYNTHIUM_HYDRIDE:
+                        case RESOURCE_ZYNTHIUM_OXIDE:
+                        case RESOURCE_GHODIUM_HYDRIDE:
+                        case RESOURCE_GHODIUM_OXIDE: return dr.amount * 1000; // amount * 10^3
+                        case RESOURCE_UTRIUM_ACID:
+                        case RESOURCE_UTRIUM_ALKALIDE:
+                        case RESOURCE_KEANIUM_ACID:
+                        case RESOURCE_KEANIUM_ALKALIDE:
+                        case RESOURCE_LEMERGIUM_ACID:
+                        case RESOURCE_LEMERGIUM_ALKALIDE:
+                        case RESOURCE_ZYNTHIUM_ACID:
+                        case RESOURCE_ZYNTHIUM_ALKALIDE:
+                        case RESOURCE_GHODIUM_ACID:
+                        case RESOURCE_GHODIUM_ALKALIDE: return dr.amount * 10000; // amount * 10^4
+                        case RESOURCE_CATALYZED_UTRIUM_ACID:
+                        case RESOURCE_CATALYZED_UTRIUM_ALKALIDE:
+                        case RESOURCE_CATALYZED_KEANIUM_ACID:
+                        case RESOURCE_CATALYZED_KEANIUM_ALKALIDE:
+                        case RESOURCE_CATALYZED_LEMERGIUM_ACID:
+                        case RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE:
+                        case RESOURCE_CATALYZED_ZYNTHIUM_ACID:
+                        case RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE:
+                        case RESOURCE_CATALYZED_GHODIUM_ACID:
+                        case RESOURCE_CATALYZED_GHODIUM_ALKALIDE: return dr.amount * 100000; // amount * 10^5
+                        case RESOURCE_POWER: return dr.amount * 1000000; // amount * 10^6
+                    }}, "desc");
                 for (let droppedResource of droppedResources) {
 					let hasAssignedCreep = _.some(Game.creeps, (c) => (
 					    c.memory.droppedResourceID == droppedResource.id
@@ -438,19 +507,21 @@ module.exports.loop = function () {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
                                 && c.memory.speeds["2"] <= 2 
+                                && c.memory.role != "miner" 
                                 && c.memory.role != "attacker" 
                                 && c.memory.role != "powerHarvester"
                                 && c.memory.role != "adaptable" 
                                 && c.memory.role != "scout"
                                 && c.memory.role != "claimer" 
                                 && c.memory.role != "recyclable" 
-                                && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
+                                && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount
                         )});
                         if (creep == undefined) {
                             creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                 filter: (c) => (c.spawning == false 
                                     && c.memory.droppedResourceID == undefined 
                                     && c.memory.speeds["2"] <= 2 
+                                    && c.memory.role != "miner" 
                                     && c.memory.role != "attacker" 
                                     && c.memory.role != "powerHarvester"
                                     && c.memory.role != "adaptable" 
@@ -458,13 +529,14 @@ module.exports.loop = function () {
                                     && c.memory.role != "claimer" 
                                     && c.memory.role != "recyclable" 
                                     && c.carryCapacity > 0 
-                                    && _.sum(c.carry) == 0 
+                                    && _.sum(c.carry) == 0
                             )});
                             if (creep == undefined) {
                                 creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                     filter: (c) => (c.spawning == false 
                                         && c.memory.droppedResourceID == undefined 
                                         && c.memory.speeds["2"] <= 2 
+                                        && c.memory.role != "miner" 
                                         && c.memory.role != "attacker" 
                                         && c.memory.role != "powerHarvester"
                                         && c.memory.role != "adaptable" 
@@ -560,6 +632,7 @@ module.exports.loop = function () {
         
         // Run a role that's not stored in creep.memory.role
         let runningRole = false;
+        // TODO: If a creep is damaged, check that it still has enough active body parts to run it's role, and if not go back home to either repair via a tower or recycle if no tower is avaliable
         if (creep.memory.role != "attacker" && creep.memory.role != "powerHarvester") {
             if (creep.memory.droppedResourceID != undefined) {
                 ROLES["collector"].run(creep);
@@ -594,28 +667,43 @@ module.exports.loop = function () {
         });
     }
     
-    // Spawn creeps
+    // Spawn or renew creeps
     let nothingToSpawn = [];
     for (let spawnID in Game.spawns) {
         let spawn = Game.spawns[spawnID];
         let roomID = spawn.room.name;
-        if (spawn.spawning == undefined && _.includes(nothingToSpawn, roomID) == false && spawn.isActive() == true) {
-            let creepName = undefined;
-            let creepMins = Memory.rooms[roomID].creepMins; // TODO: Check if this needs existance validation
-            for (let creepType in creepMins) {
-                if (Memory.rooms[roomID].creepCounts[creepType] < creepMins[creepType]) {
-                    creepName = spawn.createCustomCreep(creepType);
-                    if (_.isString(creepName) == true) {
-                        Memory.rooms[roomID].creepCounts[creepType] += 1;
-                        console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
+        if (spawn.spawning == undefined) {
+            if (spawn.isActive() == true) {
+                let creepName = undefined;
+                if (_.includes(nothingToSpawn, roomID) == false) {
+                    let creepMins = Memory.rooms[roomID].creepMins; // TODO: Check if this needs existance validation
+                    for (let creepType in creepMins) {
+                        if (Memory.rooms[roomID].creepCounts[creepType] < creepMins[creepType]) {
+                            creepName = spawn.createCustomCreep(creepType);
+                            if (_.isString(creepName) == true) {
+                                Memory.rooms[roomID].creepCounts[creepType] += 1;
+                                console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
+                            }
+                            break; // NOTE: Need to either wait till the creep can start spawning or be spawned, so no need to check the rest
+                        }
                     }
-                    break; // NOTE: Need to either wait till the creep can start spawning or be spawned, so no need to check the rest
+                    
+                    // Keep track of rooms that don't have anything to spawn so we don't check them again if they have another spawn
+                    if (creepName == undefined || creepName == ERR_NOT_ENOUGH_ENERGY || _.isString(creepName) == true) { // TODO: Override Room.energyAvaliable so it can be updated if a spawn starts spawning a creep so we don't need to skip other spawns in the room this tick, them remove the isString check from this if case
+                        nothingToSpawn.push(roomID);
+                    }
                 }
-            }
-            
-            // Keep track of rooms that don't have anything to spawn so we don't check them again if they have another spawn
-            if (creepName == undefined || creepName == ERR_NOT_ENOUGH_ENERGY || _.isString(creepName) == true) { // TODO: Override Room.energyAvaliable so it can be updated if a spawn starts spawning a creep so we don't need to skip other spawns in the room this tick, them remove the isString check from this if case
-                nothingToSpawn.push(roomID);
+                
+                if (_.isString(creepName) == false) {
+                    let creep = _.min(spawn.pos.findInRange(FIND_MY_CREEPS, 1, { filter: (c) => (
+                        c.energyAvaliableOnSpawn >= spawn.room.energyCapacityAvailable 
+                        && c.memory.role != "" 
+                        && _.some(c.body, "boost") == false
+                    )}), "ticksToLive");
+                    if (creep instanceof Creep) { // make sure Infinity wasn't returned from min instead of a creep
+                        spawn.renewCreep(creep);
+                    }
+                }
             }
         }
         else if (_.get(spawn, ["spawning", "remainingTime"], 0) == 1) {
@@ -632,7 +720,7 @@ module.exports.loop = function () {
     
     // Update ramparts public/private state
     _.forEach(ramparts, (r) => {
-        if (_.get(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], r.room.controller.level, 0) == 0) { return; } // NOTE: This should use less than the 0.2 CPU than a Rampart.isActive() check uses
+        if (_.get(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], r.room.controller.level, 0) == 0) { return; } // NOTE: This should use less than the 0.2 CPU that a Rampart.isActive() check uses
         
         // If the rampart is protecting a structure, it should always be private
         let privateState = privateRamparts[r.id] || false;
@@ -652,6 +740,6 @@ module.exports.loop = function () {
     screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
     
     // For Screeps Visual: https://github.com/screepers/screeps-visual
-    visualiser.movePaths();
-    RawVisual.commit();
+    //visualiser.movePaths();
+    //RawVisual.commit();
 }

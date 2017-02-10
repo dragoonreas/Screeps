@@ -1,8 +1,8 @@
 let prototypeRoom = function() {
     if (Room.prototype.sources == undefined) {
-        Object.defineProperty(Room.prototype, "sources", {
+        Object.defineProperty(Room.prototype, "sources", { // NOTE: Must be defined after Memory.source
             get: function() {
-    			if(this === Room.prototype || this == undefined) { return; }
+                if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "sources", undefined) == undefined) {
                     _.forEach(this.find(FIND_SOURCES), (source) => (_.set(this.memory, ["sources", source.id], { 
                         pos: source.pos
@@ -29,13 +29,13 @@ let prototypeRoom = function() {
             }
         });
     }
-
+    
     if (Room.prototype.harvestRooms == undefined) {
         Object.defineProperty(Room.prototype, "harvestRooms", {
             get: function() {
-    			if(this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, "harvestRooms", unedfined) == undefined) {
-                    _set(this.memory, "harvestRooms", []);
+                if (this === Room.prototype || this == undefined) { return; }
+                if (_.get(this.memory, "harvestRooms", undefined) == undefined) {
+                    _.set(this.memory, "harvestRooms", []);
                 }
                 if (_.isArray(this.memory.harvestRooms) == false) {
                     return undefined;
@@ -44,8 +44,8 @@ let prototypeRoom = function() {
             },
             
             set: function(value) {
-                if (_.get(this.memory, "harvestRooms", unedfined) == undefined) {
-                    _set(this.memory, "harvestRooms", []);
+                if (_.get(this.memory, "harvestRooms", undefined) == undefined) {
+                    _.set(this.memory, "harvestRooms", []);
                 }
                 if (_.isArray(this.memory.harvestRooms) == false) {
                     throw new Error("Could not set Room.harvestRooms property");
@@ -54,11 +54,23 @@ let prototypeRoom = function() {
             }
         });
     }
-
+    
+    if (Room.prototype.minerSources == undefined) {
+        defineCachedGetter(Room.prototype, 'minerSources', (r) => {
+            let sources = r.sources;
+            _.each(r.harvestRooms, (hr) => {
+                _.each(hr.sources, (hrs, sID) => {
+                    sources[sID] = hrs;
+                });
+            });
+            return sources;
+        });
+    }
+    
     if (Room.prototype.checkForDrops == undefined) {
         Object.defineProperty(Room.prototype, "checkForDrops", {
             get: function() {
-    			if(this === Room.prototype || this == undefined) { return; }
+                if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "checkForDrops", undefined) == undefined) {
                     _.set(this.memory, "checkForDrops", true);
                 }
@@ -79,11 +91,11 @@ let prototypeRoom = function() {
             }
         });
     }
-
+    
     if (Room.prototype.buildOrderFILO == undefined) {
         Object.defineProperty(Room.prototype, "buildOrderFILO", {
             get: function() {
-    			if(this === Room.prototype || this == undefined) { return; }
+                if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "buildOrderFILO", undefined) == undefined) {
                     _.set(this.memory, "buildOrderFILO", false);
                 }
@@ -104,11 +116,11 @@ let prototypeRoom = function() {
             }
         });
     }
-
+    
     if (Room.prototype.hasHostileCreep == undefined) {
         Object.defineProperty(Room.prototype, "hasHostileCreep", {
             get: function() {
-    			if(this === Room.prototype || this == undefined) { return; }
+                if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "hasHostileCreep", undefined) == undefined) {
                     _.set(this.memory, "hasHostileCreep", false);
                 }
@@ -133,7 +145,7 @@ let prototypeRoom = function() {
     if (Room.prototype.hasHostileTower == undefined) {
         Object.defineProperty(Room.prototype, "hasHostileTower", {
             get: function() {
-    			if(this === Room.prototype || this == undefined) { return; }
+                if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "hasHostileTower", undefined) == undefined) {
                     _.set(this.memory, "hasHostileTower", false);
                 }
@@ -155,27 +167,27 @@ let prototypeRoom = function() {
         });
     }
     
-    if (Room.prototype.avoidTravel == undefined) {
-        Object.defineProperty(Room.prototype, "avoidTravel", {
+    if (Room.prototype.avoidTravelUntil == undefined) {
+        Object.defineProperty(Room.prototype, "avoidTravelUntil", {
             get: function() {
-    			if(this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, "avoidTravel", undefined) == undefined) {
-                    _.set(this.memory, "avoidTravel", false);
+                if (this === Room.prototype || this == undefined) { return; }
+                if (_.get(this.memory, "avoidTravelUntil", undefined) == undefined) {
+                    _.set(this.memory, "avoidTravelUntil", 0);
                 }
-                if (_.isBoolean(this.memory.avoidTravel) == false) {
+                if (_.isNumber(this.memory.avoidTravelUntil) == false) {
                     return undefined;
                 }
-                return this.memory.avoidTravel;
+                return this.memory.avoidTravelUntil;
             },
             
             set: function(value) {
-                if (_.get(this.memory, "avoidTravel", undefined) == undefined) {
-                    _.set(this.memory, "avoidTravel", false);
+                if (_.get(this.memory, "avoidTravelUntil", undefined) == undefined) {
+                    _.set(this.memory, "avoidTravelUntil", 0);
                 }
-                if (_.isBoolean(this.memory.avoidTravel) == false) {
-                    throw new Error("Could not set Room.avoidTravel property");
+                if (_.isNumber(this.memory.avoidTravelUntil) == false) {
+                    throw new Error("Could not set Room.avoidTravelUntil property");
                 }
-                this.memory.avoidTravel = value;
+                this.memory.avoidTravelUntil = value;
             }
         });
     }
@@ -185,7 +197,7 @@ let prototypeRoom = function() {
             return (_.some(Memory.rooms, (rm) => {
                 let harvestRooms = _.get(rm, "harvestRooms", undefined);
                 if (harvestRooms == undefined) { return false; }
-                return (_.some(harvestRooms, this.name) == true);
+                return (_.includes(harvestRooms, r.name) == true);
             }) == true);
         });
     }
@@ -193,9 +205,9 @@ let prototypeRoom = function() {
     if (Room.prototype.memoryExpiration == undefined) {
         Object.defineProperty(Room.prototype, "memoryExpiration", {
             get: function() {
-    			if(this === Room.prototype || this == undefined) { return; }
+                if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "memoryExpiration", undefined) == undefined) {
-                    _.set(this.memory, "memoryExpiration", false);
+                    _.set(this.memory, "memoryExpiration", 0);
                 }
                 if (_.isNumber(this.memory.memoryExpiration) == false) {
                     return undefined;
@@ -205,7 +217,7 @@ let prototypeRoom = function() {
             
             set: function(value) {
                 if (_.get(this.memory, "memoryExpiration", undefined) == undefined) {
-                    _.set(this.memory, "memoryExpiration", false);
+                    _.set(this.memory, "memoryExpiration", 0);
                 }
                 if (_.isNumber(this.memory.memoryExpiration) == false) {
                     throw new Error("Could not set Room.memoryExpiration property");

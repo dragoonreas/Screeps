@@ -30,9 +30,7 @@ let roleAttacker = {
             // TODO: Change this to only consider invaders in melee range
             let invaders = _.get(Memory.rooms[creep.room.name], ["invaderWeightings"], undefined);
             if (invaders != undefined) {
-                invader = _.sortBy(invaders, (i) => (
-                    i.weighting
-                ))[invaders.length - 1];
+                //invader = _.max(invaders, "weighting"); // TODO: Get the key not the value here
             }
             
             if (invader == undefined) {

@@ -7,6 +7,7 @@ let rolePowerHarvester = {
         }
         else if (creep.memory.working == true && creep.carry[RESOURCE_POWER] == 0) {
             creep.memory.working = false;
+            creep.memory.depositeStructureID = undefined; // can be a harvester when working
         }
         
         if (creep.memory.working == false) {

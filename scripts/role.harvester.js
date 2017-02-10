@@ -33,6 +33,7 @@ let roleHarvester = {
                     let sourceIDs = {
                         "W87N29": [
                             "5873bb7f11e3e4361b4d5f14"
+                            , "5873bb7f11e3e4361b4d5f17"
                             , "5873bb9511e3e4361b4d6159"
                         ]
                         , "W86N29": [
@@ -75,7 +76,7 @@ let roleHarvester = {
                 }
             }
             
-            if (creep.memory.sourceID != undefined) {
+            if (source != undefined) {
                 let err = creep.harvest(source);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.say("\u27A1\u26CF", true);
@@ -118,7 +119,7 @@ let roleHarvester = {
             }
         }
         else {
-            if (creep.room.name != creep.memory.roomID) {
+            if (creep.room.name != creep.memory.roomID && _.isString(creep.memory.roomID) == true) {
                 creep.say("\u27A1" + creep.memory.roomID, true);
                 creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
             }

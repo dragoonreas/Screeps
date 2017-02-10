@@ -3,11 +3,13 @@ let roleRepairer = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
-            creep.memory.sourceID = undefined;
+            creep.memory.sourceID = undefined; // can be a harvester when not working
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
             creep.memory.repairStructureID = undefined;
+            creep.memory.constructionSiteID = undefined; // can be a builder when working
+            creep.memory.depositeStructureID = undefined; // can be a harvester when working
         }
         
         if (creep.memory.working == true) {
@@ -59,7 +61,7 @@ let roleRepairer = {
                             }
                             
                             if (theStructures.length > 0) {
-                                structure = theStructures.sort(function(s0,s1){return (s0.hits - s1.hits);})[0];
+                                structure = _.min(theStructures, "hits");
                             }
                         }
                         if (structure != undefined) {

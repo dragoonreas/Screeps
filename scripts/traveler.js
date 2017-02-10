@@ -19,19 +19,26 @@
  */
 "use strict";
 module.exports = function(globalOpts = {}){
+    if (globalOpts.visualisePathStyle) {
+        globalOpts.visualisePathStyle = _.defaults(globalOpts.visualisePathStyle, {
+            fill: "transparent",
+            stroke: "#fff",
+            lineStyle: "dashed",
+            strokeWidth: .15,
+            opacity: .1
+        });
+    }
     const gOpts = _.defaults(globalOpts, {
         exportTraveler:    true,
         installTraveler:   false,
         installPrototype:  true,
-        hostileLocation:   'empire',
         maxOps:            20000,
         defaultStuckValue: 3,
         reportThreshold:   50,
+        visualisePathStyle:undefined,
     });
     class Traveler {
         constructor() {
-            // change this memory path to suit your needs
-            this.memory = _.defaultsDeep(_.get(Memory, gOpts.hostileLocation, {}), { hostileRooms: {} });
         }
         findAllowedRooms(origin, destination, options = {}) {
             _.defaults(options, { restrictDistance: 16 });
@@ -67,7 +74,7 @@ module.exports = function(globalOpts = {}){
                             return 10;
                         }
                     }
-                    if (!options.allowHostile && this.memory.hostileRooms[roomName] &&
+                    if (!options.allowHostile && _.get(Memory.rooms, [roomName, "avoidTravelUntil"], 0) >= Game.time &&
                         roomName !== destination && roomName !== origin) {
                         return Number.POSITIVE_INFINITY;
                     }
@@ -107,7 +114,7 @@ module.exports = function(globalOpts = {}){
                         return false;
                     }
                 }
-                else if (this.memory.hostileRooms[roomName] && !options.allowHostile) {
+                else if (_.get(Memory.rooms, [roomName, "avoidTravelUntil"], 0) >= Game.time && !options.allowHostile) {
                     return false;
                 }
                 let room = Game.rooms[roomName];
@@ -141,13 +148,8 @@ module.exports = function(globalOpts = {}){
         travelTo(creep, destination, options = {}) {
             // register hostile rooms entered
             let creepPos = creep.pos, destPos = (destination.pos || destination);
-            if (creep.room.controller) {
-                if (creep.room.controller.owner && !creep.room.controller.my) {
-                    this.memory.hostileRooms[creep.room.name] = creep.room.controller.level;
-                }
-                else {
-                    this.memory.hostileRooms[creep.room.name] = undefined;
-                }
+            if (_.get(creep.room, ["controller", "owner"], undefined) && !creep.room.controller.my && !_.includes(Memory.nonAgressivePlayers, creep.room.controller.owner.username)) {
+                _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], (creep.room.controller.level > 1 ? Game.time + EST_TICKS_PER_DAY : 0));
             }
             // initialize data object
             if (!creep.memory._travel) {
@@ -324,29 +326,90 @@ module.exports = function(globalOpts = {}){
             let offsetY = [0, -1, -1, 0, 1, 1, 1, 0, -1];
             return new RoomPosition(origin.x + offsetX[direction], origin.y + offsetY[direction], origin.roomName);
         }
-    }    
-
+        visualisePath(creep, pathStyle = {}) {
+            // Check that the creep is trying to move this tick
+            if (_.get(creep.memory, ["_travel", "tick"], 0) != Game.time) {
+                return;
+            }
+            // Check that the creep has path data
+            let pathData = _.get(creep.memory, ["_travel", "path"], undefined);
+            if (pathData == undefined || pathData.length <= 0) {
+                return;
+            }
+            // Init the path style
+            if (gOpts.visualisePathStyle) {
+                pathStyle = _.defaults(pathStyle, gOpts.visualisePathStyle);
+            }
+            else {
+                pathStyle = _.defaults(pathStyle, {
+                    fill: "transparent",
+                    stroke: "#fff",
+                    lineStyle: "dashed",
+                    strokeWidth: .15,
+                    opacity: .1
+                });
+            }
+            if (pathStyle.lineStyle == "solid") {
+                pathStyle.lineStyle = undefined;
+            }
+            // Get the first step position
+            let stepPos = {
+                x: _.get(creep.memory, ["_travel", "prev", "x"], creep.pos.x)
+                , y: _.get(creep.memory, ["_travel", "prev", "y"], creep.pos.y)
+            };
+            // Get the path
+            let path = [[stepPos.x, stepPos.y]];
+            _.each(pathData, (d) => {
+                // Get the next step position
+                switch (Number(d)) {
+                    case TOP_RIGHT: stepPos.y = stepPos.y - 1;
+                    case RIGHT: stepPos.x = stepPos.x + 1; break;
+                    case BOTTOM_RIGHT: stepPos.x = stepPos.x + 1;
+                    case BOTTOM: stepPos.y = stepPos.y + 1; break;
+                    case BOTTOM_LEFT: stepPos.y = stepPos.y + 1;
+                    case LEFT: stepPos.x = stepPos.x - 1; break;
+                    case TOP_LEFT: stepPos.x = stepPos.x - 1;
+                    case TOP: stepPos.y = stepPos.y - 1; break;
+                    default: console.log(d + " didn't match a direction during path visualisation for: " + creep.name); break;
+                }
+                // If the path is still in the room, push the next step position onto the path
+                if (stepPos.x < 0 || stepPos.x >= 50 || stepPos.y < 0 || stepPos.y >= 50) {
+                    return false; // stop the loop if the path goes into a new room
+                }
+                else {
+                    path.push([stepPos.x, stepPos.y]);
+                }
+            });
+            // Draw the path
+            creep.room.visual.poly(path, pathStyle);
+        }
+    }
+    
     if(gOpts.installTraveler){
         global.Traveler = Traveler;
         global.traveler = new Traveler();
         global.travelerTick = Game.time;
     }
-
+    
     if(gOpts.installPrototype){
         // prototype requires an instance of traveler be installed in global
         if(!gOpts.installTraveler) {
             global.traveler = new Traveler();
             global.travelerTick = Game.time;
         }
-
-        Creep.prototype.travelTo = function (destination, options) {
+        
+        Creep.prototype.travelTo = function (destination, options = {}) {
             if(global.traveler && global.travelerTick !== Game.time){
                 global.traveler = new Traveler();
             }
-            return traveler.travelTo(this, destination, options);
+            let outcome = traveler.travelTo(this, destination, options);
+            if (options.visualisePathStyle !== false && (options.visualisePathStyle || gOpts.visualisePathStyle)) {
+                traveler.visualisePath(this, options.visualisePathStyle);
+            }
+            return outcome;
         };
     }
-
+    
     if(gOpts.exportTraveler){
         return Traveler;
     }

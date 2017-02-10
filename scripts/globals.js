@@ -21,11 +21,13 @@ let globals = function() {
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     
+    global.toStr = (obj) => JSON.stringify(obj, null, 2); // shortcut to stringify an object (idea credit: warinternal, from the Screeps Slack)
+    
     /*
         Cached dynamic properties: Declaration
         By warinternal, from the Screeps Slack
         NOTES:
-            - This function is best used when declared as a global
+            - This function is easiest to use when declared as a global
             - See prototype.creep for usage examples
     */
     global.defineCachedGetter = function (proto, propertyName, fn) {
@@ -50,6 +52,7 @@ let globals = function() {
         For Screeps Visual: https://github.com/screepers/screeps-visual
         NOTE: Run "loadVisual();" from the command line to see visuals when opening a new tab / steam client window.
     */
+    /*
     global.Visual = require('visual');
     global.loadVisual = function() {
         return console.log('<script>' + 
@@ -59,6 +62,7 @@ let globals = function() {
             '}</script>'
         );
     };
+    */
 };
 
 module.exports = globals;

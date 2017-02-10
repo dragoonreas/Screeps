@@ -1,10 +1,10 @@
 let prototypeSource = function() {
     
     // Based off: http://stackoverflow.com/a/38445167
-    if (Source.prototype.memory == undefined) {
+    if (Source.prototype.memory == undefined) { // NOTE: Must be defined after Room.sources and Memory.source
         Object.defineProperty(Source.prototype, "memory", {
             get: function() {
-    			if(this === Source.prototype || this == undefined) { return; }
+    			if (this === Source.prototype || this == undefined) { return; }
                 if (_.isObject(this.room.sources) == false) {
                     return undefined;
                 }
@@ -23,7 +23,7 @@ let prototypeSource = function() {
     if (Source.prototype.regenAt == undefined) {
         Object.defineProperty(Source.prototype, "regenAt", {
             get: function() {
-    			if(this === Source.prototype || this == undefined) { return; }
+    			if (this === Source.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "regenAt", undefined) == undefined) {
                     _.set(this.memory, "regenAt", Game.time + (this.energy == 0 ? this.ticksToRegeneration : 0));
                 }
@@ -45,11 +45,11 @@ let prototypeSource = function() {
         });
     }
     
-    // TODO: In claimed rooms with two sources, automatically set the source with the closest path to the controller. All other sources should be set to false.
+    // TODO: In claimed rooms with two sources, automatically set the source with the closest path to the controller (with goal range set to 3). All other sources in the room should be set to false.
     if (Source.prototype.upgraderOnly == undefined) {
         Object.defineProperty(Source.prototype, "upgraderOnly", {
             get: function() {
-    			if(this === Source.prototype || this == undefined) { return; }
+    			if (this === Source.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "upgraderOnly", undefined) == undefined) {
                     _.set(this.memory, "upgraderOnly", false);
                 }
@@ -73,8 +73,8 @@ let prototypeSource = function() {
     
     if (Source.prototype.miner == undefined) {
         Object.defineProperty(Source.prototype, "miner", {
-            get: function() {
-    			if(this === Source.prototype || this == undefined) { return; }
+            get: function() { // TODO: Clear miners that have less ticks to live than the time it took them to get to the source
+    			if (this === Source.prototype || this == undefined) { return; }
                 if (_.isString(this.memory.minerName) == false) {
                     return undefined;
                 }
@@ -84,11 +84,11 @@ let prototypeSource = function() {
             set: function(value) {
                 if (_.isString(_.get(value, "name", undefined)) == true 
                     && Game.creeps[value.name] != undefined) {
-                    this.memory.miner = value.name;
+                    this.memory.minerName = value.name;
                 }
                 else if (_.isString(value) == true 
                     && Game.creeps[value.name] != undefined) {
-                    this.memory.miner = value;
+                    this.memory.minerName = value;
                 }
                 else {
                     throw new Error("Could not set Source.miner property");
@@ -96,11 +96,12 @@ let prototypeSource = function() {
             }
         });
     }
-
-    if (Source.prototype.container == undefined) {
+    
+    // NOTE: Can be either a construction site or a structure
+    if (Source.prototype.container == undefined) { // TODO: Add checks to make sure container is beside source
         Object.defineProperty(Source.prototype, "container", {
-            get: function() {
-    			if(this === Source.prototype || this == undefined) { return; }
+            get: function() { // TODO: If no container is found, look near the source to try and assign one
+    			if (this === Source.prototype || this == undefined) { return; }
                 if (_.isString(this.memory.containerID) == false) {
                     return undefined;
                 }
@@ -122,11 +123,12 @@ let prototypeSource = function() {
             }
         });
     }
-
-    if (Source.prototype.link == undefined) {
+    
+    // NOTE: Can be either a construction site or a structure
+    if (Source.prototype.link == undefined) { // TODO: Add checks to make sure link is placed correctly (the links tile should be beside a tile beside the source that doesn't block new miners from accessing that tile beside the source)
         Object.defineProperty(Source.prototype, "link", {
-            get: function() {
-    			if(this === Source.prototype || this == undefined) { return; }
+            get: function() { // TODO: If no link is found, look around the source to try and assign one
+    			if (this === Source.prototype || this == undefined) { return; }
                 if (_.isString(this.memory.linkID) == false) {
                     return undefined;
                 }

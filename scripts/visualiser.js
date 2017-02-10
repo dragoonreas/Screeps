@@ -9,13 +9,12 @@ let visualiser = {
         Modified to also show paths created by the traveler script by bonzaiferroni
     */
     movePaths: function() {
+        let pathStyle = {
+            strokeWidth: 0.5
+        }
         _.each(Game.rooms, (r,rn) => {
-            let visual = new Visual(rn);
-            visual.defineColors(colours);
-            visual.setLineWidth = 0.5;
-            
             _.each(Game.creeps, (c) => {
-                if (c.room.name != rn) { return; }
+                let theVisual = c.room.visual;
                 
                 let pathingMethod = "_move";
                 let pathData = _.get(c.memory, [pathingMethod, "path"], undefined);
@@ -36,10 +35,7 @@ let visualiser = {
                 if (pathData == undefined || pathData.length <= 0) { return; }
                 
                 let path = undefined;
-                if (pathingMethod == "_move") {
-                    path = _.map(pathData, (sP) => ([sP.x, sP.y]));
-                }
-                else if (pathingMethod == "_travel") {
+                if (pathingMethod == "_travel") {
                     let stepPos = {
                         x: _.get(c.memory, [pathingMethod, "prev", "x"], c.pos.x)
                         , y: _.get(c.memory, [pathingMethod, "prev", "y"], c.pos.y)
@@ -67,7 +63,7 @@ let visualiser = {
                     });
                 }
                 else {
-                    return;
+                    path = _.map(pathData, (sP) => ([sP.x, sP.y]));
                 }
                 
                 visual.drawLine(path
