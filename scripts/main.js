@@ -299,6 +299,18 @@ module.exports.loop = function () {
 			if (theRoom.isHarvestRoom == true) {
 				let youngestInvader = _.max(invaders, "ticksToLive");
                 if (theRoom.avoidTravelUntil < Game.time) {
+                    _.each(Game.creeps, (c) => {
+                        if (c.room.name == theRoom.name && justNPCs == true) {
+                            c.suicide();
+                        }
+                        else {
+                            if (c.memory.role != "miner") {
+                                c.memory.sourceID = undefined;
+                            }
+                            c.memory._travel = undefined;
+                            c.memory._move = undefined;
+                        }
+                    });
                     theRoom.avoidTravelUntil = Game.time + youngestInvader.ticksToLive;
                     console.log("Enemy creep owned by " + youngestInvader.owner.username + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
                 }
@@ -696,8 +708,8 @@ module.exports.loop = function () {
                 
                 if (_.isString(creepName) == false) {
                     let creep = _.min(spawn.pos.findInRange(FIND_MY_CREEPS, 1, { filter: (c) => (
-                        c.energyAvaliableOnSpawn >= spawn.room.energyCapacityAvailable 
-                        && c.memory.role != "" 
+                        c.energyAvaliableOnSpawn >= _.get(Game.rooms, [c.memory.roomID, "energyCapacityAvailable"], spawn.room.energyCapacityAvailable) 
+                        && c.memory.role != "claimer" 
                         && _.some(c.body, "boost") == false
                     )}), "ticksToLive");
                     if (creep instanceof Creep) { // make sure Infinity wasn't returned from min instead of a creep
