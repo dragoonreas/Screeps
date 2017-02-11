@@ -113,9 +113,10 @@ _.set(Memory.rooms, ["W83N25", "repairerTypeMins"], {
 });
 
 let managedRooms = [];
-for (let roomID in Game.rooms) {
+for (let roomID in Memory.rooms) {
     if (Memory.rooms[roomID].repairerTypeMins != undefined) {
         managedRooms.push(roomID);
+        Memory.rooms[roomID].memoryExpiration = Game.time + EST_TICKS_PER_DAY;
     }
 }
 
