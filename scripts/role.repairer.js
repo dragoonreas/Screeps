@@ -25,7 +25,8 @@ let roleRepairer = {
 			    structure = undefined;
 		    }
 		    
-            if(structure == undefined) {
+            if (structure == undefined) {
+                creep.memory.repairStructureID = undefined;
                 structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                 filter: (s) => (s.structureType == STRUCTURE_TOWER 
                     && s.energy < s.energyCapacity

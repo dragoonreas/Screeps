@@ -15,6 +15,7 @@ let roleBuilder = {
         if(creep.memory.working == true) {
             let constructionSite = Game.getObjectById(creep.memory.constructionSiteID);
             if (constructionSite == undefined && creep.memory.constructionSiteID != undefined && creep.memory.repairStructureID == undefined) {
+                creep.memory.constructionSiteID = undefined;
                 let newRampart = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                     filter: (s) => (s.hits <= RAMPART_DECAY_AMOUNT
                         && s.structureType == STRUCTURE_RAMPART

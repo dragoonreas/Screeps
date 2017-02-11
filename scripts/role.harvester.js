@@ -126,6 +126,7 @@ let roleHarvester = {
             else {
                 let structure = Game.getObjectById(creep.memory.depositeStructureID);
                 if (structure == undefined || structure.energy == structure.energyCapacity) {
+                    creep.memory.depositeStructureID = undefined;
                     structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                         filter: (s) => {
                             return (s.structureType == STRUCTURE_EXTENSION 
