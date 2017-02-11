@@ -35,11 +35,16 @@ let roleHarvester = {
                             "5873bb7f11e3e4361b4d5f14"
                             , "5873bb7f11e3e4361b4d5f17"
                             , "5873bb9511e3e4361b4d6159"
-                        ]
+                        ] 
                         , "W86N29": [
                             "5873bbab11e3e4361b4d6400"
                             , "5873bb9511e3e4361b4d615c"
                             , "5873bbab11e3e4361b4d63fc"
+                        ] 
+                        , "W83N25": [
+                            "5873bbfa11e3e4361b4d6dbd"
+                            , "5873bbfa11e3e4361b4d6dbd"
+                            , "5873bbfa11e3e4361b4d6dbd"
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -69,6 +74,18 @@ let roleHarvester = {
                                 creep.memory.sourceID = sourceID;
                                 creep.say("\u27A1W87N28", true);
                                 creep.travelTo(new RoomPosition(20, 26, "W87N28"));
+                                return;
+                            }
+                            else if (sourceID == "5873bbfa11e3e4361b4d6dbd") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say("\u27A1W83N26", true);
+                                creep.travelTo(new RoomPosition(17, 24, "W83N26"));
+                                return;
+                            }
+                            else if (sourceID == "5873bc1111e3e4361b4d700e") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say("\u27A1W82N26", true);
+                                creep.travelTo(new RoomPosition(34, 27, "W83N26"));
                                 return;
                             }
                         }

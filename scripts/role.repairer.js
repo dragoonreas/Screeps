@@ -137,6 +137,13 @@ let roleRepairer = {
                     return;
                 }
             }
+            else if (creep.memory.roomID == "W83N25") {
+                source = Game.getObjectById("5873bbfa11e3e4361b4d6dc0");
+                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy > (theTerminal.storeCapacity / 2))) {
+                    ROLES["harvester"].run(creep);
+                    return;
+                }
+            }
             
             if (source != undefined) {
                 let err = creep.harvest(source);

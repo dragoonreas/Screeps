@@ -80,6 +80,10 @@ _.set(Memory.rooms, ["W86N29", "harvestRooms"], [
     "W86N28"
     , "W87N28"
 ]);
+_.set(Memory.rooms, ["W83N25", "harvestRooms"], [
+    "W83N26"
+    , "W82N26"
+]);
 
 /*
     TODO:
@@ -98,6 +102,13 @@ _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     , [STRUCTURE_RAMPART]: 2
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 1
+    , all: 1
+});
+_.set(Memory.rooms, ["W83N25", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_WALL]: 0
     , all: 1
 });
 
@@ -137,6 +148,18 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
+_.set(Memory.rooms, ["W83N25", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W83N25", "minerSources"], {}))
+    , adaptable: 0
+    , scout: 0
+    , claimer: 1
+    , repairer: _.reduce(_.get(Memory.rooms, ["W83N25", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+});
 
 module.exports.loop = function () {
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
@@ -162,8 +185,9 @@ module.exports.loop = function () {
         }
     }
     
-    Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W86N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W87N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    // TODO: Enable bootstraping after claiming W83N25
+    //Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W82N26.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    //Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W82N26.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Update TooAngel 
     Memory.TooAngelDealings.isFriendly = (Memory.TooAngelDealings.idiotRating < 0); // TODO: Since more than just TooAngel uses this AI, need to setup an array of players to use this with
@@ -637,7 +661,7 @@ module.exports.loop = function () {
                 ["1"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
                 , ["2"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)
                 , ["10"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1)
-            } // TODO: Add default for closest active spawn room to be set as creep.memory.roomID
+            } // TODO: Add default for closest active spawn room to be set as creep.memory.roomID, and also set energyAvaliableOnSpawn & spawnTick to a default like in the creep garbage collection
         });
         
         let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined); // Get home room storage if avaliable

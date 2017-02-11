@@ -14,7 +14,7 @@ let roleClaimer = {
                 creep.say("\u27A1W86N28", true);
                 creep.travelTo(new RoomPosition(31, 12, "W86N28"));
             }
-            else if (creep.memory.controllerID == "5873bbab11e3e4361b4d63fe") { // TODO: Change this to use the controller position in memory once it's implemented, but for now assume any controller not in reservedControllerIDs can be reached by running the scout role
+            else if (creep.memory.controllerID == "5873bbfa11e3e4361b4d6dc1") { // TODO: Change this to use the controller position in memory once it's implemented, but for now assume any controller not in reservedControllerIDs can be reached by running the scout role
                 ROLES["scout"].run(creep);
             }
             else {

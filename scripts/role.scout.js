@@ -10,7 +10,7 @@ let roleScout = {
         }
         
         if (creep.memory.goalReached != true) {
-            if (creep.memory.roomID == "W53N32") {
+            if (creep.memory.roomID == "W53N32") { // TODO: Repurpose when next portal hopping oppertunity presents itself
                 let waypoints = [
                     "W54N34"
                     , "W65N15"
@@ -63,13 +63,9 @@ let roleScout = {
                     }
                 }
             }
-            else if (creep.memory.roomID == "W87N29") {
-                creep.say("\u27A1W86N29", true);
-                creep.travelTo(new RoomPosition(9, 39, "W86N29"));
-            }
-            else if (creep.memory.roomID == "W86N29") {
-                creep.say("\u27A1W87N29", true);
-                creep.travelTo(new RoomPosition(7, 25, "W87N29"));
+            else if (creep.memory.roomID == "W87N29" || creep.memory.roomID == "W86N29") {
+                creep.say("\u27A1W83N25", true);
+                creep.travelTo(new RoomPosition(13, 11, "W83N25"));
             }
             else {
                 creep.say("?", true);

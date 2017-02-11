@@ -113,7 +113,9 @@ let prototypeSpawn = function() {
         else if (roleName == "upgrader") {
             partMultiplier = Math.floor(Math.min(energyAvaliable, UPGRADER_ENERGY_CAP) / bodyCost);
         }
-        else if (roleName == "claimer" && _.get(Memory.rooms[this.room.name], "harvestRooms", undefined) != undefined) {
+        else if (roleName == "claimer" 
+            && _.get(Memory.rooms[this.room.name], "harvestRooms", undefined) != undefined 
+            && _.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) {
             partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * RESERVE_CLAIM_PART_CAP) / bodyCost); // rooms using other rooms to harvest send out claimers to reserve those harvest rooms and need up to two claim parts to keep the room reservation up
         }
         else if (roleName == "scout" 
@@ -190,7 +192,12 @@ let prototypeSpawn = function() {
                 creepMemory.controllerID = "5873bb7f11e3e4361b4d5f13";
             }
             else if (this.room.name == "W86N29") {
-                creepMemory.controllerID = "5873bbab11e3e4361b4d6401";
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    creepMemory.controllerID = "5873bbab11e3e4361b4d6401";
+                }
+                else {
+                    creepMemory.controllerID = "5873bbfa11e3e4361b4d6dc1";
+                }
             }
         }
         else if (roleName == "powerHarvester") {
