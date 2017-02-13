@@ -4,6 +4,7 @@ let roleClaimer = {
         let reservedControllerIDs = [
             "5873bb7f11e3e4361b4d5f13"
             , "5873bbab11e3e4361b4d6401"
+            , "5873bbe111e3e4361b4d6ac5"
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (theController == undefined || creep.room.name != theController.room.name) {
             if (creep.memory.controllerID == "5873bb7f11e3e4361b4d5f13") { // TODO: Store controller.pos in memory for controllers in harvest rooms
@@ -14,11 +15,15 @@ let roleClaimer = {
                 creep.say("\u27A1W86N28", true);
                 creep.travelTo(new RoomPosition(31, 12, "W86N28"));
             }
-            else if (creep.memory.controllerID == "5873bbfa11e3e4361b4d6dc1") { // TODO: Change this to use the controller position in memory once it's implemented, but for now assume any controller not in reservedControllerIDs can be reached by running the scout role
+            else if (creep.memory.controllerID == "5873bbe111e3e4361b4d6ac5") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.say("\u27A1W84N23", true);
+                creep.travelTo(new RoomPosition(23, 22, "W84N23"));
+            }
+            else if (creep.memory.controllerID == "5873bbc911e3e4361b4d677c") { // TODO: Change this to use the controller position in memory once it's implemented, but for now assume any controller not in reservedControllerIDs can be reached by running the scout role
                 ROLES["scout"].run(creep);
             }
             else {
-                creep.say("\uD83C\uDFF0?");
+                creep.say("\uD83C\uDFF0?", true);
             }
         }
         else {
@@ -47,11 +52,13 @@ let roleClaimer = {
                 }
             }
             if (err != OK && err != ERR_NOT_IN_RANGE) {
+                /*
                 if (_.some(reservedControllerIDs, (cID) => (cID == creep.memory.controllerID)) == false) { // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
                     Memory.rooms[creep.memory.roomID].creepMins.claimer = 0;
                 }
+                */
                 creep.memory.controllerID = undefined;
-                creep.say("\uD83C\uDFF0?");
+                creep.say("\uD83C\uDFF0?", true);
                 console.log("Can't interact with controller in " + creep.room.name + ": " + err);
             }
         }

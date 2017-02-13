@@ -41,10 +41,11 @@ let roleHarvester = {
                             , "5873bb9511e3e4361b4d615c"
                             , "5873bbab11e3e4361b4d63fc"
                         ] 
-                        , "W83N25": [
-                            "5873bbfa11e3e4361b4d6dbd"
-                            , "5873bbfa11e3e4361b4d6dbd"
-                            , "5873bbfa11e3e4361b4d6dbd"
+                        , "W85N23": [
+                            "5873bbe111e3e4361b4d6ac4"
+                            , "5873bbc911e3e4361b4d6770"
+                            , "5873bbc911e3e4361b4d676f"
+                            , "5873bbc911e3e4361b4d676e"
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -76,16 +77,16 @@ let roleHarvester = {
                                 creep.travelTo(new RoomPosition(20, 26, "W87N28"));
                                 return;
                             }
-                            else if (sourceID == "5873bbfa11e3e4361b4d6dbd") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bbe111e3e4361b4d6ac4") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.say("\u27A1W83N26", true);
-                                creep.travelTo(new RoomPosition(17, 24, "W83N26"));
+                                creep.say("\u27A1W84N23", true);
+                                creep.travelTo(new RoomPosition(3, 3, "W84N23"));
                                 return;
                             }
-                            else if (sourceID == "5873bc1111e3e4361b4d700e") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bbc911e3e4361b4d6770") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.say("\u27A1W82N26", true);
-                                creep.travelTo(new RoomPosition(34, 27, "W83N26"));
+                                creep.say("\u27A1W85N25", true);
+                                creep.travelTo(new RoomPosition(32, 37, "W85N25"));
                                 return;
                             }
                         }
@@ -192,7 +193,7 @@ let roleHarvester = {
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFEC", true);
-                        console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)) + "/" + (theTerminal.storeCapacity / 2));
+                        console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)).toLocaleString() + "/" + (theTerminal.storeCapacity / 2).toLocaleString());
                     }
                 }
                 else if (creep.memory.roomID == "W87N29" && theTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngelDealings.totalCost) {
@@ -203,7 +204,7 @@ let roleHarvester = {
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFEC", true);
-                        console.log("TooAngel dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy)) + "/" + Memory.TooAngelDealings.totalCost);
+                        console.log("TooAngel dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy)).toLocaleString() + "/" + Memory.TooAngelDealings.totalCost.toLocaleString());
                     }
                 }
                 else if (theStorage != undefined && theStorage.store.energy < (theStorage.storeCapacity / 2)) {
@@ -214,7 +215,7 @@ let roleHarvester = {
                     }
                     else if (err == OK) {
                         creep.say("\u2B06\uD83C\uDFE6", true);
-                        console.log(theStorage.room.name + " storage reserve at: " + (theStorage.store.energy + Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy)) + "/" + (theStorage.storeCapacity / 2));
+                        console.log(theStorage.room.name + " storage reserve at: " + (theStorage.store.energy + Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy)).toLocaleString() + "/" + (theStorage.storeCapacity / 2).toLocaleString());
                     }
                 }
                 else {

@@ -49,16 +49,16 @@ let roleMiner = {
                             creep.travelTo(new RoomPosition(20, 26, "W87N28"));
                             return;
                         }
-                        else if (sourceID == "5873bbfa11e3e4361b4d6dbd") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5873bbe111e3e4361b4d6ac4") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
-                            creep.say("\u27A1W83N26", true);
-                            creep.travelTo(new RoomPosition(17, 24, "W83N26"));
+                            creep.say("\u27A1W84N23", true);
+                            creep.travelTo(new RoomPosition(3, 3, "W84N23"));
                             return;
                         }
-                        else if (sourceID == "5873bc1111e3e4361b4d700e") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5873bbc911e3e4361b4d6770") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
-                            creep.say("\u27A1W82N26", true);
-                            creep.travelTo(new RoomPosition(34, 27, "W83N26"));
+                            creep.say("\u27A1W85N25", true);
+                            creep.travelTo(new RoomPosition(32, 37, "W85N25"));
                             return;
                         }
                     }

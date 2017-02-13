@@ -10,8 +10,8 @@ let roleAdaptable = {
         
         let destinationRoomName = undefined;
         switch (creep.memory.roomID) {
-            case "W87N29": destinationRoomName = "W83N25"; break;
-            case "W86N29": destinationRoomName = "W83N25"; break;
+            case "W87N29": destinationRoomName = "W85N23"; break;
+            case "W86N29": destinationRoomName = "W85N23"; break;
         }
         
         if (destinationRoomName != undefined) {
@@ -52,11 +52,12 @@ let roleAdaptable = {
                     _.forEach(builders, (b) => {
                         b.memory.role = "repairer";
                         b.memory.repairerType = "all";
-                        console.log(b.name + " in " + b.room.name + " changing from builder to repairer (of type all)"); // TODO: Find out why this doesn't display
+                        console.log(b.name + " in " + b.room.name + " changing from builder to repairer (of type all)");
                     });
                 }
                 creep.memory.role = "builder";
-                console.log("Adaptable made it to " + creep.room.name + " with " + creep.ticksToLive + " ticks to live & " + creep.hits + "/" + creep.hitsMax + " HP");
+                console.log("Adaptable made it to " + creep.room.name + " with " + creep.ticksToLive.toLocaleString() + " ticks to live & " + creep.hits.toLocaleString() + "/" + creep.hitsMax.toLocaleString() + " HP");
+                ROLES["builder"].run(creep);
             }
         }
         else {

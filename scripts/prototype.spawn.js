@@ -169,7 +169,7 @@ let prototypeSpawn = function() {
         let creepMemory = {
             roomID: this.room.name 
             , energyAvaliableOnSpawn: energyAvaliableOnSpawn 
-            , spawnTick: Game.time + (body.length * CREEP_SPAWN_TIME) 
+            , spawnTick: Game.time + (body.length * CREEP_SPAWN_TIME) - 1 // -1 because it uses the last tick to leave the spawn
             , speeds: moveSpeeds 
             , role: roleName 
             , working: false
@@ -196,8 +196,11 @@ let prototypeSpawn = function() {
                     creepMemory.controllerID = "5873bbab11e3e4361b4d6401";
                 }
                 else {
-                    creepMemory.controllerID = "5873bbfa11e3e4361b4d6dc1";
+                    creepMemory.controllerID = "5873bbc911e3e4361b4d677c";
                 }
+            }
+            else if (this.room.name == "W85N23") {
+                creepMemory.controllerID = "5873bbe111e3e4361b4d6ac5";
             }
         }
         else if (roleName == "powerHarvester") {

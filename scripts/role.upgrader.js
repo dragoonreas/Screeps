@@ -23,10 +23,11 @@ let roleUpgrader = {
             switch (creep.memory.roomID) {
                 case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6157"); break;
                 case "W86N29": source = Game.getObjectById("5873bbab11e3e4361b4d63fd"); break;
-                case "W83N25": source = Game.getObjectById("5873bbfa11e3e4361b4d6dc2"); break;
+                case "W85N23": source = Game.getObjectById("5873bbc911e3e4361b4d677d"); break;
             }
             
             if (source != undefined) {
+                let theTerminal = creep.room.terminal;
                 let theStorage = creep.room.storage;
                 let err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {

@@ -273,8 +273,8 @@ module.exports = function(globalOpts = {}){
         }
         static addStructuresToMatrix(room, matrix, roadCost) {
             for (let structure of room.find(FIND_STRUCTURES)) {
-                if (structure instanceof StructureRampart) {
-                    if (!structure.my) {
+                if (structure instanceof StructureRampart) =
+                    if (!structure.my && !(_.includes(Memory.nonAgressivePlayers, site.owner.username) && structure.isPublic == true)) {
                         matrix.set(structure.pos.x, structure.pos.y, 0xff);
                     }
                 }
@@ -287,13 +287,10 @@ module.exports = function(globalOpts = {}){
                 }
             }
             for (let site of room.find(FIND_CONSTRUCTION_SITES)) {
-                if (site.my == true) {
+                if (site.my == true || site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD || site.structureType === STRUCTURE_WALL) { // try not to block own (or possibly own) construction sites
                     matrix.set(site.pos.x, site.pos.y, 0x06);
                 }
-                else if (site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) {
-                    continue;
-                }
-                else { // TODO: Make hostile construction sites walkable (but not ally ones)
+                else if (_.includes(Memory.nonAgressivePlayers, site.owner.username)) { // ensure we don't step on an ally construction site
                     matrix.set(site.pos.x, site.pos.y, 0xff);
                 }
             }

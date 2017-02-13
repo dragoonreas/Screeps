@@ -80,9 +80,9 @@ _.set(Memory.rooms, ["W86N29", "harvestRooms"], [
     "W86N28"
     , "W87N28"
 ]);
-_.set(Memory.rooms, ["W83N25", "harvestRooms"], [
-    "W83N26"
-    , "W82N26"
+_.set(Memory.rooms, ["W85N23", "harvestRooms"], [
+    "W84N23"
+    , "W85N25"
 ]);
 
 /*
@@ -104,11 +104,11 @@ _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     , [STRUCTURE_WALL]: 1
     , all: 1
 });
-_.set(Memory.rooms, ["W83N25", "repairerTypeMins"], {
+_.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_RAMPART]: 2
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 0
+    , [STRUCTURE_WALL]: 1
     , all: 1
 });
 
@@ -149,16 +149,16 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
-_.set(Memory.rooms, ["W83N25", "creepMins"], {
+_.set(Memory.rooms, ["W85N23", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W83N25", "minerSources"], {}))
+    , upgrader: 3
+    , miner: 0//_.size(_.get(Game.rooms, ["W85N23", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
-    , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W83N25", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
 
@@ -186,10 +186,6 @@ module.exports.loop = function () {
         }
     }
     
-    // TODO: Enable bootstraping after claiming W83N25
-    //Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W82N26.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    //Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W82N26.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    
     // Update TooAngel 
     Memory.TooAngelDealings.isFriendly = (Memory.TooAngelDealings.idiotRating < 0); // TODO: Since more than just TooAngel uses this AI, need to setup an array of players to use this with
     if (
@@ -209,8 +205,8 @@ module.exports.loop = function () {
     let dealingsTerminal = Game.rooms["W87N29"].terminal;
     if (dealingsTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store.energy >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngelDealings.totalCost)) {
         if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngelDealings.energyToFriendly, "E33N15", "brain.isFriend('dragoonreas') == true?") == OK) {
-            console.log("Used " + Memory.TooAngelDealings.totalCost + " energy to lose " + Memory.TooAngelDealings.idiotRating + " to be friendly with TooAngel");
-            Game.notify("Used " + Memory.TooAngelDealings.totalCost + " energy to lose " + Memory.TooAngelDealings.idiotRating + " to be friendly with TooAngel");
+            console.log("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
+            Game.notify("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
             Memory.TooAngelDealings.idiotRating = -1;
             Memory.TooAngelDealings.lastIdiotRating = Memory.TooAngelDealings.idiotRating;
         }
@@ -238,7 +234,7 @@ module.exports.loop = function () {
                 }
             }
             let ticksSinceBirth = Game.time - (creepMemory.spawnTick || (Game.time - (creepMemory.role == "claimer" ? CREEP_CLAIM_LIFE_TIME : CREEP_LIFE_TIME)));
-            console.log("Expired " + ticksSinceBirth + " tick, " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + creepName);
+            console.log("Expired " + ticksSinceBirth.toLocaleString() + " tick, " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + creepName);
             delete Memory.creeps[creepName];
             
             if (checkingForDrops == false) {
@@ -337,7 +333,7 @@ module.exports.loop = function () {
                         }
                     });
                     theRoom.avoidTravelUntil = Game.time + youngestInvader.ticksToLive;
-                    console.log("Enemy creep owned by " + youngestInvader.owner.username + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
+                    console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
                 }
                 
                 if (_.some(_.get(theRoom, "sources", {"000000000000000000000000":{ regenAt: Game.time }}), (s) => (s.regenAt < Game.time + youngestInvader.ticksToLive))) {
@@ -349,10 +345,10 @@ module.exports.loop = function () {
                             _.get(c.memory, "sourceID", undefined) == sID
                         ));
                         
-                    }); // TODO: Also clear Creep.memory.sourceID if it's set to one of the sources
-                    console.log("Enemy creep owned by " + youngestInvader.owner.username + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
+                    });
+                    console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
                     if (justNPCs == false) {
-                        Game.notify("Enemy creep owned by " + youngestInvader.owner.username + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
+                        Game.notify("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
                     }
 			    }
 			}
@@ -444,7 +440,7 @@ module.exports.loop = function () {
 			    || _.some(Game.spawns, (s) => (
 			        s.room.name == roomID 
 			        && s.hits < s.hitsMax 
-			        && s.isActive() == true)) == true 
+			        && s.isActive() == true)) == true // TODO: Calculate the maximum damage output of hostile creeps within range a spawn, and activate safemode if the combined HP of the spawn and rampart covering it is <= x2 the damage output calculated (x2 to account for damage taken this turn if their attacks get run before our safemode)
 	            || _.some(invaders, (i) => (
 	                _.some(Memory.agressivePlayers, (aP) => (
 	                    i.owner.username == aP)))) == true)) { // TODO: Check that this is all working
@@ -454,7 +450,7 @@ module.exports.loop = function () {
 				console.log("Activated Safe Mode in: " + roomID);
 				Game.notify("Activated Safe Mode in: " + roomID);
 			}
-			else if ((roomID == "W87N29" || roomID == "W86N29") && justNPCs == false) { // NOTE: Haven't tested the defences in these rooms properly yet
+			else if ((roomID == "W87N29" || roomID == "W86N29" || roomID == "W85N23") && justNPCs == false) { // NOTE: Haven't tested the defences in these rooms properly yet
 				let err = theController.activateSafeMode();
 				if (err == OK) {
 				    console.log("Activated (backup) Safe Mode in: " + roomID);
@@ -703,6 +699,9 @@ module.exports.loop = function () {
             privateRamparts[rnc.id] = true;
         });
     }
+    
+    Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W85N23.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W85N23.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Spawn or renew creeps
     let nothingToSpawn = [];
