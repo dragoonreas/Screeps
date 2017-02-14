@@ -114,7 +114,7 @@ module.exports = function(globalOpts = {}){
                         return false;
                     }
                 }
-                else if (_.get(Memory.rooms, [roomName, "avoidTravelUntil"], 0) >= Game.time && !options.allowHostile) {
+                else if (_.get(Memory.rooms, [roomName, "avoidTravelUntil"], 0) >= Game.time && !options.allowHostile && origPos.roomName != roomName && destPos.roomName != roomName) {
                     return false;
                 }
                 let room = Game.rooms[roomName];
@@ -132,6 +132,11 @@ module.exports = function(globalOpts = {}){
                 }
                 else {
                     matrix = this.getCreepMatrix(room);
+                }
+                if (room.hasHostileCreep == true && !options.ignoreHostileCreeps) {
+                    for (let dangerZone of room.dangerZones) {
+                        matrix.set(dangerZone.x, dangerZone.y, 0xff);
+                    }
                 }
                 for (let obstacle of options.obstacles) {
                     matrix.set(obstacle.pos.x, obstacle.pos.y, 0xff);
@@ -215,6 +220,9 @@ module.exports = function(globalOpts = {}){
                 travelData.dest.roomName !== destPos.roomName) {
                 delete travelData.path;
             }
+            if (creep.room.hasHostileCreep == true && !options.ignoreHostileCreeps) {
+                delete travelData.path;
+            }
             // pathfinding
             if (!travelData.path) {
                 if (creep.spawning)
@@ -234,6 +242,11 @@ module.exports = function(globalOpts = {}){
                         options.useFindRoute = false;
                         ret = this.findTravelPath(creep, destPos, options);
                         //console.log(`attempting path without findRoute was ${ret.incomplete ? "not" : ""} successful`);
+                    }
+                    if (ret.incomplete && travelData.stuck < gOpts.defaultStuckValue && creep.room.hasHostileCreep == true) {
+                        options.ignoreHostileCreeps = true;
+                        ret = this.findTravelPath(creep, destPos, options);
+                        //console.log(`attempting path ignoring hostile creeps was ${ret.incomplete ? "not" : ""} successful`);
                     }
                 }
                 travelData.path = Traveler.serializePath(creep.pos, ret.path);

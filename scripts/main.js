@@ -1,3 +1,5 @@
+if (Memory.MonCPU == true) { console.log("start>init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+
 // Setup globals and prototypes
 require("globals")(); // NOTE: All globals not from an external resource should be declared here
 require("prototype.memory")();
@@ -157,13 +159,17 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     , miner: 0//_.size(_.get(Game.rooms, ["W85N23", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
-    , claimer: 0
+    , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
 
+if (Memory.MonCPU == true) { console.log("init>loop init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+
 module.exports.loop = function () {
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
+    
+    if (Memory.MonCPU == true) { console.log("loop init>stats:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     resourcesInfo.summarize_rooms(); // Generate stats for screepsplus to retrieve at end of loop
     
@@ -185,6 +191,8 @@ module.exports.loop = function () {
             ));
         }
     }
+    
+    if (Memory.MonCPU == true) { console.log("stats>ta:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     // Update TooAngel 
     Memory.TooAngelDealings.isFriendly = (Memory.TooAngelDealings.idiotRating < 0); // TODO: Since more than just TooAngel uses this AI, need to setup an array of players to use this with
@@ -211,6 +219,8 @@ module.exports.loop = function () {
             Memory.TooAngelDealings.lastIdiotRating = Memory.TooAngelDealings.idiotRating;
         }
     }
+    
+    if (Memory.MonCPU == true) { console.log("ta>gc:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     let checkingForDrops = false;
     
@@ -260,7 +270,14 @@ module.exports.loop = function () {
                 }
             }
         }
+        
+        // Garbage collection for dangerZones
+        if (Game.rooms[roomID] != undefined) {
+            Game.rooms[roomID].dangerZones = [];
+        }
     }
+    
+    if (Memory.MonCPU == true) { console.log("gc>room:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     let ramparts = _.filter(Game.structures, (s) => (s.structureType == STRUCTURE_RAMPART));
     let privateRamparts = {};
@@ -298,6 +315,7 @@ module.exports.loop = function () {
         // TODO: Check for nukes and make sure only 1 notification is sent (for the lifetime of that nuke) when the nuke is found
 		
         let theController = theRoom.controller;
+        let mayHaveRamparts = (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], (v) => (v > 0)) == false);
         
         let justNPCs = undefined;
         
@@ -316,43 +334,6 @@ module.exports.loop = function () {
 			
 			justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
 			
-            // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
-			if (theRoom.isHarvestRoom == true) {
-				let youngestInvader = _.max(invaders, "ticksToLive");
-                if (theRoom.avoidTravelUntil < Game.time) {
-                    _.each(Game.creeps, (c) => {
-                        if (c.room.name == theRoom.name && justNPCs == true) {
-                            c.suicide();
-                        }
-                        else {
-                            if (c.memory.role != "miner") {
-                                c.memory.sourceID = undefined;
-                            }
-                            c.memory._travel = undefined;
-                            c.memory._move = undefined;
-                        }
-                    });
-                    theRoom.avoidTravelUntil = Game.time + youngestInvader.ticksToLive;
-                    console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
-                }
-                
-                if (_.some(_.get(theRoom, "sources", {"000000000000000000000000":{ regenAt: Game.time }}), (s) => (s.regenAt < Game.time + youngestInvader.ticksToLive))) {
-                    _.forEach(theRoom.sources, (s,sID) => {
-                        if (s.regenAt < Game.time + youngestInvader.ticksToLive) {
-                            s.regenAt = Game.time + youngestInvader.ticksToLive;
-                        }
-                        let assignedCreeps = _.filter(Game.creeps, (c) => (
-                            _.get(c.memory, "sourceID", undefined) == sID
-                        ));
-                        
-                    });
-                    console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
-                    if (justNPCs == false) {
-                        Game.notify("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
-                    }
-			    }
-			}
-			
             /*
                 NOTE:
                 Don't attack player targets blinking on the borders as this is a common strat to drain towers.
@@ -368,15 +349,17 @@ module.exports.loop = function () {
             
             let rampartsToUse = []; // Ramparts for melee creeps (role.attacker) to sit in to attack invaders
             
-            // Apply target weightings to the invaders
+            // Deal with priority targets
             let priorityTargetID = undefined;
             let highestTargetWeighting = -1;
             for (let aPriorityTarget of priorityTargets) {
+                
+                // Apply target weightings to the invaders
                 let targetWeighting = 0;
+                let bodyPartCounts = _.countBy(aPriorityTarget.body, "type");
                 if (aPriorityTarget.owner.username != "Invader" && aPriorityTarget.owner.username != "Source Keeper") { // TODO: Allow NPC weightings but make sure player creeps are prioritised first
                     targetWeighting = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "weighting"], undefined);
                     if (targetWeighting == undefined) {
-                        let bodyPartCounts = _.countBy(aPriorityTarget.body, 'type');
                         targetWeighting = 0 + (
                             (bodyPartCounts[HEAL] || 0) * 5 
                             + (bodyPartCounts[WORK] || 0) * 4 
@@ -398,29 +381,114 @@ module.exports.loop = function () {
                     priorityTargetID = aPriorityTarget.id;
                 }
                 
-                // Get ramparts near target
-                let rampartsNearInvader = aPriorityTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
-                    s.structureType == STRUCTURE_RAMPART 
-                    && s.my == true
-                ));
-                _.forEach(rampartsNearInvader, (rni) => {
-                    privateRamparts[rni.id] = true; // Make ramparts near priority target private
-                    if (targetWeighting > 0 && rni.isNearTo(aPriorityTarget) == true && _.some(rampartsToUse, rni.id) == false) {
-                        rampartsToUse.push(rni.id); // Save ID of ramparts in melee range of target
+                // Record positions targets can attack within the next tick
+                let avoidanceRange = 0;
+                if ((bodyPartCounts[RANGED_ATTACK] || 0) > 0) {
+                    avoidanceRange = 4; // 3 range + 1 incase it moves closer this tick
+                }
+                else if ((bodyPartCounts[ATTACK] || 0) > 0) {
+                    avoidanceRange = 2; // 1 range + 1 incase it moves closer this tick
+                }
+                if (aPriorityTarget.owner.username == "Source Keeper" || aPriorityTarget.fatigue > 0) { // TODO: Check if the source keeper is next to a source or mineral before assuming they won't move
+                    --avoidanceRange;
+                }
+                if (avoidanceRange > 0) {
+                    let topRange = _.max([aPriorityTarget.pos.y - avoidanceRange, 0]);
+                    let leftRange = _.max([aPriorityTarget.pos.x - avoidanceRange, 0]);
+                    let bottomRange = _.min([aPriorityTarget.pos.y + avoidanceRange, 49]);
+                    let rightRange = _.min([aPriorityTarget.pos.x + avoidanceRange, 49]);
+                    let theRamparts = [];
+                    if (mayHaveRamparts == true) {
+                        theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
+                            s.structure.structureType == STRUCTURE_RAMPART 
+                            && (s.structure.my == true 
+                            || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                && s.structure.isPublic == true))
+                        ));
                     }
-                });
+                    for (let yPos = topRange; yPos <= bottomRange; ++yPos) {
+                        for (let xPos = leftRange; xPos <= rightRange; ++xPos) {
+                            let thePos = {
+                                x: xPos
+                                , y: yPos
+                            };
+                            if (_.some(theRoom.dangerZones, thePos) == false && (theRamparts.length == 0 || _.some(theRamparts, thePos) == false)) {
+                                theRoom.dangerZones.push(thePos);
+                                //theRoom.visual.rect(thePos.x - 0.5, thePos.y - 0.5, 1, 1, { fill: "red" });
+                            }
+                        }
+                    }
+                }
+                
+                // Get ramparts near target
+                if (mayHaveRamparts == true) {
+                    let rampartsNearInvader = aPriorityTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
+                        s.structureType == STRUCTURE_RAMPART 
+                        && s.my == true
+                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    _.forEach(rampartsNearInvader, (rni) => {
+                        privateRamparts[rni.id] = true; // Make ramparts near priority target private
+                        if (targetWeighting > 0 && rni.isNearTo(aPriorityTarget) == true && _.some(rampartsToUse, rni.id) == false) {
+                            rampartsToUse.push(rni.id); // Save ID of ramparts in melee range of target
+                        }
+                    });
+                }
             }
             
-            // Make ramparts near non priority targets private
+            // Deal with non-priority targets
             let nonPriorityTargets = _.difference(invaders, priorityTargets);
             for (let aNonPriorityTarget of nonPriorityTargets) {
-                let rampartsNearInvader = aNonPriorityTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
-                    s.structureType == STRUCTURE_RAMPART 
-                    && s.my == true
-                ));
-                _.forEach(rampartsNearInvader, (rni) => {
-                    privateRamparts[rni.id] = true;
-                });
+                
+                //  Record positions targets can attack within the next tick
+                let bodyPartCounts = _.countBy(aNonPriorityTarget.body, 'type');
+                let avoidanceRange = 0;
+                if ((bodyPartCounts[RANGED_ATTACK] || 0) > 0) {
+                    avoidanceRange = 4; // 3 range + 1 incase it moves closer this tick
+                }
+                else if ((bodyPartCounts[ATTACK] || 0) > 0) {
+                    avoidanceRange = 2; // 1 range + 1 incase it moves closer this tick
+                }
+                if (aPriorityTarget.owner.username == "Source Keeper" || aPriorityTarget.fatigue > 0) { // TODO: Check if the source keeper is next to a source or mineral before assuming they won't move
+                    --avoidanceRange;
+                }
+                if (avoidanceRange > 0) {
+                    let topRange = _.max([aNonPriorityTarget.pos.y - avoidanceRange, 0]);
+                    let leftRange = _.max([aNonPriorityTarget.pos.x - avoidanceRange, 0]);
+                    let bottomRange = _.min([aNonPriorityTarget.pos.y + avoidanceRange, 49]);
+                    let rightRange = _.min([aNonPriorityTarget.pos.x + avoidanceRange, 49]);
+                    let theRamparts = [];
+                    if (mayHaveRamparts == true) {
+                        theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
+                            s.structure.structureType == STRUCTURE_RAMPART 
+                            && (s.structure.my == true 
+                            || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                && s.structure.isPublic == true))
+                        ));
+                    }
+                    for (let yPos = topRange; yPos <= bottomRange; ++yPos) {
+                        for (let xPos = leftRange; xPos <= rightRange; ++xPos) {
+                            let thePos = {
+                                x: xPos
+                                , y: yPos
+                            };
+                            if (_.some(theRoom.dangerZones, thePos) == false && (theRamparts.length == 0 || _.some(theRamparts, thePos) == false)) {
+                                theRoom.dangerZones.push(thePos);
+                                //theRoom.visual.rect(thePos.x - 0.5, thePos.y - 0.5, 1, 1, { fill: "red" });
+                            }
+                        }
+                    }
+                }
+                
+                // Make ramparts near non priority targets private
+                if (mayHaveRamparts == true) {
+                    let rampartsNearInvader = aNonPriorityTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
+                        s.structureType == STRUCTURE_RAMPART 
+                        && s.my == true
+                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    _.forEach(rampartsNearInvader, (rni) => {
+                        privateRamparts[rni.id] = true;
+                    });
+                }
             }
             
             priorityTarget = Game.getObjectById(priorityTargetID); // This target will be focused on by towers and attacker creeps
@@ -459,7 +527,7 @@ module.exports.loop = function () {
 			}
         }
         else if (theRoom.hasHostileCreep == true) {
-            theRoom.hasHostileCreep == false;
+            theRoom.hasHostileCreep = false;
             theRoom.checkForDrops = true; // TODO: If the invaders were players, consider drops near the exits as suspisious as they may just be trying to lure creeps outside walls/ramparts to attack them
             
             // Make sure we're not spawning attacker creeps needlessly
@@ -468,6 +536,45 @@ module.exports.loop = function () {
             }
         }
         
+        let dangerousToCreeps = (theRoom.dangerZones.length > 0) ? true : false;
+        
+        // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
+		if (dangerousToCreeps == true && theRoom.isHarvestRoom == true) {
+			let youngestInvader = _.max(invaders, "ticksToLive");
+            if (theRoom.avoidTravelUntil < Game.time) {
+                _.each(Game.creeps, (c) => {
+                    if (c.room.name == theRoom.name && justNPCs == true) {
+                        c.suicide();
+                    }
+                    else {
+                        if (c.memory.role != "miner") {
+                            c.memory.sourceID = undefined;
+                        }
+                        c.memory._travel = undefined;
+                        c.memory._move = undefined;
+                    }
+                });
+                theRoom.avoidTravelUntil = Game.time + youngestInvader.ticksToLive;
+                console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
+            }
+            
+            if (_.some(_.get(theRoom, "sources", {"000000000000000000000000":{ regenAt: Game.time }}), (s) => (s.regenAt < Game.time + youngestInvader.ticksToLive))) {
+                _.forEach(theRoom.sources, (s,sID) => {
+                    if (s.regenAt < Game.time + youngestInvader.ticksToLive) {
+                        s.regenAt = Game.time + youngestInvader.ticksToLive;
+                    }
+                    let assignedCreeps = _.filter(Game.creeps, (c) => (
+                        _.get(c.memory, "sourceID", undefined) == sID
+                    ));
+                    
+                });
+                console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
+                if (justNPCs == false) {
+                    Game.notify("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
+                }
+		    }
+		}
+		
         if (theRoom.hasHostileTower == true) { // TODO: Add a check to see if the towers are still there if a creep is in the room, instead of just waiting for it to be reset after a day due to the room memory garbage collection being run on it
             theRoom.checkForDrops = false;
         }
@@ -643,6 +750,8 @@ module.exports.loop = function () {
 		}
     }
     
+    if (Memory.MonCPU == true) { console.log("room>creeps:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+    
     // Run creeps
     for(let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
@@ -700,6 +809,8 @@ module.exports.loop = function () {
         });
     }
     
+    if (Memory.MonCPU == true) { console.log("creeps>spawn:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+    
     Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W85N23.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W85N23.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
@@ -732,7 +843,7 @@ module.exports.loop = function () {
                 
                 if (_.isString(creepName) == false) {
                     let creep = _.min(spawn.pos.findInRange(FIND_MY_CREEPS, 1, { filter: (c) => (
-                        c.energyAvaliableOnSpawn >= _.get(Game.rooms, [c.memory.roomID, "energyCapacityAvailable"], spawn.room.energyCapacityAvailable) 
+                        c.energyAvaliableOnSpawn >= _.get(Game.rooms, [c.memory.roomID, "energyCapacityAvailable"], spawn.room.energyCapacityAvailable) // NOTE: Don't renew creeps when better ones might be spawned to replace them
                         && c.memory.role != "claimer" 
                         && _.some(c.body, "boost") == false
                     )}), "ticksToLive");
@@ -754,6 +865,8 @@ module.exports.loop = function () {
         }
     }
     
+    if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+    
     // Update ramparts public/private state
     _.forEach(ramparts, (r) => {
         if (_.get(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], r.room.controller.level, 0) == 0) { return; } // NOTE: This should use less than the 0.2 CPU that a Rampart.isActive() check uses
@@ -773,9 +886,13 @@ module.exports.loop = function () {
         }
     });
     
+    if (Memory.MonCPU == true) { console.log("ramparts>screepsPlus:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+    
     screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
     
     // For Screeps Visual: https://github.com/screepers/screeps-visual
     //visualiser.movePaths();
     //RawVisual.commit();
+    
+    if (Memory.MonCPU == true) { console.log("screepsPlus>end:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 }

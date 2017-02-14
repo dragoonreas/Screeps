@@ -1,4 +1,6 @@
 let prototypeRoom = function() {
+    Room.prototype.dangerZones = []; // TODO: Define this property properly
+    
     if (Room.prototype.sources == undefined) {
         Object.defineProperty(Room.prototype, "sources", { // NOTE: Must be defined after Memory.source
             get: function() {
