@@ -69,6 +69,20 @@ let prototypeRoom = function() {
         });
     }
     
+    if (Room.prototype.recycleContainer == undefined) {
+        defineCachedGetter(Room.prototype, 'recycleContainer', (r) => {
+            let containers = [];
+            let theSpawns = r.find(FIND_MY_SPAWNS);
+            _.each(theSpawns, (s) => {
+                containers.push(s.pos.findInRange(FIND_STRUCTURES, 1, (s) => (
+                    s.structureType == STRUCTURE_CONTAINER
+                )));
+            });
+            containers = _.flattenDeep(containers);
+            return _.first(containers);
+        });
+    }
+    
     if (Room.prototype.checkForDrops == undefined) {
         Object.defineProperty(Room.prototype, "checkForDrops", {
             get: function() {

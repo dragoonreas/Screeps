@@ -648,6 +648,7 @@ module.exports.loop = function () {
                         let creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                             filter: (c) => (c.spawning == false 
                                 && c.memory.droppedResourceID == undefined 
+                                && c.hits == c.hitsMax 
                                 && c.memory.speeds["2"] <= 2 
                                 && c.memory.role != "miner" 
                                 && c.memory.role != "attacker" 
@@ -662,6 +663,7 @@ module.exports.loop = function () {
                             creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                 filter: (c) => (c.spawning == false 
                                     && c.memory.droppedResourceID == undefined 
+                                    && c.hits == c.hitsMax 
                                     && c.memory.speeds["2"] <= 2 
                                     && c.memory.role != "miner" 
                                     && c.memory.role != "attacker" 
@@ -677,6 +679,7 @@ module.exports.loop = function () {
                                 creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
                                     filter: (c) => (c.spawning == false 
                                         && c.memory.droppedResourceID == undefined 
+                                        && c.hits == c.hitsMax 
                                         && c.memory.speeds["2"] <= 2 
                                         && c.memory.role != "miner" 
                                         && c.memory.role != "attacker" 
@@ -778,7 +781,12 @@ module.exports.loop = function () {
         let runningRole = false;
         // TODO: If a creep is damaged, check that it still has enough active body parts to run it's role, and if not go back home to either repair via a tower or recycle if no tower is avaliable
         if (creep.memory.role != "attacker" && creep.memory.role != "powerHarvester") {
-            if (creep.memory.droppedResourceID != undefined) {
+            if (creep.hits < creep.hitsMax) {
+                creep.memory.droppedResourceID = undefined;
+                ROLES["recyclable"].run(creep);
+                runningRole = true;
+            }
+            else if (creep.memory.droppedResourceID != undefined) {
                 ROLES["collector"].run(creep);
                 runningRole = true;
             }

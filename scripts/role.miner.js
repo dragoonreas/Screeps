@@ -133,7 +133,7 @@ let roleMiner = {
             }
             else {
                 let droppedResource = undefined
-                let droppedResources = creep.pos.findInRange(FIND_DROPPED_RESOURCES, {
+                let droppedResources = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 1, {
                     filter: (dr) => (dr.resourceType == RESOURCE_ENERGY)
                 });
                 if (droppedResources.length > 0) {
