@@ -19,10 +19,10 @@ let globals = function() {
     global.ICONS = {
         [STRUCTURE_CONTROLLER]: "\uD83C\uDFF0"
         , [STRUCTURE_SPAWN]: "\uD83C\uDFE5"
-        , [STRUCTURE_EXTENTION]: "\uD83C\uDFEA"
+        , [STRUCTURE_EXTENSION]: "\uD83C\uDFEA"
         , [STRUCTURE_CONTAINER]: "\uD83D\uDCE4"
         , [STRUCTURE_STORAGE]: "\uD83C\uDFE6"
-        , [STRUCTURE_RAMPART] "\uD83D\uDEA7"
+        , [STRUCTURE_RAMPART]: "\uD83D\uDEA7"
         , [STRUCTURE_WALL]: "\u26F0"
         , [STRUCTURE_TOWER]: "\uD83D\uDD2B"
         , [STRUCTURE_ROAD]: "\uD83D\uDEE3"
