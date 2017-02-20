@@ -7,18 +7,18 @@ let roleHoarder = {
                 if (resourceType != RESOURCE_ENERGY) {
                     let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\uD83C\uDFE6", true);
+                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                         creep.travelTo(theStorage);
                     }
                     else if (err == OK) {
-                        creep.say("\u2B06\uD83C\uDFE6", true);
+                        creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
                     }
                     break;
                 }
             }
         }
         else {
-            creep.say("\uD83C\uDFE6?", true);
+            creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
         }
     }
 };

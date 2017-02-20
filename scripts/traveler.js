@@ -135,7 +135,7 @@ module.exports = function(globalOpts = {}){
                 }
                 if (room.hasHostileCreep == true && !options.ignoreHostileCreeps) {
                     for (let dangerZone of room.dangerZones) {
-                        matrix.set(dangerZone.x, dangerZone.y, 0xff);
+                        matrix.set(dangerZone.x, dangerZone.y, 0xfe); // NOTE: Don't use 0xff since that stops creeps trying to escape when they're surrounded by danger zones
                     }
                 }
                 for (let obstacle of options.obstacles) {
@@ -221,6 +221,7 @@ module.exports = function(globalOpts = {}){
                 delete travelData.path;
             }
             if (creep.room.hasHostileCreep == true && !options.ignoreHostileCreeps) {
+                options.ignoreCreeps = false; // TODO: Find a way to use stuck detection while resetting the path each tick and ignoring creeps
                 delete travelData.path;
             }
             // pathfinding
@@ -287,7 +288,7 @@ module.exports = function(globalOpts = {}){
         static addStructuresToMatrix(room, matrix, roadCost) {
             for (let structure of room.find(FIND_STRUCTURES)) {
                 if (structure instanceof StructureRampart) {
-                    if (!structure.my && !(_.includes(Memory.nonAgressivePlayers, site.owner.username) && structure.isPublic == true)) {
+                    if (!structure.my && !(_.includes(Memory.nonAgressivePlayers, structure.owner.username) && structure.isPublic == true)) {
                         matrix.set(structure.pos.x, structure.pos.y, 0xff);
                     }
                 }

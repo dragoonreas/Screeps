@@ -1,7 +1,7 @@
 let roleAttacker = {
     run: function(creep) {
         if (creep.room.name != creep.memory.roomID) {
-            creep.say("\u27A1" + creep.memory.roomID, true);
+            creep.say(ICONS["moveTo"] + creep.memory.roomID, true);
             creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID), {
                 allowHostile: true
                 , ignoreHostileCreeps: true
@@ -20,7 +20,7 @@ let roleAttacker = {
                     break;
                 }
                 if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
-                    creep.say("\u27A1\uD83D\uDEA7", true);
+                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_RAMPART], true);
                     creep.travelTo(new RoomPosition(entrances[i].x, entrances[i].y, "W87N29"), {
                         allowHostile: true
                         , ignoreHostileCreeps: true
@@ -56,14 +56,14 @@ let roleAttacker = {
         if (invader != undefined) {
             let err = creep.attack(invader);
             if (err == ERR_NOT_IN_RANGE) { // TODO: Make creep stay in rampart closest to invader
-                creep.say("\u27A1\uD83D\uDDE1", true);
+                creep.say(ICONS["moveTo"] + ICONS["attack"] + ICONS["creep"], true);
                 creep.travelTo(invader, {
                     allowHostile: true
                     , ignoreHostileCreeps: true
                 });
             }
             else if (err == OK) {
-                creep.say("\uD83D\uDDE1", true);
+                creep.say(ICONS["attack"] + ICONS["creep"], true);
             }
         }
         else {
@@ -81,14 +81,14 @@ let roleAttacker = {
             if (structure != undefined) {
                 let err = creep.attack(structure);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say("\u27A1\uD83D\uDDE1", true);
+                    creep.say(ICONS["moveTo"] + ICONS["attack"] + _.get(ICONS, structure.structureType, "?"), true);
                     creep.travelTo(structure, {
                         allowHostile: true
                         , ignoreHostileCreeps: true
                     });
                 }
                 else if (err == OK) {
-                    creep.say("\uD83D\uDDE1", true);
+                    creep.say(ICONS["attack"] + _.get(ICONS, structure.structureType, "?"), true);
                 }
             }/*
             else if (creep.room.name == "W87N29") { // TODO: Automate based on ramparts with no building under them near attackers
@@ -100,7 +100,7 @@ let roleAttacker = {
                         break;
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
-                        creep.say("\u27A1\uD83D\uDEA7", true);
+                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_RAMPART], true);
                         creep.travelTo(new RoomPosition(entrances[i].x, entrances[i].y, "W87N29"){
                             allowHostile: true
                             , ignoreHostileCreeps: true

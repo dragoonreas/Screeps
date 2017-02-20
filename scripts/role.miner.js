@@ -9,7 +9,7 @@ let roleMiner = {
                     sourceMem.minerName = creep.name;
                 }
                 
-                creep.say("\u27A1" + sourceMem.pos.roomName, true);
+                creep.say(ICONS["moveTo"] + sourceMem.pos.roomName, true);
                 creep.travelTo(sourceMem);
                 return;
             }
@@ -31,33 +31,35 @@ let roleMiner = {
                         if (sourceMem != undefined && _.get(sourceMem, "minerName", creep.name) == creep.name) {
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
-                            creep.say("\u27A1" + sourceMem.pos.roomName, true);
+                            creep.say(ICONS["moveTo"] + sourceMem.pos.roomName, true);
                             creep.travelTo(sourceMem);
                             return;
                         }
                         else if (sourceID == "5873bb7f11e3e4361b4d5f17" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
-                            creep.say("\u27A1W88N28", true);
+                            creep.say(ICONS["moveTo"] + "W88N28", true);
                             creep.travelTo(new RoomPosition(24, 40, "W88N28"));
                             return;
                         }
                         else if (sourceID == "5873bb9511e3e4361b4d615c" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
-                            creep.say("\u27A1W87N28", true);
+                            creep.say(ICONS["moveTo"] + "W87N28", true);
                             creep.travelTo(new RoomPosition(20, 26, "W87N28"));
                             return;
                         }
-                        else if (sourceID == "5873bbe111e3e4361b4d6ac4") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5873bbe111e3e4361b4d6ac4" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
-                            creep.say("\u27A1W84N23", true);
+                            sourceMem.minerName = creep.name;
+                            creep.say(ICONS["moveTo"] + "W84N23", true);
                             creep.travelTo(new RoomPosition(3, 3, "W84N23"));
                             return;
                         }
-                        else if (sourceID == "5873bbc911e3e4361b4d6770") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5873bbc911e3e4361b4d6770" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
-                            creep.say("\u27A1W85N25", true);
+                            sourceMem.minerName = creep.name;
+                            creep.say(ICONS["moveTo"] + "W85N25", true);
                             creep.travelTo(new RoomPosition(32, 37, "W85N25"));
                             return;
                         }
@@ -68,7 +70,7 @@ let roleMiner = {
         
         // Can't do anything if there's no source
         if (source == undefined) {
-            creep.say("\u26CF?", true);
+            creep.say(ICONS["harvest"] + "?", true);
             return;
         }
         
@@ -81,13 +83,10 @@ let roleMiner = {
         }
         
         // Set if (when not mining) the miner should be building/repairing or collecting energy
-        if (creep.lastWorkingState == undefined) {
-            creep.lastWorkingState = creep.memory.working;
-        }
-        if ((creep.memory.working == false || creep.lastWorkingState == false) && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }
-        else if ((creep.memory.working == true || creep.lastWorkingState == true) && creep.carry.energy == 0) {
+        else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
         }
         
@@ -106,21 +105,13 @@ let roleMiner = {
                 }
                 
                 if (constructionSite != undefined) {
-                    let structureIcon = "?";
-                    switch (constructionSite.structureType) {
-                        case STRUCTURE_CONTAINER: structureIcon = "\uD83D\uDCE4"; break;
-                        case STRUCTURE_RAMPART: structureIcon = "\uD83D\uDEA7"; break;
-                        case STRUCTURE_ROAD: structureIcon = "\uD83D\uDEE3"; break;
-                        case STRUCTURE_LINK: structureIcon = "\uD83D\uDCEE"; break;
-                    }
-                    
                     let err = creep.build(constructionSite);
                     if(err == ERR_NOT_IN_RANGE) {
                         creep.travelTo(constructionSite);
-                        creep.say("\u27A1\uD83C\uDFD7" + structureIcon, true);
+                        creep.say(ICONS["moveTo"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
                     }
                     else if (err == OK) {
-                        creep.say("\uD83D\uDD28\uD83C\uDFD7" + structureIcon, true);
+                        creep.say(ICONS["build"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
                     } // TODO: Move off construction site if standing on it
                 }
                 else {
@@ -133,28 +124,9 @@ let roleMiner = {
                     }
                     
                     if (theStructure != undefined) {
-                        let structureIcon = "?";
-                        switch (theStructure.structureType) {
-                            case STRUCTURE_SPAWN: structureIcon = "\uD83C\uDFE5"; break;
-                            case STRUCTURE_EXTENSION: structureIcon = "\uD83C\uDFEA"; break;
-                            case STRUCTURE_CONTAINER: structureIcon = "\uD83D\uDCE4"; break;
-                            case STRUCTURE_STORAGE: structureIcon = "\uD83C\uDFE6"; break;
-                            case STRUCTURE_RAMPART: structureIcon = "\uD83D\uDEA7"; break;
-                            case STRUCTURE_WALL: structureIcon = "\u26F0"; break;
-                            case STRUCTURE_TOWER: structureIcon = "\uD83D\uDD2B"; break;
-                            case STRUCTURE_ROAD: structureIcon = "\uD83D\uDEE3"; break;
-                            case STRUCTURE_LINK: structureIcon = "\uD83D\uDCEE"; break;
-                            case STRUCTURE_EXTRACTOR: structureIcon = "\uD83C\uDFED"; break;
-                            case STRUCTURE_LAB: structureIcon = "\u2697"; break;
-                            case STRUCTURE_TERMINAL: structureIcon = "\uD83C\uDFEC"; break;
-                            case STRUCTURE_OBSERVER: structureIcon = "\uD83D\uDCE1"; break;
-                            case STRUCTURE_POWER_SPAWN: structureIcon = "\uD83C\uDFDB"; break;
-                            case STRUCTURE_NUKER: structureIcon = "\u2622"; break;
-                        }
-                        
                         let err = creep.repair(theStructure);
                         if (err == OK) {
-                            creep.say("\uD83D\uDD27" + structureIcon, true);
+                            creep.say(ICONS["repair"] + _.get(ICONS, theStructure.structureType, "?"), true);
                         }
                     }
                 }
@@ -169,52 +141,52 @@ let roleMiner = {
                 }
                 
                 if (droppedResource != undefined && creep.pickup(droppedResource) == OK) {
-                    creep.say("\u2B07\uD83D\uDEE2", true);
+                    creep.say(ICONS["pickup"] + ICONS["resource"], true);
                 }
                 else if (theContainer != undefined && theContainer instanceof StructureContainer && theContainer.store.energy > 0 && creep.withdraw(theContainer, RESOURCE_ENERGY) == OK) {
-                    creep.say("\u2B07\uD83D\uDCE4", true);
+                    creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
                 }
-                else if (theLink != undefined && theLink instanceof StructureContainer && theLink.energy > 0 && creep.withdraw(theContainer, RESOURCE_ENERGY) == OK) {
-                    creep.say("\u2B07\uD83D\uDCEE", true);
+                else if (theLink != undefined && theLink instanceof StructureContainer && theLink.energy > 0 && creep.withdraw(theLink, RESOURCE_ENERGY) == OK) {
+                    creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_LINK], true);
                 }
                 else {
                     switch (creep.saying) {
-                        case "\uD83D\uDD5B\u26CF": creep.say("\uD83D\uDD67\u26CF", true); break;
-                        case "\uD83D\uDD67\u26CF": creep.say("\uD83D\uDD50\u26CF", true); break;
-                        case "\uD83D\uDD50\u26CF": creep.say("\uD83D\uDD5C\u26CF", true); break;
-                        case "\uD83D\uDD5C\u26CF": creep.say("\uD83D\uDD51\u26CF", true); break;
-                        case "\uD83D\uDD51\u26CF": creep.say("\uD83D\uDD5D\u26CF", true); break;
-                        case "\uD83D\uDD5D\u26CF": creep.say("\uD83D\uDD52\u26CF", true); break;
-                        case "\uD83D\uDD52\u26CF": creep.say("\uD83D\uDD5E\u26CF", true); break;
-                        case "\uD83D\uDD5E\u26CF": creep.say("\uD83D\uDD53\u26CF", true); break;
-                        case "\uD83D\uDD53\u26CF": creep.say("\uD83D\uDD5F\u26CF", true); break;
-                        case "\uD83D\uDD5F\u26CF": creep.say("\uD83D\uDD54\u26CF", true); break;
-                        case "\uD83D\uDD54\u26CF": creep.say("\uD83D\uDD60\u26CF", true); break;
-                        case "\uD83D\uDD60\u26CF": creep.say("\uD83D\uDD55\u26CF", true); break;
-                        case "\uD83D\uDD55\u26CF": creep.say("\uD83D\uDD61\u26CF", true); break;
-                        case "\uD83D\uDD61\u26CF": creep.say("\uD83D\uDD56\u26CF", true); break;
-                        case "\uD83D\uDD56\u26CF": creep.say("\uD83D\uDD62\u26CF", true); break;
-                        case "\uD83D\uDD62\u26CF": creep.say("\uD83D\uDD57\u26CF", true); break;
-                        case "\uD83D\uDD57\u26CF": creep.say("\uD83D\uDD63\u26CF", true); break;
-                        case "\uD83D\uDD63\u26CF": creep.say("\uD83D\uDD58\u26CF", true); break;
-                        case "\uD83D\uDD58\u26CF": creep.say("\uD83D\uDD64\u26CF", true); break;
-                        case "\uD83D\uDD64\u26CF": creep.say("\uD83D\uDD59\u26CF", true); break;
-                        case "\uD83D\uDD59\u26CF": creep.say("\uD83D\uDD65\u26CF", true); break;
-                        case "\uD83D\uDD65\u26CF": creep.say("\uD83D\uDD5A\u26CF", true); break;
-                        case "\uD83D\uDD5A\u26CF": creep.say("\uD83D\uDD66\u26CF", true); break;
-                        default: creep.say("\uD83D\uDD5B\u26CF", true);
+                        case ICONS["wait0"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait1"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait1"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait2"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait2"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait3"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait3"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait4"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait4"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait5"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait5"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait6"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait6"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait7"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait7"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait8"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait8"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait9"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait9"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait10"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait10"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait11"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait11"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait12"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait12"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait13"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait13"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait14"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait14"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait15"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait15"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait16"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait16"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait17"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait17"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait18"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait18"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait19"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait19"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait20"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait20"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait21"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait21"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait22"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait22"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait23"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        default: creep.say(ICONS["wait0"] + ICONS["harvest"] + ICONS["source"], true);
                     }
                 }
             }
         }
         else {
             if (theContainer != undefined && creep.pos.isEqualTo(theContainer) == false) {
-                creep.say("\u27A1\uD83D\uDCE4", true);
+                creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTAINER], true);
                 creep.travelTo(theContainer);
                 return;
             }
             else if (creep.memory.working == false && creep.pos.isNearTo(source) == false) {
-                creep.say("\u27A1\u26CF", true);
+                creep.say(ICONS["moveTo"] + ICONS["harvest"] + ICONS["source"], true);
                 creep.travelTo(source);
                 return;
             } // TODO: Make sure the link can be reached if it exists
@@ -257,34 +229,34 @@ let roleMiner = {
                 creep.memory.working = true;
             }
             else if (err == OK) {
-                creep.say("\u26CF", true);
+                creep.say(ICONS["harvest"] + ICONS["source"], true);
             }
             else {
                 switch (creep.saying) {
-                    case "\uD83D\uDD5B\u26CF": creep.say("\uD83D\uDD67\u26CF", true); break;
-                    case "\uD83D\uDD67\u26CF": creep.say("\uD83D\uDD50\u26CF", true); break;
-                    case "\uD83D\uDD50\u26CF": creep.say("\uD83D\uDD5C\u26CF", true); break;
-                    case "\uD83D\uDD5C\u26CF": creep.say("\uD83D\uDD51\u26CF", true); break;
-                    case "\uD83D\uDD51\u26CF": creep.say("\uD83D\uDD5D\u26CF", true); break;
-                    case "\uD83D\uDD5D\u26CF": creep.say("\uD83D\uDD52\u26CF", true); break;
-                    case "\uD83D\uDD52\u26CF": creep.say("\uD83D\uDD5E\u26CF", true); break;
-                    case "\uD83D\uDD5E\u26CF": creep.say("\uD83D\uDD53\u26CF", true); break;
-                    case "\uD83D\uDD53\u26CF": creep.say("\uD83D\uDD5F\u26CF", true); break;
-                    case "\uD83D\uDD5F\u26CF": creep.say("\uD83D\uDD54\u26CF", true); break;
-                    case "\uD83D\uDD54\u26CF": creep.say("\uD83D\uDD60\u26CF", true); break;
-                    case "\uD83D\uDD60\u26CF": creep.say("\uD83D\uDD55\u26CF", true); break;
-                    case "\uD83D\uDD55\u26CF": creep.say("\uD83D\uDD61\u26CF", true); break;
-                    case "\uD83D\uDD61\u26CF": creep.say("\uD83D\uDD56\u26CF", true); break;
-                    case "\uD83D\uDD56\u26CF": creep.say("\uD83D\uDD62\u26CF", true); break;
-                    case "\uD83D\uDD62\u26CF": creep.say("\uD83D\uDD57\u26CF", true); break;
-                    case "\uD83D\uDD57\u26CF": creep.say("\uD83D\uDD63\u26CF", true); break;
-                    case "\uD83D\uDD63\u26CF": creep.say("\uD83D\uDD58\u26CF", true); break;
-                    case "\uD83D\uDD58\u26CF": creep.say("\uD83D\uDD64\u26CF", true); break;
-                    case "\uD83D\uDD64\u26CF": creep.say("\uD83D\uDD59\u26CF", true); break;
-                    case "\uD83D\uDD59\u26CF": creep.say("\uD83D\uDD65\u26CF", true); break;
-                    case "\uD83D\uDD65\u26CF": creep.say("\uD83D\uDD5A\u26CF", true); break;
-                    case "\uD83D\uDD5A\u26CF": creep.say("\uD83D\uDD66\u26CF", true); break;
-                    default: creep.say("\uD83D\uDD5B\u26CF", true);
+                    case ICONS["wait0"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait1"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait1"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait2"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait2"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait3"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait3"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait4"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait4"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait5"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait5"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait6"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait6"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait7"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait7"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait8"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait8"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait9"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait9"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait10"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait10"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait11"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait11"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait12"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait12"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait13"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait13"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait14"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait14"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait15"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait15"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait16"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait16"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait17"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait17"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait18"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait18"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait19"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait19"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait20"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait20"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait21"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait21"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait22"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    case ICONS["wait22"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait23"] + ICONS["harvest"] + ICONS["source"], true); break;
+                    default: creep.say(ICONS["wait0"] + ICONS["harvest"] + ICONS["source"], true);
                 }
             }
         }

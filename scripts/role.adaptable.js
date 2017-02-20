@@ -10,7 +10,7 @@ let roleAdaptable = {
         
         let destinationRoomName = undefined;
         switch (creep.memory.roomID) {
-            case "W87N29": destinationRoomName = "W85N23"; break;
+            case "W87N29": destinationRoomName = "W86N29"; break;
             case "W86N29": destinationRoomName = "W85N23"; break;
         }
         
@@ -21,21 +21,21 @@ let roleAdaptable = {
                 if (theTerminal != undefined && theTerminal.store.energy > 0) {
                     let err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\uD83C\uDFEC", true);
+                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
                         creep.travelTo(theTerminal);
                     }
                     else if (err == OK) {
-                        creep.say("\u2B07\uD83C\uDFEC", true);
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
                     }
                 }
                 else if (theStorage != undefined && theStorage.store.energy > 0) {
                     let err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\uD83C\uDFE6", true);
+                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                         creep.travelTo(theStorage);
                     }
                     else if (err == OK) {
-                        creep.say("\u2B07\uD83C\uDFE6", true);
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
                     }
                 }
             }
@@ -44,6 +44,7 @@ let roleAdaptable = {
             }
             else {
                 creep.memory.roomID = destinationRoomName;
+                console.log("Adaptable made it to " + creep.room.name + " with " + creep.ticksToLive.toLocaleString() + " ticks to live & " + creep.hits.toLocaleString() + "/" + creep.hitsMax.toLocaleString() + " HP");
                 if (_.get(Memory, ["rooms", destinationRoomName, "creepCounts", "builder"], 0) > 0) {
                     let builders = _.filter(Game.creeps, (c) => (
                         c.memory.roomID == destinationRoomName 
@@ -56,7 +57,6 @@ let roleAdaptable = {
                     });
                 }
                 creep.memory.role = "builder";
-                console.log("Adaptable made it to " + creep.room.name + " with " + creep.ticksToLive.toLocaleString() + " ticks to live & " + creep.hits.toLocaleString() + "/" + creep.hitsMax.toLocaleString() + " HP");
                 ROLES["builder"].run(creep);
             }
         }

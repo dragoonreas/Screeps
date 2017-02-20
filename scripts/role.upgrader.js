@@ -11,11 +11,11 @@ let roleUpgrader = {
             let theController = Game.rooms[creep.memory.roomID].controller;
             let err = creep.upgradeController(theController);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.say("\u27A1\uD83C\uDFF0", true);
+                creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTROLLER], true);
                 creep.travelTo(theController);
             }
             else if (err == OK) {
-                creep.say("\u2B06\uD83C\uDFF0", true);
+                creep.say(ICONS["upgradeController"] + ICONS[STRUCTURE_CONTROLLER], true);
             }
         }
         else {
@@ -31,7 +31,7 @@ let roleUpgrader = {
                 let theStorage = creep.room.storage;
                 let err = creep.harvest(source);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say("\u27A1\u26CF", true);
+                    creep.say(ICONS["moveTo"] + ICONS["harvest"] + ICONS["source"], true);
                     creep.travelTo(source);
                 }
                 else if (err == ERR_NOT_ENOUGH_RESOURCES 
@@ -39,13 +39,13 @@ let roleUpgrader = {
                     creep.memory.working = true;
                 }
                 else if (err == OK) {
-                    creep.say("\u26CF", true);
+                    creep.say(ICONS["harvest"] + ICONS["source"], true);
                 }
                 else if (theStorage != undefined && theStorage.store.energy > 0) {
                     creep.cancelOrder("harvest");
                     err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\uD83C\uDFE6", true);
+                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                         creep.travelTo(theStorage);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
@@ -53,14 +53,14 @@ let roleUpgrader = {
                         creep.memory.working = true;
                     }
                     else if (err == OK) {
-                        creep.say("\u2B07\uD83C\uDFE6", true);
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
                     }
                 }
                 else if (theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
                     creep.cancelOrder("harvest");
                     err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say("\u27A1\uD83C\uDFEC", true);
+                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
                         creep.travelTo(theTerminal);
                     }
                     else if (err == ERR_NOT_ENOUGH_RESOURCES 
@@ -68,40 +68,40 @@ let roleUpgrader = {
                         creep.memory.working = true;
                     }
                     else if (err == OK) {
-                        creep.say("\u2B07\uD83C\uDFEC", true);
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
                     }
                 }
                 else {
                     switch (creep.saying) {
-                        case "\uD83D\uDD5B\u26CF": creep.say("\uD83D\uDD67\u26CF", true); break;
-                        case "\uD83D\uDD67\u26CF": creep.say("\uD83D\uDD50\u26CF", true); break;
-                        case "\uD83D\uDD50\u26CF": creep.say("\uD83D\uDD5C\u26CF", true); break;
-                        case "\uD83D\uDD5C\u26CF": creep.say("\uD83D\uDD51\u26CF", true); break;
-                        case "\uD83D\uDD51\u26CF": creep.say("\uD83D\uDD5D\u26CF", true); break;
-                        case "\uD83D\uDD5D\u26CF": creep.say("\uD83D\uDD52\u26CF", true); break;
-                        case "\uD83D\uDD52\u26CF": creep.say("\uD83D\uDD5E\u26CF", true); break;
-                        case "\uD83D\uDD5E\u26CF": creep.say("\uD83D\uDD53\u26CF", true); break;
-                        case "\uD83D\uDD53\u26CF": creep.say("\uD83D\uDD5F\u26CF", true); break;
-                        case "\uD83D\uDD5F\u26CF": creep.say("\uD83D\uDD54\u26CF", true); break;
-                        case "\uD83D\uDD54\u26CF": creep.say("\uD83D\uDD60\u26CF", true); break;
-                        case "\uD83D\uDD60\u26CF": creep.say("\uD83D\uDD55\u26CF", true); break;
-                        case "\uD83D\uDD55\u26CF": creep.say("\uD83D\uDD61\u26CF", true); break;
-                        case "\uD83D\uDD61\u26CF": creep.say("\uD83D\uDD56\u26CF", true); break;
-                        case "\uD83D\uDD56\u26CF": creep.say("\uD83D\uDD62\u26CF", true); break;
-                        case "\uD83D\uDD62\u26CF": creep.say("\uD83D\uDD57\u26CF", true); break;
-                        case "\uD83D\uDD57\u26CF": creep.say("\uD83D\uDD63\u26CF", true); break;
-                        case "\uD83D\uDD63\u26CF": creep.say("\uD83D\uDD58\u26CF", true); break;
-                        case "\uD83D\uDD58\u26CF": creep.say("\uD83D\uDD64\u26CF", true); break;
-                        case "\uD83D\uDD64\u26CF": creep.say("\uD83D\uDD59\u26CF", true); break;
-                        case "\uD83D\uDD59\u26CF": creep.say("\uD83D\uDD65\u26CF", true); break;
-                        case "\uD83D\uDD65\u26CF": creep.say("\uD83D\uDD5A\u26CF", true); break;
-                        case "\uD83D\uDD5A\u26CF": creep.say("\uD83D\uDD66\u26CF", true); break;
-                        default: creep.say("\uD83D\uDD5B\u26CF", true);
+                        case ICONS["wait0"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait1"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait1"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait2"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait2"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait3"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait3"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait4"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait4"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait5"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait5"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait6"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait6"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait7"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait7"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait8"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait8"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait9"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait9"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait10"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait10"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait11"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait11"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait12"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait12"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait13"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait13"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait14"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait14"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait15"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait15"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait16"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait16"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait17"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait17"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait18"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait18"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait19"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait19"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait20"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait20"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait21"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait21"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait22"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        case ICONS["wait22"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait23"] + ICONS["harvest"] + ICONS["source"], true); break;
+                        default: creep.say(ICONS["wait0"] + ICONS["harvest"] + ICONS["source"], true);
                     }
                 }
             }
             else {
-                creep.say("\u26CF?", true);
+                creep.say(ICONS["harvest"] + "?", true);
             }
         }
     }

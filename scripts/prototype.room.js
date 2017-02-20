@@ -61,7 +61,7 @@ let prototypeRoom = function() {
         defineCachedGetter(Room.prototype, 'minerSources', (r) => {
             let sources = r.sources;
             _.each(r.harvestRooms, (hr) => {
-                _.each(hr.sources, (hrs, sID) => {
+                _.each(_.get(Memory.rooms, [hr, "sources"], {}), (hrs, sID) => {
                     sources[sID] = hrs;
                 });
             });

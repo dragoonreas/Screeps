@@ -43,6 +43,7 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
         , "Palle" // PINK alliance
         , "Kendalor" // PINK alliance
         , "InfiniteJoe" // PINK alliance
+        , "KermitFrog" // PINK alliance
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
 });
 
@@ -94,26 +95,27 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
 */
 _.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 2
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 1
+    , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 2
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_WALL]: 1
+    , [STRUCTURE_WALL]: 0
     , all: 1
 });
 
+// NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
 let managedRooms = [];
 for (let roomID in Memory.rooms) {
     if (Memory.rooms[roomID].repairerTypeMins != undefined) {
@@ -143,7 +145,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 1
+    , upgrader: 3
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
@@ -155,7 +157,7 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 3
+    , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W85N23", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
@@ -811,7 +813,7 @@ module.exports.loop = function () {
     
     if (Memory.MonCPU == true) { console.log("creeps>spawn:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
-    Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W85N23.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W86N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W85N23.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Spawn or renew creeps
