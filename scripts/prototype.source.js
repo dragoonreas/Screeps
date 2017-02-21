@@ -1,7 +1,7 @@
 let prototypeSource = function() {
     
     // Based off: http://stackoverflow.com/a/38445167
-    if (Source.prototype.memory == undefined) { // NOTE: Must be defined after Room.sources and Memory.source
+    if (Source.prototype.memory == undefined) { // NOTE: Must be defined after Room.sources
         Object.defineProperty(Source.prototype, "memory", {
             get: function() {
     			if (this === Source.prototype || this == undefined) { return; }

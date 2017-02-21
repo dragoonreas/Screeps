@@ -2,7 +2,7 @@ let prototypeRoom = function() {
     Room.prototype.dangerZones = []; // TODO: Define this property properly
     
     if (Room.prototype.sources == undefined) {
-        Object.defineProperty(Room.prototype, "sources", { // NOTE: Must be defined after Memory.source
+        Object.defineProperty(Room.prototype, "sources", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "sources", undefined) == undefined) {
@@ -32,6 +32,51 @@ let prototypeRoom = function() {
         });
     }
     
+    if (Room.prototype.controllerMem == undefined) {
+        Object.defineProperty(Room.prototype, "controllerMem", {
+            get: function() {
+                if (this === Room.prototype || this == undefined) { return; }
+                if (_.get(this.memory, "controller", undefined) == undefined && this.controller != undefined) {
+                    let theController = this.controller;
+                    _.set(this.memory, ["controller"], { 
+                        id: theController.id 
+                        , pos: theController.pos 
+                        , owner: theController.owner 
+                        , reservation: theController.reservation 
+                        , level: theController.level 
+                        , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
+                        , sameModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
+                        , sign: theController.sign
+                    });
+                }
+                if (_.isObject(this.memory.controller) == false) {
+                    return undefined;
+                }
+                return this.memory.controller;
+            },
+            
+            set: function(value) {
+                if (_.get(this.memory, "controller", undefined) == undefined && this.controller != undefined) {
+                    let theController = this.controller;
+                    _.set(this.memory, ["controller"], { 
+                        id: theController.id 
+                        , pos: theController.pos 
+                        , owner: theController.owner 
+                        , reservation: theController.reservation 
+                        , level: theController.level 
+                        , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
+                        , sameModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
+                        , sign: theController.sign
+                    });
+                }
+                if (_.isObject(this.memory.controller) == false && this.controller != undefined) {
+                    throw new Error("Could not set Room.controllerMem property");
+                }
+                this.memory.controller = value;
+            }
+        });
+    }
+    
     if (Room.prototype.harvestRooms == undefined) {
         Object.defineProperty(Room.prototype, "harvestRooms", {
             get: function() {
@@ -57,7 +102,7 @@ let prototypeRoom = function() {
         });
     }
     
-    if (Room.prototype.minerSources == undefined) {
+    if (Room.prototype.minerSources == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'minerSources', (r) => {
             let sources = r.sources;
             _.each(r.harvestRooms, (hr) => {
@@ -69,7 +114,7 @@ let prototypeRoom = function() {
         });
     }
     
-    if (Room.prototype.recycleContainer == undefined) {
+    if (Room.prototype.recycleContainer == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'recycleContainer', (r) => {
             let containers = [];
             let theSpawns = r.find(FIND_MY_SPAWNS);
@@ -208,7 +253,7 @@ let prototypeRoom = function() {
         });
     }
     
-    if (Room.prototype.isHarvestRoom == undefined) {
+    if (Room.prototype.isHarvestRoom == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'isHarvestRoom', (r) => {
             return (_.some(Memory.rooms, (rm) => {
                 let harvestRooms = _.get(rm, "harvestRooms", undefined);

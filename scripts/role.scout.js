@@ -11,6 +11,7 @@ let roleScout = {
         
         if (creep.memory.goalReached != true) {
             if (creep.memory.roomID == "W86N29") {
+                /*
                 let waypoints = [
                     "W85N29"
                     , "W85N26"
@@ -56,6 +57,11 @@ let roleScout = {
                     creep.say(ICONS["moveTo"] + "W85N23", true);
                     creep.travelTo(new RoomPosition(24, 29, "W85N23"));
                 }
+                */
+                if (creep.room.name != "W85N23") {
+                    creep.say(ICONS["moveTo"] + "W85N23", true);
+                    creep.travelTo(new RoomPosition(24, 29, "W85N23"));
+                }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);
                     creep.memory.goalReached = true;
@@ -70,6 +76,21 @@ let roleScout = {
                 if (creep.room.name != "W86N29") {
                     creep.say(ICONS["moveTo"] + "W86N29", true);
                     creep.travelTo(new RoomPosition(9, 39, "W86N29"));
+                }
+                else if (creep.memory.goalReached != true) {
+                    creep.say(ICONS["testPassed"], true);
+                    creep.memory.goalReached = true;
+                    if (creep.memory.role == "scout") {
+                        console.log("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
+                        Game.notify("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
+                        Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
+                    }
+                }
+            }
+            else if (creep.memory.roomID == "W85N23") {
+                if (creep.room.name != "W87N29") {
+                    creep.say(ICONS["moveTo"] + "W87N29", true);
+                    creep.travelTo(new RoomPosition(7, 25, "W87N29"));
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);

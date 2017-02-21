@@ -2,11 +2,12 @@ if (Memory.MonCPU == true) { console.log("start>init:",Game.cpu.getUsed().toFixe
 
 // Setup globals and prototypes
 require("globals")(); // NOTE: All globals not from an external resource should be declared here
-require("prototype.memory")();
-require("prototype.room")(); // NOTE: Must be required after prototype.memory.js
-require("prototype.source")(); // NOTE: Must be required after prototype.room.js and prototype.memory.js
+require("prototype.creep")(); // NOTE: Must be required after globals.js
+require("prototype.room")(); // NOTE: Must be required after globals.js
+require("prototype.memory")(); // NOTE: Must be required after prototype.room.js
+require("prototype.controller")(); // NOTE: Must be required after prototype.room.js
+require("prototype.source")(); // NOTE: Must be required after prototype.room.js
 require("prototype.spawn")();
-require("prototype.creep")();
 require("traveler")({ 
     exportTraveler: false
     , installPrototype: true
@@ -57,6 +58,13 @@ for (let roomID in Game.rooms) {
         , "memoryExpiration": Game.time + EST_TICKS_PER_DAY
         , "avoidTravelUntil": 0
     }); // TODO: Implement sparse memory storage for rooms (assume a default value for undefined keys)
+    
+    let theController = theRoom.controller;
+    if (theController != undefined) {
+        _.defaults(Memory.controllers[theController.id], {
+            pos: theController.pos
+        });
+    }
     
     let sources = theRoom.find(FIND_SOURCES);
     for (let source of sources) {
@@ -297,6 +305,13 @@ module.exports.loop = function () {
         });
         theRoom.memory.memoryExpiration = Game.time + EST_TICKS_PER_DAY; // Update scheduled time for room memory garbage collection
         
+        let theController = theRoom.controller;
+        if (theController != undefined) {
+            _.defaults(Memory.controllers[theController.id], {
+                pos: theController.pos
+            });
+        }
+        
         // Make sure source memory exists and is up-to-date
         let sources = theRoom.find(FIND_SOURCES);
         for (let sourceID in sources) {
@@ -316,7 +331,6 @@ module.exports.loop = function () {
         
         // TODO: Check for nukes and make sure only 1 notification is sent (for the lifetime of that nuke) when the nuke is found
 		
-        let theController = theRoom.controller;
         let mayHaveRamparts = (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], (v) => (v > 0)) == false);
         
         let justNPCs = undefined;
@@ -363,11 +377,11 @@ module.exports.loop = function () {
                     targetWeighting = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "weighting"], undefined);
                     if (targetWeighting == undefined) {
                         targetWeighting = 0 + (
-                            (bodyPartCounts[HEAL] || 0) * 5 
-                            + (bodyPartCounts[WORK] || 0) * 4 
-                            + (bodyPartCounts[ATTACK] || 0) * 3 
-                            + (bodyPartCounts[RANGED_ATTACK] || 0) * 2 
-                            + (bodyPartCounts[CLAIM] || 0) * 1
+                            (bodyPartCounts[ATTACK] || 0) * 5 
+                            + (bodyPartCounts[RANGED_ATTACK] || 0) * 4 
+                            + (bodyPartCounts[WORK] || 0) * 3 
+                            + (bodyPartCounts[CLAIM] || 0) * 2 
+                            + (bodyPartCounts[HEAL] || 0) * 1
                         ); // TODO: Take into account boosted parts
                         
                         _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id], {
@@ -502,23 +516,25 @@ module.exports.loop = function () {
             
             // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
 			if (theController != undefined 
-			    && theController.my == true 
-			    && theController.safeMode == undefined 
-			    && theController.safeModeCooldown == undefined 
-			    && theController.safeModeAvaliable > 0
-			    && (theController.level < 3 
-			    || _.some(Game.spawns, (s) => (
-			        s.room.name == roomID 
-			        && s.hits < s.hitsMax 
-			        && s.isActive() == true)) == true // TODO: Calculate the maximum damage output of hostile creeps within range a spawn, and activate safemode if the combined HP of the spawn and rampart covering it is <= x2 the damage output calculated (x2 to account for damage taken this turn if their attacks get run before our safemode)
-	            || _.some(invaders, (i) => (
-	                _.some(Memory.agressivePlayers, (aP) => (
-	                    i.owner.username == aP)))) == true)) { // TODO: Check that this is all working
+                && theController.my == true 
+                && theController.safeMode == undefined 
+                && theController.safeModeCooldown == undefined 
+                && theController.safeModeAvaliable > 0
+                && (theController.level < 3 
+                || _.some(Game.spawns, (s) => (
+                    s.room.name == roomID 
+                    && s.hits < s.hitsMax 
+                    && s.isActive() == true)) == true // TODO: Calculate the maximum damage output of hostile creeps within range a spawn, and activate safemode if the combined HP of the spawn and rampart covering it is <= x2 the damage output calculated (x2 to account for damage taken this turn if their attacks get run before our safemode)
+                || _.some(invaders, (i) => (
+                    _.some(Memory.agressivePlayers, (aP) => (
+                        i.owner.username == aP)))) == true)) { // TODO: Check that this is all working
 				//console.log("Attempting to activate Safe Mode in: " + roomID);
 				//Game.notify("Attempting to activate Safe Mode in: " + roomID, 30);
-				theController.activateSafeMode();
-				console.log("Activated Safe Mode in: " + roomID);
-				Game.notify("Activated Safe Mode in: " + roomID);
+				let err = theController.activateSafeMode();
+				if (err == OK) {
+                    console.log("Activated Safe Mode in: " + roomID);
+                    Game.notify("Activated Safe Mode in: " + roomID);
+				}
 			}
 			else if ((roomID == "W87N29" || roomID == "W86N29" || roomID == "W85N23") && justNPCs == false) { // NOTE: Haven't tested the defences in these rooms properly yet
 				let err = theController.activateSafeMode();
@@ -560,7 +576,7 @@ module.exports.loop = function () {
                 console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
             }
             
-            if (_.some(_.get(theRoom, "sources", {"000000000000000000000000":{ regenAt: Game.time }}), (s) => (s.regenAt < Game.time + youngestInvader.ticksToLive))) {
+            if (_.some(_.get(theRoom, "sources", {"000000000000000000000000": { regenAt: Game.time + youngestInvader.ticksToLive } }), (s) => (s.regenAt < Game.time + youngestInvader.ticksToLive))) {
                 _.forEach(theRoom.sources, (s,sID) => {
                     if (s.regenAt < Game.time + youngestInvader.ticksToLive) {
                         s.regenAt = Game.time + youngestInvader.ticksToLive;
@@ -568,13 +584,15 @@ module.exports.loop = function () {
                     let assignedCreeps = _.filter(Game.creeps, (c) => (
                         _.get(c.memory, "sourceID", undefined) == sID
                     ));
-                    
+                    // TODO: Do something with assigned creeps
                 });
                 console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
                 if (justNPCs == false) {
                     Game.notify("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
                 }
 		    }
+		    
+		    // TODO: Stop claimers being spawned to reserve this harvest room
 		}
 		
         if (theRoom.hasHostileTower == true) { // TODO: Add a check to see if the towers are still there if a creep is in the room, instead of just waiting for it to be reset after a day due to the room memory garbage collection being run on it
@@ -781,7 +799,7 @@ module.exports.loop = function () {
         let runningRole = false;
         // TODO: If a creep is damaged, check that it still has enough active body parts to run it's role, and if not go back home to either repair via a tower or recycle if no tower is avaliable
         if (creep.memory.role != "attacker" && creep.memory.role != "powerHarvester") {
-            if (creep.hits < creep.hitsMax) {
+            if (creep.hits < creep.hitsMax && creep.memory.role != "adaptable") {
                 creep.memory.droppedResourceID = undefined;
                 ROLES["recyclable"].run(creep);
                 runningRole = true;
@@ -823,6 +841,7 @@ module.exports.loop = function () {
     
     Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W86N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W85N23.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W85N23.creepMins.adaptable = ((Memory.rooms.W87N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Spawn or renew creeps
     let nothingToSpawn = [];

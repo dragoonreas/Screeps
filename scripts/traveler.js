@@ -154,6 +154,10 @@ module.exports = function(globalOpts = {}){
             // register hostile rooms entered
             let creepPos = creep.pos, destPos = (destination.pos || destination);
             if (_.get(creep.room, ["controller", "owner"], undefined) && !creep.room.controller.my && !_.includes(Memory.nonAgressivePlayers, creep.room.controller.owner.username)) {
+                if (_.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0) < Game.time && creep.room.controller.level > 1) {
+                    console.log("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
+                    Game.notify("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
+                }
                 _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], (creep.room.controller.level > 1 ? Game.time + EST_TICKS_PER_DAY : 0));
             }
             // initialize data object

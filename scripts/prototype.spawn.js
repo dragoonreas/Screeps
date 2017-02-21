@@ -5,8 +5,8 @@
     = 1*300 + 10*50 
     = 800
 */
-const GENERAL_WORKER_RCL_SCALING_CAP = 3;
-const GENERAL_WORKER_ENERGY_CAP = CONTROLLER_STRUCTURES[STRUCTURE_SPAWN][GENERAL_WORKER_RCL_SCALING_CAP] * SPAWN_ENERGY_CAPACITY + CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][GENERAL_WORKER_RCL_SCALING_CAP] * EXTENSION_ENERGY_CAPACITY[GENERAL_WORKER_RCL_SCALING_CAP];
+//const GENERAL_WORKER_RCL_SCALING_CAP = 3;
+//const GENERAL_WORKER_ENERGY_CAP = CONTROLLER_STRUCTURES[STRUCTURE_SPAWN][GENERAL_WORKER_RCL_SCALING_CAP] * SPAWN_ENERGY_CAPACITY + CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][GENERAL_WORKER_RCL_SCALING_CAP] * EXTENSION_ENERGY_CAPACITY[GENERAL_WORKER_RCL_SCALING_CAP];
 
 const MINER_WORK_PART_CAP = ((SOURCE_ENERGY_CAPACITY / ENERGY_REGEN_TIME) / HARVEST_POWER) + 1; // +1 so there's some down time to repair it's container
 
@@ -100,7 +100,9 @@ let prototypeSpawn = function() {
             energyAvaliable -= BODYPART_COST[CARRY]; // accounts for the single carry part miners have that doesn't get multiplied dynamically with avaliable energy
         }
         
-        let partMultiplier = Math.floor(Math.min(energyAvaliable, GENERAL_WORKER_ENERGY_CAP) / bodyCost);
+        const GENERAL_WORKER_CARRY_PART_CAP = (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / CARRY_CAPACITY) * 3; // Base general worker size off capacity to fill 3 extentions from a single haul
+        
+        let partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), GENERAL_WORKER_CARRY_PART_CAP);
         if (roleName == "miner") {
             partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * MINER_WORK_PART_CAP) / bodyCost);
         }

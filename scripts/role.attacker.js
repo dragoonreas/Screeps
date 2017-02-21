@@ -111,6 +111,7 @@ let roleAttacker = {
             }*/
             else {
                 creep.room.memory.creepMins.attacker = 0;
+                creep.say(ICONS["attack"] + "?", true);
             }
         }
         

@@ -12,6 +12,7 @@ let roleAdaptable = {
         switch (creep.memory.roomID) {
             case "W87N29": destinationRoomName = "W86N29"; break;
             case "W86N29": destinationRoomName = "W85N23"; break;
+            case "W85N23": destinationRoomName = "W87N29"; break;
         }
         
         if (destinationRoomName != undefined) {
