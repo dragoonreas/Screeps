@@ -93,8 +93,10 @@ let roleBuilder = {
             if(constructionSite != undefined) {
                 let err = creep.build(constructionSite);
                 if(err == ERR_NOT_IN_RANGE) {
-                    creep.travelTo(constructionSite);
                     creep.say(ICONS["moveTo"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
+                    creep.travelTo(constructionSite, {
+                        range: 3
+                    });
                 }
                 else if (err == OK) {
                     creep.say(ICONS["build"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
@@ -124,6 +126,20 @@ let roleBuilder = {
             }
             else if (creep.memory.roomID == "W85N23") {
                 source = Game.getObjectById("5873bbc911e3e4361b4d677e");
+                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) {
+                    ROLES["harvester"].run(creep);
+                    return;
+                }
+            }
+            else if (creep.memory.roomID == "W86N39") {
+                source = Game.getObjectById("5873bbaa11e3e4361b4d63cf");
+                if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) {
+                    ROLES["harvester"].run(creep);
+                    return;
+                }
+            }
+            else if (creep.memory.roomID == "W85N38") {
+                source = Game.getObjectById("5873bbc711e3e4361b4d6731");
                 if (source != undefined && source.energy == 0 && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) {
                     ROLES["harvester"].run(creep);
                     return;

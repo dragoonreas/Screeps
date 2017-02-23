@@ -12,7 +12,9 @@ let roleUpgrader = {
             let err = creep.upgradeController(theController);
             if (err == ERR_NOT_IN_RANGE) {
                 creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTROLLER], true);
-                creep.travelTo(theController);
+                creep.travelTo(theController, {
+                    range: 3
+                });
             }
             else if (err == OK) {
                 creep.say(ICONS["upgradeController"] + ICONS[STRUCTURE_CONTROLLER], true);
@@ -24,6 +26,8 @@ let roleUpgrader = {
                 case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6157"); break;
                 case "W86N29": source = Game.getObjectById("5873bbab11e3e4361b4d63fd"); break;
                 case "W85N23": source = Game.getObjectById("5873bbc911e3e4361b4d677d"); break;
+                case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63ce"); break;
+                case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6733"); break;
             }
             
             if (source != undefined) {

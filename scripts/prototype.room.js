@@ -42,7 +42,7 @@ let prototypeRoom = function() {
                         id: theController.id 
                         , pos: theController.pos 
                         , owner: theController.owner 
-                        , reservation: theController.reservation 
+                        , reservation: theController.reservation // TODO: Change reservation.ticksToEnd to reservation.endsAt
                         , level: theController.level 
                         , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
                         , sameModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
@@ -62,7 +62,7 @@ let prototypeRoom = function() {
                         id: theController.id 
                         , pos: theController.pos 
                         , owner: theController.owner 
-                        , reservation: theController.reservation 
+                        , reservation: theController.reservation // TODO: Change reservation.ticksToEnd to reservation.endsAt
                         , level: theController.level 
                         , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
                         , sameModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
@@ -118,10 +118,10 @@ let prototypeRoom = function() {
         defineCachedGetter(Room.prototype, 'recycleContainer', (r) => {
             let containers = [];
             let theSpawns = r.find(FIND_MY_SPAWNS);
-            _.each(theSpawns, (s) => {
-                containers.push(s.pos.findInRange(FIND_STRUCTURES, 1, (s) => (
+            _.each(theSpawns, (sp) => {
+                containers.push(sp.pos.findInRange(FIND_STRUCTURES, 1, { filter: (s) => (
                     s.structureType == STRUCTURE_CONTAINER
-                )));
+                )}));
             });
             containers = _.flattenDeep(containers);
             return _.first(containers);

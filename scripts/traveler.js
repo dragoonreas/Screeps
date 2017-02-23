@@ -141,6 +141,9 @@ module.exports = function(globalOpts = {}){
                 for (let obstacle of options.obstacles) {
                     matrix.set(obstacle.pos.x, obstacle.pos.y, 0xff);
                 }
+                if (roomName == "W86N39" && destPos.roomName == "W86N39" && destPos.isEqualTo(19, 20) == false) { // stop blocking only access to source at [19,20] in room W86N39 when not harvesting it
+                    matrix.set(20, 21, 0xff);
+                }
                 return matrix;
             };
             return PathFinder.search(origPos, { pos: destPos, range: options.range }, {
@@ -153,7 +156,7 @@ module.exports = function(globalOpts = {}){
         travelTo(creep, destination, options = {}) {
             // register hostile rooms entered
             let creepPos = creep.pos, destPos = (destination.pos || destination);
-            if (_.get(creep.room, ["controller", "owner"], undefined) && !creep.room.controller.my && !_.includes(Memory.nonAgressivePlayers, creep.room.controller.owner.username)) {
+            if (_.get(creep.room, ["controller", "owner"], undefined) && !creep.room.controller.my && !_.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe"]), creep.room.controller.owner.username)) {
                 if (_.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0) < Game.time && creep.room.controller.level > 1) {
                     console.log("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                     Game.notify("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
@@ -224,14 +227,28 @@ module.exports = function(globalOpts = {}){
                 travelData.dest.roomName !== destPos.roomName) {
                 delete travelData.path;
             }
-            if (creep.room.hasHostileCreep == true && !options.ignoreHostileCreeps) {
+            if (creep.room.dangerZones.length > 0 && !options.ignoreHostileCreeps) {
                 options.ignoreCreeps = false; // TODO: Find a way to use stuck detection while resetting the path each tick and ignoring creeps
                 delete travelData.path;
+            }
+            let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creep.pos.roomName);
+            let isPortalRoom = (parsed[1] % 10 === 5) || (parsed[2] % 10 === 5);
+            if (isPortalRoom && _.get(travelData, ["start", "roomName"], undefined) != creep.pos.roomName) {
+                let portals = creep.room.find(FIND_STRUCTURES, (s) => (
+                    s.structureType == STRUCTURE_PORTAL
+                ));
+                let destIsPortal = _.some(portals, (p) => (
+                    p.pos.isEqualTo(destPos) == true
+                ));
+                if (portals.length > 0 && destIsPortal == false) {
+                    delete travelData.path;
+                }
             }
             // pathfinding
             if (!travelData.path) {
                 if (creep.spawning)
                     return ERR_BUSY;
+                travelData.start = creep.pos;
                 travelData.dest = destPos;
                 travelData.prev = undefined;
                 let cpu = Game.cpu.getUsed();
@@ -298,6 +315,9 @@ module.exports = function(globalOpts = {}){
                 }
                 else if (structure instanceof StructureRoad) {
                     matrix.set(structure.pos.x, structure.pos.y, roadCost);
+                }
+                else if (structure instanceof StructurePortal) { // Only go through portals if we absolutly must (i.e. if the destination is set to it)
+                    matrix.set(structure.pos.x, structure.pos.y, 0xfe);
                 }
                 else if (structure.structureType !== STRUCTURE_CONTAINER) {
                     // Can't walk through non-walkable buildings

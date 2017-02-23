@@ -59,7 +59,12 @@ let prototypeSpawn = function() {
             bodyTemplate = [CARRY, ATTACK, HEAL];
         }
         else if (roleName == "upgrader") {
-            moveRatio = 0.5; // should really be 1, but their current travel times make it so that in combination with the rest of the parameters being used right now they just happen to deplete their source right around the time it refreshes
+            if (this.room.name == "W86N39" || this.room.name == "W85N38") { // these rooms have a source in range of the controller
+                moveRatio = 0;
+            }
+            else {
+                moveRatio = 0.5; // should really be 1, but their current travel times make it so that in combination with the rest of the parameters being used right now they just happen to deplete their source right around the time it refreshes
+            }
         }
         else if (roleName == "scout") {
             bodyTemplate = []; // moveRatio is set automatically when an empty body template is used, so no use setting it here
@@ -189,6 +194,30 @@ let prototypeSpawn = function() {
                 }
             }
         }
+        else if (roleName == "adaptable") {
+            creepMemory.roomSentFrom = this.room.name;
+            if (this.room.name == "W87N29") {
+                if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N29";
+                }
+            }
+            else if (this.room.name == "W86N29") {
+                if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W85N38";
+                }
+                else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N39";
+                }
+                else if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W85N23";
+                }
+            }
+            else if (this.room.name == "W85N23") {
+                if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W87N29";
+                }
+            }
+        }
         else if (roleName == "claimer") {
             if (this.room.name == "W87N29") {
                 creepMemory.controllerID = "5873bb7f11e3e4361b4d5f13";
@@ -198,11 +227,15 @@ let prototypeSpawn = function() {
                     creepMemory.controllerID = "5873bbab11e3e4361b4d6401";
                 }
                 else {
-                    creepMemory.controllerID = "5873bbc911e3e4361b4d677c";
+                    creepMemory.controllerID = "5873bbdf11e3e4361b4d6a75";
                 }
             }
             else if (this.room.name == "W85N23") {
                 creepMemory.controllerID = "5873bbe111e3e4361b4d6ac5";
+            }
+            else if (this.room.name == "W84N37") {
+                //creepMemory.controllerID = "5873bbaa11e3e4361b4d63cd";
+                creepMemory.controllerID = "5873bbc711e3e4361b4d6732";
             }
         }
         else if (roleName == "powerHarvester") {

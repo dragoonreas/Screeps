@@ -15,7 +15,7 @@ let globals = function() {
         , claimer: require("role.claimer")
         , recyclable: require("role.recyclable")
     }
-
+    
     global.ICONS = {
         [STRUCTURE_CONTROLLER]: "\uD83C\uDFF0"
         , [STRUCTURE_SPAWN]: "\uD83C\uDFE5"

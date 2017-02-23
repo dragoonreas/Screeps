@@ -63,6 +63,48 @@ let roleMiner = {
                             creep.travelTo(new RoomPosition(32, 37, "W85N25"));
                             return;
                         }
+                        else if (sourceID == "5873bb9411e3e4361b4d6137" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            sourceMem.minerName = creep.name;
+                            creep.say(ICONS["moveTo"] + "W87N39", true);
+                            creep.travelTo(new RoomPosition(34, 19, "W87N39"));
+                            return;
+                        }
+                        else if (sourceID == "5873bbc711e3e4361b4d672e" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            sourceMem.minerName = creep.name;
+                            creep.say(ICONS["moveTo"] + "W85N39", true);
+                            creep.travelTo(new RoomPosition(21, 12, "W85N39"));
+                            return;
+                        }
+                        else if (sourceID == "5873bb7e11e3e4361b4d5ef2" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            sourceMem.minerName = creep.name;
+                            creep.say(ICONS["moveTo"] + "W88N39", true);
+                            creep.travelTo(new RoomPosition(35, 4, "W88N39"));
+                            return;
+                        }
+                        else if (sourceID == "5873bbaa11e3e4361b4d63d2" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            sourceMem.minerName = creep.name;
+                            creep.say(ICONS["moveTo"] + "W86N38", true);
+                            creep.travelTo(new RoomPosition(8, 12, "W86N38"));
+                            return;
+                        }
+                        else if (sourceID == "5873bbaa11e3e4361b4d63d5" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            sourceMem.minerName = creep.name;
+                            creep.say(ICONS["moveTo"] + "W86N37", true);
+                            creep.travelTo(new RoomPosition(11, 43, "W86N37"));
+                            return;
+                        }
+                        else if (sourceID == "5873bbc811e3e4361b4d6735" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            sourceMem.minerName = creep.name;
+                            creep.say(ICONS["moveTo"] + "W85N37", true);
+                            creep.travelTo(new RoomPosition(32, 36, "W85N37"));
+                            return;
+                        }
                     }
                 }
             }
@@ -107,8 +149,10 @@ let roleMiner = {
                 if (constructionSite != undefined) {
                     let err = creep.build(constructionSite);
                     if(err == ERR_NOT_IN_RANGE) {
-                        creep.travelTo(constructionSite);
                         creep.say(ICONS["moveTo"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
+                        creep.travelTo(constructionSite, {
+                            range: 3
+                        });
                     }
                     else if (err == OK) {
                         creep.say(ICONS["build"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);

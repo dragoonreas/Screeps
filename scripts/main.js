@@ -95,6 +95,16 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
     "W84N23"
     , "W85N25"
 ]);
+_.set(Memory.rooms, ["W86N39", "harvestRooms"], [
+    "W87N39"
+    , "W85N39"
+    , "W88N39"
+]);
+_.set(Memory.rooms, ["W85N38", "harvestRooms"], [
+    "W86N38"
+    , "W86N37"
+    , "W85N37"
+]);
 
 /*
     TODO:
@@ -118,7 +128,21 @@ _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
 _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_WALL]: 1
+    , all: 1
+});
+_.set(Memory.rooms, ["W86N39", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 2
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+_.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -171,6 +195,30 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+});
+_.set(Memory.rooms, ["W86N39", "creepMins"], {
+    attacker: 0
+    , harvester: 4
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W86N39", "minerSources"], {}))
+    , adaptable: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+});
+_.set(Memory.rooms, ["W85N38", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 2
+    , miner: 0//_.size(_.get(Game.rooms, ["W85N38", "minerSources"], {}))
+    , adaptable: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
 
@@ -397,7 +445,7 @@ module.exports.loop = function () {
                     priorityTargetID = aPriorityTarget.id;
                 }
                 
-                // Record positions targets can attack within the next tick
+                // Record positions targets can attack within the next tick (TODO: but not during safemode)
                 let avoidanceRange = 0;
                 if ((bodyPartCounts[RANGED_ATTACK] || 0) > 0) {
                     avoidanceRange = 4; // 3 range + 1 incase it moves closer this tick
@@ -413,6 +461,9 @@ module.exports.loop = function () {
                     let leftRange = _.max([aPriorityTarget.pos.x - avoidanceRange, 0]);
                     let bottomRange = _.min([aPriorityTarget.pos.y + avoidanceRange, 49]);
                     let rightRange = _.min([aPriorityTarget.pos.x + avoidanceRange, 49]);
+                    let theWalls = _.filter(theRoom.lookForAtArea(LOOK_TERRAIN, topRange, leftRange, bottomRange, rightRange, true), (t) => (
+                        t.terrain == "wall"
+                    ));
                     let theRamparts = [];
                     if (mayHaveRamparts == true) {
                         theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
@@ -428,7 +479,7 @@ module.exports.loop = function () {
                                 x: xPos
                                 , y: yPos
                             };
-                            if (_.some(theRoom.dangerZones, thePos) == false && (theRamparts.length == 0 || _.some(theRamparts, thePos) == false)) {
+                            if (_.some(theRoom.dangerZones, thePos) == false && (theRamparts.length == 0 || _.some(theRamparts, thePos) == false) && (theWalls.length == 0 || _.some(theWalls, thePos) == false)) { // TODO: Filter all other non-walkable objects from dangerzones (maybe after all dangerzones have been created)
                                 theRoom.dangerZones.push(thePos);
                                 //theRoom.visual.rect(thePos.x - 0.5, thePos.y - 0.5, 1, 1, { fill: "red" });
                             }
@@ -464,7 +515,7 @@ module.exports.loop = function () {
                 else if ((bodyPartCounts[ATTACK] || 0) > 0) {
                     avoidanceRange = 2; // 1 range + 1 incase it moves closer this tick
                 }
-                if (aPriorityTarget.owner.username == "Source Keeper" || aPriorityTarget.fatigue > 0) { // TODO: Check if the source keeper is next to a source or mineral before assuming they won't move
+                if (aNonPriorityTarget.owner.username == "Source Keeper" || aNonPriorityTarget.fatigue > 0) { // TODO: Check if the source keeper is next to a source or mineral before assuming they won't move
                     --avoidanceRange;
                 }
                 if (avoidanceRange > 0) {
@@ -536,7 +587,7 @@ module.exports.loop = function () {
                     Game.notify("Activated Safe Mode in: " + roomID);
 				}
 			}
-			else if ((roomID == "W87N29" || roomID == "W86N29" || roomID == "W85N23") && justNPCs == false) { // NOTE: Haven't tested the defences in these rooms properly yet
+			else if ((roomID == "W87N29" || roomID == "W86N29" || roomID == "W85N23" || roomID == "W86N39" || roomID == "W85N38") && justNPCs == false) { // NOTE: Haven't tested the defences in these rooms properly yet
 				let err = theController.activateSafeMode();
 				if (err == OK) {
 				    console.log("Activated (backup) Safe Mode in: " + roomID);
@@ -839,9 +890,9 @@ module.exports.loop = function () {
     
     if (Memory.MonCPU == true) { console.log("creeps>spawn:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
-    Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W86N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W86N29.creepMins.adaptable = ((Memory.rooms.W85N23.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W85N23.creepMins.adaptable = ((Memory.rooms.W87N29.creepCounts.builder == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W86N29.creepMins.adaptable = (((Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W85N23.creepMins.adaptable = ((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Spawn or renew creeps
     let nothingToSpawn = [];

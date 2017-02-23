@@ -7,7 +7,12 @@ let roleClaimer = {
             , "5873bbe111e3e4361b4d6ac5"
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (theController == undefined || creep.room.name != theController.room.name) {
-            if (creep.memory.controllerID == "5873bb7f11e3e4361b4d5f13") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+            let controllerMem = Memory.controllers[creep.memory.controllerID];
+            if (controllerMem != undefined) {
+                creep.say(ICONS["moveTo"] + controllerMem.pos.roomName, true);
+                creep.travelTo(new RoomPosition(controllerMem.pos.x, controllerMem.pos.y, controllerMem.pos.roomName));
+            }
+            else if (creep.memory.controllerID == "5873bb7f11e3e4361b4d5f13") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.say(ICONS["moveTo"] + "W88N29", true);
                 creep.travelTo(new RoomPosition(13, 32, "W88N29"));
             }
@@ -19,8 +24,13 @@ let roleClaimer = {
                 creep.say(ICONS["moveTo"] + "W84N23", true);
                 creep.travelTo(new RoomPosition(23, 22, "W84N23"));
             }
-            else if (creep.memory.controllerID == "5873bbc911e3e4361b4d677c") { // TODO: Change this to use the controller position in memory once it's implemented, but for now assume any controller not in reservedControllerIDs can be reached by running the scout role
-                ROLES["scout"].run(creep);
+            else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63cd") {
+                creep.say(ICONS["moveTo"] + "W86N39", true);
+                creep.travelTo(new RoomPosition(19, 19, "W86N39"));
+            }
+            else if (creep.memory.controllerID == "5873bbc711e3e4361b4d6732") {
+                creep.say(ICONS["moveTo"] + "W85N38", true);
+                creep.travelTo(new RoomPosition(43, 37, "W85N38"));
             }
             else {
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
