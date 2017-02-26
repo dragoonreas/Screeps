@@ -200,21 +200,40 @@ let prototypeSpawn = function() {
                 if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N29";
                 }
-            }
-            else if (this.room.name == "W86N29") {
-                if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
+                else if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W85N23";
+                }
+                else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W85N38";
                 }
-                else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N39";
+            }
+            else if (this.room.name == "W86N29") {
+                if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W85N23";
                 }
                 else if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W85N23";
+                }
+                else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N39";
                 }
             }
             else if (this.room.name == "W85N23") {
                 if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W87N29";
+                }
+                else if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N29";
+                }
+            }
+            else if (this.room.name == "W86N39") {
+                if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W85N38";
+                }
+            }
+            else if (this.room.name == "W85N38") {
+                if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N39";
                 }
             }
         }

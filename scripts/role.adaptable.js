@@ -14,6 +14,8 @@ let roleAdaptable = {
                 case "W87N29": sentTo = "W86N29"; break;
                 case "W86N29": sentTo = "W85N23"; break;
                 case "W85N23": sentTo = "W87N29"; break;
+                case "W86N39": sentTo = "W85N38"; break;
+                case "W85N38": sentTo = "W86N39"; break;
             }
             if (_.isString(sentTo) == true) {
                 creep.memory.roomSentTo = sentTo;
@@ -28,18 +30,8 @@ let roleAdaptable = {
         if (_.isString(sentTo) == true) {
             let theStorage = Game.rooms[sentFrom].storage;
             let theTerminal = Game.rooms[sentFrom].terminal;
-            if (creep.room.name == sentFrom && _.sum(creep.carry) < creep.carryCapacity && ((theTerminal != undefined && theTerminal.store.energy > 0) || (theStorage != undefined && theStorage.store.energy > 0))) {
-                if (theTerminal != undefined && theTerminal.store.energy > 0) {
-                    let err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
-                    if (err == ERR_NOT_IN_RANGE) {
-                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
-                        creep.travelTo(theTerminal);
-                    }
-                    else if (err == OK) {
-                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
-                    }
-                }
-                else if (theStorage != undefined && theStorage.store.energy > 0) {
+            if (creep.room.name == sentFrom && _.sum(creep.carry) < creep.carryCapacity && ((theStorage != undefined && theStorage.store.energy > 0) || (theTerminal != undefined && theTerminal.store.energy > 0))) {
+                if (theStorage != undefined && theStorage.store.energy > 0) {
                     let err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
@@ -47,6 +39,16 @@ let roleAdaptable = {
                     }
                     else if (err == OK) {
                         creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
+                    }
+                }
+                else if (theTerminal != undefined && theTerminal.store.energy > 0) {
+                    let err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
+                        creep.travelTo(theTerminal);
+                    }
+                    else if (err == OK) {
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
                     }
                 }
             }

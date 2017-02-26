@@ -89,7 +89,7 @@ _.set(Memory.rooms, ["W87N29", "harvestRooms"], [
 ]);
 _.set(Memory.rooms, ["W86N29", "harvestRooms"], [
     "W86N28"
-    , "W87N28"
+    , "W85N29"
 ]);
 _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
     "W84N23"
@@ -112,24 +112,24 @@ _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     Also be sure to use for...of instead of for..in where their order is important
 */
 _.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
+    [STRUCTURE_CONTAINER]: 1
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
+    [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 2
+    , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
+    [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 1
-    , [STRUCTURE_WALL]: 1
+    , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["W86N39", "repairerTypeMins"], {
@@ -177,7 +177,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 3
+    , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
@@ -587,7 +587,7 @@ module.exports.loop = function () {
                     Game.notify("Activated Safe Mode in: " + roomID);
 				}
 			}
-			else if ((roomID == "W87N29" || roomID == "W86N29" || roomID == "W85N23" || roomID == "W86N39" || roomID == "W85N38") && justNPCs == false) { // NOTE: Haven't tested the defences in these rooms properly yet
+			else if (_.get(theRoom, ["controller", "my"], false) == true && justNPCs == false && highestTargetWeighting > 0) { // TODO: Remove after defences have been properly tested
 				let err = theController.activateSafeMode();
 				if (err == OK) {
 				    console.log("Activated (backup) Safe Mode in: " + roomID);
@@ -612,16 +612,11 @@ module.exports.loop = function () {
 			let youngestInvader = _.max(invaders, "ticksToLive");
             if (theRoom.avoidTravelUntil < Game.time) {
                 _.each(Game.creeps, (c) => {
-                    if (c.room.name == theRoom.name && justNPCs == true) {
-                        c.suicide();
+                    if (c.memory.role != "miner") {
+                        c.memory.sourceID = undefined;
                     }
-                    else {
-                        if (c.memory.role != "miner") {
-                            c.memory.sourceID = undefined;
-                        }
-                        c.memory._travel = undefined;
-                        c.memory._move = undefined;
-                    }
+                    c.memory._travel = undefined;
+                    c.memory._move = undefined;
                 });
                 theRoom.avoidTravelUntil = Game.time + youngestInvader.ticksToLive;
                 console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
@@ -641,9 +636,9 @@ module.exports.loop = function () {
                 if (justNPCs == false) {
                     Game.notify("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
                 }
-		    }
-		    
-		    // TODO: Stop claimers being spawned to reserve this harvest room
+            }
+            
+            // TODO: Stop claimers being spawned to reserve this harvest room
 		}
 		
         if (theRoom.hasHostileTower == true) { // TODO: Add a check to see if the towers are still there if a creep is in the room, instead of just waiting for it to be reset after a day due to the room memory garbage collection being run on it
@@ -890,9 +885,11 @@ module.exports.loop = function () {
     
     if (Memory.MonCPU == true) { console.log("creeps>spawn:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
-    Memory.rooms.W87N29.creepMins.adaptable = ((Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W86N29.creepMins.adaptable = (((Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W85N23.creepMins.adaptable = ((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W87N29.creepMins.adaptable = (((Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W86N29.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W85N23.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W86N39.creepMins.adaptable = ((Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W85N38.creepMins.adaptable = ((Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Spawn or renew creeps
     let nothingToSpawn = [];

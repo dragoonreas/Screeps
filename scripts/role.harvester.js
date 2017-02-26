@@ -38,7 +38,8 @@ let roleHarvester = {
                         ] 
                         , "W86N29": [
                             "5873bbab11e3e4361b4d6400"
-                            , "5873bb9511e3e4361b4d615c"
+                            , "5873bbc811e3e4361b4d675b"
+                            , "5873bbc811e3e4361b4d675c"
                             , "5873bbab11e3e4361b4d63fc"
                         ] 
                         , "W85N23": [
@@ -65,18 +66,20 @@ let roleHarvester = {
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);
                         if (source != undefined) {
-                            if (source.energy > 0) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
+                            if (source.regenAt <= Game.time) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
                                 creep.memory.sourceID = sourceID;
                                 break;
                             }
                         }
                         else {
                             sourceMem = Memory.sources[sourceID];
-                            if (sourceMem != undefined && sourceMem.regenAt <= Game.time) {
-                                creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + sourceMem.pos.roomName, true);
-                                creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
-                                return;
+                            if (sourceMem != undefined) {
+                                if (sourceMem.regenAt <= Game.time) {
+                                    creep.memory.sourceID = sourceID;
+                                    creep.say(ICONS["moveTo"] + sourceMem.pos.roomName, true);
+                                    creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
+                                    return;
+                                }
                             }
                             else if (sourceID == "5873bb7f11e3e4361b4d5f17") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
@@ -84,10 +87,10 @@ let roleHarvester = {
                                 creep.travelTo(new RoomPosition(24, 40, "W88N28"));
                                 return;
                             }
-                            else if (sourceID == "5873bb9511e3e4361b4d615c") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bbc811e3e4361b4d675b") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W87N28", true);
-                                creep.travelTo(new RoomPosition(20, 26, "W87N28"));
+                                creep.say(ICONS["moveTo"] + "W85N29", true);
+                                creep.travelTo(new RoomPosition(23, 9, "W85N29"));
                                 return;
                             }
                             else if (sourceID == "5873bbe111e3e4361b4d6ac4") { // TODO: Remove this after the source has been added to memory
