@@ -94,7 +94,7 @@ let prototypeSpawn = function() {
             energyAvaliable = SPAWN_ENERGY_CAPACITY; // start small if forced to build up from scratch
         }
         
-        let energyAvaliableOnSpawn = energyAvaliable; // to save in creep.memory.energyAvaliableOnSpawn
+        const ENERGY_AVALIABLE_ON_SPAWN = energyAvaliable; // to save in creep.memory.energyAvaliableOnSpawn
         
         if (moveRatio == 0) {
             energyAvaliable -= BODYPART_COST[MOVE]; // when move ratio is 0, remove energy from the total avaliable to account for the 1 mandatory move part that will be added that's not included in the body cost
@@ -106,6 +106,8 @@ let prototypeSpawn = function() {
             energyAvaliable -= BODYPART_COST[CARRY]; // accounts for the single carry part miners have that doesn't get multiplied dynamically with avaliable energy
         }
         
+        let bodyPartCounts = _.countBy(bodyTemplate);
+        
         const GENERAL_WORKER_CARRY_PART_CAP = (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / CARRY_CAPACITY) * 3; // Base general worker size off capacity to fill 3 extentions from a single haul
         
         let partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), GENERAL_WORKER_CARRY_PART_CAP);
@@ -116,10 +118,20 @@ let prototypeSpawn = function() {
             || roleName == "adaptable" 
             || roleName == "attacker" 
             || roleName == "powerHarvester") {
-            partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), Math.floor((MAX_CREEP_SIZE - ((moveRatio == 0) ? 1 : 0)) / bodyTemplate.length)); // go all out if we're under attack, going after a power bank or doing some ad-hoc stuff
+            partMultiplier = Math.floor(energyAvaliable / bodyCost); // go all out if we're under attack, going after a power bank or doing some ad-hoc stuff
         }
         else if (roleName == "upgrader") {
-            partMultiplier = Math.floor(Math.min(energyAvaliable, UPGRADER_ENERGY_CAP) / bodyCost);
+            if (moveRatio == 0) {
+                const TOTAL_CARRY = (bodyPartCounts[CARRY] || 1) * CARRY_CAPACITY;
+                const TICKS_TO_FILL = TOTAL_CARRY / ((bodyPartCounts[WORK] || 1) * HARVEST_POWER);
+                const TICK_TO_UPGRADE = TOTAL_CARRY / ((bodyPartCounts[WORK] || 1) * UPGRADE_CONTROLLER_POWER);
+                const TOTAL_UPGRADER_PARTS_REQUIRED = ((SOURCE_ENERGY_CAPACITY / TOTAL_CARRY) * (TICKS_TO_FILL + TICK_TO_UPGRADE)) / ENERGY_REGEN_TIME;
+                const UPGRADER_PART_MULTIPLIER_CAP = Math.ceil(TOTAL_UPGRADER_PARTS_REQUIRED / (_.get(Memory.rooms, [this.room.name, "creepMins", "upgrader"], 1) || 1));
+                partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * UPGRADER_PART_MULTIPLIER_CAP) / bodyCost);
+            }
+            else {
+                partMultiplier = Math.floor(Math.min(energyAvaliable, UPGRADER_ENERGY_CAP) / bodyCost);
+            }
         }
         else if (roleName == "claimer" 
             && _.get(Memory.rooms[this.room.name], "harvestRooms", undefined) != undefined 
@@ -131,7 +143,16 @@ let prototypeSpawn = function() {
             partMultiplier = 1; // for creeps that don't scale with energy avaliable
         }
         
-        let bodyPartCounts = _.countBy(bodyTemplate);
+        // can't MAX_CREEP_SIZE directly as we need to account for parts not included in the bodyTemplate
+        let maxCreepSize = MAX_CREEP_SIZE;
+        if (moveRatio == 0) {
+            --maxCreepSize;
+        }
+        if (roleName == "hauler" 
+            || roleName == "miner") {
+            --maxCreepSize;
+        }
+        partMultiplier = Math.min(partMultiplier, Math.floor(maxCreepSize / ((bodyTemplate.length > 0) ? bodyTemplate.length : 1))); // make sure we only don't try and make a creep with more than 50 body parts
         
         let body = [];
         body.push(_.fill(Array(partMultiplier * (bodyPartCounts[TOUGH] || 0)), TOUGH)); // add any tough parts first
@@ -176,7 +197,7 @@ let prototypeSpawn = function() {
         
         let creepMemory = {
             roomID: this.room.name 
-            , energyAvaliableOnSpawn: energyAvaliableOnSpawn 
+            , energyAvaliableOnSpawn: ENERGY_AVALIABLE_ON_SPAWN 
             , spawnTick: Game.time + (body.length * CREEP_SPAWN_TIME) - 1 // -1 because it uses the last tick to leave the spawn
             , speeds: moveSpeeds 
             , role: roleName 
