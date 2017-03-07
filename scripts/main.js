@@ -85,7 +85,7 @@ for (let roomID in Game.rooms) {
 // Setup room memory objects for owned rooms
 _.set(Memory.rooms, ["W87N29", "harvestRooms"], [
     "W88N29"
-    , "W88N28"
+    , "W89N29"
 ]);
 _.set(Memory.rooms, ["W86N29", "harvestRooms"], [
     "W86N28"
@@ -97,13 +97,12 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
 ]);
 _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
     "W87N39"
-    , "W85N39"
     , "W88N39"
 ]);
 _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     "W86N38"
-    , "W86N37"
-    , "W85N37"
+    , "W85N39"
+    , "W84N39"
 ]);
 
 /*
@@ -618,23 +617,23 @@ module.exports.loop = function () {
                     c.memory._travel = undefined;
                     c.memory._move = undefined;
                 });
-                theRoom.avoidTravelUntil = Game.time + youngestInvader.ticksToLive;
-                console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " restricting travel to room " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
+                theRoom.avoidTravelUntil = Game.time + (youngestInvader.ticksToLive || 0);
+                console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " restricting travel to room " + roomID + " for " + (youngestInvader.ticksToLive || 0) + " ticks.");
             }
             
-            if (_.some(_.get(theRoom, "sources", {"000000000000000000000000": { regenAt: Game.time + youngestInvader.ticksToLive } }), (s) => (s.regenAt < Game.time + youngestInvader.ticksToLive))) {
+            if (_.some(_.get(theRoom, "sources", {"000000000000000000000000": { regenAt: Game.time + (youngestInvader.ticksToLive || 0) } }), (s) => (s.regenAt < Game.time + (youngestInvader.ticksToLive || 0)))) {
                 _.forEach(theRoom.sources, (s,sID) => {
-                    if (s.regenAt < Game.time + youngestInvader.ticksToLive) {
-                        s.regenAt = Game.time + youngestInvader.ticksToLive;
+                    if (s.regenAt < Game.time + (youngestInvader.ticksToLive || 0)) {
+                        s.regenAt = Game.time + (youngestInvader.ticksToLive || 0);
                     }
                     let assignedCreeps = _.filter(Game.creeps, (c) => (
                         _.get(c.memory, "sourceID", undefined) == sID
                     ));
                     // TODO: Do something with assigned creeps
                 });
-                console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.");
+                console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + (youngestInvader.ticksToLive || 0) + " ticks.");
                 if (justNPCs == false) {
-                    Game.notify("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + youngestInvader.ticksToLive + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
+                    Game.notify("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + (youngestInvader.ticksToLive || 0) + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
                 }
             }
             

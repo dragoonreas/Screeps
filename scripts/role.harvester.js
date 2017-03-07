@@ -33,7 +33,7 @@ let roleHarvester = {
                     let sourceIDs = {
                         "W87N29": [
                             "5873bb7f11e3e4361b4d5f14"
-                            , "5873bb7f11e3e4361b4d5f17"
+                            , "5873bb6711e3e4361b4d5cc5"
                             , "5873bb9511e3e4361b4d6159"
                         ] 
                         , "W86N29": [
@@ -44,21 +44,20 @@ let roleHarvester = {
                         ] 
                         , "W85N23": [
                             "5873bbe111e3e4361b4d6ac4"
-                            , "5873bbc911e3e4361b4d6770"
-                            , "5873bbc911e3e4361b4d676f"
                             , "5873bbc911e3e4361b4d676e"
+                            , "5873bbc911e3e4361b4d676f"
+                            , "5873bbc911e3e4361b4d6770"
                         ]
                         , "W86N39": [
                             "5873bb9411e3e4361b4d6137"
                             , "5873bb9411e3e4361b4d6138"
-                            , "5873bbc711e3e4361b4d672e"
                             , "5873bb7e11e3e4361b4d5ef2"
                             , "5873bbaa11e3e4361b4d63cf"
                         ]
                         , "W85N38": [
                             "5873bbaa11e3e4361b4d63d2"
-                            , "5873bbaa11e3e4361b4d63d5"
-                            , "5873bbc811e3e4361b4d6735"
+                            , "5873bbc711e3e4361b4d672e"
+                            , "5873bbdf11e3e4361b4d6a6f"
                             , "5873bbc711e3e4361b4d6731"
                         ]
                     };
