@@ -77,7 +77,7 @@ for (let roomID in Game.rooms) {
         }
         else if (source.energy == 0 && source.regenAt < (Game.time + source.ticksToRegeneration)) {
             source.regenAt = Game.time + source.ticksToRegeneration;
-            console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
+            //console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
         }
     }
 }
@@ -102,7 +102,11 @@ _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
 _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     "W86N38"
     , "W85N39"
-    , "W84N39"
+]);
+_.set(Memory.rooms, ["W86N43", "harvestRooms"], [
+    "W87N43"
+    , "W87N44"
+    , "W85N45"
 ]);
 
 /*
@@ -126,10 +130,10 @@ _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
 });
 _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_WALL]: 0
-    , all: 1
+    , all: 2
 });
 _.set(Memory.rooms, ["W86N39", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
@@ -142,6 +146,13 @@ _.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+_.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 1
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -164,7 +175,7 @@ _.set(Memory.rooms, ["W87N29", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 1
+    , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W87N29", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
@@ -218,6 +229,18 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+});
+_.set(Memory.rooms, ["W86N43", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 2
+    , miner: 0//_.size(_.get(Game.rooms, ["W86N43", "minerSources"], {}))
+    , adaptable: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
 
@@ -372,7 +395,7 @@ module.exports.loop = function () {
             }
             else if (source.energy == 0 && source.regenAt < (Game.time + source.ticksToRegeneration)) {
                 source.regenAt = Game.time + source.ticksToRegeneration;
-                console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
+                //console.log("Energy source at " + JSON.stringify(source.pos) + " will regen in " + source.ticksToRegeneration + " ticks");
             }
         }
         
@@ -420,15 +443,14 @@ module.exports.loop = function () {
                 // Apply target weightings to the invaders
                 let targetWeighting = 0;
                 let bodyPartCounts = _.countBy(aPriorityTarget.body, "type");
-                if (aPriorityTarget.owner.username != "Invader" && aPriorityTarget.owner.username != "Source Keeper") { // TODO: Allow NPC weightings but make sure player creeps are prioritised first
+                if (justNPCs == true || (aPriorityTarget.owner.username != "Invader" && aPriorityTarget.owner.username != "Source Keeper")) { // Only give NPCs a weighting of more than 0 if they're the only hostiles in the room
                     targetWeighting = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "weighting"], undefined);
                     if (targetWeighting == undefined) {
                         targetWeighting = 0 + (
-                            (bodyPartCounts[ATTACK] || 0) * 5 
-                            + (bodyPartCounts[RANGED_ATTACK] || 0) * 4 
-                            + (bodyPartCounts[WORK] || 0) * 3 
-                            + (bodyPartCounts[CLAIM] || 0) * 2 
-                            + (bodyPartCounts[HEAL] || 0) * 1
+                            (bodyPartCounts[ATTACK] || 0) * 4 
+                            + (bodyPartCounts[RANGED_ATTACK] || 0) * 3 
+                            + (bodyPartCounts[WORK] || 0) * 2 
+                            + (bodyPartCounts[CLAIM] || 0) * 1
                         ); // TODO: Take into account boosted parts
                         
                         _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id], {
@@ -494,7 +516,7 @@ module.exports.loop = function () {
                     )); // TODO: Filter theRamparts variable above if avaliable instead
                     _.forEach(rampartsNearInvader, (rni) => {
                         privateRamparts[rni.id] = true; // Make ramparts near priority target private
-                        if (targetWeighting > 0 && rni.isNearTo(aPriorityTarget) == true && _.some(rampartsToUse, rni.id) == false) {
+                        if (targetWeighting > 0 && rni.pos.isNearTo(aPriorityTarget) == true && _.some(rampartsToUse, rni.id) == false) {
                             rampartsToUse.push(rni.id); // Save ID of ramparts in melee range of target
                         }
                     });
@@ -887,8 +909,8 @@ module.exports.loop = function () {
     Memory.rooms.W87N29.creepMins.adaptable = (((Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N29.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W85N23.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W86N39.creepMins.adaptable = ((Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W85N38.creepMins.adaptable = ((Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W86N39.creepMins.adaptable = (((Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) || (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W85N38.creepMins.adaptable = (((Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Spawn or renew creeps
     let nothingToSpawn = [];

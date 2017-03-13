@@ -44,6 +44,7 @@ let globals = function() {
         , attack: "\uD83D\uDDE1"
         , build: "\uD83D\uDD28"
         , repair: "\uD83D\uDD27"
+        , dismantle: "\u2692"
         , harvest: "\u26CF"
         , pickup: "\u2B07" // NOTE: Same as withdraw
         , withdraw: "\u2B07" // NOTE: Same as pickup

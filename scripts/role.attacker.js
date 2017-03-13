@@ -111,11 +111,10 @@ let roleAttacker = {
             }*/
             else {
                 creep.room.memory.creepMins.attacker = 0;
-                creep.say(ICONS["attack"] + "?", true);
+                //creep.say(ICONS["attack"] + "?", true);
+                ROLES["recyclable"].run(creep);
             }
         }
-        
-		// TODO: Recycle attacker once threat eliminated
     }
 };
 

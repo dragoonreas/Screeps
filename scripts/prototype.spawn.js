@@ -108,6 +108,20 @@ let prototypeSpawn = function() {
         
         let bodyPartCounts = _.countBy(bodyTemplate);
         
+        /*
+            Alternative equation for this part cap to try, is: Creep.carryCapacity = Room.energyCapacityAvaliable / 6
+            RCL Room.energyCapacityAvaliable    Creep.carryCapacity energyToSpawn   totalNumOfParts
+            1:  1*300+ 0* 50=     300/6=      50	  50*5=           250/5/50*4=	  4
+            2:  1*300+ 5* 50=     550/6=      91	 100*5=           500/5/50*4=	  8
+            3:  1*300+10* 50=     800/6=     133	 150*5=           750/5/50*4=	 12
+            4:  1*300+20* 50=    1300/6=     216	 250*5=          1250/5/50*4=	 20
+            5:  1*300+30* 50=    1800/6=     300	 300*5=          1500/5/50*4=	 24
+            6:  1*300+40* 50=    2300/6=     383	 400*5=          2000/5/50*4=	 32
+            7:  1*300+50*100=    5300/6=     883	 900*5=          4500/5/50*4=	 72!
+            8:  1*300+60*200=   12300/6=    2050	2050*5=         10250/5/50*4=	164!
+            
+            !: Invalid since it goes over 50 parts
+        */
         const GENERAL_WORKER_CARRY_PART_CAP = (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / CARRY_CAPACITY) * 3; // Base general worker size off capacity to fill 3 extentions from a single haul
         
         let partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), GENERAL_WORKER_CARRY_PART_CAP);
@@ -249,13 +263,25 @@ let prototypeSpawn = function() {
                 }
             }
             else if (this.room.name == "W86N39") {
-                if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
+                if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N43";
+                }
+                else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W85N38";
+                }
+                else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N39";
                 }
             }
             else if (this.room.name == "W85N38") {
-                if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N43";
+                }
+                else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N39";
+                }
+                else if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N29";
                 }
             }
         }
@@ -274,9 +300,8 @@ let prototypeSpawn = function() {
             else if (this.room.name == "W85N23") {
                 creepMemory.controllerID = "5873bbe111e3e4361b4d6ac5";
             }
-            else if (this.room.name == "W84N37") {
-                //creepMemory.controllerID = "5873bbaa11e3e4361b4d63cd";
-                creepMemory.controllerID = "5873bbc711e3e4361b4d6732";
+            else if (this.room.name == "W86N39") {
+                creepMemory.controllerID = "5873bbaa11e3e4361b4d63c3";
             }
         }
         else if (roleName == "powerHarvester") {

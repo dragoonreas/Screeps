@@ -32,6 +32,10 @@ let roleClaimer = {
                 creep.say(ICONS["moveTo"] + "W85N38", true);
                 creep.travelTo(new RoomPosition(43, 37, "W85N38"));
             }
+            else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63c3") {
+                creep.say(ICONS["moveTo"] + "W86N43", true);
+                creep.travelTo(new RoomPosition(30, 17, "W86N43"));
+            }
             else {
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
             }

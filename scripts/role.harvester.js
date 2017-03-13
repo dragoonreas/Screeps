@@ -6,7 +6,7 @@ let roleHarvester = {
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
-            creep.memory.depositeStructureID = undefined;
+            creep.memory.depositStructureID = undefined;
         }
         
         if (creep.memory.working == false) {
@@ -47,6 +47,7 @@ let roleHarvester = {
                             , "5873bbc911e3e4361b4d676e"
                             , "5873bbc911e3e4361b4d676f"
                             , "5873bbc911e3e4361b4d6770"
+                            , "5873bbc911e3e4361b4d677e"
                         ]
                         , "W86N39": [
                             "5873bb9411e3e4361b4d6137"
@@ -57,8 +58,15 @@ let roleHarvester = {
                         , "W85N38": [
                             "5873bbaa11e3e4361b4d63d2"
                             , "5873bbc711e3e4361b4d672e"
-                            , "5873bbdf11e3e4361b4d6a6f"
                             , "5873bbc711e3e4361b4d6731"
+                        ]
+                        , "W86N43": [
+                            "5873bb9311e3e4361b4d612d"
+                            , "5873bb9311e3e4361b4d612b"
+                            , "5873bbc611e3e4361b4d6715"
+                            , "5873bbc611e3e4361b4d6713"
+                            , "5873bbc611e3e4361b4d6714"
+                            , "5873bbaa11e3e4361b4d63c4"
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -80,10 +88,22 @@ let roleHarvester = {
                                     return;
                                 }
                             }
-                            else if (sourceID == "5873bb7f11e3e4361b4d5f17") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bb7f11e3e4361b4d5f14") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W88N28", true);
-                                creep.travelTo(new RoomPosition(24, 40, "W88N28"));
+                                creep.say(ICONS["moveTo"] + "W88N29", true);
+                                creep.travelTo(new RoomPosition(3, 34, "W88N29"));
+                                return;
+                            }
+                            else if (sourceID == "5873bb6711e3e4361b4d5cc5") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W89N29", true);
+                                creep.travelTo(new RoomPosition(7, 39, "W89N29"));
+                                return;
+                            }
+                            else if (sourceID == "5873bbab11e3e4361b4d6400") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W86N28", true);
+                                creep.travelTo(new RoomPosition(18, 8, "W86N28"));
                                 return;
                             }
                             else if (sourceID == "5873bbc811e3e4361b4d675b") { // TODO: Remove this after the source has been added to memory
@@ -98,22 +118,16 @@ let roleHarvester = {
                                 creep.travelTo(new RoomPosition(3, 3, "W84N23"));
                                 return;
                             }
-                            else if (sourceID == "5873bbc911e3e4361b4d6770") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bbc911e3e4361b4d676e") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
                                 creep.say(ICONS["moveTo"] + "W85N25", true);
-                                creep.travelTo(new RoomPosition(32, 37, "W85N25"));
+                                creep.travelTo(new RoomPosition(4, 8, "W85N25"));
                                 return;
                             }
                             else if (sourceID == "5873bb9411e3e4361b4d6137") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
                                 creep.say(ICONS["moveTo"] + "W87N39", true);
                                 creep.travelTo(new RoomPosition(34, 19, "W87N39"));
-                                return;
-                            }
-                            else if (sourceID == "5873bbc711e3e4361b4d672e") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W85N39", true);
-                                creep.travelTo(new RoomPosition(21, 12, "W85N39"));
                                 return;
                             }
                             else if (sourceID == "5873bb7e11e3e4361b4d5ef2") { // TODO: Remove this after the source has been added to memory
@@ -128,16 +142,28 @@ let roleHarvester = {
                                 creep.travelTo(new RoomPosition(8, 12, "W86N38"));
                                 return;
                             }
-                            else if (sourceID == "5873bbaa11e3e4361b4d63d5") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bbc711e3e4361b4d672e") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W86N37", true);
-                                creep.travelTo(new RoomPosition(11, 43, "W86N37"));
+                                creep.say(ICONS["moveTo"] + "W85N39", true);
+                                creep.travelTo(new RoomPosition(21, 12, "W85N39"));
                                 return;
                             }
-                            else if (sourceID == "5873bbc811e3e4361b4d6735") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bb9311e3e4361b4d612d") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W85N37", true);
-                                creep.travelTo(new RoomPosition(32, 36, "W85N37"));
+                                creep.say(ICONS["moveTo"] + "W87N43", true);
+                                creep.travelTo(new RoomPosition(18, 36, "W87N43"));
+                                return;
+                            }
+                            else if (sourceID == "5873bb9311e3e4361b4d612b") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W87N44", true);
+                                creep.travelTo(new RoomPosition(4, 35, "W87N44"));
+                                return;
+                            }
+                            else if (sourceID == "5873bbc611e3e4361b4d6715") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W85N45", true);
+                                creep.travelTo(new RoomPosition(17, 41, "W85N45"));
                                 return;
                             }
                         }
@@ -193,10 +219,10 @@ let roleHarvester = {
                 creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
             }
             else {
-                let structure = Game.getObjectById(creep.memory.depositeStructureID);
+                let structure = Game.getObjectById(creep.memory.depositStructureID);
                 if (structure == undefined || structure.energy == structure.energyCapacity) {
-                    creep.memory.depositeStructureID = undefined;
-                    structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    creep.memory.depositStructureID = undefined;
+                    structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                         filter: (s) => {
                             return (s.structureType == STRUCTURE_EXTENSION 
                                 || s.structureType == STRUCTURE_SPAWN) 
@@ -204,7 +230,7 @@ let roleHarvester = {
                         }
                     });
                     if (structure == undefined) {
-                        structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                        structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                             filter: (s) => {
                                 return s.structureType == STRUCTURE_TOWER 
                                     && s.energy < s.energyCapacity;
@@ -212,7 +238,7 @@ let roleHarvester = {
                         });
                     }
                     if (structure != undefined) {
-                        creep.memory.depositeStructureID = structure.id;
+                        creep.memory.depositStructureID = structure.id;
                     }
                 }
                 

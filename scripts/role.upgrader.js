@@ -28,12 +28,14 @@ let roleUpgrader = {
                 case "W85N23": source = Game.getObjectById("5873bbc911e3e4361b4d677d"); break;
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63ce"); break;
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6733"); break;
+                case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c2"); break;
             }
             
             let err = ERR_INVALID_TARGET;
             if (source != undefined) {
                 err = creep.harvest(source);
             }
+            
             let theTerminal = creep.room.terminal;
             let theStorage = creep.room.storage;
             if (err == ERR_NOT_IN_RANGE) {
