@@ -99,7 +99,7 @@ module.exports = function(globalOpts = {}){
                 ignoreCreeps: true,
                 range: 1,
                 maxOps: gOpts.maxOps,
-                obstacles: [],
+                obstacles: []
             });
             let origPos = (origin.pos || origin), destPos = (destination.pos || destination);
             let allowedRooms;
@@ -155,8 +155,8 @@ module.exports = function(globalOpts = {}){
             return PathFinder.search(origPos, { pos: destPos, range: options.range }, {
                 maxOps: options.maxOps,
                 plainCost: options.ignoreRoads ? 1 : 2,
-                roomCallback: callback
-                swampCost: options.ignoreRoads ? 5 : 10,
+                roomCallback: callback,
+                swampCost: options.ignoreRoads ? 5 : 10
             });
         }
         travelTo(creep, destination, options = {}) {
