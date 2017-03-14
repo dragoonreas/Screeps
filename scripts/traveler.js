@@ -54,8 +54,9 @@ module.exports = function(globalOpts = {}){
                             return outcome;
                         }
                     }
-                    if (Game.map.getRoomLinearDistance(origin, roomName) > options.restrictDistance)
+                    if (Game.map.getRoomLinearDistance(origin, roomName) > options.restrictDistance) {
                         return false;
+                    }
                     let parsed;
                     if (options.preferHighway) {
                         parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
@@ -68,8 +69,11 @@ module.exports = function(globalOpts = {}){
                         if (!parsed) {
                             parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
                         }
-                        let isSK = ((parsed[1] % 10 === 4) || (parsed[1] % 10 === 6)) &&
-                            ((parsed[2] % 10 === 4) || (parsed[2] % 10 === 6));
+                        let fMod = parsed[1] % 10;
+                        let sMod = parsed[2] % 10;
+                        let isSK = !(fMod === 5 && sMod === 5) &&
+                        ((fMod >= 4) && (fMod <= 6)) &&
+                        ((sMod >= 4) && (sMod <= 6));
                         if (isSK) {
                             return 10;
                         }
@@ -78,6 +82,7 @@ module.exports = function(globalOpts = {}){
                         roomName !== destination && roomName !== origin) {
                         return Number.POSITIVE_INFINITY;
                     }
+                    return 2.5;
                 }
             });
             if (!_.isArray(ret)) {
@@ -93,8 +98,8 @@ module.exports = function(globalOpts = {}){
             _.defaults(options, {
                 ignoreCreeps: true,
                 range: 1,
-                obstacles: [],
                 maxOps: gOpts.maxOps,
+                obstacles: [],
             });
             let origPos = (origin.pos || origin), destPos = (destination.pos || destination);
             let allowedRooms;
@@ -118,8 +123,9 @@ module.exports = function(globalOpts = {}){
                     return false;
                 }
                 let room = Game.rooms[roomName];
-                if (!room)
+                if (!room) {
                     return;
+                }
                 let matrix;
                 if (options.ignoreStructures) {
                     matrix = new PathFinder.CostMatrix();
@@ -133,7 +139,7 @@ module.exports = function(globalOpts = {}){
                 else {
                     matrix = this.getCreepMatrix(room);
                 }
-                if (room.hasHostileCreep == true && !options.ignoreHostileCreeps) {
+                if (room.hasHostileCreep == true && !options.ignoreHostileCreeps) { // TODO: Stop overwriting structures and creeps
                     for (let dangerZone of room.dangerZones) {
                         matrix.set(dangerZone.x, dangerZone.y, 0xfe); // NOTE: Don't use 0xff since that stops creeps trying to escape when they're surrounded by danger zones
                     }
@@ -147,10 +153,10 @@ module.exports = function(globalOpts = {}){
                 return matrix;
             };
             return PathFinder.search(origPos, { pos: destPos, range: options.range }, {
-                swampCost: options.ignoreRoads ? 5 : 10,
-                plainCost: options.ignoreRoads ? 1 : 2,
                 maxOps: options.maxOps,
+                plainCost: options.ignoreRoads ? 1 : 2,
                 roomCallback: callback
+                swampCost: options.ignoreRoads ? 5 : 10,
             });
         }
         travelTo(creep, destination, options = {}) {
@@ -176,23 +182,23 @@ module.exports = function(globalOpts = {}){
                 return ERR_INVALID_ARGS;
             }
             // manage case where creep is nearby destination
-            let rangeToDestination = creep.pos.getRangeTo(destPos);
-            if (rangeToDestination <= 1) {
-                let outcome = OK;
-                if (rangeToDestination === 1) {
-                    outcome = creep.move(creep.pos.getDirectionTo(destPos));
+            let rangeToDestination = creepPos.getRangeTo(destPos);
+            if (rangeToDestination <= options.range) {
+                return OK;
+            }
+            else if (rangeToDestination <= 1) {
+                if (rangeToDestination === 1 && !options.range) {
+                    if (options.returnData) {
+                        options.returnData.nextPos = destPos;
+                    }
+                    return creep.move(creepPos.getDirectionTo(destPos));
                 }
-                if (options.returnPosition && outcome === OK) {
-                    return destPos;
-                }
-                else {
-                    return outcome;
-                }
+                return OK;
             }
             // check if creep is stuck
             let hasMoved = true;
             if (travelData.prev) {
-                travelData.prev = new RoomPosition(travelData.prev.x, travelData.prev.y, travelData.prev.roomName);
+                travelData.prev = Traveler.initPosition(travelData.prev);
                 if (creepPos.inRangeTo(travelData.prev, 0)) {
                     hasMoved = false;
                     travelData.stuck++;
@@ -202,20 +208,9 @@ module.exports = function(globalOpts = {}){
                 }
             }
             // handle case where creep is stuck
-            if (travelData.stuck >= gOpts.defaultStuckValue) {
-                if (options.ignoreStuck) {
-                    if (options.returnPosition && travelData.path && travelData.path.length > 0) {
-                        let direction = parseInt(travelData.path[0]);
-                        return Traveler.positionAtDirection(creepPos, direction);
-                    }
-                    else {
-                        return OK;
-                    }
-                }
-                else {
-                    options.ignoreCreeps = false;
-                    delete travelData.path;
-                }
+            if (travelData.stuck >= gOpts.defaultStuckValue && !options.ignoreStuck) {
+                options.ignoreCreeps = false;
+                delete travelData.path;
             }
             // handle case where creep wasn't traveling last tick and may have moved, but destination is still the same
             if (Game.time - travelData.tick > 1 && hasMoved) {
@@ -231,9 +226,9 @@ module.exports = function(globalOpts = {}){
                 options.ignoreCreeps = false; // TODO: Find a way to use stuck detection while resetting the path each tick and ignoring creeps
                 delete travelData.path;
             }
-            let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creep.pos.roomName);
+            let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creepPos.roomName);
             let isPortalRoom = (parsed[1] % 10 === 5) || (parsed[2] % 10 === 5);
-            if (isPortalRoom && _.get(travelData, ["start", "roomName"], undefined) != creep.pos.roomName) {
+            if (isPortalRoom && _.get(travelData, ["start", "roomName"], undefined) != creepPos.roomName) {
                 let portals = creep.room.find(FIND_STRUCTURES, (s) => (
                     s.structureType == STRUCTURE_PORTAL
                 ));
@@ -246,9 +241,10 @@ module.exports = function(globalOpts = {}){
             }
             // pathfinding
             if (!travelData.path) {
-                if (creep.spawning)
+                if (creep.spawning) {
                     return ERR_BUSY;
-                travelData.start = creep.pos;
+                }
+                travelData.start = creepPos;
                 travelData.dest = destPos;
                 travelData.prev = undefined;
                 let cpu = Game.cpu.getUsed();
@@ -256,7 +252,7 @@ module.exports = function(globalOpts = {}){
                 travelData.cpu += (Game.cpu.getUsed() - cpu);
                 travelData.count++;
                 if (travelData.cpu > gOpts.reportThreshold) {
-                    //console.log(`TRAVELER: heavy cpu use: ${creep.name}, cpu: ${_.round(travelData.cpu, 2)}, pos: ${creep.pos}`);
+                    //console.log(`TRAVELER: heavy cpu use: ${creep.name}, cpu: ${_.round(travelData.cpu, 2)}, origin: ${creepPos}, dest: ${destination.pos}`);
                 }
                 if (ret.incomplete) {
                     //console.log(`TRAVELER: incomplete path for ${creep.name}`);
@@ -271,7 +267,7 @@ module.exports = function(globalOpts = {}){
                         //console.log(`attempting path ignoring hostile creeps was ${ret.incomplete ? "not" : ""} successful`);
                     }
                 }
-                travelData.path = Traveler.serializePath(creep.pos, ret.path);
+                travelData.path = Traveler.serializePath(creepPos, ret.path);
                 travelData.stuck = 0;
             }
             if (!travelData.path || travelData.path.length === 0) {
@@ -281,22 +277,12 @@ module.exports = function(globalOpts = {}){
             if (travelData.prev && travelData.stuck === 0) {
                 travelData.path = travelData.path.substr(1);
             }
-            travelData.prev = creep.pos;
-            let nextDirection = parseInt(travelData.path[0]);
-            let outcome = creep.move(nextDirection);
-            if (!options.returnPosition || outcome !== OK) {
-                return outcome;
+            travelData.prev = creepPos;
+            let nextDirection = parseInt(travelData.path[0], 10);
+            if (options.returnData) {
+                options.returnData.nextPos = Traveler.positionAtDirection(creepPos, nextDirection);
             }
-            else {
-                return Traveler.positionAtDirection(creep.pos, nextDirection);
-            }
-        }
-        refreshMatrices() {
-            if (Game.time !== this.currentTick) {
-                this.currentTick = Game.time;
-                this.structureMatrixCache = {};
-                this.creepMatrixCache = {};
-            }
+            return creep.move(nextDirection);
         }
         getStructureMatrix(room) {
             this.refreshMatrices();
@@ -305,6 +291,9 @@ module.exports = function(globalOpts = {}){
                 this.structureMatrixCache[room.name] = Traveler.addStructuresToMatrix(room, matrix, 1);
             }
             return this.structureMatrixCache[room.name];
+        }
+        static initPosition(pos) {
+            return new RoomPosition(pos.x, pos.y, pos.roomName);
         }
         static addStructuresToMatrix(room, matrix, roadCost) {
             for (let structure of room.find(FIND_STRUCTURES)) {
@@ -355,6 +344,13 @@ module.exports = function(globalOpts = {}){
                 lastPosition = position;
             }
             return serializedPath;
+        }
+        refreshMatrices() {
+            if (Game.time !== this.currentTick) {
+                this.currentTick = Game.time;
+                this.structureMatrixCache = {};
+                this.creepMatrixCache = {};
+            }
         }
         static positionAtDirection(origin, direction) {
             let offsetX = [0, 0, 1, 1, 1, 0, -1, -1, -1];
