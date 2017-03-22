@@ -214,21 +214,23 @@ let roleHarvester = {
             }
         }
         else {
-            if (creep.room.name != creep.memory.roomID && _.isString(creep.memory.roomID) == true) {
+            if (_.isString(creep.memory.roomID) == true && creep.room.name != creep.memory.roomID) {
                 creep.say(ICONS["moveTo"] + creep.memory.roomID, true);
                 creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
             }
             else {
                 let structure = Game.getObjectById(creep.memory.depositStructureID);
                 if (structure == undefined || structure.energy == structure.energyCapacity) {
-                    creep.memory.depositStructureID = undefined;
-                    structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                        filter: (s) => {
-                            return (s.structureType == STRUCTURE_EXTENSION 
-                                || s.structureType == STRUCTURE_SPAWN) 
-                                && s.energy < s.energyCapacity;
-                        }
-                    });
+                    structure = undefined;
+                    if (creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
+                        structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                            filter: (s) => {
+                                return (s.structureType == STRUCTURE_EXTENSION 
+                                    || s.structureType == STRUCTURE_SPAWN) 
+                                    && s.energy < s.energyCapacity;
+                            }
+                        });
+                    }
                     if (structure == undefined) {
                         structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                             filter: (s) => {
@@ -237,9 +239,7 @@ let roleHarvester = {
                             }
                         });
                     }
-                    if (structure != undefined) {
-                        creep.memory.depositStructureID = structure.id;
-                    }
+                    creep.memory.depositStructureID = _.get(structure, "id", undefined);
                 }
                 
                 let theTerminal = creep.room.terminal;

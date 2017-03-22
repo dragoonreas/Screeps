@@ -90,7 +90,7 @@ let prototypeSpawn = function() {
         let bodyCost = _.sum(bodyTemplate, (bp) => (BODYPART_COST[bp]));
         
         let energyAvaliable = this.room.energyCapacityAvailable;
-        if ((Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) {
+        if ((Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) { // TODO: Allow harvesters to scale gradually instead of jump between lowest to maximum scale
             energyAvaliable = SPAWN_ENERGY_CAPACITY; // start small if forced to build up from scratch
         }
         
@@ -244,8 +244,8 @@ let prototypeSpawn = function() {
                 }
             }
             else if (this.room.name == "W86N29") {
-                if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W85N23";
+                if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W87N29";
                 }
                 else if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W85N23";

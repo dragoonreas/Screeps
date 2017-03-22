@@ -123,8 +123,8 @@ _.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
 });
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -151,10 +151,10 @@ _.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
 });
 _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
-    , all: 1
+    , all: 2
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -199,7 +199,7 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 2
+    , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W85N23", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
@@ -235,7 +235,7 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 2
+    , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N43", "minerSources"], {}))
     , adaptable: 0
     , scout: 0
@@ -324,12 +324,16 @@ module.exports.loop = function () {
                 }
             }
             let ticksSinceBirth = Game.time - (creepMemory.spawnTick || (Game.time - (creepMemory.role == "claimer" ? CREEP_CLAIM_LIFE_TIME : CREEP_LIFE_TIME)));
-            console.log("Expired " + ticksSinceBirth.toLocaleString() + " tick, " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + creepName);
-            delete Memory.creeps[creepName];
-            
-            if (checkingForDrops == false) {
-                checkingForDrops = true;
+            if (ticksSinceBirth < 0) {
+                console.log("Failed to spawn " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + creepName);
             }
+            else {
+                console.log("Expired " + ticksSinceBirth.toLocaleString() + " tick, " + creepMemory.roomID + " " + creepMemory.role + " (" + currentSpawnedRole + "/" + minimumSpawnedRole + "): " + creepName);
+                if (checkingForDrops == false) {
+                    checkingForDrops = true;
+                }
+            }
+            delete Memory.creeps[creepName];
         }
     }
     
@@ -833,7 +837,7 @@ module.exports.loop = function () {
                         filter: (c) => (c.hits < c.hitsMax
                     )}); // TODO: Also heal ally creeps
                     if (target != undefined) {
-                        tower.heal(target);
+                        tower.heal(target); // TODO: Maybe prioritise healing creeps before structures?
                     }
                 }
             }
@@ -909,8 +913,8 @@ module.exports.loop = function () {
     Memory.rooms.W87N29.creepMins.adaptable = (((Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N29.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W85N23.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W86N39.creepMins.adaptable = (((Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) || (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W85N38.creepMins.adaptable = (((Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W86N39.creepMins.adaptable = (((Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) || (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W85N38.creepMins.adaptable = (((Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Spawn or renew creeps
     let nothingToSpawn = [];
@@ -984,13 +988,14 @@ module.exports.loop = function () {
         }
     });
     
-    if (Memory.MonCPU == true) { console.log("ramparts>screepsPlus:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
-    
-    screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
-    
     // For Screeps Visual: https://github.com/screepers/screeps-visual
     //visualiser.movePaths();
     //RawVisual.commit();
+    
+    if (Memory.MonCPU == true) { console.log("ramparts>screepsPlus:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+    
+    screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
+    Memory.stats.cpu.used = Game.cpu.getUsed();
     
     if (Memory.MonCPU == true) { console.log("screepsPlus>end:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 }

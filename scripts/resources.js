@@ -37,14 +37,7 @@ function count_source_containers(room) {
 
     source_container_search:
     for (let source of room_sources) {
-        let nearby_containers =
-            source.pos.findInRange(FIND_STRUCTURES, 2, { filter: s => s.structureType == STRUCTURE_CONTAINER });
-        // console.log(room.name + ', source: ' + source.id + ', nearby containers: ' + nearby_containers.length);
-        for (let nc of nearby_containers) {
-            if (nc.pos.getRangeTo(source) >= 2.0) {
-                // We can't say 1.999 above I don't think, in the findInRange, so double check.
-                continue;
-            }
+        if (source.container != undefined) {
             retval++;
         } // nearby_containers
     } // room_sources

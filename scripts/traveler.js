@@ -139,9 +139,18 @@ module.exports = function(globalOpts = {}){
                 else {
                     matrix = this.getCreepMatrix(room);
                 }
-                if (room.hasHostileCreep == true && !options.ignoreHostileCreeps) { // TODO: Stop overwriting structures and creeps
+                for (let y = 0; y < 50; ++y) {
+                    for (let x = 0; x < 50; x += ((y % 49 == 0) ? 1 : 49)) {
+                        if (matrix.get(x, y) < 0xff) {
+                            matrix.set(x, y, 0x0b);
+                        }
+                    }
+                }
+                if (room.hasHostileCreep == true && !options.ignoreHostileCreeps) {
                     for (let dangerZone of room.dangerZones) {
-                        matrix.set(dangerZone.x, dangerZone.y, 0xfe); // NOTE: Don't use 0xff since that stops creeps trying to escape when they're surrounded by danger zones
+                        if (matrix.get(dangerZone.x, dangerZone.y) < 0xfe) {
+                            matrix.set(dangerZone.x, dangerZone.y, 0xfe); // NOTE: Don't use 0xff since that stops creeps trying to escape when they're surrounded by danger zones
+                        }
                     }
                 }
                 for (let obstacle of options.obstacles) {
@@ -162,7 +171,7 @@ module.exports = function(globalOpts = {}){
         travelTo(creep, destination, options = {}) {
             // register hostile rooms entered
             let creepPos = creep.pos, destPos = (destination.pos || destination);
-            if (_.get(creep.room, ["controller", "owner"], undefined) && !creep.room.controller.my && !_.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade"]), creep.room.controller.owner.username)) {
+            if (_.get(creep.room, ["controller", "owner"], undefined) && !creep.room.controller.my && !_.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), creep.room.controller.owner.username)) {
                 if (_.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0) < Game.time && creep.room.controller.level > 1) {
                     console.log("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                     Game.notify("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
@@ -314,10 +323,10 @@ module.exports = function(globalOpts = {}){
                 }
             }
             for (let site of room.find(FIND_CONSTRUCTION_SITES)) {
-                if (site.my == true || site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD || site.structureType === STRUCTURE_WALL) { // try not to block own (or possibly own) construction sites
-                    matrix.set(site.pos.x, site.pos.y, 0x06);
+                if ((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == false) || site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) { // try not to block own (or possibly own) construction sites
+                    matrix.set(site.pos.x, site.pos.y, 0x0b);
                 }
-                else if (_.includes(Memory.nonAgressivePlayers, site.owner.username)) { // ensure we don't step on an ally construction site
+                else if (site.my == true || _.includes(Memory.nonAgressivePlayers, site.owner.username)) { // ensure we don't step on an ally construction site
                     matrix.set(site.pos.x, site.pos.y, 0xff);
                 }
             }

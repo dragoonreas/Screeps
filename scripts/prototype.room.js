@@ -45,7 +45,7 @@ let prototypeRoom = function() {
                         , reservation: theController.reservation // TODO: Change reservation.ticksToEnd to reservation.endsAt
                         , level: theController.level 
                         , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
-                        , sameModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
+                        , safeModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
                         , sign: theController.sign
                     });
                 }

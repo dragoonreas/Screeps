@@ -7,7 +7,12 @@ let roleRecyclable = {
             let theSpawns = _.filter(Game.spawns, (s) => (
                 s.room.name == _.get(Game.rooms, creep.memory.roomID, creep.room).name
             ));
-            theSpawn = creep.pos.findClosestByRange(theSpawns);
+            if (recycleContainer != undefined) {
+                theSpawn = recycleContainer.pos.findInRange(theSpawns, 1);
+            }
+            if (theSpawn == undefined) {
+                theSpawn = creep.pos.findClosestByRange(theSpawns);
+            }
             if (theSpawn != undefined) {
                 creep.memory.recycleSpawnID = theSpawn.id;
             }
@@ -26,7 +31,7 @@ let roleRecyclable = {
                 break;
             }
         }
-        else if (recycleContainer != undefined && creep.pos.isEqualTo(recycleContainer) == false) {
+        else if (recycleContainer != undefined && theSpawn != undefined && recycleContainer.pos.isNearTo(theSpawn) && creep.pos.isEqualTo(recycleContainer) == false) {
             creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTAINER], true);
             creep.travelTo(recycleContainer);
 		}
