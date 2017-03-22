@@ -133,7 +133,7 @@ _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_WALL]: 0
-    , all: 2
+    , all: 1
 });
 _.set(Memory.rooms, ["W86N39", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
@@ -151,10 +151,10 @@ _.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
 });
 _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
-    , all: 2
+    , all: 1
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;

@@ -128,7 +128,7 @@ module.exports = function(globalOpts = {}){
                 }
                 let matrix;
                 if (options.ignoreStructures) {
-                    matrix = new PathFinder.CostMatrix();
+                    matrix = this.getBorderMatrix().clone();
                     if (!options.ignoreCreeps) {
                         Traveler.addCreepsToMatrix(room, matrix);
                     }
@@ -138,13 +138,6 @@ module.exports = function(globalOpts = {}){
                 }
                 else {
                     matrix = this.getCreepMatrix(room);
-                }
-                for (let y = 0; y < 50; ++y) {
-                    for (let x = 0; x < 50; x += ((y % 49 == 0) ? 1 : 49)) {
-                        if (matrix.get(x, y) < 0xff) {
-                            matrix.set(x, y, 0x0b);
-                        }
-                    }
                 }
                 if (room.hasHostileCreep == true && !options.ignoreHostileCreeps) {
                     for (let dangerZone of room.dangerZones) {
@@ -296,8 +289,7 @@ module.exports = function(globalOpts = {}){
         getStructureMatrix(room) {
             this.refreshMatrices();
             if (!this.structureMatrixCache[room.name]) {
-                let matrix = new PathFinder.CostMatrix();
-                this.structureMatrixCache[room.name] = Traveler.addStructuresToMatrix(room, matrix, 1);
+                this.structureMatrixCache[room.name] = Traveler.addStructuresToMatrix(room, this.getBorderMatrix().clone(), 1);
             }
             return this.structureMatrixCache[room.name];
         }
@@ -314,7 +306,7 @@ module.exports = function(globalOpts = {}){
                 else if (structure instanceof StructureRoad) {
                     matrix.set(structure.pos.x, structure.pos.y, roadCost);
                 }
-                else if (structure instanceof StructurePortal) { // Only go through portals if we absolutly must (i.e. if the destination is set to it)
+                else if (structure instanceof StructurePortal && matrix.get(structure.pos.x, structure.pos.y) < 0xfe) { // Only go through portals if we absolutly must (i.e. if the destination is set to it)
                     matrix.set(structure.pos.x, structure.pos.y, 0xfe);
                 }
                 else if (structure.structureType !== STRUCTURE_CONTAINER) {
@@ -323,7 +315,7 @@ module.exports = function(globalOpts = {}){
                 }
             }
             for (let site of room.find(FIND_CONSTRUCTION_SITES)) {
-                if ((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == false) || site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) { // try not to block own (or possibly own) construction sites
+                if (((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == false) || site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) && matrix.get(site.pos.x, site.pos.y) < 0xfe) { // try not to block own (or possibly own) construction sites
                     matrix.set(site.pos.x, site.pos.y, 0x0b);
                 }
                 else if (site.my == true || _.includes(Memory.nonAgressivePlayers, site.owner.username)) { // ensure we don't step on an ally construction site
@@ -341,6 +333,23 @@ module.exports = function(globalOpts = {}){
         }
         static addCreepsToMatrix(room, matrix) {
             room.find(FIND_CREEPS).forEach((creep) => matrix.set(creep.pos.x, creep.pos.y, 0xff));
+            return matrix;
+        }
+        getBorderMatrix() {
+            if (!this.borderMatrixCache) {
+                let matrix = new PathFinder.CostMatrix();
+                this.borderMatrixCache = Traveler.addBorderToMatrix(matrix);
+            }
+            return this.borderMatrixCache;
+        }
+        static addBorderToMatrix(matrix) {
+            for (let y = 0; y < 50; ++y) {
+                for (let x = 0; x < 50; x += ((y % 49 == 0) ? 1 : 49)) {
+                    if (matrix.get(x, y) < 0x03) {
+                        matrix.set(x, y, 0x03);
+                    }
+                }
+            }
             return matrix;
         }
         static serializePath(startPos, path) {

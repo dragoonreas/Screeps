@@ -8,7 +8,7 @@ let roleRecyclable = {
                 s.room.name == _.get(Game.rooms, creep.memory.roomID, creep.room).name
             ));
             if (recycleContainer != undefined) {
-                theSpawn = recycleContainer.pos.findInRange(theSpawns, 1);
+                theSpawn = _.first(recycleContainer.pos.findInRange(theSpawns, 1));
             }
             if (theSpawn == undefined) {
                 theSpawn = creep.pos.findClosestByRange(theSpawns);
