@@ -128,7 +128,7 @@ module.exports = function(globalOpts = {}){
                 }
                 let matrix;
                 if (options.ignoreStructures) {
-                    matrix = this.getBorderMatrix().clone();
+                    matrix = this.getBorderMatrix(room).clone();
                     if (!options.ignoreCreeps) {
                         Traveler.addCreepsToMatrix(room, matrix);
                     }
@@ -289,7 +289,7 @@ module.exports = function(globalOpts = {}){
         getStructureMatrix(room) {
             this.refreshMatrices();
             if (!this.structureMatrixCache[room.name]) {
-                this.structureMatrixCache[room.name] = Traveler.addStructuresToMatrix(room, this.getBorderMatrix().clone(), 1);
+                this.structureMatrixCache[room.name] = Traveler.addStructuresToMatrix(room, this.getBorderMatrix(room).clone(), 1);
             }
             return this.structureMatrixCache[room.name];
         }
@@ -335,17 +335,25 @@ module.exports = function(globalOpts = {}){
             room.find(FIND_CREEPS).forEach((creep) => matrix.set(creep.pos.x, creep.pos.y, 0xff));
             return matrix;
         }
-        getBorderMatrix() {
-            if (!this.borderMatrixCache) {
+        getBorderMatrix(room) {
+            if (_.get(this, ["borderMatrixCache", room.name], undefined) == undefined) {
                 let matrix = new PathFinder.CostMatrix();
-                this.borderMatrixCache = Traveler.addBorderToMatrix(matrix);
+                _.set(this, ["borderMatrixCache", room.name], Traveler.addBorderToMatrix(room, matrix));
             }
-            return this.borderMatrixCache;
+            return this.borderMatrixCache[room.name];
         }
-        static addBorderToMatrix(matrix) {
-            for (let y = 0; y < 50; ++y) {
-                for (let x = 0; x < 50; x += ((y % 49 == 0) ? 1 : 49)) {
-                    if (matrix.get(x, y) < 0x03) {
+        static addBorderToMatrix(room, matrix) {
+            let exits = Game.map.describeExits(room.name);
+            if (exits == undefined) {
+                return matrix;
+            }
+            let top = ((_.get(exits, TOP, undefined) == undefined) ? 1 : 0);
+            let right = ((_.get(exits, RIGHT, undefined) == undefined) ? 48 : 49);
+            let bottom = ((_.get(exits, BOTTOM, undefined) == undefined) ? 48 : 49);
+            let left = ((_.get(exits, LEFT, undefined) == undefined) ? 1 : 0);
+            for (let y = top; y <= bottom; ++y) {
+                for (let x = left; x <= right; x += ((y % 49 == 0) ? 1 : 49)) {
+                    if (matrix.get(x, y) < 0x03 && Game.map.getTerrainAt(x, y, room.name) != "wall") {
                         matrix.set(x, y, 0x03);
                     }
                 }
