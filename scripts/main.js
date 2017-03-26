@@ -115,7 +115,7 @@ _.set(Memory.rooms, ["W86N43", "harvestRooms"], [
     Also be sure to use for...of instead of for..in where their order is important
 */
 _.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
@@ -129,23 +129,23 @@ _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["W86N39", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 2
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
+    [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -404,10 +404,18 @@ module.exports.loop = function () {
         }
         
         // TODO: Check for nukes and make sure only 1 notification is sent (for the lifetime of that nuke) when the nuke is found
+        
+		let towers = theRoom.find(FIND_MY_STRUCTURES, {
+            filter: (s) => (
+                s.structureType == STRUCTURE_TOWER 
+				&& s.energy >= TOWER_ENERGY_COST 
+                && s.isActive() == true
+        )});
 		
         let mayHaveRamparts = (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], (v) => (v > 0)) == false);
         
         let justNPCs = undefined;
+        let noHealers = undefined;
         
         let priorityTargets = undefined;
         let priorityTarget = undefined;
@@ -423,6 +431,7 @@ module.exports.loop = function () {
             }
 			
 			justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
+			noHealers = (_.any(Game.creeps, (c) => (c.getActiveBodyparts(HEAL) > 0)) == false);
 			
             /*
                 NOTE:
@@ -585,9 +594,14 @@ module.exports.loop = function () {
             
             priorityTarget = Game.getObjectById(priorityTargetID); // This target will be focused on by towers and attacker creeps
             
-            // Spawn one melee attacker per rampart in melee range of a priority target
+            // Spawn one melee attacker per rampart in melee range of a priority target, if the towers may not be able to handle it
             if (theRoom.memory.creepMins != undefined) {
-                theRoom.memory.creepMins.attacker = rampartsToUse.length;
+                if (noHealers == false || towers.length == 0) {
+                    theRoom.memory.creepMins.attacker = rampartsToUse.length;
+                }
+                else {
+                    theRoom.memory.creepMins.attacker = 0;
+                }
             }
             
             // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
@@ -797,12 +811,6 @@ module.exports.loop = function () {
         // TODO: Else case for unassigning dropped resources from creeps in a room when it's unsafe to try and collect them
         
         // Run towers in the room
-		let towers = theRoom.find(FIND_MY_STRUCTURES, {
-            filter: (s) => (
-                s.structureType == STRUCTURE_TOWER 
-				&& s.energy >= TOWER_ENERGY_COST 
-                && s.isActive() == true
-        )});
 		for (let towerID in towers) {
             let tower = towers[towerID];
             
