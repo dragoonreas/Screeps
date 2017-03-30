@@ -11,7 +11,7 @@ let roleHarvester = {
         
         if (creep.memory.working == false) {
             let source = Game.getObjectById(creep.memory.sourceID);
-            if (source == undefined || source.energy == 0) {
+            if (source == undefined || source.energy == 0 || _.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas" || _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") != "dragoonreas") {
                 if (source != undefined) {
                     creep.memory.sourceID = undefined;
                 }
@@ -19,7 +19,7 @@ let roleHarvester = {
                 let sourceMem = Memory.sources[creep.memory.sourceID];
                 if (sourceMem != undefined && sourceMem.regenAt <= Game.time && creep.room.name != sourceMem.pos.roomName) {
                     creep.say(ICONS["moveTo"] + sourceMem.pos.roomName, true);
-                    creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
+                    creep.travelTo(_.create(RoomPosition.prototype, sourceMem.pos));
                     return;
                 }
                 else {
@@ -73,19 +73,29 @@ let roleHarvester = {
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);
                         if (source != undefined) {
-                            if (source.regenAt <= Game.time) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
-                                creep.memory.sourceID = sourceID;
-                                break;
+                            if (_.get(source.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" && _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") == "dragoonreas") {
+                                if (source.regenAt <= Game.time) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
+                                    creep.memory.sourceID = sourceID;
+                                    break;
+                                }
+                            }
+                            else {
+                                // TODO: Set Source.regenAt to Source.room.controller.reservation.ticksToEnd or Source.room.contoller.ticksToDowngrade
                             }
                         }
                         else {
                             sourceMem = Memory.sources[sourceID];
                             if (sourceMem != undefined) {
-                                if (sourceMem.regenAt <= Game.time) {
-                                    creep.memory.sourceID = sourceID;
-                                    creep.say(ICONS["moveTo"] + sourceMem.pos.roomName, true);
-                                    creep.travelTo(new RoomPosition(sourceMem.pos.x, sourceMem.pos.y, sourceMem.pos.roomName));
-                                    return;
+                                if (_.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "owner", "username"], "dragoonreas") == "dragoonreas" && _.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "reservation", "owner"], "dragoonreas") == "dragoonreas") {
+                                    if (sourceMem.regenAt <= Game.time) {
+                                        creep.memory.sourceID = sourceID;
+                                        creep.say(ICONS["moveTo"] + sourceMem.pos.roomName, true);
+                                        creep.travelTo(_.create(RoomPosition.prototype, sourceMem.pos));
+                                        return;
+                                    }
+                                }
+                                else {
+                                    // TODO: Set Source.regenAt to Source.room.controller.reservation.ticksToEnd or Source.room.contoller.ticksToDowngrade
                                 }
                             }
                             else if (sourceID == "5873bb7f11e3e4361b4d5f14") { // TODO: Remove this after the source has been added to memory

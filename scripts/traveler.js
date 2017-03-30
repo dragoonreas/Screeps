@@ -294,7 +294,7 @@ module.exports = function(globalOpts = {}){
             return this.structureMatrixCache[room.name];
         }
         static initPosition(pos) {
-            return new RoomPosition(pos.x, pos.y, pos.roomName);
+            return _.create(RoomPosition.prototype, pos);
         }
         static addStructuresToMatrix(room, matrix, roadCost) {
             for (let structure of room.find(FIND_STRUCTURES)) {

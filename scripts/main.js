@@ -55,7 +55,7 @@ for (let roomID in Game.rooms) {
         "buildOrderFILO": false
         , "checkForDrops": true
         , "hasHostileCreep": false
-        , "memoryExpiration": Game.time + EST_TICKS_PER_DAY
+        , "memoryExpiration": Game.time + EST_TICKS_PER_DAY // TODO: Don't let harvest rooms expire
         , "avoidTravelUntil": 0
     }); // TODO: Implement sparse memory storage for rooms (assume a default value for undefined keys)
     
@@ -136,14 +136,14 @@ _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W86N39", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
+    [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
@@ -178,6 +178,7 @@ _.set(Memory.rooms, ["W87N29", "creepMins"], {
     , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W87N29", "minerSources"], {}))
     , adaptable: 0
+    , demolisher: 0
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W87N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -190,6 +191,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
+    , demolisher: 0
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -202,6 +204,7 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W85N23", "minerSources"], {}))
     , adaptable: 0
+    , demolisher: 0
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -214,8 +217,9 @@ _.set(Memory.rooms, ["W86N39", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N39", "minerSources"], {}))
     , adaptable: 0
+    , demolisher: 0
     , scout: 0
-    , claimer: 0
+    , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
@@ -226,6 +230,7 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W85N38", "minerSources"], {}))
     , adaptable: 0
+    , demolisher: 0
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -238,6 +243,7 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N43", "minerSources"], {}))
     , adaptable: 0
+    , demolisher: 0
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -381,8 +387,20 @@ module.exports.loop = function () {
         
         let theController = theRoom.controller;
         if (theController != undefined) {
+            /*
             _.defaults(Memory.controllers[theController.id], {
                 pos: theController.pos
+            });
+            */
+            _.set(theRoom.memory, ["controller"], { 
+                id: theController.id 
+                , pos: theController.pos 
+                , owner: theController.owner 
+                , reservation: theController.reservation // TODO: Change reservation.ticksToEnd to reservation.endsAt
+                , level: theController.level 
+                , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
+                , safeModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
+                , sign: theController.sign
             });
         }
         
@@ -693,7 +711,7 @@ module.exports.loop = function () {
         
         // TODO: Set theRoom.memory.avoidTravel based on the check for if it's safe to assign dropped energy for creeps to pickup
         
-        if (theRoom.checkForDrops == true || (checkingForDrops == true && (theRoom.hasHostileCreep == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) {
+        if (theRoom.checkForDrops == true || (checkingForDrops == true && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) {
             theRoom.checkForDrops = false;
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
@@ -863,7 +881,7 @@ module.exports.loop = function () {
         // Ensure basic memory elements exist
         let bodyPartCounts = _.countBy(creep.body);
         _.defaults(creep.memory, {
-            role: "harvester"
+            role: "harvester" // TODO: Set role based on body parts
             , working: false
             , speeds: {
                 ["1"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
@@ -938,7 +956,6 @@ module.exports.loop = function () {
                         if (Memory.rooms[roomID].creepCounts[creepType] < creepMins[creepType]) {
                             creepName = spawn.createCustomCreep(creepType);
                             if (_.isString(creepName) == true) {
-                                Memory.rooms[roomID].creepCounts[creepType] += 1;
                                 console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
                             }
                             break; // NOTE: Need to either wait till the creep can start spawning or be spawned, so no need to check the rest

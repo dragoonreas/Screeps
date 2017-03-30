@@ -9,6 +9,7 @@ let globals = function() {
         , powerHarvester: require("role.powerHarvester")
         , upgrader: require("role.upgrader")
         , adaptable: require("role.adaptable")
+        , demolisher: require("role.demolisher")
         , repairer: require("role.repairer")
         , scout: require("role.scout")
         , builder: require("role.builder")
@@ -41,7 +42,7 @@ let globals = function() {
         , resource: "\uD83D\uDEE2"
         , creep: "" // TODO: Add icon for creep
         , moveTo: "\u27A1"
-        , attack: "\uD83D\uDDE1"
+        , attack: "\uD83D\uDDE1" // NOTE: Same as attackController
         , build: "\uD83D\uDD28"
         , repair: "\uD83D\uDD27"
         , dismantle: "\u2692"
@@ -52,6 +53,7 @@ let globals = function() {
         , upgradeController: "\u2B06" // NOTE: Same as transfer
         , claimController: "\uD83D\uDDDD"
         , reserveController: "\uD83D\uDD12"
+        , attackController: "\uD83D\uDDE1" // NOTE: Same as attack
         , recycle: "\u267B"
         , wait0: "\uD83D\uDD5B" // 12:00
         , wait1: "\uD83D\uDD67" // 12:30

@@ -40,6 +40,8 @@ function collect_stats() {
     if (Memory.stats == null) {
         Memory.stats = { tick: Game.time };
     }
+    
+    Memory.stats.currentTick = Game.time;
 
     // Note: This is fragile and will change if the Game.cpu API changes
     Memory.stats.cpu = Game.cpu;
@@ -56,7 +58,7 @@ function collect_stats() {
     };
 
     Memory.stats.market = {
-        credits: Game.market.credits,
+        credits: _.round(Game.market.credits, 2),
         num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
     };
 

@@ -32,7 +32,7 @@ let roleMiner = {
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
                             creep.say(ICONS["moveTo"] + sourceMem.pos.roomName, true);
-                            creep.travelTo(sourceMem);
+                            creep.travelTo(_.create(RoomPosition.prototype, sourceMem));
                             return;
                         }
                         else if (sourceID == "5873bb7f11e3e4361b4d5f14" && _.get(sourceMem, "minerName", creep.name) == creep.name) { // TODO: Remove this after the source has been added to memory
