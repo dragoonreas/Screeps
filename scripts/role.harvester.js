@@ -68,6 +68,12 @@ let roleHarvester = {
                             , "5873bbc611e3e4361b4d6714"
                             , "5873bbaa11e3e4361b4d63c4"
                         ]
+                        , "W17N79": [
+                            "5836b79f8b8b9619519f0ad0"
+                            , "5836b79a8b8b9619519f0a4f"
+                            , "5836b79d8b8b9619519f0a93"
+                            , "5836b79c8b8b9619519f0a8f"
+                        ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
@@ -174,6 +180,30 @@ let roleHarvester = {
                                 creep.memory.sourceID = sourceID;
                                 creep.say(ICONS["moveTo"] + "W85N45", true);
                                 creep.travelTo(new RoomPosition(17, 41, "W85N45"));
+                                return;
+                            }
+                            else if (sourceID == "5836b79f8b8b9619519f0ad0") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W16N79", true);
+                                creep.travelTo(new RoomPosition(8, 7, "W16N79"));
+                                return;
+                            }
+                            else if (sourceID == "5836b79a8b8b9619519f0a4f") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W18N79", true);
+                                creep.travelTo(new RoomPosition(11, 33, "W18N79"));
+                                return;
+                            }
+                            else if (sourceID == "5836b79d8b8b9619519f0a93") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W17N78", true);
+                                creep.travelTo(new RoomPosition(34, 38, "W17N78"));
+                                return;
+                            }
+                            else if (sourceID == "5836b79c8b8b9619519f0a8f") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W17N79", true);
+                                creep.travelTo(new RoomPosition(6, 15, "W17N79"));
                                 return;
                             }
                         }
@@ -300,7 +330,12 @@ let roleHarvester = {
                     }
                 }
                 else {
-                    ROLES["upgrader"].run(creep);
+                    if (_.size(Game.constructionSites) > 0 && creep.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
+                        ROLES["builder"].run(creep);
+                    }
+                    else {
+                        ROLES["upgrader"].run(creep);
+                    }
                 }
             }
         }

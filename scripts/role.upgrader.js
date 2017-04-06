@@ -2,6 +2,7 @@ let roleUpgrader = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
+            creep.memory.sourceID = undefined; // can be a harvester when not working
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
@@ -29,6 +30,7 @@ let roleUpgrader = {
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63ce"); break;
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6733"); break;
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c2"); break;
+                case "W17N79": source = Game.getObjectById("5836b79c8b8b9619519f0a8e"); break;
             }
             
             let err = ERR_INVALID_TARGET;
@@ -81,6 +83,9 @@ let roleUpgrader = {
             }
             else if (err == ERR_INVALID_TARGET) {
                 creep.say(ICONS["harvest"] + "?", true);
+            }
+            else if (creep.memory.speeds["2"] < 2) {
+                ROLES["harvester"].run(creep);
             }
             else {
                 switch (creep.saying) {

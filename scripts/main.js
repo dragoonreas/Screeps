@@ -108,6 +108,11 @@ _.set(Memory.rooms, ["W86N43", "harvestRooms"], [
     , "W87N44"
     , "W85N45"
 ]);
+_.set(Memory.rooms, ["W17N79", "harvestRooms"], [
+    "W16N79"
+    , "W18N79"
+    , "W17N78"
+]);
 
 /*
     TODO:
@@ -136,7 +141,7 @@ _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W86N39", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
@@ -150,6 +155,13 @@ _.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 1
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+_.set(Memory.rooms, ["W17N79", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
@@ -240,7 +252,7 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 1
+    , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W86N43", "minerSources"], {}))
     , adaptable: 0
     , demolisher: 0
@@ -248,6 +260,19 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+});
+_.set(Memory.rooms, ["W17N79", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W17N79", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W17N79", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 4
 });
 
 if (Memory.MonCPU == true) { console.log("init>loop init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -615,7 +640,7 @@ module.exports.loop = function () {
             // Spawn one melee attacker per rampart in melee range of a priority target, if the towers may not be able to handle it
             if (theRoom.memory.creepMins != undefined) {
                 if (noHealers == false || towers.length == 0) {
-                    theRoom.memory.creepMins.attacker = rampartsToUse.length;
+                    theRoom.memory.creepMins.attacker = rampartsToUse.length || 1;
                 }
                 else {
                     theRoom.memory.creepMins.attacker = 0;
@@ -711,7 +736,7 @@ module.exports.loop = function () {
         
         // TODO: Set theRoom.memory.avoidTravel based on the check for if it's safe to assign dropped energy for creeps to pickup
         
-        if (theRoom.checkForDrops == true || (checkingForDrops == true && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) {
+        if (theRoom.checkForDrops == true || (checkingForDrops == true && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
             theRoom.checkForDrops = false;
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
@@ -913,6 +938,20 @@ module.exports.loop = function () {
                 ROLES["hoarder"].run(creep);
                 runningRole = true;
             }
+            else if (creep.memory.role == "healer") { // TODO: Make this a proper role
+                let target = creep.pos.findClosestByRange(FIND_MY_CREEPS, { 
+                    filter: (c) => (c.hits < c.hitsMax
+                )}); // TODO: Also heal ally creeps
+                if (target != undefined) {
+                    if (creep.heal(target) == ERR_NOT_IN_RANGE) {
+                        creep.travelTo(target);
+                    }
+                }
+                else {
+                    creep.memory.role = "recyclable";
+                }
+                runningRole = true;
+            }
         }
         
         // If not already running another role, run the role assigned in creep.memory.role
@@ -938,7 +977,7 @@ module.exports.loop = function () {
     
     Memory.rooms.W87N29.creepMins.adaptable = (((Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N29.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W85N23.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W85N23.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W17N79.creepCounts.builder == 0 && Memory.rooms.W17N79.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N39.creepMins.adaptable = (((Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) || (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W85N38.creepMins.adaptable = (((Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     

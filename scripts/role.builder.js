@@ -115,6 +115,7 @@ let roleBuilder = {
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63cf"); break;
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6731"); break;
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c4"); break;
+                case "W17N79": source = Game.getObjectById("5836b79c8b8b9619519f0a8f"); break;
             }
             
             let theStorage = Game.rooms[creep.memory.roomID].storage;

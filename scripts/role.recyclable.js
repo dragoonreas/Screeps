@@ -5,7 +5,7 @@ let roleRecyclable = {
         let theSpawn = Game.getObjectById(creep.memory.recycleSpawnID);
         if (theSpawn == undefined) {
             let theSpawns = _.filter(Game.spawns, (s) => (
-                s.room.name == _.get(Game.rooms, creep.memory.roomID, creep.room).name
+                s.room.name == _.get(Game.rooms, [creep.memory.roomID], creep.room).name
             ));
             if (recycleContainer != undefined) {
                 theSpawn = _.first(recycleContainer.pos.findInRange(theSpawns, 1));
