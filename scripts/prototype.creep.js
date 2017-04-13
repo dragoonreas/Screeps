@@ -11,7 +11,8 @@ let prototypeCreep = function() {
             get: function() {
                 if (this === Creep.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "energyAvaliableOnSpawn", undefined) == undefined) {
-                    _.set(this.memory, "energyAvaliableOnSpawn", _.max(_.get(Game.rooms, [this.memory.roomID, "energyCapacityAvailable"], _.sum(this.body, (bp) => (BODYPART_COST[bp.type]))), _.sum(this.body, (bp) => (BODYPART_COST[bp.type]))));
+                    let bodyCost = _.sum(this.body, (bp) => (BODYPART_COST[bp.type]));
+                    _.set(this.memory, "energyAvaliableOnSpawn", _.max(_.get(Game.rooms, [this.memory.roomID, "energyCapacityAvailable"], bodyCost), bodyCost));
                 }
                 if (_.isNumber(this.memory.energyAvaliableOnSpawn) == false) {
                     return undefined;
@@ -21,7 +22,8 @@ let prototypeCreep = function() {
             
             set: function(value) {
                 if (_.get(this.memory, "energyAvaliableOnSpawn", undefined) == undefined) {
-                    _.set(this.memory, "energyAvaliableOnSpawn", _.max(_.get(Game.rooms, [this.memory.roomID, "energyCapacityAvailable"], _.sum(this.body, (bp) => (BODYPART_COST[bp.type]))), _.sum(this.body, (bp) => (BODYPART_COST[bp.type]))));
+                    let bodyCost = _.sum(this.body, (bp) => (BODYPART_COST[bp.type]));
+                    _.set(this.memory, "energyAvaliableOnSpawn", _.max(_.get(Game.rooms, [this.memory.roomID, "energyCapacityAvailable"], bodyCost), bodyCost));
                 }
                 if (_.isNumber(this.memory.energyAvaliableOnSpawn) == false) {
                     throw new Error("Could not set Room.energyAvaliableOnSpawn property");

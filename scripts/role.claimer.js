@@ -51,26 +51,9 @@ let roleClaimer = {
                 creep.say(ICONS["moveTo"] + "W86N43", true);
                 creep.travelTo(new RoomPosition(30, 17, "W86N43"));
             }
-            else if (creep.memory.controllerID == "5873bccb11e3e4361b4d8313") {
-                creep.say(ICONS["moveTo"] + "W24N87", true);
-                if (creep.room.name != "W24N87") {
-                    ROLES["scout"].run(creep);
-                }
-                else {
-                    creep.travelTo(new RoomPosition(15, 37, "W24N87"));
-                }
-            }
-            else if (creep.memory.controllerID == "5873bcd711e3e4361b4d844f") {
-                creep.say(ICONS["moveTo"] + "W19N85", true);
-                creep.travelTo(new RoomPosition(13, 28, "W19N85"));
-            }
-            else if (creep.memory.controllerID == "5836b79c8b8b9619519f0a90") {
-                creep.say(ICONS["moveTo"] + "W17N79", true);
-                creep.travelTo(new RoomPosition(8, 39, "W17N79"));
-            }
             else {
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
-                creep.memory.role = "recyclable"; // recycle this creep since it can't seem to do anything
+                //creep.memory.role = "recyclable"; // recycle this creep since it can't seem to do anything
             }
         }
         else {

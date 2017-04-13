@@ -17,7 +17,11 @@ require("traveler")({
 }}); // TODO: Make a custom version of Creep.moveTo and remove this stopgap solution
 
 // Setup constants
-const resourcesInfo = require("resources"); // Used by screepsPlus to generate stats
+/*
+    Used by screepsPlus to generate stats
+    NOTE: Must be called after globals initialisation
+*/
+const resourcesInfo = require("resources");
 const screepsPlus = require("screepsplus"); // Used to put stats in memory for agent to collect and push to Grafana dashboard
 //const visualiser = require("visualiser"); // NOTE: Must be called after globals initialisation
 
@@ -32,19 +36,21 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
     }
     , "agressivePlayers": [ // these players attack first and ask questions later (if at all)
         "rysade"
-        , "roncli" // turns out they were just using my RCL6 and lower rooms as low-risk targets to improve their combat code with
+        , "roncli" // uses players with no RCL 8 rooms as testing grounds to improve their combat code with
         , "rudykocur"
         , "McGnomington" // open to negotiations
         , "Archangel"
         , "Vultured"
+        , "vrs" // open to negotiations
+        , "a2coder" // indiscriminately agressive towards PINK alliance members
     ]
-    , "nonAgressivePlayers": [ // nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
-        "Bovius"
-        , "Cade" // PINK alliance
+    , "nonAgressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
+        "Bovius" // allows passage through their remote mining rooms
+        , "Cade" // PINK alliance (not yet added to their whitelist)
         , "Palle" // PINK alliance
         , "Kendalor" // PINK alliance
-        , "InfiniteJoe" // PINK alliance
-        , "KermitFrog" // PINK alliance
+        , "InfiniteJoe" // PINK alliance (not yet added to their whitelist)
+        , "KermitFrog" // PINK alliance (not yat added to their whitelist)
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
 });
 
@@ -108,11 +114,6 @@ _.set(Memory.rooms, ["W86N43", "harvestRooms"], [
     , "W87N44"
     , "W85N45"
 ]);
-_.set(Memory.rooms, ["W17N79", "harvestRooms"], [
-    "W16N79"
-    , "W18N79"
-    , "W17N78"
-]);
 
 /*
     TODO:
@@ -159,14 +160,7 @@ _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W17N79", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
+    , all: 2
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -203,7 +197,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: 1
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -229,7 +223,7 @@ _.set(Memory.rooms, ["W86N39", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N39", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: 1
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -261,19 +255,6 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
-_.set(Memory.rooms, ["W17N79", "creepMins"], {
-    attacker: 0
-    , harvester: 6
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W17N79", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: 0
-    , scout: 0
-    , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["W17N79", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
-    , builder: 4
-});
 
 if (Memory.MonCPU == true) { console.log("init>loop init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 
@@ -281,6 +262,22 @@ module.exports.loop = function () {
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
     
     if (Memory.MonCPU == true) { console.log("loop init>stats:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+    
+    if (NODE_USAGE.first == NODE_USAGE.last) {
+        _.set(Memory, ["stats", "node", "hasReset"], 1);
+    }
+    else {
+        _.set(Memory, ["stats", "node", "hasReset"], 0);
+    }
+    NODE_USAGE.total += 1;
+    _.set(Memory.stats.node, ["totalTicksUsed"], NODE_USAGE.total);
+    if (NODE_USAGE.last != (Game.time - 1)) {
+        _.set(Memory.stats.node, ["hasSwapped"], 1);
+    }
+    else {
+        _.set(Memory.stats.node, ["hasSwapped"], 0);
+    }
+    NODE_USAGE.last = Game.time;
     
     resourcesInfo.summarize_rooms(); // Generate stats for screepsplus to retrieve at end of loop
     
@@ -417,14 +414,16 @@ module.exports.loop = function () {
                 pos: theController.pos
             });
             */
-            _.set(theRoom.memory, ["controller"], { 
+            let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
+            _.set(this.memory, ["controller"], { 
                 id: theController.id 
                 , pos: theController.pos 
                 , owner: theController.owner 
-                , reservation: theController.reservation // TODO: Change reservation.ticksToEnd to reservation.endsAt
+                , reservation: ((theController.reservation && { username: _.get(theController.reservation, ["username"], ""), endsAt: Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1) }) || undefined)
                 , level: theController.level 
-                , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
-                , safeModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
+                , downgradeAt: downgradeAt 
+                , neutralAt: ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 1], 0))) || undefined) // TODO: Fix this line
+                , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined) 
                 , sign: theController.sign
             });
         }
@@ -508,6 +507,9 @@ module.exports.loop = function () {
                             + (bodyPartCounts[WORK] || 0) * 2 
                             + (bodyPartCounts[CLAIM] || 0) * 1
                         ); // TODO: Take into account boosted parts
+                        if (targetWeighting == 0) {
+                            targetWeighting = (bodyPartCounts[HEAL] || 0) * -1;
+                        } // TODO: Take into account boosted parts
                         
                         _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id], {
                             weighting: targetWeighting
@@ -977,7 +979,7 @@ module.exports.loop = function () {
     
     Memory.rooms.W87N29.creepMins.adaptable = (((Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N29.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
-    Memory.rooms.W85N23.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) || (Memory.rooms.W17N79.creepCounts.builder == 0 && Memory.rooms.W17N79.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W85N23.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N39.creepMins.adaptable = (((Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) || (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W85N38.creepMins.adaptable = (((Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     

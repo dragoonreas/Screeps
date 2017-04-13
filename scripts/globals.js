@@ -83,9 +83,17 @@ let globals = function() {
         , testFinished: "\uD83C\uDFC1" // for when scout has finished its test run
     }
     
+    global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v,i,c) => (_.get(c, [(i - 1)], 0) + v));
+    
     global.EST_SEC_PER_TICK = 4.25; // time between ticks is currently averaging ~4.25 seconds (as of 2017/04/05)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
+    
+    global.NODE_USAGE = { 
+        first: Game.time
+        , last: Game.time
+        , total: 0
+    };
     
     global.toStr = (obj) => JSON.stringify(obj, null, 2); // shortcut to stringify an object (idea credit: warinternal, from the Screeps Slack)
     

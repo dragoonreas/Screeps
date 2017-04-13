@@ -59,12 +59,17 @@
               "hide": true,
               "refId": "B",
               "target": "aliasSub(screeps.roomSummary.$Room.creep_counts.$Role, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+))\\.(?:.*)\\.(.*)$', '\\1 \\2')"
+            },
+            {
+              "hide": true,
+              "refId": "C",
+              "target": "groupByNode(screeps.roomSummary.$Room.creep_counts.$Role, 5, 'sum')"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Total Creeps",
+          "title": "My Creeps",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -291,7 +296,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Spawning",
+          "title": "Spawn Activity",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -1967,6 +1972,7 @@
             "alignAsTable": false,
             "avg": true,
             "current": true,
+            "hideZero": false,
             "max": true,
             "min": true,
             "rightSide": true,
@@ -1987,11 +1993,36 @@
               "alias": "Tick Duration MA",
               "fill": 0,
               "legend": false,
-              "linewidth": 2
+              "linewidth": 2,
+              "zindex": 2
             },
             {
-              "alias": "Ticks/s",
+              "alias": "/^(?!Tick Duration).*/",
+              "legend": false,
               "yaxis": 2
+            },
+            {
+              "alias": "Tick Duration",
+              "fill": 0,
+              "zindex": 1
+            },
+            {
+              "alias": "Node Usage",
+              "fillBelowTo": "Node Swapping",
+              "lines": false,
+              "zindex": -3
+            },
+            {
+              "alias": "Node Swapping",
+              "fillBelowTo": "Node Resetting",
+              "lines": false,
+              "zindex": -2
+            },
+            {
+              "alias": "Node Resetting",
+              "fill": 5,
+              "linewidth": 0,
+              "zindex": -1
             }
           ],
           "span": 12,
@@ -1999,26 +2030,36 @@
           "steppedLine": false,
           "targets": [
             {
-              "refId": "A",
-              "target": "alias(derivative(screeps.currentTick), 'Tick Duration')",
-              "textEditor": false
-            },
-            {
-              "refId": "B",
-              "target": "alias(movingAverage(derivative(screeps.currentTick), '1hour'), 'Tick Duration MA')",
-              "textEditor": false
-            },
-            {
               "hide": true,
-              "refId": "C",
-              "target": "alias(perSecond(screeps.currentTick), 'Ticks/s')",
+              "refId": "A",
+              "target": "alias(screeps.currentTick, 'Tick Number')",
               "textEditor": false
+            },
+            {
+              "refId": "D",
+              "target": "alias(screeps.timeSinceLastTick, 'Tick Duration')"
+            },
+            {
+              "refId": "E",
+              "target": "alias(movingAverage(screeps.timeSinceLastTick, '1hour'), 'Tick Duration MA')"
+            },
+            {
+              "refId": "F",
+              "target": "alias(screeps.node.totalTicksUsed, 'Node Usage')"
+            },
+            {
+              "refId": "G",
+              "target": "alias(screeps.node.hasSwapped, 'Node Swapping')"
+            },
+            {
+              "refId": "H",
+              "target": "alias(screeps.node.hasReset, 'Node Resetting')"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Ticks (WIP)",
+          "title": "Ticks",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -2033,7 +2074,7 @@
           },
           "yaxes": [
             {
-              "format": "s",
+              "format": "ms",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -2043,7 +2084,7 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
               "min": null,
               "show": true
@@ -2598,7 +2639,7 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null as zero",
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -2606,12 +2647,83 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W17N79",
-              "value": "W17N79"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
-          "seriesOverrides": [],
-          "span": 8,
+          "seriesOverrides": [
+            {
+              "alias": "adaptable",
+              "color": "#99440A",
+              "zindex": -2
+            },
+            {
+              "alias": "attacker",
+              "color": "#E24D42",
+              "zindex": -2
+            },
+            {
+              "alias": "builder",
+              "color": "#1F78C1",
+              "zindex": 0
+            },
+            {
+              "alias": "claimer",
+              "color": "#BA43A9",
+              "zindex": -1
+            },
+            {
+              "alias": "demolisher",
+              "color": "#052B51",
+              "zindex": -3
+            },
+            {
+              "alias": "harvester",
+              "color": "#EAB839",
+              "zindex": 3
+            },
+            {
+              "alias": "hauler",
+              "color": "#EF843C",
+              "zindex": -3
+            },
+            {
+              "alias": "miner",
+              "color": "#967302",
+              "zindex": -3
+            },
+            {
+              "alias": "powerHarvester",
+              "color": "#58140C",
+              "zindex": -3
+            },
+            {
+              "alias": "recyclable",
+              "color": "#3F6833",
+              "zindex": -2
+            },
+            {
+              "alias": "repairer",
+              "color": "#6ED0E0",
+              "zindex": 1
+            },
+            {
+              "alias": "scout",
+              "color": "#DEDAF7",
+              "zindex": -3
+            },
+            {
+              "alias": "upgrader",
+              "color": "#511749",
+              "zindex": 2
+            },
+            {
+              "alias": "healer",
+              "color": "#7EB26D",
+              "zindex": -2
+            }
+          ],
+          "span": 12,
           "stack": true,
           "steppedLine": false,
           "targets": [
@@ -2623,7 +2735,131 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Creep Role Counts",
+          "title": "Roles",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "fill": 0,
+          "id": 99,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W85N23",
+              "value": "W85N23"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Required",
+              "fillBelowTo": "Progress",
+              "legend": false,
+              "lines": false,
+              "zindex": -2
+            },
+            {
+              "alias": "Progress",
+              "legend": false,
+              "zindex": -1
+            },
+            {
+              "alias": "Level",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 0
+            },
+            {
+              "alias": "RCL/s",
+              "linewidth": 1,
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "RCL/s MA",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 8,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.controller_needed, 'Required')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')"
+            },
+            {
+              "hide": true,
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.controller_level, 'Level')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(perSecond(screeps.roomSummary.$Room.controller_progress), 'RCL/s')"
+            },
+            {
+              "refId": "E",
+              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "RCL",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -2704,8 +2940,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W17N79",
-              "value": "W17N79"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
           "span": 2,
@@ -2789,8 +3025,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W17N79",
-              "value": "W17N79"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
           "span": 2,
@@ -2837,6 +3073,126 @@
             }
           ],
           "valueName": "avg"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "fill": 0,
+          "id": 100,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W85N23",
+              "value": "W85N23"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Max Wall",
+              "color": "#58140C",
+              "fillBelowTo": "Max Rampart",
+              "zindex": -2
+            },
+            {
+              "alias": "Max Rampart",
+              "color": "#3F6833",
+              "fillBelowTo": "Max Wall",
+              "zindex": -1
+            },
+            {
+              "alias": "Min Wall",
+              "color": "#E24D42",
+              "fillBelowTo": "Min Rampart",
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "Min Rampart",
+              "color": "#7EB26D",
+              "fillBelowTo": "Min Wall",
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.max_hits, 'Max Wall')"
+            },
+            {
+              "hide": false,
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.max_hits, 'Max Rampart')"
+            },
+            {
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, 'Min Wall')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.min_hits, 'Min Rampart')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Walls Vs. Ramparts",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
         }
       ],
       "repeat": "Room",
@@ -2856,7 +3212,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 81,
+          "id": 101,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -2873,282 +3229,7 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null as zero",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
-            }
-          },
-          "seriesOverrides": [],
-          "span": 8,
-          "stack": true,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$Role, 5)"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Creep Role Counts",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "datasource": "screepspl.us",
-          "format": "percent",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": false
-          },
-          "id": 82,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
           "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
-            },
-            {
-              "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
-            }
-          ],
-          "thresholds": "",
-          "title": "RCL Progress",
-          "type": "singlestat",
-          "valueFontSize": "100%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": null,
-          "format": "s",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 83,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
-              "textEditor": false
-            },
-            {
-              "hide": true,
-              "refId": "B",
-              "target": "alias(diffSeries(screeps.roomSummary.$Room.controller_needed, #C), 'Remaining')",
-              "textEditor": false
-            },
-            {
-              "hide": true,
-              "refId": "C",
-              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')",
-              "textEditor": false
-            },
-            {
-              "refId": "D",
-              "target": "alias(holtWintersForecast(divideSeries(#B, #A)), 'Next RCL')",
-              "textEditor": false
-            }
-          ],
-          "thresholds": "604800,2419200",
-          "title": "Next RCL",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "avg"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1491448866829,
-      "repeatRowId": 10,
-      "showTitle": true,
-      "title": "$Room",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": "175",
-      "panels": [
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": "screepspl.us",
-          "decimals": 0,
-          "fill": 1,
-          "id": 84,
-          "legend": {
-            "alignAsTable": true,
-            "avg": false,
-            "current": true,
-            "hideEmpty": true,
-            "hideZero": true,
-            "max": false,
-            "min": false,
-            "rightSide": true,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -3160,8 +3241,79 @@
               "value": "W85N38"
             }
           },
-          "seriesOverrides": [],
-          "span": 8,
+          "seriesOverrides": [
+            {
+              "alias": "adaptable",
+              "color": "#99440A",
+              "zindex": -2
+            },
+            {
+              "alias": "attacker",
+              "color": "#E24D42",
+              "zindex": -2
+            },
+            {
+              "alias": "builder",
+              "color": "#1F78C1",
+              "zindex": 0
+            },
+            {
+              "alias": "claimer",
+              "color": "#BA43A9",
+              "zindex": -1
+            },
+            {
+              "alias": "demolisher",
+              "color": "#052B51",
+              "zindex": -3
+            },
+            {
+              "alias": "harvester",
+              "color": "#EAB839",
+              "zindex": 3
+            },
+            {
+              "alias": "hauler",
+              "color": "#EF843C",
+              "zindex": -3
+            },
+            {
+              "alias": "miner",
+              "color": "#967302",
+              "zindex": -3
+            },
+            {
+              "alias": "powerHarvester",
+              "color": "#58140C",
+              "zindex": -3
+            },
+            {
+              "alias": "recyclable",
+              "color": "#3F6833",
+              "zindex": -2
+            },
+            {
+              "alias": "repairer",
+              "color": "#6ED0E0",
+              "zindex": 1
+            },
+            {
+              "alias": "scout",
+              "color": "#DEDAF7",
+              "zindex": -3
+            },
+            {
+              "alias": "upgrader",
+              "color": "#511749",
+              "zindex": 2
+            },
+            {
+              "alias": "healer",
+              "color": "#7EB26D",
+              "zindex": -2
+            }
+          ],
+          "span": 12,
           "stack": true,
           "steppedLine": false,
           "targets": [
@@ -3173,7 +3325,131 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Creep Role Counts",
+          "title": "Roles",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "fill": 0,
+          "id": 102,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W85N38",
+              "value": "W85N38"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Required",
+              "fillBelowTo": "Progress",
+              "legend": false,
+              "lines": false,
+              "zindex": -2
+            },
+            {
+              "alias": "Progress",
+              "legend": false,
+              "zindex": -1
+            },
+            {
+              "alias": "Level",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 0
+            },
+            {
+              "alias": "RCL/s",
+              "linewidth": 1,
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "RCL/s MA",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 8,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.controller_needed, 'Required')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')"
+            },
+            {
+              "hide": true,
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.controller_level, 'Level')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(perSecond(screeps.roomSummary.$Room.controller_progress), 'RCL/s')"
+            },
+            {
+              "refId": "E",
+              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "RCL",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -3223,7 +3499,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 85,
+          "id": 103,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -3308,7 +3584,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 86,
+          "id": 104,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -3387,26 +3663,13 @@
             }
           ],
           "valueName": "avg"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1491448866829,
-      "repeatRowId": 10,
-      "showTitle": true,
-      "title": "$Room",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": "175",
-      "panels": [
+        },
         {
           "aliasColors": {},
           "bars": false,
           "datasource": "screepspl.us",
-          "decimals": 0,
-          "fill": 1,
-          "id": 87,
+          "fill": 0,
+          "id": 105,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -3423,7 +3686,140 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null as zero",
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W85N38",
+              "value": "W85N38"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Max Wall",
+              "color": "#58140C",
+              "fillBelowTo": "Max Rampart",
+              "zindex": -2
+            },
+            {
+              "alias": "Max Rampart",
+              "color": "#3F6833",
+              "fillBelowTo": "Max Wall",
+              "zindex": -1
+            },
+            {
+              "alias": "Min Wall",
+              "color": "#E24D42",
+              "fillBelowTo": "Min Rampart",
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "Min Rampart",
+              "color": "#7EB26D",
+              "fillBelowTo": "Min Wall",
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.max_hits, 'Max Wall')"
+            },
+            {
+              "hide": false,
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.max_hits, 'Max Rampart')"
+            },
+            {
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, 'Min Wall')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.min_hits, 'Min Rampart')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Walls Vs. Ramparts",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": 1492071049521,
+      "repeatRowId": 10,
+      "showTitle": true,
+      "title": "$Room",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": "175",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "decimals": 0,
+          "fill": 1,
+          "id": 106,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -3435,8 +3831,79 @@
               "value": "W86N29"
             }
           },
-          "seriesOverrides": [],
-          "span": 8,
+          "seriesOverrides": [
+            {
+              "alias": "adaptable",
+              "color": "#99440A",
+              "zindex": -2
+            },
+            {
+              "alias": "attacker",
+              "color": "#E24D42",
+              "zindex": -2
+            },
+            {
+              "alias": "builder",
+              "color": "#1F78C1",
+              "zindex": 0
+            },
+            {
+              "alias": "claimer",
+              "color": "#BA43A9",
+              "zindex": -1
+            },
+            {
+              "alias": "demolisher",
+              "color": "#052B51",
+              "zindex": -3
+            },
+            {
+              "alias": "harvester",
+              "color": "#EAB839",
+              "zindex": 3
+            },
+            {
+              "alias": "hauler",
+              "color": "#EF843C",
+              "zindex": -3
+            },
+            {
+              "alias": "miner",
+              "color": "#967302",
+              "zindex": -3
+            },
+            {
+              "alias": "powerHarvester",
+              "color": "#58140C",
+              "zindex": -3
+            },
+            {
+              "alias": "recyclable",
+              "color": "#3F6833",
+              "zindex": -2
+            },
+            {
+              "alias": "repairer",
+              "color": "#6ED0E0",
+              "zindex": 1
+            },
+            {
+              "alias": "scout",
+              "color": "#DEDAF7",
+              "zindex": -3
+            },
+            {
+              "alias": "upgrader",
+              "color": "#511749",
+              "zindex": 2
+            },
+            {
+              "alias": "healer",
+              "color": "#7EB26D",
+              "zindex": -2
+            }
+          ],
+          "span": 12,
           "stack": true,
           "steppedLine": false,
           "targets": [
@@ -3448,7 +3915,131 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Creep Role Counts",
+          "title": "Roles",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "fill": 0,
+          "id": 107,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N29",
+              "value": "W86N29"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Required",
+              "fillBelowTo": "Progress",
+              "legend": false,
+              "lines": false,
+              "zindex": -2
+            },
+            {
+              "alias": "Progress",
+              "legend": false,
+              "zindex": -1
+            },
+            {
+              "alias": "Level",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 0
+            },
+            {
+              "alias": "RCL/s",
+              "linewidth": 1,
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "RCL/s MA",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 8,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.controller_needed, 'Required')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')"
+            },
+            {
+              "hide": true,
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.controller_level, 'Level')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(perSecond(screeps.roomSummary.$Room.controller_progress), 'RCL/s')"
+            },
+            {
+              "refId": "E",
+              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "RCL",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -3498,7 +4089,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 88,
+          "id": 108,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -3583,7 +4174,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 89,
+          "id": 109,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -3662,26 +4253,13 @@
             }
           ],
           "valueName": "avg"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1491448866829,
-      "repeatRowId": 10,
-      "showTitle": true,
-      "title": "$Room",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": "175",
-      "panels": [
+        },
         {
           "aliasColors": {},
           "bars": false,
           "datasource": "screepspl.us",
-          "decimals": 0,
-          "fill": 1,
-          "id": 90,
+          "fill": 0,
+          "id": 110,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -3698,7 +4276,140 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null as zero",
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N29",
+              "value": "W86N29"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Max Wall",
+              "color": "#58140C",
+              "fillBelowTo": "Max Rampart",
+              "zindex": -2
+            },
+            {
+              "alias": "Max Rampart",
+              "color": "#3F6833",
+              "fillBelowTo": "Max Wall",
+              "zindex": -1
+            },
+            {
+              "alias": "Min Wall",
+              "color": "#E24D42",
+              "fillBelowTo": "Min Rampart",
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "Min Rampart",
+              "color": "#7EB26D",
+              "fillBelowTo": "Min Wall",
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.max_hits, 'Max Wall')"
+            },
+            {
+              "hide": false,
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.max_hits, 'Max Rampart')"
+            },
+            {
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, 'Min Wall')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.min_hits, 'Min Rampart')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Walls Vs. Ramparts",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": 1492071049521,
+      "repeatRowId": 10,
+      "showTitle": true,
+      "title": "$Room",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": "175",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "decimals": 0,
+          "fill": 1,
+          "id": 111,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -3710,8 +4421,79 @@
               "value": "W86N39"
             }
           },
-          "seriesOverrides": [],
-          "span": 8,
+          "seriesOverrides": [
+            {
+              "alias": "adaptable",
+              "color": "#99440A",
+              "zindex": -2
+            },
+            {
+              "alias": "attacker",
+              "color": "#E24D42",
+              "zindex": -2
+            },
+            {
+              "alias": "builder",
+              "color": "#1F78C1",
+              "zindex": 0
+            },
+            {
+              "alias": "claimer",
+              "color": "#BA43A9",
+              "zindex": -1
+            },
+            {
+              "alias": "demolisher",
+              "color": "#052B51",
+              "zindex": -3
+            },
+            {
+              "alias": "harvester",
+              "color": "#EAB839",
+              "zindex": 3
+            },
+            {
+              "alias": "hauler",
+              "color": "#EF843C",
+              "zindex": -3
+            },
+            {
+              "alias": "miner",
+              "color": "#967302",
+              "zindex": -3
+            },
+            {
+              "alias": "powerHarvester",
+              "color": "#58140C",
+              "zindex": -3
+            },
+            {
+              "alias": "recyclable",
+              "color": "#3F6833",
+              "zindex": -2
+            },
+            {
+              "alias": "repairer",
+              "color": "#6ED0E0",
+              "zindex": 1
+            },
+            {
+              "alias": "scout",
+              "color": "#DEDAF7",
+              "zindex": -3
+            },
+            {
+              "alias": "upgrader",
+              "color": "#511749",
+              "zindex": 2
+            },
+            {
+              "alias": "healer",
+              "color": "#7EB26D",
+              "zindex": -2
+            }
+          ],
+          "span": 12,
           "stack": true,
           "steppedLine": false,
           "targets": [
@@ -3723,7 +4505,131 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Creep Role Counts",
+          "title": "Roles",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "fill": 0,
+          "id": 112,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N39",
+              "value": "W86N39"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Required",
+              "fillBelowTo": "Progress",
+              "legend": false,
+              "lines": false,
+              "zindex": -2
+            },
+            {
+              "alias": "Progress",
+              "legend": false,
+              "zindex": -1
+            },
+            {
+              "alias": "Level",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 0
+            },
+            {
+              "alias": "RCL/s",
+              "linewidth": 1,
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "RCL/s MA",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 8,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.controller_needed, 'Required')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')"
+            },
+            {
+              "hide": true,
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.controller_level, 'Level')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(perSecond(screeps.roomSummary.$Room.controller_progress), 'RCL/s')"
+            },
+            {
+              "refId": "E",
+              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "RCL",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -3773,7 +4679,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 91,
+          "id": 113,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -3858,7 +4764,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 92,
+          "id": 114,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -3937,26 +4843,13 @@
             }
           ],
           "valueName": "avg"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1491448866829,
-      "repeatRowId": 10,
-      "showTitle": true,
-      "title": "$Room",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": "175",
-      "panels": [
+        },
         {
           "aliasColors": {},
           "bars": false,
           "datasource": "screepspl.us",
-          "decimals": 0,
-          "fill": 1,
-          "id": 93,
+          "fill": 0,
+          "id": 115,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -3973,7 +4866,140 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null as zero",
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N39",
+              "value": "W86N39"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Max Wall",
+              "color": "#58140C",
+              "fillBelowTo": "Max Rampart",
+              "zindex": -2
+            },
+            {
+              "alias": "Max Rampart",
+              "color": "#3F6833",
+              "fillBelowTo": "Max Wall",
+              "zindex": -1
+            },
+            {
+              "alias": "Min Wall",
+              "color": "#E24D42",
+              "fillBelowTo": "Min Rampart",
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "Min Rampart",
+              "color": "#7EB26D",
+              "fillBelowTo": "Min Wall",
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.max_hits, 'Max Wall')"
+            },
+            {
+              "hide": false,
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.max_hits, 'Max Rampart')"
+            },
+            {
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, 'Min Wall')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.min_hits, 'Min Rampart')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Walls Vs. Ramparts",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": 1492071049521,
+      "repeatRowId": 10,
+      "showTitle": true,
+      "title": "$Room",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": "175",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "decimals": 0,
+          "fill": 1,
+          "id": 116,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -3985,8 +5011,79 @@
               "value": "W86N43"
             }
           },
-          "seriesOverrides": [],
-          "span": 8,
+          "seriesOverrides": [
+            {
+              "alias": "adaptable",
+              "color": "#99440A",
+              "zindex": -2
+            },
+            {
+              "alias": "attacker",
+              "color": "#E24D42",
+              "zindex": -2
+            },
+            {
+              "alias": "builder",
+              "color": "#1F78C1",
+              "zindex": 0
+            },
+            {
+              "alias": "claimer",
+              "color": "#BA43A9",
+              "zindex": -1
+            },
+            {
+              "alias": "demolisher",
+              "color": "#052B51",
+              "zindex": -3
+            },
+            {
+              "alias": "harvester",
+              "color": "#EAB839",
+              "zindex": 3
+            },
+            {
+              "alias": "hauler",
+              "color": "#EF843C",
+              "zindex": -3
+            },
+            {
+              "alias": "miner",
+              "color": "#967302",
+              "zindex": -3
+            },
+            {
+              "alias": "powerHarvester",
+              "color": "#58140C",
+              "zindex": -3
+            },
+            {
+              "alias": "recyclable",
+              "color": "#3F6833",
+              "zindex": -2
+            },
+            {
+              "alias": "repairer",
+              "color": "#6ED0E0",
+              "zindex": 1
+            },
+            {
+              "alias": "scout",
+              "color": "#DEDAF7",
+              "zindex": -3
+            },
+            {
+              "alias": "upgrader",
+              "color": "#511749",
+              "zindex": 2
+            },
+            {
+              "alias": "healer",
+              "color": "#7EB26D",
+              "zindex": -2
+            }
+          ],
+          "span": 12,
           "stack": true,
           "steppedLine": false,
           "targets": [
@@ -3998,7 +5095,131 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Creep Role Counts",
+          "title": "Roles",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "fill": 0,
+          "id": 117,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N43",
+              "value": "W86N43"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Required",
+              "fillBelowTo": "Progress",
+              "legend": false,
+              "lines": false,
+              "zindex": -2
+            },
+            {
+              "alias": "Progress",
+              "legend": false,
+              "zindex": -1
+            },
+            {
+              "alias": "Level",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 0
+            },
+            {
+              "alias": "RCL/s",
+              "linewidth": 1,
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "RCL/s MA",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 8,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.controller_needed, 'Required')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')"
+            },
+            {
+              "hide": true,
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.controller_level, 'Level')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(perSecond(screeps.roomSummary.$Room.controller_progress), 'RCL/s')"
+            },
+            {
+              "refId": "E",
+              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "RCL",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -4048,7 +5269,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 94,
+          "id": 118,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -4133,7 +5354,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 95,
+          "id": 119,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -4212,26 +5433,13 @@
             }
           ],
           "valueName": "avg"
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": 1491448866829,
-      "repeatRowId": 10,
-      "showTitle": true,
-      "title": "$Room",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": "175",
-      "panels": [
+        },
         {
           "aliasColors": {},
           "bars": false,
           "datasource": "screepspl.us",
-          "decimals": 0,
-          "fill": 1,
-          "id": 96,
+          "fill": 0,
+          "id": 120,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -4248,7 +5456,140 @@
           "lines": true,
           "linewidth": 1,
           "links": [],
-          "nullPointMode": "null as zero",
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N43",
+              "value": "W86N43"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Max Wall",
+              "color": "#58140C",
+              "fillBelowTo": "Max Rampart",
+              "zindex": -2
+            },
+            {
+              "alias": "Max Rampart",
+              "color": "#3F6833",
+              "fillBelowTo": "Max Wall",
+              "zindex": -1
+            },
+            {
+              "alias": "Min Wall",
+              "color": "#E24D42",
+              "fillBelowTo": "Min Rampart",
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "Min Rampart",
+              "color": "#7EB26D",
+              "fillBelowTo": "Min Wall",
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.max_hits, 'Max Wall')"
+            },
+            {
+              "hide": false,
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.max_hits, 'Max Rampart')"
+            },
+            {
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, 'Min Wall')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.min_hits, 'Min Rampart')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Walls Vs. Ramparts",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": 1492071049521,
+      "repeatRowId": 10,
+      "showTitle": true,
+      "title": "$Room",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": "175",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "decimals": 0,
+          "fill": 1,
+          "id": 121,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -4260,8 +5601,79 @@
               "value": "W87N29"
             }
           },
-          "seriesOverrides": [],
-          "span": 8,
+          "seriesOverrides": [
+            {
+              "alias": "adaptable",
+              "color": "#99440A",
+              "zindex": -2
+            },
+            {
+              "alias": "attacker",
+              "color": "#E24D42",
+              "zindex": -2
+            },
+            {
+              "alias": "builder",
+              "color": "#1F78C1",
+              "zindex": 0
+            },
+            {
+              "alias": "claimer",
+              "color": "#BA43A9",
+              "zindex": -1
+            },
+            {
+              "alias": "demolisher",
+              "color": "#052B51",
+              "zindex": -3
+            },
+            {
+              "alias": "harvester",
+              "color": "#EAB839",
+              "zindex": 3
+            },
+            {
+              "alias": "hauler",
+              "color": "#EF843C",
+              "zindex": -3
+            },
+            {
+              "alias": "miner",
+              "color": "#967302",
+              "zindex": -3
+            },
+            {
+              "alias": "powerHarvester",
+              "color": "#58140C",
+              "zindex": -3
+            },
+            {
+              "alias": "recyclable",
+              "color": "#3F6833",
+              "zindex": -2
+            },
+            {
+              "alias": "repairer",
+              "color": "#6ED0E0",
+              "zindex": 1
+            },
+            {
+              "alias": "scout",
+              "color": "#DEDAF7",
+              "zindex": -3
+            },
+            {
+              "alias": "upgrader",
+              "color": "#511749",
+              "zindex": 2
+            },
+            {
+              "alias": "healer",
+              "color": "#7EB26D",
+              "zindex": -2
+            }
+          ],
+          "span": 12,
           "stack": true,
           "steppedLine": false,
           "targets": [
@@ -4273,7 +5685,131 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Creep Role Counts",
+          "title": "Roles",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "fill": 0,
+          "id": 122,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W87N29",
+              "value": "W87N29"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Required",
+              "fillBelowTo": "Progress",
+              "legend": false,
+              "lines": false,
+              "zindex": -2
+            },
+            {
+              "alias": "Progress",
+              "legend": false,
+              "zindex": -1
+            },
+            {
+              "alias": "Level",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 0
+            },
+            {
+              "alias": "RCL/s",
+              "linewidth": 1,
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "RCL/s MA",
+              "legend": false,
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 8,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.controller_needed, 'Required')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')"
+            },
+            {
+              "hide": true,
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.controller_level, 'Level')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(perSecond(screeps.roomSummary.$Room.controller_progress), 'RCL/s')"
+            },
+            {
+              "refId": "E",
+              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "RCL",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -4323,7 +5859,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 97,
+          "id": 123,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -4408,7 +5944,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 98,
+          "id": 124,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -4487,10 +6023,130 @@
             }
           ],
           "valueName": "avg"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "fill": 0,
+          "id": 125,
+          "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W87N29",
+              "value": "W87N29"
+            }
+          },
+          "seriesOverrides": [
+            {
+              "alias": "Max Wall",
+              "color": "#58140C",
+              "fillBelowTo": "Max Rampart",
+              "zindex": -2
+            },
+            {
+              "alias": "Max Rampart",
+              "color": "#3F6833",
+              "fillBelowTo": "Max Wall",
+              "zindex": -1
+            },
+            {
+              "alias": "Min Wall",
+              "color": "#E24D42",
+              "fillBelowTo": "Min Rampart",
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "Min Rampart",
+              "color": "#7EB26D",
+              "fillBelowTo": "Min Wall",
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.max_hits, 'Max Wall')"
+            },
+            {
+              "hide": false,
+              "refId": "B",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.max_hits, 'Max Rampart')"
+            },
+            {
+              "refId": "C",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, 'Min Wall')"
+            },
+            {
+              "refId": "D",
+              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.min_hits, 'Min Rampart')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Walls Vs. Ramparts",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
         }
       ],
       "repeat": null,
-      "repeatIteration": 1491448866829,
+      "repeatIteration": 1492071049521,
       "repeatRowId": 10,
       "showTitle": true,
       "title": "$Room",
@@ -4507,7 +6163,6 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
           "text": "All",
           "value": [
             "$__all"
@@ -4522,7 +6177,7 @@
         "options": [],
         "query": "screeps.roomSummary.*",
         "refresh": 1,
-        "regex": "/^W(?!19|24|53|65|84)\\d{1,3}N\\d{1,3}$/",
+        "regex": "W(?!17|19|24|53|65|84)\\d+N\\d+",
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -4545,7 +6200,7 @@
         "options": [],
         "query": "screeps.roomSummary.*.creep_counts.*",
         "refresh": 1,
-        "regex": "",
+        "regex": "(?!collector|hoarder)\\w+",
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -4568,7 +6223,7 @@
         "options": [],
         "query": "screeps.roomSummary.*.ground_resources.*",
         "refresh": 1,
-        "regex": "/.*[^y^r]$/",
+        "regex": "(?!energy|power)\\w+",
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -4610,5 +6265,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 57
+  "version": 71
 }

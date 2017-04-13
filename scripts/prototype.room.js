@@ -38,14 +38,16 @@ let prototypeRoom = function() {
                 if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, "controller", undefined) == undefined && this.controller != undefined) {
                     let theController = this.controller;
+                    let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
                     _.set(this.memory, ["controller"], { 
                         id: theController.id 
                         , pos: theController.pos 
                         , owner: theController.owner 
-                        , reservation: theController.reservation // TODO: Change reservation.ticksToEnd to reservation.endsAt
+                        , reservation: ((theController.reservation && { username: _.get(theController.reservation, ["username"], ""), endsAt: Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1) }) || undefined)
                         , level: theController.level 
-                        , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
-                        , safeModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
+                        , downgradeAt: downgradeAt 
+                        , neutralAt: ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 1], 0))) || undefined) // TODO: Fix this line
+                        , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined) 
                         , sign: theController.sign
                     });
                 }
@@ -58,14 +60,16 @@ let prototypeRoom = function() {
             set: function(value) {
                 if (_.get(this.memory, "controller", undefined) == undefined && this.controller != undefined) {
                     let theController = this.controller;
+                    let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
                     _.set(this.memory, ["controller"], { 
                         id: theController.id 
                         , pos: theController.pos 
                         , owner: theController.owner 
-                        , reservation: theController.reservation // TODO: Change reservation.ticksToEnd to reservation.endsAt
+                        , reservation: ((theController.reservation && { username: _.get(theController.reservation, ["username"], ""), endsAt: Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1) }) || undefined)
                         , level: theController.level 
-                        , downgradeAt: Game.time + (theController.ticksToDowngrade > 0 ? theController.ticksToDowngrade : 0) 
-                        , sameModeEndsAt: Game.time + (theController.safeMode > 0 ? theController.safeMode : 0) 
+                        , downgradeAt: downgradeAt 
+                        , neutralAt: ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 1], 0))) || undefined) // TODO: Fix this line
+                        , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined) 
                         , sign: theController.sign
                     });
                 }

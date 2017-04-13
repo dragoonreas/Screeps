@@ -7,27 +7,44 @@ let roleBuilder = {
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
-            creep.memory.constructionSiteID = undefined;
-            creep.memory.repairStructureID = undefined; // can be a repairer when working
-            creep.memory.depositStructureID = undefined; // can be a harvester when working
+            creep.memory.constructionSite = undefined;
+            creep.memory.repairStructure = undefined; // can be a repairer when working
+            creep.memory.depositStructure = undefined; // can be a harvester when working
         }
         
         if (creep.memory.working == true) {
-            let constructionSite = Game.getObjectById(creep.memory.constructionSiteID);
-            if (constructionSite == undefined && creep.memory.constructionSiteID != undefined && creep.memory.repairStructureID == undefined) {
-                creep.memory.constructionSiteID = undefined;
-                let newRampart = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                    filter: (s) => (s.hits <= RAMPART_DECAY_AMOUNT
-                        && s.structureType == STRUCTURE_RAMPART
-                )});
-                if (newRampart != undefined) {
-                    creep.memory.repairStructureID = newRampart.id;
-                    creep.say(ICONS["wait0"] + ICONS["repair"] + ICONS[STRUCTURE_RAMPART], true);
-                    return; // need to wait till next tick to repair it for some reason
+            let constructionSiteID = _.get(creep.memory, ["constructionSite", "id"], undefined);
+            let constructionSite = Game.getObjectById(constructionSiteID);
+            let constructionSiteMemPos = _.get(creep.memory, ["constructionSite", "pos"], undefined);
+            let repairStructureID = _.get(creep.memory, ["repairStructure", "id"], undefined);
+            if (constructionSite == undefined && constructionSiteMemPos != undefined) {
+                let constructionSiteMemRoomName = _.get(creep.memory, ["constructionSite", "pos", "roomName"], undefined); 
+                if (Game.rooms[constructionSiteMemRoomName] == undefined) {
+                    constructionSitePos = _.create(RoomPosition.prototype, constructionSiteMemPos);
+                    creep.say(ICONS["moveTo"] + constructionSitePos.roomName, true);
+                    creep.travelTo(constructionSitePos, {
+                        range: 3
+                    });
+                    return;
+                }
+                else if (repairStructureID == undefined) {
+                    creep.memory.constructionSite = undefined;
+                    let newRampart = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                        filter: (s) => (s.hits <= RAMPART_DECAY_AMOUNT
+                            && s.structureType == STRUCTURE_RAMPART
+                    )});
+                    if (newRampart != undefined) {
+                        creep.memory.repairStructure = { 
+                            id: newRampart.id
+                            , pos: newRampart.pos
+                        };
+                        creep.say(ICONS["wait0"] + ICONS["repair"] + ICONS[STRUCTURE_RAMPART], true);
+                        return; // need to wait till next tick to repair it for some reason
+                    }
                 }
             }
             
-            if (creep.memory.repairStructureID != undefined) {
+            if (repairStructureID != undefined) {
                 ROLES["repairer"].run(creep);
                 return;
             }
@@ -35,7 +52,7 @@ let roleBuilder = {
             if (constructionSite == undefined && _.size(Game.constructionSites) > 0) {
                 let roomConstructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
                 /*
-                if (roomConstructionSites.length == 0) { // TODO: Change this block to check if there's any in rooms the creep can reasonably reach
+                if (roomConstructionSites.length == 0) { // TODO: Change this block to check if there's any in rooms the creep can reasonably reach with construction sites needing to be built in them
                     for (let roomID in Game.rooms) {
                         if (roomID != creep.room.name) {
                             roomConstructionSites = Game.rooms[roomID].find(FIND_MY_CONSTRUCTION_SITES);
@@ -49,7 +66,10 @@ let roleBuilder = {
                 if (roomConstructionSites.length > 0) {
                     if (Memory.rooms[creep.room.name].buildOrderFILO == true) {
                         constructionSite = roomConstructionSites[roomConstructionSites.length - 1]; // TODO: Get max based on id instead
-                        creep.memory.constructionSiteID = constructionSite.id;
+                        creep.memory.constructionSite = { 
+                            id: constructionSite.id
+                            , pos: constructionSite.pos
+                        };
                     }
                     else {
                         let priorityQueue = [STRUCTURE_SPAWN, 
@@ -69,7 +89,7 @@ let roleBuilder = {
                                              STRUCTURE_NUKER];
                         let i = 0;
                         do {
-                            Memory.constructionStructureToFind = priorityQueue[i];
+                            Memory.constructionStructureToFind = priorityQueue[i]; // TODO: Find out why memory seems to be needed here instead of just a regualar variable
                             constructionSite = creep.pos.findClosestByRange(roomConstructionSites, {
                                 filter: (c) => c.structureType == Memory.constructionStructureToFind
                             });
@@ -78,15 +98,18 @@ let roleBuilder = {
                         while (i < priorityQueue.length && constructionSite == undefined) // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined
                         
                         if (constructionSite != undefined) {
-                            creep.memory.constructionSiteID = constructionSite.id;
+                            creep.memory.constructionSite = { 
+                                id: constructionSite.id
+                                , pos: constructionSite.pos
+                            };
                         }
                         else {
-                            creep.memory.constructionSiteID = undefined;
+                            creep.memory.constructionSite = undefined;
                         }
                     }
                 }
                 else {
-                    creep.memory.constructionSiteID = undefined;
+                    creep.memory.constructionSite = undefined;
                 }
             }
             
@@ -101,6 +124,9 @@ let roleBuilder = {
                 else if (err == OK) {
                     creep.say(ICONS["build"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
                 } // TODO: Go back to towers for repairs when can't work
+                else {
+                    creep.say(ICONS["build"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?") + "?", true);
+                }
             }
             else {
                 ROLES["harvester"].run(creep);
@@ -115,12 +141,11 @@ let roleBuilder = {
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63cf"); break;
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6731"); break;
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c4"); break;
-                case "W17N79": source = Game.getObjectById("5836b79c8b8b9619519f0a8f"); break;
             }
             
-            let theStorage = Game.rooms[creep.memory.roomID].storage;
-            let theTerminal = Game.rooms[creep.memory.roomID].terminal;
-            let theRecycleContainer = Game.rooms[creep.memory.roomID].recycleContainer;
+            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
+            let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
+            let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
             if (source != undefined && source.energy == 0 && (theRecycleContainer == undefined || theRecycleContainer.store.energy == 0) && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) {
                 ROLES["harvester"].run(creep);
                 return;
@@ -148,6 +173,9 @@ let roleBuilder = {
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
                 }
+                else {
+                    creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
+                }
             }
             else if (theStorage != undefined && theStorage.store.energy > 0) {
                 creep.cancelOrder("harvest");
@@ -158,6 +186,9 @@ let roleBuilder = {
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
+                }
+                else {
+                    creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
                 }
             }
             else if (theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
@@ -170,10 +201,14 @@ let roleBuilder = {
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
                 }
+                else {
+                    creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
+                }
             }
             else if (err == ERR_NOT_ENOUGH_RESOURCES 
                 && creep.carry.energy > 0) {
                 creep.memory.working = true;
+                ROLES["builder"].run(creep);
             }
             else if (err == ERR_INVALID_TARGET) {
                 creep.say(ICONS["harvest"] + "?", true);

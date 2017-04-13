@@ -30,7 +30,6 @@ let roleUpgrader = {
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63ce"); break;
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6733"); break;
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c2"); break;
-                case "W17N79": source = Game.getObjectById("5836b79c8b8b9619519f0a8e"); break;
             }
             
             let err = ERR_INVALID_TARGET;
@@ -38,8 +37,9 @@ let roleUpgrader = {
                 err = creep.harvest(source);
             }
             
-            let theTerminal = creep.room.terminal;
-            let theStorage = creep.room.storage;
+            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
+            let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
+            let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
             if (err == ERR_NOT_IN_RANGE) {
                 creep.say(ICONS["moveTo"] + ICONS["harvest"] + ICONS["source"], true);
                 creep.travelTo(source);

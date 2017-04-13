@@ -7,30 +7,48 @@ let roleRepairer = {
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
-            creep.memory.repairStructureID = undefined;
-            creep.memory.constructionSiteID = undefined; // can be a builder when working
-            creep.memory.depositStructureID = undefined; // can be a harvester when working
+            creep.memory.repairStructure = undefined;
+            creep.memory.constructionSite = undefined; // can be a builder when working
+            creep.memory.depositStructure = undefined; // can be a harvester when working
         }
         
         if (creep.memory.working == true) {
-            let structure = Game.getObjectById(creep.memory.repairStructureID);
-			if (structure != undefined 
-			    && structure.structureType != STRUCTURE_TOWER 
-                && structure.hits == structure.hitsMax) {
-				structure = undefined;
-			}
-			else if (structure != undefined 
-			    && structure.structureType == STRUCTURE_TOWER 
-			    && structure.energy == structure.energyCapacity) {
-			    structure = undefined;
-		    }
-		    
+            let structureID = _.get(creep.memory, ["repairStructure", "id"], undefined);
+            let structure = Game.getObjectById(structureID);
+            let structureMemPos = _.get(creep.memory, ["repairStructure", "pos"], undefined);
+            let structureMemRoomName = _.get(creep.memory, ["repairStructure", "pos", "roomName"], undefined);
+            if (structure == undefined 
+                && structureMemPos != undefined 
+                && Game.rooms[structureMemRoomName] == undefined) {
+                let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                creep.say(ICONS["moveTo"] + structurePos.roomName, true);
+                creep.travelTo(structurePos, {
+                    range: 3
+                });
+                return;
+            }
+            
+            if (structure != undefined && 
+                ((structure.structureType != STRUCTURE_TOWER 
+                    && structure.hits == structure.hitsMax)
+                || (structure.structureType == STRUCTURE_TOWER 
+                    && structure.energy == structure.energyCapacity
+                    && structure.hits == structure.hitsMax))) {
+                structure = undefined;
+            }
+            
             if (structure == undefined) {
-                creep.memory.repairStructureID = undefined;
+                creep.memory.repairStructure = undefined;
                 structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                 filter: (s) => (s.structureType == STRUCTURE_TOWER 
                     && s.energy < s.energyCapacity
                 )});
+                if (structure != undefined) {
+                    creep.memory.repairStructure = { 
+                        id: structure.id
+                        , pos: structure.pos
+                    };
+                }
             }
             
             if (structure == undefined) {
@@ -66,6 +84,10 @@ let roleRepairer = {
                             }
                         }
                         if (structure != undefined) {
+                            creep.memory.repairStructure = { 
+                                id: structure.id
+                                , pos: structure.pos
+                            };
                             break;
                         }
                     }
@@ -73,8 +95,6 @@ let roleRepairer = {
 			}
             
             if (structure != undefined) {
-				creep.memory.repairStructureID = structure.id;
-				
                 let err = undefined;
                 let actionIcon = "?";
                 if(structure.structureType == STRUCTURE_TOWER 
@@ -96,9 +116,12 @@ let roleRepairer = {
                 else if (err == OK) {
                     creep.say(actionIcon + _.get(ICONS, structure.structureType, "?"), true);
                 }
+                else {
+                    creep.say(actionIcon + _.get(ICONS, structure.structureType, "?") + "?", true);
+                }
             }
             else {
-				creep.memory.repairStructureID = undefined;
+				creep.memory.repairStructure = undefined;
                 ROLES["builder"].run(creep);
             }
         }
@@ -111,12 +134,11 @@ let roleRepairer = {
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63cf"); break;
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6731"); break;
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c4"); break;
-                case "W17N79": source = Game.getObjectById("5836b79c8b8b9619519f0a8e"); break;
             }
             
-            let theStorage = Game.rooms[creep.memory.roomID].storage;
-            let theTerminal = Game.rooms[creep.memory.roomID].terminal;
-            let theRecycleContainer = Game.rooms[creep.memory.roomID].recycleContainer;
+            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
+            let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
+            let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
             if (source != undefined && source.energy == 0 && (theRecycleContainer == undefined || theRecycleContainer.store.energy == 0) && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) {
                 ROLES["harvester"].run(creep);
                 return;
@@ -144,6 +166,9 @@ let roleRepairer = {
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
                 }
+                else {
+                    creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
+                }
             }
             else if (theStorage != undefined && theStorage.store.energy > 0) {
                 creep.cancelOrder("harvest");
@@ -154,6 +179,9 @@ let roleRepairer = {
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
+                }
+                else {
+                    creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
                 }
             }
             else if (theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
@@ -166,10 +194,14 @@ let roleRepairer = {
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
                 }
+                else {
+                    creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
+                }
             }
             else if (err == ERR_NOT_ENOUGH_RESOURCES 
                 && creep.carry.energy > 0) {
                 creep.memory.working = true;
+                ROLES["repairer"].run(creep);
             }
             else if (err == ERR_INVALID_TARGET) {
                 creep.say(ICONS["harvest"] + "?", true);

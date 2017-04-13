@@ -42,6 +42,9 @@ function collect_stats() {
     }
     
     Memory.stats.currentTick = Game.time;
+    
+    Memory.stats.timeSinceLastTick = Date.now() - (Memory.stats.currentTime || Date.now());
+    Memory.stats.currentTime = Date.now();
 
     // Note: This is fragile and will change if the Game.cpu API changes
     Memory.stats.cpu = Game.cpu;

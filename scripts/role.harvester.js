@@ -6,13 +6,14 @@ let roleHarvester = {
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
-            creep.memory.depositStructureID = undefined;
+            creep.memory.depositStructure = undefined;
         }
         
         if (creep.memory.working == false) {
             let source = Game.getObjectById(creep.memory.sourceID);
             if (source == undefined || source.energy == 0 || _.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas" || _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") != "dragoonreas") {
                 if (source != undefined) {
+                    source = undefined;
                     creep.memory.sourceID = undefined;
                 }
                 
@@ -68,12 +69,6 @@ let roleHarvester = {
                             , "5873bbc611e3e4361b4d6714"
                             , "5873bbaa11e3e4361b4d63c4"
                         ]
-                        , "W17N79": [
-                            "5836b79f8b8b9619519f0ad0"
-                            , "5836b79a8b8b9619519f0a4f"
-                            , "5836b79d8b8b9619519f0a93"
-                            , "5836b79c8b8b9619519f0a8f"
-                        ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
@@ -84,8 +79,12 @@ let roleHarvester = {
                                     creep.memory.sourceID = sourceID;
                                     break;
                                 }
+                                else {
+                                    source = undefined;
+                                }
                             }
                             else {
+                                source = undefined;
                                 // TODO: Set Source.regenAt to Source.room.controller.reservation.ticksToEnd or Source.room.contoller.ticksToDowngrade
                             }
                         }
@@ -182,30 +181,6 @@ let roleHarvester = {
                                 creep.travelTo(new RoomPosition(17, 41, "W85N45"));
                                 return;
                             }
-                            else if (sourceID == "5836b79f8b8b9619519f0ad0") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W16N79", true);
-                                creep.travelTo(new RoomPosition(8, 7, "W16N79"));
-                                return;
-                            }
-                            else if (sourceID == "5836b79a8b8b9619519f0a4f") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W18N79", true);
-                                creep.travelTo(new RoomPosition(11, 33, "W18N79"));
-                                return;
-                            }
-                            else if (sourceID == "5836b79d8b8b9619519f0a93") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W17N78", true);
-                                creep.travelTo(new RoomPosition(34, 38, "W17N78"));
-                                return;
-                            }
-                            else if (sourceID == "5836b79c8b8b9619519f0a8f") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.say(ICONS["moveTo"] + "W17N79", true);
-                                creep.travelTo(new RoomPosition(6, 15, "W17N79"));
-                                return;
-                            }
                         }
                     }
                 }
@@ -219,6 +194,9 @@ let roleHarvester = {
                 }
                 else if (err == OK) {
                     creep.say(ICONS["harvest"] + ICONS["source"], true);
+                }
+                else {
+                    creep.say(ICONS["harvest"] + ICONS["source"] + "?", true);
                 }
             }
             else if (creep.carry.energy > 0) {
@@ -254,88 +232,119 @@ let roleHarvester = {
             }
         }
         else {
-            if (_.isString(creep.memory.roomID) == true && creep.room.name != creep.memory.roomID) {
-                creep.say(ICONS["moveTo"] + creep.memory.roomID, true);
-                creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
+            let structureID = _.get(creep.memory, ["depositStructure", "id"], undefined);
+            let structure = Game.getObjectById(structureID);
+            let structureMemPos = _.get(creep.memory, ["depositStructure", "pos"], undefined);
+            let structureMemRoomName = _.get(creep.memory, ["depositStructure", "pos", "roomName"], undefined);
+            if (structure == undefined 
+                && structureMemPos != undefined 
+                && Game.rooms[structureMemRoomName] == undefined) {
+                let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                creep.say(ICONS["moveTo"] + structurePos.roomName, true);
+                creep.travelTo(structurePos);
+                return;
             }
-            else {
-                let structure = Game.getObjectById(creep.memory.depositStructureID);
-                if (structure == undefined || structure.energy == structure.energyCapacity) {
-                    structure = undefined;
-                    if (creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
-                        structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                            filter: (s) => {
-                                return (s.structureType == STRUCTURE_EXTENSION 
-                                    || s.structureType == STRUCTURE_SPAWN) 
-                                    && s.energy < s.energyCapacity;
-                            }
-                        });
-                    }
-                    if (structure == undefined) {
-                        structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-                            filter: (s) => {
-                                return s.structureType == STRUCTURE_TOWER 
-                                    && s.energy < s.energyCapacity;
-                            }
-                        });
-                    }
-                    creep.memory.depositStructureID = _.get(structure, "id", undefined);
+            
+            if (structure == undefined || structure.energy == structure.energyCapacity) {
+                if (_.isString(creep.memory.roomID) == true && creep.room.name != creep.memory.roomID) {
+                    creep.memory.depositStructure = undefined;
+                    creep.say(ICONS["moveTo"] + creep.memory.roomID, true);
+                    creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
+                    return;
                 }
                 
-                let theTerminal = creep.room.terminal;
-                let theStorage = creep.room.storage;
-                if (structure != undefined) {
-                    let err = creep.transfer(structure, RESOURCE_ENERGY);
-                    if(err == ERR_NOT_IN_RANGE) {
-                        creep.say(ICONS["moveTo"] + _.get(ICONS, structure.structureType, "?"), true);
-                        creep.travelTo(structure);
-                    }
-                    else if (err == OK) {
-                        creep.say(ICONS["transfer"] + _.get(ICONS, structure.structureType, "?"), true);
-                        if (structure.structureType == STRUCTURE_TERMINAL) {
+                structure = undefined;
+                if (creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
+                    structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                        filter: (s) => {
+                            return (s.structureType == STRUCTURE_EXTENSION 
+                                || s.structureType == STRUCTURE_SPAWN) 
+                                && s.energy < s.energyCapacity;
                         }
-                    }
+                    });
                 }
-                else if (theTerminal != undefined && theTerminal.store.energy < (theTerminal.storeCapacity / 2)) {
-                    let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy));
-                    if (err == ERR_NOT_IN_RANGE) {
-                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
-                        creep.travelTo(theTerminal);
-                    }
-                    else if (err == OK) {
-                        creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
-                        //console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)).toLocaleString() + "/" + (theTerminal.storeCapacity / 2).toLocaleString());
-                    }
+                if (structure == undefined) {
+                    structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                        filter: (s) => {
+                            return s.structureType == STRUCTURE_TOWER 
+                                && s.energy < s.energyCapacity;
+                        }
+                    });
                 }
-                else if (creep.memory.roomID == "W87N29" && theTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngelDealings.totalCost) {
-                    let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy));
-                    if (err == ERR_NOT_IN_RANGE) {
-                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
-                        creep.travelTo(theTerminal);
-                    }
-                    else if (err == OK) {
-                        creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
-                        //console.log("TooAngel dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy)).toLocaleString() + "/" + Memory.TooAngelDealings.totalCost.toLocaleString());
-                    }
-                }
-                else if (theStorage != undefined && theStorage.store.energy < (theStorage.storeCapacity / 2)) {
-                    let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy));
-                    if (err == ERR_NOT_IN_RANGE) {
-                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
-                        creep.travelTo(theStorage);
-                    }
-                    else if (err == OK) {
-                        creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
-                        //console.log(theStorage.room.name + " storage reserve at: " + (theStorage.store.energy + Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy)).toLocaleString() + "/" + (theStorage.storeCapacity / 2).toLocaleString());
-                    }
+                if (structure != undefined) {
+                    creep.memory.depositStructure = { 
+                        id: structure.id
+                        , pos: structure.pos
+                    };
                 }
                 else {
-                    if (_.size(Game.constructionSites) > 0 && creep.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
-                        ROLES["builder"].run(creep);
-                    }
-                    else {
-                        ROLES["upgrader"].run(creep);
-                    }
+                    creep.memory.depositStructure = undefined;
+                }
+            }
+            
+            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
+            let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
+            if (structure != undefined) {
+                let err = creep.transfer(structure, RESOURCE_ENERGY);
+                if(err == ERR_NOT_IN_RANGE) {
+                    creep.say(ICONS["moveTo"] + _.get(ICONS, structure.structureType, "?"), true);
+                    creep.travelTo(structure);
+                }
+                else if (err == OK) {
+                    creep.say(ICONS["transfer"] + _.get(ICONS, structure.structureType, "?"), true);
+                }
+                else {
+                    creep.say(ICONS["transfer"] + _.get(ICONS, structure.structureType, "?") + "?", true);
+                }
+            }
+            else if (theTerminal != undefined && theTerminal.store.energy < (theTerminal.storeCapacity / 2)) {
+                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy));
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
+                    creep.travelTo(theTerminal);
+                }
+                else if (err == OK) {
+                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
+                    //console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)).toLocaleString() + "/" + (theTerminal.storeCapacity / 2).toLocaleString());
+                }
+                else {
+                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
+                }
+            }
+            else if (creep.memory.roomID == "W87N29" && theTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngelDealings.totalCost) {
+                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy));
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
+                    creep.travelTo(theTerminal);
+                }
+                else if (err == OK) {
+                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
+                    //console.log("TooAngel dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy)).toLocaleString() + "/" + Memory.TooAngelDealings.totalCost.toLocaleString());
+                }
+                else {
+                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
+                }
+            }
+            else if (theStorage != undefined && theStorage.store.energy < (theStorage.storeCapacity / 2)) {
+                let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy));
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
+                    creep.travelTo(theStorage);
+                }
+                else if (err == OK) {
+                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
+                    //console.log(theStorage.room.name + " storage reserve at: " + (theStorage.store.energy + Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy)).toLocaleString() + "/" + (theStorage.storeCapacity / 2).toLocaleString());
+                }
+                else {
+                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE] + "?", true);
+                }
+            }
+            else {
+                if (_.size(Game.constructionSites) > 0 && creep.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
+                    ROLES["builder"].run(creep);
+                }
+                else {
+                    ROLES["upgrader"].run(creep);
                 }
             }
         }

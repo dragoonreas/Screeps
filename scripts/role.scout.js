@@ -10,10 +10,10 @@ let roleScout = {
         }
         
         if (creep.memory.goalReached != true) {
-            if (creep.memory.roomID == "W19N85") {
-                if (creep.room.name != "W17N79" || creep.pos.isNearTo(8, 39) == false) {
-                    creep.say(ICONS["moveTo"] + "W17N79", true);
-                    creep.travelTo(new RoomPosition(8, 39, "W17N79"));
+            if (creep.memory.roomID == "W17N79") {
+                if (creep.room.name != "W8N78" || creep.pos.isNearTo(8, 39) == false) {
+                    creep.say(ICONS["moveTo"] + "W8N78", true);
+                    creep.travelTo(new RoomPosition(13, 42, "W8N78"));
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);

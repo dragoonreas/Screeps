@@ -157,13 +157,24 @@ let roleMiner = {
         let theLink = source.link;
         if(creep.memory.mining == false) {
             if (creep.memory.working == true) {
-                let constructionSite = Game.getObjectById(creep.memory.constructionSiteID);
+                let constructionSiteID = _.get(creep.memory, ["constructionSite", "id"], undefined);
+                let constructionSite = Game.getObjectById(constructionSiteID);
+                // TODO: Finish implementing travelTo if room not visible
                 if (constructionSite == undefined) {
                     if (theLink != undefined && theLink instanceof ConstructionSite) {
                         constructionSite = theLink;
                     }
                     else if (theContainer != undefined && theContainer instanceof ConstructionSite) {
                         constructionSite = theContainer;
+                    }
+                    if (constructionSite != undefined) {
+                        creep.memory.constructionSite = { 
+                            id: constructionSite.id
+                            , pos: constructionSite.pos
+                        };
+                    }
+                    else {
+                        creep.memory.constructionSite = undefined;
                     }
                 }
                 
@@ -278,7 +289,7 @@ let roleMiner = {
                     creep.memory.containerConstructionPos = undefined;
                 }
                 else {
-                    let theConstructionSites = Game.rooms[creep.memory.containerPos.roomName].lookForAt(LOOK_CONSTRUCTION_SITES, creep.memory.containerPos.x, creep.memory.containerPos.y);
+                    let theConstructionSites = Game.rooms[creep.memory.containerConstructionPos.roomName].lookForAt(LOOK_CONSTRUCTION_SITES, creep.memory.containerConstructionPos.x, creep.memory.containerConstructionPos.y);
                     if (theConstructionSites.length > 0 && _.first(theConstructionSites).structureType == STRUCTURE_CONTAINER) { // NOTE: You can only have 1 construction site on a tile at a time
                         source.container = _.first(theConstructionSites);
                         theContainer = source.container;

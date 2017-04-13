@@ -25,8 +25,7 @@ const RESERVE_CLAIM_PART_CAP = 2;
 const ATTACK_CLAIM_PART_MULTIPLIER = 5;
 
 let prototypeSpawn = function() {
-    StructureSpawn.prototype.createCustomCreep =
-        function(roleName) {
+    StructureSpawn.prototype.createCustomCreep = function(roleName) {
         
         let creepMemory = {
             roomID: this.room.name 
@@ -77,9 +76,6 @@ let prototypeSpawn = function() {
                 else if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N29";
                 }
-                else if (Memory.rooms.W17N79.creepCounts.builder == 0 && Memory.rooms.W17N79.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W17N79";
-                }
             }
             else if (this.room.name == "W86N39") {
                 if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
@@ -105,8 +101,11 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "demolisher") {
-            if (this.room.name == "W86N39") {
-                creepMemory.roomSentTo = "W87N39";
+            if (this.room.name == "W86N29") {
+                creepMemory.roomSentTo = "W81N29";
+            }
+            else if (this.room.name == "W86N39") {
+                creepMemory.roomSentTo = "W82N39";
             }
         }
         else if (roleName == "claimer") {
@@ -131,9 +130,6 @@ let prototypeSpawn = function() {
             }
             else if (this.room.name == "W86N39") {
                 creepMemory.controllerID = "5873bb9411e3e4361b4d6139"; // harvest room
-            }
-            else if (this.room.name == "W19N85") {
-                creepMemory.controllerID = "5836b79c8b8b9619519f0a90";
             }
         }
         else if (roleName == "powerHarvester") {
@@ -173,7 +169,7 @@ let prototypeSpawn = function() {
             bodyTemplate = [CARRY, ATTACK, HEAL];
         }
         else if (roleName == "upgrader") {
-            if (this.room.name == "W86N39" || this.room.name == "W85N38" || this.room.name == "W24N87") { // these rooms have a source in range of the controller
+            if (this.room.name == "W86N39" || this.room.name == "W85N38") { // these rooms have a source in range of the controller
                 moveRatio = 0;
             }
             else if (this.room.controller.level > 3 && _.size(this.room.sources) > 1) { // NOTE: Assumes roads built between the dedicated upgrader source (2 source rooms only) and the controller at RCL 4 onwards

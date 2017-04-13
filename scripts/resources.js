@@ -24,6 +24,7 @@
 // 3. Number of structures differs at controller level (CONTROLLER_STRUCTURES, no arrays)
 // 
 
+const DEFAULT_ROLE_COUNTS = _.mapValues(ROLES, () => (0));
 
 // Determines the number of containers that are adjacent to sources.
 // NOTE: THIS MUST MATCH CALCULATIONS IN role.harvester2.determine_destination()!!!
@@ -132,8 +133,9 @@ function summarize_room_internal(room) {
 
     // Number of each kind of creeps
     // const creep_types = new Set(creeps.map(c => c.memory.role));
-    const creep_counts = _.countBy(creeps, c => c.memory.role); // TODO: Also include values for roles with no creeps
-
+    let creep_counts = _.countBy(creeps, c => c.memory.role);
+    _.defaults(creep_counts, DEFAULT_ROLE_COUNTS);
+    
     // Other things we can count:
     // Tower count, energy
     // Minimum health of ramparts, walls

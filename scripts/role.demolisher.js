@@ -1,9 +1,8 @@
-// role to use when doing ad-hoc stuff
 let roleDemolisher = {
     run: function(creep) {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
-            creep.memory.demolishStructureID = undefined;
+            creep.memory.demolishStructure = undefined;
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
@@ -12,7 +11,7 @@ let roleDemolisher = {
         
         let sentTo = creep.memory.roomSentTo;
         if (_.isString(sentTo) == false) {
-            _.get(Memory.rooms, [creep.memory.roomID, "harvestRooms", 0], undefined);
+            sentTo = _.get(Memory.rooms, [creep.memory.roomID, "harvestRooms", 0], undefined);
             if (_.isString(sentTo) == true) {
                 creep.memory.roomSentTo = sentTo;
             }
@@ -23,10 +22,17 @@ let roleDemolisher = {
         
         if (creep.memory.working == false) {
             if (sentTo != undefined) {
-                let demoTarget = Game.getObjectById(creep.memory.demolishStructureID);
+                let demoTarget = Game.getObjectById(_.get(creep.memory, ["demolishStructure", "id"], undefined));
                 if (demoTarget == undefined) {
+                    let demolishStructurePos = _.get(creep.memory, ["demolishStructure", "pos"], undefined);
+                    if (_.isString(_.get(demolishStructurePos, ["roomName"], undefined)) && (demolishStructurePos.roomName != creep.room.name)) {
+                        creep.say(ICONS["moveTo"] + demolishStructurePos.roomName, true);
+                        creep.travelTo(_.create(RoomPosition.prototype, demolishStructurePos));
+                        return;
+                    }
+                    
                     creep.room.checkForDrops = (creep.room.dangerZones.length > 0) ? true : false;
-                    creep.memory.demolishStructureID = undefined;
+                    creep.memory.demolishStructure = undefined;
                     
                     if (creep.room.name != sentTo) {
                         creep.say(ICONS["moveTo"] + sentTo, true);
@@ -57,7 +63,10 @@ let roleDemolisher = {
                     }
                     
                     if (demoTarget != undefined) {
-                        creep.memory.demolishStructureID = demoTarget.id;
+                        creep.memory.demolishStructure = { 
+                            id: demoTarget.id
+                            , pos: demoTarget.pos
+                        };
                     }
                 }
                 
@@ -79,6 +88,7 @@ let roleDemolisher = {
                 }
                 else {
                     creep.say(ICONS["dismantle"] + "?", true);
+                    _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "demolisher"],  0);
                     creep.memory.role = "harvester";
                 }
             }
