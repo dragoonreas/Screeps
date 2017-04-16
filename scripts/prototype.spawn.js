@@ -142,6 +142,9 @@ let prototypeSpawn = function() {
             else if (this.room.name == "W86N39") {
                 creepMemory.controllerID = "5873bb9411e3e4361b4d6139"; // harvest room
             }
+            else if (this.room.name == "W85N38") {
+                creepMemory.controllerID = "5873bbaa11e3e4361b4d63d1"; // harvest room
+            }
             else if (this.room.name == "W86N43") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     creepMemory.controllerID = "5873bb9311e3e4361b4d612e"; // harvest room

@@ -251,7 +251,7 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , adaptable: 0
     , demolisher: 0
     , scout: 0
-    , claimer: 0
+    , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
