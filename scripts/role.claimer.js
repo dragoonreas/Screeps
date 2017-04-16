@@ -10,6 +10,7 @@ let roleClaimer = {
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
             ROLES["recyclable"].run(creep);
+            return;
         }
         let theController = Game.getObjectById(creep.memory.controllerID);
         let canAttack = (_.countBy(creep.body, "type")[CLAIM] || 0) >= 5;
