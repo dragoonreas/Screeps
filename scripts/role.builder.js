@@ -4,6 +4,7 @@ let roleBuilder = {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
+            creep.memory.demolishStructure = undefined; // can be a demolisher
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
@@ -141,13 +142,19 @@ let roleBuilder = {
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63cf"); break;
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6731"); break;
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c4"); break;
+                case "W9N45": source = Game.getObjectById("577b935b0f9d51615fa48074"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
             let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
             let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
             if (source != undefined && source.energy == 0 && (theRecycleContainer == undefined || theRecycleContainer.store.energy == 0) && (theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) {
-                ROLES["harvester"].run(creep);
+                if (creep.room.name == "") { // for new rooms that have old structures. TODO: add check for >=4 WORK parts
+                    ROLES["demolisher"].run(creep);
+                }
+                else {
+                    ROLES["harvester"].run(creep);
+                }
                 return;
             }
             

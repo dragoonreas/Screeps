@@ -17,6 +17,7 @@ let roleAdaptable = {
                 case "W86N39": sentTo = "W85N38"; break;
                 case "W85N38": sentTo = "W86N43"; break;
                 case "W86N43": sentTo = "W86N39"; break;
+                case "W9N45": sentTo = "W9N45"; break;
             }
             if (_.isString(sentTo) == true) {
                 creep.memory.roomSentTo = sentTo;
@@ -60,7 +61,7 @@ let roleAdaptable = {
                     _.set(Memory.rooms, [sentTo, "creepCounts", "adaptables"], _.get(Memory.rooms, [sentTo, "creepCounts", "adaptables"], 0) + 1);
                 }
                 creep.say(ICONS["moveTo"] + sentTo, true);
-                if (sentTo == "") { // NOTE: Any rooms that require waypoints to get to should be added here
+                if (sentTo == "W9N45") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
@@ -81,7 +82,7 @@ let roleAdaptable = {
                         _.set(Memory.rooms, [sentTo, "creepCounts", "repairer"], _.get(Memory.rooms, [sentTo, "creepCounts", "repairer"], 0) + 1);
                         _.set(Memory.rooms, [sentTo, "repairerTypeCounts", "all"], _.get(Memory.rooms, [sentTo, "repairerTypeCounts", "all"], 0) + 1);
                         console.log(b.name + " in " + b.room.name + " changing from builder to " + b.memory.role + " (of type " + b.memory.repairerType + ")");
-                        if (_.get(Memory, ["rooms", sentTo, "creepCounts", "builder"], 0) <= _.get(Memory, ["rooms", sentTo, "creepMins", "builder"], 1) - 1) {
+                        if (_.get(Memory.rooms, [sentTo, "creepCounts", "builder"], 0) <= _.get(Memory.rooms, [sentTo, "creepMins", "builder"], 1) - 1) {
                             return false; // break loop
                         }
                     });

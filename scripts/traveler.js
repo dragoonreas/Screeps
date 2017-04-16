@@ -227,7 +227,7 @@ module.exports = function(globalOpts = {}){
                 travelData.dest.roomName !== destPos.roomName) {
                 delete travelData.path;
             }
-            if (creep.room.dangerZones.length > 0 && !options.ignoreHostileCreeps) {
+            if (creep.room.clearPathCaches == true && !options.ignoreHostileCreeps) { // TODO: Seperate the clear path cache flag from the ignoreHostileCreeps flag
                 options.ignoreCreeps = false; // TODO: Find a way to use stuck detection while resetting the path each tick and ignoring creeps
                 delete travelData.path;
             }

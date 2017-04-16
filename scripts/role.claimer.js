@@ -1,12 +1,16 @@
 let roleClaimer = {
    run: function(creep) {
-        let theController = Game.getObjectById(creep.memory.controllerID);
         let reservedControllerIDs = [
             "5873bb7f11e3e4361b4d5f13"
             , "5873bbab11e3e4361b4d6401"
             , "5873bbe111e3e4361b4d6ac5"
             , "5873bb9411e3e4361b4d6139"
+            , "5873bb9311e3e4361b4d612e"
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
+        if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
+            ROLES["recyclable"].run(creep);
+        }
+        let theController = Game.getObjectById(creep.memory.controllerID);
         let canAttack = (_.countBy(creep.body, "type")[CLAIM] || 0) >= 5;
         if (theController == undefined || creep.room.name != theController.room.name) {
             let controllerMem = Memory.controllers[creep.memory.controllerID];
@@ -14,7 +18,7 @@ let roleClaimer = {
                 if ((_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") && canAttack == false) { // TODO: Add additional checks to make sure we're not accidently attacking an ally
                     creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
                 }
-                else if (creep.memory.controllerID == "5873bccb11e3e4361b4d8313" && creep.room.name != "W24N87") {
+                else if (creep.memory.controllerID == "577b935b0f9d51615fa48076" && creep.room.name != "W9N45") {
                     creep.say(ICONS["moveTo"] + controllerMem.pos.roomName, true);
                     ROLES["scout"].run(creep);
                 }
@@ -39,6 +43,10 @@ let roleClaimer = {
                 creep.say(ICONS["moveTo"] + "W87N39", true);
                 creep.travelTo(new RoomPosition(24, 40, "W87N39"));
             }
+            else if (creep.memory.controllerID == "5873bb9311e3e4361b4d612e") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.say(ICONS["moveTo"] + "W87N43", true);
+                creep.travelTo(new RoomPosition(8, 39, "W87N43"));
+            }
             else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63cd") {
                 creep.say(ICONS["moveTo"] + "W86N39", true);
                 creep.travelTo(new RoomPosition(19, 19, "W86N39"));
@@ -50,6 +58,10 @@ let roleClaimer = {
             else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63c3") {
                 creep.say(ICONS["moveTo"] + "W86N43", true);
                 creep.travelTo(new RoomPosition(30, 17, "W86N43"));
+            }
+            else if (creep.memory.controllerID == "577b935b0f9d51615fa48076") {
+                creep.say(ICONS["moveTo"] + "W9N45", true);
+                ROLES["scout"].run(creep);
             }
             else {
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);

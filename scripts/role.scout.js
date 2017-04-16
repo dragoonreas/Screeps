@@ -25,45 +25,40 @@ let roleScout = {
                     }
                 }
             }
-            else if (creep.memory.roomID == "W85N23" || creep.memory.roomSentTo == "W17N79") {
+            else if (creep.memory.roomID == "W86N43" || creep.memory.roomSentTo == "W9N45") {
                 let waypoints = [
-                    "W25N85"
-                    , "W24N84"
-                    , "W24N83"
-                    , "W22N82"
-                    , "W20N80"
-                    , "W17N79"
+                    "W85N45"
+                    , "W5N45"
+                    , "W5N44"
+                    , "W7N44"
+                    , "W9N45"
                 ];
-                if (creep.memory.waypoint > 0 && creep.room.name == "W85N25") {
-                    creep.memory.waypoint = 0;
+                if (creep.memory.waypoint > 1 && creep.room.name == "W85N45") {
+                    creep.memory.waypoint = 1;
                 }
                 else if (creep.memory.waypoint < waypoints.length && creep.room.name == waypoints[creep.memory.waypoint]) {
                     ++creep.memory.waypoint;
                 }
                 
                 if (creep.memory.waypoint == 0) {
-                    creep.say(ICONS["moveTo"] + "W85N25", true);
-                    creep.travelTo(new RoomPosition(6, 13, "W85N25"));
+                    creep.say(ICONS["moveTo"] + "W85N45", true);
+                    creep.travelTo(new RoomPosition(13, 49, "W85N45"));
                 }
                 else if (creep.memory.waypoint == 1) {
-                    creep.say(ICONS["moveTo"] + "W24N84", true);
-                    creep.travelTo(new RoomPosition(25, 25, "W24N84"));
+                    creep.say(ICONS["moveTo"] + "W85N45", true);
+                    creep.travelTo(new RoomPosition(19, 14, "W85N45"));
                 }
                 else if (creep.memory.waypoint == 2) {
-                    creep.say(ICONS["moveTo"] + "W24N83", true);
-                    creep.travelTo(new RoomPosition(25, 25, "W24N83"));
+                    creep.say(ICONS["moveTo"] + "W5N44", true);
+                    creep.travelTo(new RoomPosition(25, 25, "W5N44"));
                 }
                 else if (creep.memory.waypoint == 3) {
-                    creep.say(ICONS["moveTo"] + "W22N82", true);
-                    creep.travelTo(new RoomPosition(25, 25, "W22N82"));
+                    creep.say(ICONS["moveTo"] + "W7N44", true);
+                    creep.travelTo(new RoomPosition(25, 25, "W7N44"));
                 }
-                else if (creep.memory.waypoint == 4) {
-                    creep.say(ICONS["moveTo"] + "W20N80", true);
-                    creep.travelTo(new RoomPosition(25, 25, "W20N80"));
-                }
-                else if (creep.memory.waypoint == 5 || creep.pos.isNearTo(8, 39) == false) {
-                    creep.say(ICONS["moveTo"] + "W17N79", true);
-                    creep.travelTo(new RoomPosition(8, 39, "W17N79"));
+                else if (creep.memory.waypoint == 4 || creep.pos.isNearTo(26, 37) == false) {
+                    creep.say(ICONS["moveTo"] + "W9N45", true);
+                    creep.travelTo(new RoomPosition(26, 37, "W9N45"));
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);

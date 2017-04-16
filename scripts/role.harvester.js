@@ -7,6 +7,8 @@ let roleHarvester = {
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
             creep.memory.depositStructure = undefined;
+            creep.memory.constructionSite = undefined; // can be a builder when working
+            creep.memory.repairStructure = undefined; // can be a repairer when working
         }
         
         if (creep.memory.working == false) {
@@ -68,6 +70,13 @@ let roleHarvester = {
                             , "5873bbc611e3e4361b4d6713"
                             , "5873bbc611e3e4361b4d6714"
                             , "5873bbaa11e3e4361b4d63c4"
+                        ]
+                        , "W9N45": [
+                            "577b935b0f9d51615fa48078"
+                            , "577b935b0f9d51615fa48079"
+                            , "577b935d0f9d51615fa480ba"
+                            , "577b935b0f9d51615fa48071"
+                            , "577b935b0f9d51615fa48074"
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -232,6 +241,14 @@ let roleHarvester = {
             }
         }
         else {
+            if ((creep.memory.constructionSite != undefined 
+                    && _.get(creep.memory, ["constructionSite", "pos", "roomName"], undefined) != creep.room.name) 
+                || (creep.memory.repairStructure != undefined 
+                    && _.get(creep.memory, ["repairStructure", "pos", "roomName"], undefined) != creep.room.name)) {
+                ROLES["builder"].run(creep);
+                return;
+            }
+            
             let structureID = _.get(creep.memory, ["depositStructure", "id"], undefined);
             let structure = Game.getObjectById(structureID);
             let structureMemPos = _.get(creep.memory, ["depositStructure", "pos"], undefined);

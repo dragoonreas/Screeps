@@ -58,11 +58,12 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
 for (let roomID in Game.rooms) {
     let theRoom = Game.rooms[roomID];
     _.defaults(theRoom, {
-        "buildOrderFILO": false
+         "memoryExpiration": Game.time + EST_TICKS_PER_DAY // TODO: Don't let harvest rooms expire
         , "checkForDrops": true
         , "hasHostileCreep": false
-        , "memoryExpiration": Game.time + EST_TICKS_PER_DAY // TODO: Don't let harvest rooms expire
+        , "clearPathCaches": true
         , "avoidTravelUntil": 0
+        , "buildOrderFILO": false
     }); // TODO: Implement sparse memory storage for rooms (assume a default value for undefined keys)
     
     let theController = theRoom.controller;
@@ -114,6 +115,11 @@ _.set(Memory.rooms, ["W86N43", "harvestRooms"], [
     , "W87N44"
     , "W85N45"
 ]);
+_.set(Memory.rooms, ["W9N45", "harvestRooms"], [
+    "W9N44"
+    , "W8N45"
+    , "W9N46"
+]);
 
 /*
     TODO:
@@ -161,6 +167,13 @@ _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 2
+});
+_.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 1
+    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 1
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -223,7 +236,7 @@ _.set(Memory.rooms, ["W86N39", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N39", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 1
+    , demolisher: 0
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -251,8 +264,21 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
     , adaptable: 0
     , demolisher: 0
     , scout: 0
-    , claimer: 0
+    , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+});
+_.set(Memory.rooms, ["W9N45", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W9N45", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
 
@@ -394,18 +420,26 @@ module.exports.loop = function () {
     let ramparts = _.filter(Game.structures, (s) => (s.structureType == STRUCTURE_RAMPART));
     let privateRamparts = {};
     
+    let ignoredRooms = [
+        "W84N37"
+        , "W17N79"
+    ];
+    
     // Manage rooms and run towers
     for (let roomID in Game.rooms) {
+        if (_.includes(ignoredRooms, roomID) == true) { continue; }
+        
         let theRoom = Game.rooms[roomID];
         
         // Make sure all required room memory objects exist
-        _.defaults(theRoom.memory, {
-            "buildOrderFILO": false
-            , "checkForDrops": true
-            , "hasHostileCreep": false
-            , "avoidTravelUntil": 0
-        });
         theRoom.memory.memoryExpiration = Game.time + EST_TICKS_PER_DAY; // Update scheduled time for room memory garbage collection
+        _.defaults(theRoom.memory, {
+            "checkForDrops": true
+            , "hasHostileCreep": false
+            , "clearPathCaches": true
+            , "avoidTravelUntil": 0
+            , "buildOrderFILO": false
+        });
         
         let theController = theRoom.controller;
         if (theController != undefined) {
@@ -490,6 +524,8 @@ module.exports.loop = function () {
             
             let rampartsToUse = []; // Ramparts for melee creeps (role.attacker) to sit in to attack invaders
             
+            let clearPathCaches = false;
+            
             // Deal with priority targets
             let priorityTargetID = undefined;
             let highestTargetWeighting = -1;
@@ -536,31 +572,51 @@ module.exports.loop = function () {
                     --avoidanceRange;
                 }
                 if (avoidanceRange > 0) {
-                    let topRange = _.max([aPriorityTarget.pos.y - avoidanceRange, 0]);
-                    let leftRange = _.max([aPriorityTarget.pos.x - avoidanceRange, 0]);
-                    let bottomRange = _.min([aPriorityTarget.pos.y + avoidanceRange, 49]);
-                    let rightRange = _.min([aPriorityTarget.pos.x + avoidanceRange, 49]);
-                    let theWalls = _.filter(theRoom.lookForAtArea(LOOK_TERRAIN, topRange, leftRange, bottomRange, rightRange, true), (t) => (
-                        t.terrain == "wall"
-                    ));
-                    let theRamparts = [];
-                    if (mayHaveRamparts == true) {
-                        theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
-                            s.structure.structureType == STRUCTURE_RAMPART 
-                            && (s.structure.my == true 
-                            || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
-                                && s.structure.isPublic == true))
-                        ));
+                    let oldPos = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "pos"], undefined);
+                    let oldAvoidanceRange = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "avoidanceRange"], undefined);
+                    let oldDangerZones = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "dangerZones"], []);
+                    if (oldPos != undefined && aPriorityTarget.pos.isEqualTo(_.create(RoomPosition.prototype, oldPos)) && oldAvoidanceRange != undefined && oldAvoidanceRange == avoidanceRange) {
+                        for (let oldDangerZone of oldDangerZones) {
+                            if (_.some(theRoom.dangerZones, oldDangerZone) == false) {
+                                theRoom.dangerZones.push(oldDangerZone);
+                                //theRoom.visual.rect(oldDangerZone.x - 0.5, oldDangerZone.y - 0.5, 1, 1, { fill: "red" });
+                            }
+                        }
                     }
-                    for (let yPos = topRange; yPos <= bottomRange; ++yPos) {
-                        for (let xPos = leftRange; xPos <= rightRange; ++xPos) {
-                            let thePos = {
-                                x: xPos
-                                , y: yPos
-                            };
-                            if (_.some(theRoom.dangerZones, thePos) == false && (theRamparts.length == 0 || _.some(theRamparts, thePos) == false) && (theWalls.length == 0 || _.some(theWalls, thePos) == false)) { // TODO: Filter all other non-walkable objects from dangerzones (maybe after all dangerzones have been created)
-                                theRoom.dangerZones.push(thePos);
-                                //theRoom.visual.rect(thePos.x - 0.5, thePos.y - 0.5, 1, 1, { fill: "red" });
+                    else {
+                        clearPathCaches = true;
+                        let topRange = _.max([aPriorityTarget.pos.y - avoidanceRange, 0]);
+                        let leftRange = _.max([aPriorityTarget.pos.x - avoidanceRange, 0]);
+                        let bottomRange = _.min([aPriorityTarget.pos.y + avoidanceRange, 49]);
+                        let rightRange = _.min([aPriorityTarget.pos.x + avoidanceRange, 49]);
+                        let theWalls = _.filter(theRoom.lookForAtArea(LOOK_TERRAIN, topRange, leftRange, bottomRange, rightRange, true), (t) => (
+                            t.terrain == "wall"
+                        ));
+                        let theRamparts = [];
+                        if (mayHaveRamparts == true) {
+                            theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
+                                s.structure.structureType == STRUCTURE_RAMPART 
+                                && (s.structure.my == true 
+                                || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                    && s.structure.isPublic == true))
+                            ));
+                        }
+                        _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "pos"], aPriorityTarget.pos);
+                        _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "avoidanceRange"], avoidanceRange);
+                        _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "dangerZones"], []);
+                        for (let yPos = topRange; yPos <= bottomRange; ++yPos) {
+                            for (let xPos = leftRange; xPos <= rightRange; ++xPos) {
+                                let thePos = {
+                                    x: xPos
+                                    , y: yPos
+                                };
+                                if ((theRamparts.length == 0 || _.some(theRamparts, thePos) == false) && (theWalls.length == 0 || _.some(theWalls, thePos) == false)) { // TODO: Filter all other non-walkable objects from dangerzones (maybe after all dangerzones have been created)
+                                    Memory.rooms[aPriorityTarget.room.name].invaderWeightings[aPriorityTarget.id].dangerZones.push(thePos);
+                                    if (_.some(theRoom.dangerZones, thePos) == false) {
+                                        theRoom.dangerZones.push(thePos);
+                                        //theRoom.visual.rect(thePos.x - 0.5, thePos.y - 0.5, 1, 1, { fill: "red" });
+                                    }
+                                }
                             }
                         }
                     }
@@ -598,28 +654,48 @@ module.exports.loop = function () {
                     --avoidanceRange;
                 }
                 if (avoidanceRange > 0) {
-                    let topRange = _.max([aNonPriorityTarget.pos.y - avoidanceRange, 0]);
-                    let leftRange = _.max([aNonPriorityTarget.pos.x - avoidanceRange, 0]);
-                    let bottomRange = _.min([aNonPriorityTarget.pos.y + avoidanceRange, 49]);
-                    let rightRange = _.min([aNonPriorityTarget.pos.x + avoidanceRange, 49]);
-                    let theRamparts = [];
-                    if (mayHaveRamparts == true) {
-                        theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
-                            s.structure.structureType == STRUCTURE_RAMPART 
-                            && (s.structure.my == true 
-                            || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
-                                && s.structure.isPublic == true))
-                        ));
+                    let oldPos = _.get(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "pos"], undefined);
+                    let oldAvoidanceRange = _.get(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "avoidanceRange"], undefined);
+                    let oldDangerZones = _.get(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "dangerZones"], []);
+                    if (oldPos != undefined && aNonPriorityTarget.pos.isEqualTo(_.create(RoomPosition.prototype, oldPos)) && oldAvoidanceRange != undefined && oldAvoidanceRange == avoidanceRange) {
+                        for (let oldDangerZone of oldDangerZones) {
+                            if (_.some(theRoom.dangerZones, oldDangerZone) == false) {
+                                theRoom.dangerZones.push(oldDangerZone);
+                                //theRoom.visual.rect(oldDangerZone.x - 0.5, oldDangerZone.y - 0.5, 1, 1, { fill: "red" });
+                            }
+                        }
                     }
-                    for (let yPos = topRange; yPos <= bottomRange; ++yPos) {
-                        for (let xPos = leftRange; xPos <= rightRange; ++xPos) {
-                            let thePos = {
-                                x: xPos
-                                , y: yPos
-                            };
-                            if (_.some(theRoom.dangerZones, thePos) == false && (theRamparts.length == 0 || _.some(theRamparts, thePos) == false)) {
-                                theRoom.dangerZones.push(thePos);
-                                //theRoom.visual.rect(thePos.x - 0.5, thePos.y - 0.5, 1, 1, { fill: "red" });
+                    else {
+                        clearPathCaches = true;
+                        let topRange = _.max([aNonPriorityTarget.pos.y - avoidanceRange, 0]);
+                        let leftRange = _.max([aNonPriorityTarget.pos.x - avoidanceRange, 0]);
+                        let bottomRange = _.min([aNonPriorityTarget.pos.y + avoidanceRange, 49]);
+                        let rightRange = _.min([aNonPriorityTarget.pos.x + avoidanceRange, 49]);
+                        let theRamparts = [];
+                        if (mayHaveRamparts == true) {
+                            theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
+                                s.structure.structureType == STRUCTURE_RAMPART 
+                                && (s.structure.my == true 
+                                || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                    && s.structure.isPublic == true))
+                            ));
+                        }
+                        _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "pos"], aNonPriorityTarget.pos);
+                        _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "avoidanceRange"], avoidanceRange);
+                        _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "dangerZones"], []);
+                        for (let yPos = topRange; yPos <= bottomRange; ++yPos) {
+                            for (let xPos = leftRange; xPos <= rightRange; ++xPos) {
+                                let thePos = {
+                                    x: xPos
+                                    , y: yPos
+                                };
+                                if ((theRamparts.length == 0 || _.some(theRamparts, thePos) == false)) {
+                                    Memory.rooms[aNonPriorityTarget.room.name].invaderWeightings[aNonPriorityTarget.id].dangerZones.push(thePos);
+                                    if (_.some(theRoom.dangerZones, thePos) == false) {
+                                        theRoom.dangerZones.push(thePos);
+                                        //theRoom.visual.rect(thePos.x - 0.5, thePos.y - 0.5, 1, 1, { fill: "red" });
+                                    }
+                                }
                             }
                         }
                     }
@@ -636,6 +712,8 @@ module.exports.loop = function () {
                     });
                 }
             }
+            
+            theRoom.clearPathCaches = clearPathCaches;
             
             priorityTarget = Game.getObjectById(priorityTargetID); // This target will be focused on by towers and attacker creeps
             
@@ -680,6 +758,7 @@ module.exports.loop = function () {
 			}
         }
         else if (theRoom.hasHostileCreep == true) {
+            theRoom.clearPathCaches = false;
             theRoom.hasHostileCreep = false;
             theRoom.checkForDrops = true; // TODO: If the invaders were players, consider drops near the exits as suspisious as they may just be trying to lure creeps outside walls/ramparts to attack them
             
@@ -687,6 +766,9 @@ module.exports.loop = function () {
             if (theRoom.memory.creepMins != undefined) {
                 theRoom.memory.creepMins.attacker = 0;
             }
+        }
+        else {
+            theRoom.clearPathCaches = false;
         }
         
         let dangerousToCreeps = (theRoom.dangerZones.length > 0) ? true : false;
@@ -722,7 +804,7 @@ module.exports.loop = function () {
                 }
             }
             
-            // TODO: Stop claimers being spawned to reserve this harvest room
+            // TODO: Stop claimers being spawned to reserve this harvest room properly from this point, rather than in the in the spawn and claimer logic
 		}
 		
         if (theRoom.hasHostileTower == true) { // TODO: Add a check to see if the towers are still there if a creep is in the room, instead of just waiting for it to be reset after a day due to the room memory garbage collection being run on it
@@ -982,6 +1064,7 @@ module.exports.loop = function () {
     Memory.rooms.W85N23.creepMins.adaptable = (((Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W86N39.creepMins.adaptable = (((Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) || (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     Memory.rooms.W85N38.creepMins.adaptable = (((Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) || (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
+    Memory.rooms.W86N43.creepMins.adaptable = (((Memory.rooms.W9N45.creepCounts.builder == 0 && Memory.rooms.W9N45.creepCounts.adaptable == 0) || (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W85N39.creepCounts.adaptable == 0) || (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0)) ? 1 : 0); // TODO: Incorporate this into propper bootstrapping code
     
     // Spawn or renew creeps
     let nothingToSpawn = [];

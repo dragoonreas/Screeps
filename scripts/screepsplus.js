@@ -45,7 +45,17 @@ function collect_stats() {
     
     Memory.stats.timeSinceLastTick = Date.now() - (Memory.stats.currentTime || Date.now());
     Memory.stats.currentTime = Date.now();
-
+    
+    if (_.get(Memory.stats, ["lastCommitTime"], 0) != require.timestamp) {
+        Memory.stats.newCommit = 1;
+        Memory.stats.codeUptime = 0;
+        Memory.stats.lastCommitTime = require.timestamp;
+    }
+    else {
+        Memory.stats.newCommit = 0;
+    }
+    Memory.stats.codeUptime += 1;
+    
     // Note: This is fragile and will change if the Game.cpu API changes
     Memory.stats.cpu = Game.cpu;
     // Memory.stats.cpu.used = Game.cpu.getUsed(); // AT END OF MAIN LOOP
