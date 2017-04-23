@@ -105,6 +105,8 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
 _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
     "W87N39"
     , "W88N39"
+    , "W85N41"
+    , "W87N41"
 ]);
 _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     "W86N38"
@@ -162,16 +164,16 @@ _.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
-    , all: 2
+    , all: 1
 });
 _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -210,7 +212,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 1
+    , demolisher: 0
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -220,7 +222,7 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 1
+    , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W85N23", "minerSources"], {}))
     , adaptable: 0
     , demolisher: 0
@@ -507,7 +509,7 @@ module.exports.loop = function () {
             }
 			
 			justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
-			noHealers = (_.any(Game.creeps, (c) => (c.getActiveBodyparts(HEAL) > 0)) == false);
+			noHealers = (_.any(invaders, (c) => (c.getActiveBodyparts(HEAL) > 0)) == false);
 			
             /*
                 NOTE:
@@ -1081,6 +1083,9 @@ module.exports.loop = function () {
                             creepName = spawn.createCustomCreep(creepType);
                             if (_.isString(creepName) == true) {
                                 console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
+                            }
+                            else if (creepName == -6.5 || creepName == -10.5) { // TODO: Just check for -#.5
+                                continue;
                             }
                             break; // NOTE: Need to either wait till the creep can start spawning or be spawned, so no need to check the rest
                         }

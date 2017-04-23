@@ -83,7 +83,7 @@ let globals = function() {
         , testFinished: "\uD83C\uDFC1" // for when scout has finished its test run
     }
     
-    global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v,i,c) => (_.get(c, [(i - 1)], 0) + v));
+    global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
     
     global.EST_SEC_PER_TICK = 4.25; // time between ticks is currently averaging ~4.25 seconds (as of 2017/04/05)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s

@@ -41,9 +41,11 @@ function collect_stats() {
         Memory.stats = { tick: Game.time };
     }
     
-    Memory.stats.currentTick = Game.time;
+    let ticksPast = Game.time - _.get(Memory.stats, ["currentTick"], 0);
+    Memory.stats.ticksSkipped = ticksPast - 1;
+    Memory.stats.timeSinceLastTick = (Date.now() - (Memory.stats.currentTime || Date.now())) / ticksPast;
     
-    Memory.stats.timeSinceLastTick = Date.now() - (Memory.stats.currentTime || Date.now());
+    Memory.stats.currentTick = Game.time;
     Memory.stats.currentTime = Date.now();
     
     if (_.get(Memory.stats, ["lastCommitTime"], 0) != require.timestamp) {

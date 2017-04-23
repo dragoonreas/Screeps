@@ -10,7 +10,8 @@ let roleDemolisher = {
         }
         
         let sentTo = creep.memory.roomSentTo;
-        if (_.isString(sentTo) == false) {
+        if (_.isString(sentTo) == false || creep.memory.roomSentFrom != undefined) {
+            creep.memory.roomSentFrom = undefined;
             sentTo = _.get(Memory.rooms, [creep.memory.roomID, "harvestRooms", 0], undefined);
             if (_.isString(sentTo) == true) {
                 creep.memory.roomSentTo = sentTo;
@@ -20,7 +21,7 @@ let roleDemolisher = {
             }
         }
         
-        if (creep.memory.working == false) {
+        if (creep.memory.working == false && (sentTo == undefined || _.get(Memory.rooms, [sentTo, "avoidTravelUntil"], 0) < Game.time)) {
             if (sentTo != undefined) {
                 let demoTarget = Game.getObjectById(_.get(creep.memory, ["demolishStructure", "id"], undefined));
                 if (demoTarget == undefined) {
@@ -86,10 +87,15 @@ let roleDemolisher = {
                         }
                     }
                 }
-                else {
+                else if (creep.memory.role == "demolisher") {
                     creep.say(ICONS["dismantle"] + "?", true);
                     _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "demolisher"],  0);
                     creep.memory.role = "harvester";
+                }
+                else {
+                    creep.say(ICONS["dismantle"] + "?", true);
+                    ROLES["harvester"].run(creep);
+                    return;
                 }
             }
             else {
