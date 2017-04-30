@@ -1,3 +1,5 @@
+const DEFAULT_HARVEST_COUNT = 6;
+
 /*
     Production seemed to peak with the body size used during controller lvl 3 and subsequently fell off at the new couple of higher levels in E69N44.
     So, use that energy capacity as the GENERAL_WORKER_ENERGY_CAP: 
@@ -100,10 +102,7 @@ let prototypeSpawn = function() {
                 }
             }
             else if (this.room.name == "W86N43") {
-                if (Memory.rooms.W9N45.creepCounts.builder == 0 && Memory.rooms.W9N45.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W9N45";
-                }
-                else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N39";
                 }
                 else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
@@ -153,9 +152,12 @@ let prototypeSpawn = function() {
                     creepMemory.controllerID = "577b935b0f9d51615fa48076";
                 }
             }
+            else if (this.room.name == "W9N45") {
+                creepMemory.controllerID = "577b935b0f9d51615fa4807a"; // harvest room
+            }
             let controllerRoom = _.get(Memory.controllers, [creepMemory.controllerID, "pos", "roomName"], "");
             if (_.includes(_.get(Memory.rooms, [this.room.name, "harvestRooms"], []), controllerRoom) == true && Game.time < _.get(Memory.rooms, [controllerRoom, "avoidTravelUntil"], 0)) {
-                return -10.5; // NODE: Fake error for when a claimer would just die to an invader in the room they're going to reserve
+                return -10.5; // NOTE: Fake error for when a claimer would just die to an invader in the room they're going to reserve
             }
         }
         else if (roleName == "powerHarvester") {
@@ -244,20 +246,27 @@ let prototypeSpawn = function() {
         let bodyPartCounts = _.countBy(bodyTemplate);
         
         /*
-            Alternative equation for this part cap to try, is: Creep.carryCapacity = Room.energyCapacityAvaliable / 6
-            RCL Room.energyCapacityAvaliable    Creep.carryCapacity energyToSpawn   totalNumOfParts
-            1:  1*300+ 0* 50=     300/6=      50	  50*5=           250/5/50*4=	  4
-            2:  1*300+ 5* 50=     550/6=      91	 100*5=           500/5/50*4=	  8
-            3:  1*300+10* 50=     800/6=     133	 150*5=           750/5/50*4=	 12
-            4:  1*300+20* 50=    1300/6=     216	 250*5=          1250/5/50*4=	 20
-            5:  1*300+30* 50=    1800/6=     300	 300*5=          1500/5/50*4=	 24
-            6:  1*300+40* 50=    2300/6=     383	 400*5=          2000/5/50*4=	 32
-            7:  1*300+50*100=    5300/6=     883	 900*5=          4500/5/50*4=	 72!
-            8:  1*300+60*200=   12300/6=    2050	2050*5=         10250/5/50*4=	164!
-            
-            !: Invalid since it goes over 50 parts
+            Base general worker size off capacity to fill 3 extentions from a single haul
+            RCL     Room.energyCapacityAvaliable    Creep.carryCapacity energyToSpawn   totalNumberOfParts
+            1-6:      300-2300          ( 50/50)*3= 150*5=               750/5/50*4=    12
+            7:       5600               (100/50)*3= 300*5=              1500/5/50*4=    24
+            1-6:    12900               (200/50)*3= 600*5=              3000/5/50*4=    48
         */
-        const GENERAL_WORKER_CARRY_PART_CAP = (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / CARRY_CAPACITY) * 3; // Base general worker size off capacity to fill 3 extentions from a single haul
+        //const GENERAL_WORKER_CARRY_PART_CAP = (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / CARRY_CAPACITY) * 3;
+        /*
+            Alternative equation for this part cap to try that scales more smoothly with RCL:
+            Creep.carryCapacity = ceil(Room.energyCapacityAvaliable / defaultHarvesterCount / (curentExtentionCapacity / rcl1ExtentionCapacity) / CARRY_CAPACITY) * CARRY_CAPACITY
+            RCL                 Room.energyCapacityAvaliable    Creep.carryCapacity energyToSpawn   totalNumOfParts
+            1:  1*300+ 0* 50=     300/6/( 50/50)=   50           50*5=               250/5/50*4=     4
+            2:  1*300+ 5* 50=     550/6/( 50/50)=   91          100*5=               500/5/50*4=     8
+            3:  1*300+10* 50=     800/6/( 50/50)=   133         150*5=               750/5/50*4=    12
+            4:  1*300+20* 50=    1300/6/( 50/50)=   216         250*5=              1250/5/50*4=    20
+            5:  1*300+30* 50=    1800/6/( 50/50)=   300         300*5=              1500/5/50*4=    24
+            6:  1*300+40* 50=    2300/6/( 50/50)=   383         400*5=              2000/5/50*4=    32
+            7:  2*300+50*100=    5600/6/(100/50)=   466         500*5=              2500/5/50*4=    40
+            8:  3*300+60*200=   12900/6/(200/50)=   537         550*5=              2750/5/50*4=	44
+        */
+        const GENERAL_WORKER_CARRY_PART_CAP = Math.ceil(this.room.energyCapacityAvailable / DEFAULT_HARVEST_COUNT / (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / EXTENSION_ENERGY_CAPACITY[1]) / CARRY_CAPACITY);
         
         let partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), GENERAL_WORKER_CARRY_PART_CAP);
         if (roleName == "miner") {
@@ -359,7 +368,7 @@ let prototypeSpawn = function() {
         
         let result = this.createCreep(body, undefined, creepMemory); // TODO: Work out a custom naming scheme
         
-        Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role] += 1;
+        ++Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role];
         
         if (roleName == "repairer" && _.isString(result) == true) {
             ++Memory.rooms[creepMemory.roomID].repairerTypeCounts[creepMemory.repairerType];

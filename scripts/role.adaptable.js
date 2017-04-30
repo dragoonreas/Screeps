@@ -81,7 +81,7 @@ let roleAdaptable = {
                         _.set(Memory.rooms, [sentTo, "creepCounts", "builder"], _.get(Memory.rooms, [sentTo, "creepCounts", "builder"], 1) - 1);
                         _.set(Memory.rooms, [sentTo, "creepCounts", "repairer"], _.get(Memory.rooms, [sentTo, "creepCounts", "repairer"], 0) + 1);
                         _.set(Memory.rooms, [sentTo, "repairerTypeCounts", "all"], _.get(Memory.rooms, [sentTo, "repairerTypeCounts", "all"], 0) + 1);
-                        console.log(b.name + " in " + b.room.name + " changing from builder to " + b.memory.role + " (of type " + b.memory.repairerType + ")");
+                        console.log(b.name + " in " + b.memory.roomID + " changing from builder to " + b.memory.role + " (of type " + b.memory.repairerType + ")");
                         if (_.get(Memory.rooms, [sentTo, "creepCounts", "builder"], 0) <= _.get(Memory.rooms, [sentTo, "creepMins", "builder"], 1) - 1) {
                             return false; // break loop
                         }

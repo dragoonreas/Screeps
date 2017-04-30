@@ -165,6 +165,9 @@ module.exports = function(globalOpts = {}){
             });
         }
         travelTo(creep, destination, options = {}) {
+            if (creep.spawning) {
+                return ERR_BUSY;
+            }
             // register hostile rooms entered
             let creepPos = creep.pos, destPos = (destination.pos || destination);
             if (_.get(creep.room, ["controller", "owner", "username"], undefined) && !creep.room.controller.my && !_.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), creep.room.controller.owner.username)) {
@@ -181,7 +184,7 @@ module.exports = function(globalOpts = {}){
             let travelData = creep.memory._travel;
             if (creep.fatigue > 0) {
                 travelData.tick = Game.time;
-                return ERR_BUSY;
+                return ERR_TIRED;
             }
             if (!destination) {
                 return ERR_INVALID_ARGS;
@@ -218,7 +221,7 @@ module.exports = function(globalOpts = {}){
                 _.set(global, ["summarized_rooms", creepRoomID, "traveler", creepRole, "count"], 1);
             }
             else {
-                global.summarized_rooms[creepRoomID].traveler[creepRole].count++;
+                ++global.summarized_rooms[creepRoomID].traveler[creepRole].count;
             }
             // handle case where creep is stuck
             if (travelData.stuck >= gOpts.defaultStuckValue && !options.ignoreStuck) {
@@ -227,21 +230,27 @@ module.exports = function(globalOpts = {}){
                 global.summarized_rooms[creepRoomID].traveler[creepRole].stuck = (global.summarized_rooms[creepRoomID].traveler[creepRole].stuck || 0) + 1;
             }
             // handle case where creep wasn't traveling last tick and may have moved, but destination is still the same
-            if (Game.time - travelData.tick > 1 && hasMoved) {
-                delete travelData.path;
-                global.summarized_rooms[creepRoomID].traveler[creepRole].offCourse = (global.summarized_rooms[creepRoomID].traveler[creepRole].offCourse || 0) + 1;
+            if (Game.time - (travelData.tick || Game.time) > 1 && hasMoved) {
+                if (travelData.path != undefined) {
+                    delete travelData.path;
+                    global.summarized_rooms[creepRoomID].traveler[creepRole].offCourse = (global.summarized_rooms[creepRoomID].traveler[creepRole].offCourse || 0) + 1;
+                }
             }
             travelData.tick = Game.time;
             // delete path cache if destination is different
             if (!travelData.dest || travelData.dest.x !== destPos.x || travelData.dest.y !== destPos.y ||
                 travelData.dest.roomName !== destPos.roomName) {
-                delete travelData.path;
-                global.summarized_rooms[creepRoomID].traveler[creepRole].newDestination = (global.summarized_rooms[creepRoomID].traveler[creepRole].newDestination || 0) + 1;
+                if (travelData.path != undefined) {
+                    delete travelData.path;
+                    global.summarized_rooms[creepRoomID].traveler[creepRole].newDestination = (global.summarized_rooms[creepRoomID].traveler[creepRole].newDestination || 0) + 1;
+                }
             }
             if (creep.room.clearPathCaches == true && !options.ignoreHostileCreeps) { // TODO: Seperate the clear path cache flag from the ignoreHostileCreeps flag
                 options.ignoreCreeps = false; // TODO: Find a way to use stuck detection while resetting the path each tick and ignoring creeps
-                delete travelData.path;
-                global.summarized_rooms[creepRoomID].traveler[creepRole].forceRepath = (global.summarized_rooms[creepRoomID].traveler[creepRole].forceRepath || 0) + 1;
+                if (travelData.path != undefined) {
+                    delete travelData.path;
+                    global.summarized_rooms[creepRoomID].traveler[creepRole].forceRepath = (global.summarized_rooms[creepRoomID].traveler[creepRole].forceRepath || 0) + 1;
+                }
             }
             let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creepPos.roomName);
             let isPortalRoom = (parsed[1] % 10 === 5) || (parsed[2] % 10 === 5);
@@ -252,16 +261,13 @@ module.exports = function(globalOpts = {}){
                 let destIsPortal = _.some(portals, (p) => (
                     p.pos.isEqualTo(destPos) == true
                 ));
-                if (portals.length > 0 && destIsPortal == false) {
+                if (portals.length > 0 && destIsPortal == false && travelData.path != undefined) {
                     delete travelData.path;
                     global.summarized_rooms[creepRoomID].traveler[creepRole].portalCheck = (global.summarized_rooms[creepRoomID].traveler[creepRole].portalCheck || 0) + 1;
                 }
             }
             // pathfinding
             if (!travelData.path) {
-                if (creep.spawning) {
-                    return ERR_BUSY;
-                }
                 travelData.start = creepPos;
                 travelData.dest = destPos;
                 travelData.prev = undefined;
@@ -298,8 +304,8 @@ module.exports = function(globalOpts = {}){
                 travelData.stuck = 0;
             }
             if (!travelData.path || travelData.path.length === 0) {
-                return ERR_NO_PATH;
                 global.summarized_rooms[creepRoomID].traveler[creepRole].noPath = (global.summarized_rooms[creepRoomID].traveler[creepRole].noPath || 0) + 1;
+                return ERR_NO_PATH;
             }
             // consume path and move
             if (travelData.prev && travelData.stuck === 0) {

@@ -20,6 +20,9 @@ let roleUpgrader = {
             else if (err == OK) {
                 creep.say(ICONS["upgradeController"] + ICONS[STRUCTURE_CONTROLLER], true);
             }
+            else {
+                creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
+            }
         }
         else {
             let source = undefined;
@@ -51,6 +54,20 @@ let roleUpgrader = {
             }
             else if (err == OK) {
                 creep.say(ICONS["harvest"] + ICONS["source"], true);
+            }
+            else if (theRecycleContainer != undefined && theRecycleContainer.store.energy > 0 && creep.memory.speeds["1"] <= 1) {
+                creep.cancelOrder("harvest");
+                err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTAINER], true);
+                    creep.travelTo(theRecycleContainer);
+                }
+                else if (err == OK) {
+                    creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
+                }
+                else {
+                    creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
+                }
             }
             else if (theStorage != undefined && theStorage.store.energy > 0 && creep.memory.speeds["1"] <= 1) {
                 creep.cancelOrder("harvest");

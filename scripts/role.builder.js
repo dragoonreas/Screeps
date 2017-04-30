@@ -148,7 +148,18 @@ let roleBuilder = {
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
             let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
             let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
-            if (source != undefined && source.energy == 0 && (theRecycleContainer == undefined || theRecycleContainer.store.energy == 0) && (((theStorage == undefined || theStorage.store.energy == 0) && (theTerminal == undefined || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) || (_.size(Game.constructionSites) == 0 || (Game.rooms[creep.memory.roomID] != undefined && Game.rooms[creep.memory.roomID].find(FIND_MY_CONSTRUCTION_SITES).length == 0)))) {
+            if (source != undefined 
+                && source.energy == 0 
+                && (theRecycleContainer == undefined 
+                    || theRecycleContainer.store.energy == 0) 
+                && (((theStorage == undefined 
+                            || theStorage.store.energy == 0) 
+                        && (theTerminal == undefined 
+                            || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) 
+                    || (((_.size(Game.constructionSites) == 0) 
+                            || (Game.rooms[creep.memory.roomID] == undefined 
+                                || Game.rooms[creep.memory.roomID].find(FIND_MY_CONSTRUCTION_SITES).length == 0))
+                        /*&& _.get(Game.rooms, [creep.memory.roomID, "energyAvailable"], 0) == _.get(Game.rooms, [creep.memory.roomID, "energyCapacityAvailable"], 0)*/))) {
                 if (creep.memory.roomID == "W9N45" && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
                 }

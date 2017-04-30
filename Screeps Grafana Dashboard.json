@@ -9,7 +9,7 @@
   "hideControls": false,
   "id": 277,
   "links": [],
-  "refresh": "15s",
+  "refresh": "1m",
   "rows": [
     {
       "collapse": false,
@@ -19,6 +19,7 @@
           "aliasColors": {},
           "bars": false,
           "datasource": "screepspl.us",
+          "decimals": null,
           "editable": true,
           "error": false,
           "fill": 0,
@@ -44,7 +45,16 @@
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {
+              "alias": "Creeps Total",
+              "color": "#7EB26D",
+              "fill": 2,
+              "linewidth": 0,
+              "yaxis": 2,
+              "zindex": -3
+            }
+          ],
           "span": 4,
           "stack": false,
           "steppedLine": false,
@@ -64,6 +74,12 @@
               "hide": true,
               "refId": "C",
               "target": "groupByNode(screeps.roomSummary.$Room.creep_counts.$Role, 5, 'sum')"
+            },
+            {
+              "hide": false,
+              "refId": "D",
+              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.num_creeps, 3), 'Creeps Total')",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -950,33 +966,97 @@
       "panels": [
         {
           "aliasColors": {},
-          "bars": false,
+          "bars": true,
           "datasource": "screepspl.us",
-          "fill": 1,
+          "fill": 0,
           "id": 101,
           "legend": {
-            "alignAsTable": false,
-            "avg": false,
-            "current": false,
-            "max": false,
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": true,
             "min": false,
-            "rightSide": false,
-            "show": false,
+            "rightSide": true,
+            "show": true,
             "total": false,
-            "values": false
+            "values": true
           },
-          "lines": true,
-          "linewidth": 1,
+          "lines": false,
+          "linewidth": 3,
           "links": [],
           "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {
+              "alias": "/.*(?!CPU).{3}$/",
+              "stack": true,
+              "yaxis": 2,
+              "zindex": -1
+            },
+            {
+              "alias": "/.*CPU$/",
+              "bars": false,
+              "lines": true,
+              "linewidth": 1,
+              "steppedLine": false,
+              "zindex": 3
+            },
+            {
+              "alias": "Travelling",
+              "color": "#052B51",
+              "stack": false,
+              "zindex": -3
+            },
+            {
+              "alias": "Pathfinding",
+              "color": "#0A50A1",
+              "stack": false,
+              "zindex": -2
+            },
+            {
+              "alias": "Incomplete Path",
+              "bars": false,
+              "color": "#890F02",
+              "nullPointMode": "null",
+              "points": true,
+              "stack": false,
+              "zindex": 0
+            },
+            {
+              "alias": "New Destination",
+              "color": "#967302"
+            },
+            {
+              "alias": "Stuck",
+              "color": "#58140C"
+            },
+            {
+              "alias": "Off Course",
+              "color": "#3F6833"
+            },
+            {
+              "alias": "Portal Check",
+              "color": "#962D82"
+            },
+            {
+              "alias": "Total CPU",
+              "color": "#70DBED",
+              "fillBelowTo": "Avg/Creep CPU",
+              "lines": false
+            },
+            {
+              "alias": "Avg/Creep CPU",
+              "color": "#F29191"
+            }
+          ],
           "span": 12,
           "stack": false,
-          "steppedLine": false,
+          "steppedLine": true,
           "targets": [
             {
               "hide": true,
@@ -984,7 +1064,7 @@
               "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.count, 3, 5), 'Travelling')"
             },
             {
-              "hide": true,
+              "hide": false,
               "refId": "B",
               "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), 'Total CPU')"
             },
@@ -1021,8 +1101,8 @@
             {
               "hide": false,
               "refId": "I",
-              "target": "alias(divideSeries(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), #F), 'Average CPU')",
-              "targetFull": "alias(divideSeries(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')), 'Average CPU')"
+              "target": "alias(divideSeries(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), #F), 'Avg/Creep CPU')",
+              "targetFull": "alias(divideSeries(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')), 'Avg/Creep CPU')"
             }
           ],
           "thresholds": [],
@@ -1053,7 +1133,7 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
               "min": null,
               "show": true
@@ -1099,7 +1179,7 @@
                 "type": "query"
               }
             ],
-            "executionErrorState": "alerting",
+            "executionErrorState": "keep_state",
             "frequency": "60s",
             "handler": 1,
             "message": "Average bucket below 500 CPU for the past 5 minutes.",
@@ -1154,6 +1234,7 @@
             },
             {
               "alias": "Used MA",
+              "color": "#EF843C",
               "yaxis": 2,
               "zindex": 3
             },
@@ -1191,7 +1272,15 @@
             },
             {
               "alias": "Tick Limit",
-              "yaxis": 1
+              "color": "#3F6833",
+              "fillBelowTo": "Bucket",
+              "lines": false,
+              "yaxis": 1,
+              "zindex": -1
+            },
+            {
+              "alias": "Bucket MA",
+              "color": "#E24D42"
             }
           ],
           "span": 6,
@@ -1213,9 +1302,9 @@
               "target": "alias(screeps.cpu.limit, 'Limit')"
             },
             {
-              "hide": true,
+              "hide": false,
               "refId": "C",
-              "target": "alias(screeps.cpu.tickLimit, 'Tick Limit')"
+              "target": "alias(removeAboveValue(screeps.cpu.tickLimit, 499), 'Tick Limit')"
             },
             {
               "hide": false,
@@ -1396,6 +1485,29 @@
                   "type": "last"
                 },
                 "type": "query"
+              },
+              {
+                "evaluator": {
+                  "params": [
+                    1
+                  ],
+                  "type": "lt"
+                },
+                "operator": {
+                  "type": "and"
+                },
+                "query": {
+                  "params": [
+                    "K",
+                    "5m",
+                    "now"
+                  ]
+                },
+                "reducer": {
+                  "params": [],
+                  "type": "max"
+                },
+                "type": "query"
               }
             ],
             "executionErrorState": "alerting",
@@ -1403,13 +1515,14 @@
             "handler": 1,
             "message": "No new data received for the past 5 minutes.",
             "name": "No Data",
-            "noDataState": "alerting",
+            "noDataState": "no_data",
             "notifications": []
           },
           "aliasColors": {},
           "bars": true,
           "datasource": "screepspl.us",
           "fill": 1,
+          "hideTimeOverride": false,
           "id": 63,
           "legend": {
             "alignAsTable": false,
@@ -1474,7 +1587,7 @@
               "zindex": -1
             },
             {
-              "alias": "Code Commit",
+              "alias": "Code Committed",
               "color": "#1F78C1",
               "zindex": 0
             },
@@ -1540,7 +1653,7 @@
             {
               "hide": false,
               "refId": "B",
-              "target": "alias(screeps.newCommit, 'Code Commit')"
+              "target": "alias(screeps.newCommit, 'Code Committed')"
             },
             {
               "hide": false,
@@ -1556,6 +1669,12 @@
               "hide": false,
               "refId": "J",
               "target": "alias(absolute(transformNull(removeAboveValue(screeps.ticksSkipped, 0), 0)), 'Ticks Repeated')"
+            },
+            {
+              "hide": true,
+              "refId": "K",
+              "target": "alias(derivative(screeps.currentTick), 'Ticks/Graph Update')",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -2891,6 +3010,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -3482,6 +3602,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -4046,7 +4167,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1492953460568,
+      "repeatIteration": 1493440578833,
       "repeatRowId": 11,
       "showTitle": true,
       "title": "$Room",
@@ -4073,6 +4194,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -4637,7 +4759,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1492953460568,
+      "repeatIteration": 1493440578833,
       "repeatRowId": 11,
       "showTitle": true,
       "title": "$Room",
@@ -4664,6 +4786,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -5228,7 +5351,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1492953460568,
+      "repeatIteration": 1493440578833,
       "repeatRowId": 11,
       "showTitle": true,
       "title": "$Room",
@@ -5255,6 +5378,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -5819,7 +5943,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1492953460568,
+      "repeatIteration": 1493440578833,
       "repeatRowId": 11,
       "showTitle": true,
       "title": "$Room",
@@ -5846,6 +5970,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -6410,7 +6535,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1492953460568,
+      "repeatIteration": 1493440578833,
       "repeatRowId": 11,
       "showTitle": true,
       "title": "$Room",
@@ -6437,6 +6562,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -7001,7 +7127,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1492953460568,
+      "repeatIteration": 1493440578833,
       "repeatRowId": 11,
       "showTitle": true,
       "title": "$Room",
@@ -7018,9 +7144,11 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "tags": [],
           "text": "All",
-          "value": "$__all"
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "screepspl.us",
         "hide": 0,
@@ -7042,7 +7170,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -7066,7 +7193,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -7091,7 +7217,9 @@
         "allValue": null,
         "current": {
           "text": "All",
-          "value": "$__all"
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "screepspl.us",
         "hide": 2,
@@ -7144,5 +7272,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 93
+  "version": 106
 }

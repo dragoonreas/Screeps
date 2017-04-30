@@ -34,9 +34,9 @@ let roleAttacker = {
         if (invader == undefined) {
             
             // TODO: Change this to only consider invaders in melee range
-            let invaders = _.get(Memory.rooms[creep.room.name], ["invaderWeightings"], undefined);
-            if (invaders != undefined) {
-                //invader = _.max(invaders, "weighting"); // TODO: Get the key not the value here
+            let invaders = _.get(Memory.rooms[creep.room.name], ["invaderWeightings"], {});
+            if (_.size(invaders) > 0) {
+                //invader = _.findKey(invaders, _.max(invaders, "weighting")); // TODO: Check that this works
             }
             
             if (invader == undefined) {
