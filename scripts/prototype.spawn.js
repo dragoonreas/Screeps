@@ -70,6 +70,9 @@ let prototypeSpawn = function() {
                 else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N39";
                 }
+                else if (Memory.rooms.W81N29.creepCounts.builder == 0 && Memory.rooms.W81N29.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W81N29";
+                }
             }
             else if (this.room.name == "W85N23") {
                 if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
@@ -127,7 +130,7 @@ let prototypeSpawn = function() {
                     creepMemory.controllerID = "5873bbab11e3e4361b4d6401"; // harvest room
                 }
                 else {
-                    creepMemory.controllerID = "5873bbdf11e3e4361b4d6a75";
+                    creepMemory.controllerID = "5873bc2711e3e4361b4d7257";
                 }
             }
             else if (this.room.name == "W85N23") {
@@ -154,6 +157,9 @@ let prototypeSpawn = function() {
             }
             else if (this.room.name == "W9N45") {
                 creepMemory.controllerID = "577b935b0f9d51615fa4807a"; // harvest room
+            }
+            else if (this.room.name == "W81N29") {
+                creepMemory.controllerID = "5873bc2811e3e4361b4d725a"; // harvest room
             }
             let controllerRoom = _.get(Memory.controllers, [creepMemory.controllerID, "pos", "roomName"], "");
             if (_.includes(_.get(Memory.rooms, [this.room.name, "harvestRooms"], []), controllerRoom) == true && Game.time < _.get(Memory.rooms, [controllerRoom, "avoidTravelUntil"], 0)) {

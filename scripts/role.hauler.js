@@ -8,6 +8,8 @@ let roleHauler = {
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
             creep.memory.depositStructure = undefined;
+            creep.memory.constructionSite = undefined; // can be a builder when working
+            creep.memory.repairStructure = undefined; // can be a repairer when working
         }
         
         if (creep.memory.working == false) {
@@ -52,10 +54,12 @@ let roleHauler = {
                             , "5873bbc911e3e4361b4d677e"
                         ]
                         , "W86N39": [
-                            "5873bb9411e3e4361b4d6137"
-                            , "5873bb9411e3e4361b4d6138"
-                            , "5873bb7e11e3e4361b4d5ef2"
-                            , "5873bbaa11e3e4361b4d63cf"
+                            "5873bb9411e3e4361b4d6137" // W87N39
+                            , "5873bb9411e3e4361b4d6138" // W87N39
+                            , "5873bb7e11e3e4361b4d5ef2" // W88N39
+                            , "5873bb9411e3e4361b4d6133" // W87N41
+                            , "5873bbaa11e3e4361b4d63c9" // W86N41
+                            , "5873bbaa11e3e4361b4d63cf" // W86N39
                         ]
                         , "W85N38": [
                             "5873bbaa11e3e4361b4d63d2"
@@ -69,6 +73,21 @@ let roleHauler = {
                             , "5873bbc611e3e4361b4d6713"
                             , "5873bbc611e3e4361b4d6714"
                             , "5873bbaa11e3e4361b4d63c4"
+                        ]
+                        , "W9N45": [
+                            "577b935b0f9d51615fa48078"
+                            , "577b935b0f9d51615fa48079"
+                            , "577b935d0f9d51615fa480ba"
+                            , "577b935b0f9d51615fa48071"
+                            , "577b935b0f9d51615fa48074"
+                        ]
+                        , "W81N29": [
+                            "5873bc2811e3e4361b4d7259" // W81N28
+                            , "5873bc1011e3e4361b4d7004" // W82N29
+                            , "5873bc2711e3e4361b4d7252" // W81N31
+                            , "5873bc1011e3e4361b4d6fff" // W82N31
+                            , "5873bc1011e3e4361b4d6ffe" // W82N31
+                            , "5873bc2711e3e4361b4d7255" // W81N29
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -152,6 +171,18 @@ let roleHauler = {
                                 creep.travelTo(new RoomPosition(35, 4, "W88N39"));
                                 return;
                             }
+                            else if (sourceID == "5873bb9411e3e4361b4d6133") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W87N41", true);
+                                creep.travelTo(new RoomPosition(20, 28, "W87N41"));
+                                return;
+                            }
+                            else if (sourceID == "5873bbaa11e3e4361b4d63c9") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W86N41", true);
+                                creep.travelTo(new RoomPosition(15, 4, "W86N41"));
+                                return;
+                            }
                             else if (sourceID == "5873bbaa11e3e4361b4d63d2") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
                                 creep.say(ICONS["moveTo"] + "W86N38", true);
@@ -180,6 +211,48 @@ let roleHauler = {
                                 creep.memory.sourceID = sourceID;
                                 creep.say(ICONS["moveTo"] + "W85N45", true);
                                 creep.travelTo(new RoomPosition(17, 41, "W85N45"));
+                                return;
+                            }
+                            else if (sourceID == "577b935b0f9d51615fa48078") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W9N44", true);
+                                creep.travelTo(new RoomPosition(42, 11, "W9N44"));
+                                return;
+                            }
+                            else if (sourceID == "577b935d0f9d51615fa480ba") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W8N45", true);
+                                creep.travelTo(new RoomPosition(30, 22, "W8N45"));
+                                return;
+                            }
+                            else if (sourceID == "577b935b0f9d51615fa48071") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W9N46", true);
+                                creep.travelTo(new RoomPosition(8, 14, "W9N46"));
+                                return;
+                            }
+                            else if (sourceID == "5873bc2811e3e4361b4d7259") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W81N28", true);
+                                creep.travelTo(new RoomPosition(22, 30, "W81N28"));
+                                return;
+                            }
+                            else if (sourceID == "5873bc1011e3e4361b4d7004") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W82N29", true);
+                                creep.travelTo(new RoomPosition(17, 17, "W82N29"));
+                                return;
+                            }
+                            else if (sourceID == "5873bc2711e3e4361b4d7252") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W81N31", true);
+                                creep.travelTo(new RoomPosition(18, 22, "W81N31"));
+                                return;
+                            }
+                            else if (sourceID == "5873bc1011e3e4361b4d6fff") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.say(ICONS["moveTo"] + "W82N31", true);
+                                creep.travelTo(new RoomPosition(38, 27, "W82N31"));
                                 return;
                             }
                         }
@@ -233,6 +306,14 @@ let roleHauler = {
             }
         }
         else {
+            if ((creep.memory.constructionSite != undefined 
+                    && _.get(creep.memory, ["constructionSite", "pos", "roomName"], undefined) != creep.room.name) 
+                || (creep.memory.repairStructure != undefined 
+                    && _.get(creep.memory, ["repairStructure", "pos", "roomName"], undefined) != creep.room.name)) {
+                ROLES["builder"].run(creep);
+                return;
+            }
+            
             let structureID = _.get(creep.memory, ["depositStructure", "id"], undefined);
             let structure = Game.getObjectById(structureID);
             let structureMemPos = _.get(creep.memory, ["depositStructure", "pos"], undefined);

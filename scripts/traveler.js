@@ -107,6 +107,29 @@ module.exports = function(globalOpts = {}){
                 Game.map.getRoomLinearDistance(origPos.roomName, destPos.roomName) > 2)) {
                 allowedRooms = this.findAllowedRooms(origPos.roomName, destPos.roomName, options);
             }
+            let newRange = _.min([options.range, destPos.x, 49 - destPos.x, destPos.y, 49 - destPos.y]);
+            let goals = [];
+            if (newRange != options.range) {
+                if (newRange > 0 && newRange <= 3) {
+                    let top = destPos.y - newRange;
+                    let bottom = destPos.y + newRange;
+                    let left = destPos.x - newRange;
+                    let right = destPos.x + newRange;
+                    let areaLength = newRange * 2;
+                    let yOffset = bottom - destPos.y;
+                    for (let y = top; y <= bottom; ++y) {
+                        for (let x = left; x <= right; x += (((y - yOffset) % areaLength == 0) ? 1 : areaLength)) {
+                            goals.push({ pos: new RoomPosition(x, y, destPos.roomName), range: 0 });
+                        }
+                    }
+                }
+                else {
+                    options.range = newRange;
+                }
+            }
+            if (goals.length == 0) {
+                goals.push({ pos: destPos, range: options.range });
+            }
             let callback = (roomName) => {
                 if (options.roomCallback) {
                     let outcome = options.roomCallback(roomName, options.ignoreCreeps);
@@ -157,7 +180,7 @@ module.exports = function(globalOpts = {}){
                 }
                 return matrix;
             };
-            return PathFinder.search(origPos, { pos: destPos, range: options.range }, {
+            return PathFinder.search(origPos, goals, {
                 maxOps: options.maxOps,
                 plainCost: options.ignoreRoads ? 1 : 2,
                 roomCallback: callback,

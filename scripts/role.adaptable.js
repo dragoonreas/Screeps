@@ -89,6 +89,9 @@ let roleAdaptable = {
                 }
                 creep.memory.role = "builder";
                 _.set(Memory.rooms, [sentTo, "creepCounts", "builder"], _.get(Memory.rooms, [sentTo, "creepCounts", "builder"], 0) + 1);
+                if (creep.memory.roomID == "W81N29") { // Allows these creeps to demolish in the room they're sent to
+                    creep.memory.roomSentFrom = undefined;
+                }
                 ROLES["builder"].run(creep);
             }
         }

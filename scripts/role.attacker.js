@@ -1,6 +1,6 @@
 let roleAttacker = {
     run: function(creep) {
-        if (creep.room.name != creep.memory.roomID) {
+        if (creep.room.name != creep.memory.roomID) { // TODO: Allow attacker to move in and out of the room if required
             creep.say(ICONS["moveTo"] + creep.memory.roomID, true);
             creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID), {
                 allowHostile: true

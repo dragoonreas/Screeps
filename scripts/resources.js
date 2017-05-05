@@ -78,7 +78,7 @@ function summarize_room_internal(room) {
     const container_energy = _.sum(containers, c => c.store.energy);
     const sources = room.find(FIND_SOURCES);
     const num_sources = sources == null ? 0 : sources.length;
-    const source_energy = _.sum(sources, s => s.energy);
+    const source_energy = _.sum(sources, s => s.energy); // TODO: Include harvest room sources and calculate energy wasted for sources that renew but aren't immidiatly mined
     const links = room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_LINK && s.my });
     const num_links = links == null ? 0 : links.length;
     const link_energy = _.sum(links, l => l.energy);

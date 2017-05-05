@@ -34,6 +34,7 @@ let roleUpgrader = {
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6733"); break;
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c2"); break;
                 case "W9N45": source = Game.getObjectById("577b935b0f9d51615fa48075"); break;
+                case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7256"); break;
             }
             
             let err = ERR_INVALID_TARGET;
