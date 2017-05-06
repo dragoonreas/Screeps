@@ -73,8 +73,11 @@ let prototypeSpawn = function() {
                 /*else if (Memory.rooms.W81N29.creepCounts.builder == 0 && Memory.rooms.W81N29.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W81N29";
                 }*/
-                else if (Memory.rooms.W72N28.creepCounts.builder == 0 && Memory.rooms.W72N28.creepCounts.adaptable == 0) {
+                /*else if (Memory.rooms.W72N28.creepCounts.builder == 0 && Memory.rooms.W72N28.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W72N28";
+                }*/
+                else if (Memory.rooms.W64N31.creepCounts.builder == 0 && Memory.rooms.W64N31.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W64N31";
                 }
             }
             else if (this.room.name == "W85N23") {
@@ -170,7 +173,15 @@ let prototypeSpawn = function() {
                 }
             }
             else if (this.room.name == "W72N28") {
-                creepMemory.controllerID = "5836b6eb8b8b9619519ef90b"; // harvest room
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    creepMemory.controllerID = "5836b6eb8b8b9619519ef90b"; // harvest room
+                }
+                else {
+                    creepMemory.controllerID = "57ef9cad86f108ae6e60ca55";
+                }
+            }
+            else if (this.room.name == "W64N31") {
+                creepMemory.controllerID = "57ef9cad86f108ae6e60ca51"; // harvest room
             }
             let controllerRoom = _.get(Memory.controllers, [creepMemory.controllerID, "pos", "roomName"], "");
             if (_.includes(_.get(Memory.rooms, [this.room.name, "harvestRooms"], []), controllerRoom) == true && Game.time < _.get(Memory.rooms, [controllerRoom, "avoidTravelUntil"], 0)) {
@@ -214,7 +225,7 @@ let prototypeSpawn = function() {
             bodyTemplate = [CARRY, ATTACK, HEAL];
         }
         else if (roleName == "upgrader") {
-            if (this.room.name == "W86N39" || this.room.name == "W85N38" || this.room.name == "W9N45" || this.room.name == "W72N28") { // these rooms have a source in range of the controller
+            if (this.room.name == "W86N39" || this.room.name == "W85N38" || this.room.name == "W9N45" || this.room.name == "W72N28" || this.room.name == "W64N31") { // these rooms have a source in range of the controller
                 moveRatio = 0;
             }
             else if (this.room.controller.level > 3 && _.size(this.room.sources) > 1) { // NOTE: Assumes roads built between the dedicated upgrader source (2 source rooms only) and the controller at RCL 4 onwards

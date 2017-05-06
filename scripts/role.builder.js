@@ -145,6 +145,7 @@ let roleBuilder = {
                 case "W9N45": source = Game.getObjectById("577b935b0f9d51615fa48074"); break;
                 case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7255"); break;
                 case "W72N28": source = Game.getObjectById("5836b6eb8b8b9619519ef90e"); break;
+                case "W64N31": source = Game.getObjectById("57ef9cad86f108ae6e60ca54"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
@@ -167,7 +168,7 @@ let roleBuilder = {
                         return;
                     }
                 }
-                if ((creep.memory.roomID == "W9N45" || creep.memory.roomID == "W81N29" || creep.memory.roomID == "W72N28") && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
+                if ((creep.memory.roomID == "W9N45" || creep.memory.roomID == "W81N29" || creep.memory.roomID == "W72N28" || creep.memory.roomID == "W64N31") && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
                 }
                 else {

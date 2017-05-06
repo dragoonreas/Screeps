@@ -20,6 +20,7 @@ let roleAdaptable = {
                 case "W9N45": sentTo = "W9N45"; break;
                 case "W81N29": sentTo = "W81N29"; break;
                 case "W72N28": sentTo = "W72N28"; break;
+                case "W64N31": sentTo = "W64N31"; break;
             }
             if (_.isString(sentTo) == true) {
                 creep.memory.roomSentTo = sentTo;

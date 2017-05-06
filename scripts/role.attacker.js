@@ -69,7 +69,7 @@ let roleAttacker = {
         else {
             let structure = Game.getObjectById(creep.memory.structureID);
             if (structure == undefined) {
-                structure = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
+                //structure = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES); // TODO: Add extra checks for if the stucture has energy or minerals in it
                 if (structure != undefined) {
                     creep.memory.structureID = structure.id;
                 }

@@ -127,10 +127,15 @@ _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
     , "W81N31"
     , "W82N31"
 ]);*/
-_.set(Memory.rooms, ["W72N28", "harvestRooms"], [
+/*_.set(Memory.rooms, ["W72N28", "harvestRooms"], [
     "W72N29"
     , "W73N28"
     , "W72N27"
+]);*/
+_.set(Memory.rooms, ["W64N31", "harvestRooms"], [
+    "W64N32"
+    , "W63N31"
+    , "W65N31"
 ]);
 
 /*
@@ -194,7 +199,14 @@ _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
     , [STRUCTURE_WALL]: 0
     , all: 0
 });*/
-_.set(Memory.rooms, ["W72N28", "repairerTypeMins"], {
+/*_.set(Memory.rooms, ["W72N28", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 0
+});*/
+_.set(Memory.rooms, ["W64N31", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
@@ -320,7 +332,7 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W81N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });*/
-_.set(Memory.rooms, ["W72N28", "creepMins"], {
+/*_.set(Memory.rooms, ["W72N28", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
@@ -331,6 +343,19 @@ _.set(Memory.rooms, ["W72N28", "creepMins"], {
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W72N28", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+});*/
+_.set(Memory.rooms, ["W64N31", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W64N31", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 1
+    , repairer: _.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
 
@@ -475,6 +500,7 @@ module.exports.loop = function () {
     let ignoredRooms = [
         "W17N79"
         , "W81N29"
+        , "W72N28"
     ];
     
     // Manage rooms and run towers
@@ -1180,7 +1206,8 @@ module.exports.loop = function () {
         || (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0)
         /*|| (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)*/
-        || (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)
+        /*|| (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)*/
+        || (_.get(Memory.rooms, ["W64N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W64N31", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W85N23", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
