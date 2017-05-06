@@ -11,9 +11,9 @@ let roleScout = {
         
         if (creep.memory.goalReached != true) {
             if (creep.memory.roomID == "W81N29") {
-                if (creep.room.name != "W73N29" || creep.pos.isNearTo(20, 33) == false) {
-                    creep.say(ICONS["moveTo"] + "W73N29", true);
-                    creep.travelTo(new RoomPosition(20, 33, "W73N29"));
+                if (creep.room.name != "W72N28" || creep.pos.isNearTo(17, 36) == false) {
+                    creep.say(ICONS["moveTo"] + "W72N28", true);
+                    creep.travelTo(new RoomPosition(17, 36, "W72N28"));
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);

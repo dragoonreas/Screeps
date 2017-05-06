@@ -18,6 +18,8 @@ let roleAdaptable = {
                 case "W85N38": sentTo = "W86N43"; break;
                 case "W86N43": sentTo = "W86N39"; break;
                 case "W9N45": sentTo = "W9N45"; break;
+                case "W81N29": sentTo = "W81N29"; break;
+                case "W72N28": sentTo = "W72N28"; break;
             }
             if (_.isString(sentTo) == true) {
                 creep.memory.roomSentTo = sentTo;
@@ -70,7 +72,7 @@ let roleAdaptable = {
             }
             else {
                 console.log("Adaptable made it to " + creep.room.name + " with " + creep.ticksToLive.toLocaleString() + " ticks to live & " + creep.hits.toLocaleString() + "/" + creep.hitsMax.toLocaleString() + " HP");
-                if (_.get(Memory, ["rooms", sentTo, "creepCounts", "builder"], 0) >= _.get(Memory, ["rooms", sentTo, "creepMins", "builder"], 0)) {
+                if (sentTo != "W81N29" && sentTo != "W72N28" && _.get(Memory, ["rooms", sentTo, "creepCounts", "builder"], 0) >= _.get(Memory, ["rooms", sentTo, "creepMins", "builder"], 0)) {
                     let builders = _.filter(Game.creeps, (c) => (
                         c.memory.roomID == sentTo 
                         && c.memory.role == "builder"
@@ -89,7 +91,7 @@ let roleAdaptable = {
                 }
                 creep.memory.role = "builder";
                 _.set(Memory.rooms, [sentTo, "creepCounts", "builder"], _.get(Memory.rooms, [sentTo, "creepCounts", "builder"], 0) + 1);
-                if (creep.memory.roomID == "W81N29") { // Allows these creeps to demolish in the room they're sent to
+                if (creep.memory.roomID == "W81N29" || creep.memory.roomID == "W72N28") { // Allows these creeps to demolish in the room they're sent to
                     creep.memory.roomSentFrom = undefined;
                 }
                 ROLES["builder"].run(creep);

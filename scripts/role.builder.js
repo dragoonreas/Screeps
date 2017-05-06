@@ -144,6 +144,7 @@ let roleBuilder = {
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c4"); break;
                 case "W9N45": source = Game.getObjectById("577b935b0f9d51615fa48074"); break;
                 case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7255"); break;
+                case "W72N28": source = Game.getObjectById("5836b6eb8b8b9619519ef90e"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
@@ -161,7 +162,12 @@ let roleBuilder = {
                             || (Game.rooms[creep.memory.roomID] == undefined 
                                 || Game.rooms[creep.memory.roomID].find(FIND_MY_CONSTRUCTION_SITES).length == 0))
                         /*&& _.get(Game.rooms, [creep.memory.roomID, "energyAvailable"], 0) == _.get(Game.rooms, [creep.memory.roomID, "energyCapacityAvailable"], 0)*/))) {
-                if ((creep.memory.roomID == "W9N45" || creep.memory.roomID == "W81N29") && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
+                if (_.get(Memory, ["rooms", creep.memory.roomID, "creepCounts", "upgrader"], 0) == 0) {
+                    if (ROLES["upgrader"].run(creep) != ERR_NOT_ENOUGH_RESOURCES) {
+                        return;
+                    }
+                }
+                if ((creep.memory.roomID == "W9N45" || creep.memory.roomID == "W81N29" || creep.memory.roomID == "W72N28") && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
                 }
                 else {

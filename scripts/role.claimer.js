@@ -9,6 +9,7 @@ let roleClaimer = {
             , "5873bb9311e3e4361b4d612e"
             , "577b935b0f9d51615fa4807a"
             , "5873bc2811e3e4361b4d725a" // W81N28
+            , "5836b6eb8b8b9619519ef90b" // W72N29
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
             ROLES["recyclable"].run(creep);
@@ -63,6 +64,10 @@ let roleClaimer = {
                 creep.say(ICONS["moveTo"] + "W81N28", true);
                 creep.travelTo(new RoomPosition(10, 38, "W81N28"));
             }
+            else if (creep.memory.controllerID == "5836b6eb8b8b9619519ef90b") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.say(ICONS["moveTo"] + "W72N29", true);
+                creep.travelTo(new RoomPosition(7, 9, "W72N29"));
+            }
             else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63cd") {
                 creep.say(ICONS["moveTo"] + "W86N39", true);
                 creep.travelTo(new RoomPosition(19, 19, "W86N39"));
@@ -82,6 +87,10 @@ let roleClaimer = {
             else if (creep.memory.controllerID == "5873bc2711e3e4361b4d7257") {
                 creep.say(ICONS["moveTo"] + "W81N29", true);
                 creep.travelTo(new RoomPosition(34, 31, "W81N29"));
+            }
+            else if (creep.memory.controllerID == "5836b6eb8b8b9619519ef910") {
+                creep.say(ICONS["moveTo"] + "W72N28", true);
+                creep.travelTo(new RoomPosition(17, 36, "W72N28"));
             }
             else {
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);

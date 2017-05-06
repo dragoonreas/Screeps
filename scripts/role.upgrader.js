@@ -35,6 +35,7 @@ let roleUpgrader = {
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c2"); break;
                 case "W9N45": source = Game.getObjectById("577b935b0f9d51615fa48075"); break;
                 case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7256"); break;
+                case "W72N28": source = Game.getObjectById("5836b6eb8b8b9619519ef90f"); break;
             }
             
             let err = ERR_INVALID_TARGET;
@@ -55,6 +56,9 @@ let roleUpgrader = {
             }
             else if (err == OK) {
                 creep.say(ICONS["harvest"] + ICONS["source"], true);
+            }
+            else if (creep.memory.role == "builder" || creep.memory.role == "repairer") {
+                return ERR_NOT_ENOUGH_RESOURCES;
             }
             else if (theRecycleContainer != undefined && theRecycleContainer.store.energy > 0 && creep.memory.speeds["1"] <= 1) {
                 creep.cancelOrder("harvest");

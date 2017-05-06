@@ -106,7 +106,6 @@ _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
     "W87N39"
     , "W88N39"
     , "W85N41"
-    , "W86N41"
 ]);
 _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     "W86N38"
@@ -122,11 +121,16 @@ _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
     , "W8N45"
     , "W9N46"
 ]);
-_.set(Memory.rooms, ["W81N29", "harvestRooms"], [
+/*_.set(Memory.rooms, ["W81N29", "harvestRooms"], [
     "W81N28"
     , "W82N29"
     , "W81N31"
     , "W82N31"
+]);*/
+_.set(Memory.rooms, ["W72N28", "harvestRooms"], [
+    "W72N29"
+    , "W73N28"
+    , "W72N27"
 ]);
 
 /*
@@ -183,7 +187,14 @@ _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
-_.set(Memory.rooms, ["W81N29", "repairerTypeMins"], {
+/*_.set(Memory.rooms, ["W81N29", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 0
+});*/
+_.set(Memory.rooms, ["W72N28", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
@@ -296,17 +307,30 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
-_.set(Memory.rooms, ["W81N29", "creepMins"], {
+/*_.set(Memory.rooms, ["W81N29", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
     , upgrader: 4
-    , miner: 0//_.size(_.get(Game.rooms, ["W9N45", "minerSources"], {}))
+    , miner: 0//_.size(_.get(Game.rooms, ["W81N29", "minerSources"], {}))
     , adaptable: 0
     , demolisher: 0
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.reduce(_.get(Memory.rooms, ["W81N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+});*/
+_.set(Memory.rooms, ["W72N28", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W72N28", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 1
+    , repairer: _.reduce(_.get(Memory.rooms, ["W72N28", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
 });
 
@@ -450,6 +474,7 @@ module.exports.loop = function () {
     
     let ignoredRooms = [
         "W17N79"
+        , "W81N29"
     ];
     
     // Manage rooms and run towers
@@ -843,7 +868,7 @@ module.exports.loop = function () {
                 theRoom.hasHostileTower = true;
                 theRoom.checkForDrops = false;
             }
-        }
+        } // TODO: Don't check for drops in rooms owned/reserved by allies
         
         // TODO: Set theRoom.memory.avoidTravel based on the check for if it's safe to assign dropped energy for creeps to pickup
         
@@ -1154,7 +1179,8 @@ module.exports.loop = function () {
         (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0)
-        || (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)
+        /*|| (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)*/
+        || (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W85N23", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
