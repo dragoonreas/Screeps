@@ -980,6 +980,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sortDesc": true,
             "total": false,
             "values": true
           },
@@ -1150,7 +1151,7 @@
     },
     {
       "collapse": false,
-      "height": "175px",
+      "height": "175",
       "panels": [
         {
           "alert": {
@@ -1183,9 +1184,16 @@
             "frequency": "60s",
             "handler": 1,
             "message": "Average bucket below 500 CPU for the past 5 minutes.",
-            "name": "Bucket Alert",
-            "noDataState": "keep_state",
-            "notifications": []
+            "name": "Low Bucket",
+            "noDataState": "ok",
+            "notifications": [
+              {
+                "id": 9
+              },
+              {
+                "id": 9
+              }
+            ]
           },
           "aliasColors": {},
           "bars": false,
@@ -1283,7 +1291,7 @@
               "color": "#E24D42"
             }
           ],
-          "span": 6,
+          "span": 9,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -1355,7 +1363,7 @@
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "ms",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -1363,7 +1371,7 @@
               "show": true
             },
             {
-              "format": "short",
+              "format": "ms",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -1399,7 +1407,7 @@
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
-          "span": 6,
+          "span": 3,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -1704,7 +1712,7 @@
             },
             {
               "format": "short",
-              "label": null,
+              "label": "Ticks",
               "logBase": 2,
               "max": null,
               "min": null,
@@ -1742,6 +1750,8 @@
             "min": true,
             "rightSide": true,
             "show": true,
+            "sort": "min",
+            "sortDesc": false,
             "total": false,
             "values": true
           },
@@ -1818,6 +1828,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "avg",
+            "sortDesc": false,
             "total": false,
             "values": true
           },
@@ -2287,6 +2299,105 @@
       "repeatRowId": null,
       "showTitle": false,
       "title": "GLC",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": "125",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "screepspl.us",
+          "decimals": null,
+          "fill": 1,
+          "id": 137,
+          "legend": {
+            "alignAsTable": false,
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "Rank",
+              "fill": 0,
+              "linewidth": 2,
+              "yaxis": 2
+            },
+            {
+              "alias": "Score",
+              "legend": false
+            }
+          ],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(offset(screeps.leaderboard.rank, 1), 'Rank')"
+            },
+            {
+              "hide": false,
+              "refId": "B",
+              "target": "alias(screeps.leaderboard.score, 'Score')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "GCL Monthly Leaderboard",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
+      "showTitle": false,
+      "title": "Dashboard Row",
       "titleSize": "h6"
     },
     {
@@ -3010,6 +3121,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -3099,6 +3211,11 @@
               "alias": "healer",
               "color": "#7EB26D",
               "zindex": -2
+            },
+            {
+              "alias": "exporter",
+              "color": "#F9BA8F",
+              "zindex": -3
             }
           ],
           "span": 12,
@@ -3469,6 +3586,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": null,
+            "sortDesc": null,
             "total": false,
             "values": true
           },
@@ -3591,7 +3710,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 102,
+          "id": 138,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -3602,6 +3721,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -3691,6 +3811,11 @@
               "alias": "healer",
               "color": "#7EB26D",
               "zindex": -2
+            },
+            {
+              "alias": "exporter",
+              "color": "#F9BA8F",
+              "zindex": -3
             }
           ],
           "span": 12,
@@ -3742,7 +3867,7 @@
           "bars": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 103,
+          "id": 139,
           "legend": {
             "avg": true,
             "current": true,
@@ -3879,7 +4004,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 104,
+          "id": 140,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -3964,7 +4089,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 105,
+          "id": 141,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -4050,7 +4175,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 106,
+          "id": 142,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -4061,6 +4186,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": null,
+            "sortDesc": null,
             "total": false,
             "values": true
           },
@@ -4167,8 +4294,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494096824799,
-      "repeatRowId": 11,
+      "repeatIteration": 1494651642775,
+      "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -4183,7 +4310,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 107,
+          "id": 143,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -4194,6 +4321,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -4283,6 +4411,11 @@
               "alias": "healer",
               "color": "#7EB26D",
               "zindex": -2
+            },
+            {
+              "alias": "exporter",
+              "color": "#F9BA8F",
+              "zindex": -3
             }
           ],
           "span": 12,
@@ -4334,7 +4467,7 @@
           "bars": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 108,
+          "id": 144,
           "legend": {
             "avg": true,
             "current": true,
@@ -4471,7 +4604,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 109,
+          "id": 145,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -4556,7 +4689,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 110,
+          "id": 146,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -4642,7 +4775,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 111,
+          "id": 147,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -4653,6 +4786,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": null,
+            "sortDesc": null,
             "total": false,
             "values": true
           },
@@ -4759,8 +4894,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494096824799,
-      "repeatRowId": 11,
+      "repeatIteration": 1494651642775,
+      "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -4775,7 +4910,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 112,
+          "id": 148,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -4786,6 +4921,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -4875,6 +5011,11 @@
               "alias": "healer",
               "color": "#7EB26D",
               "zindex": -2
+            },
+            {
+              "alias": "exporter",
+              "color": "#F9BA8F",
+              "zindex": -3
             }
           ],
           "span": 12,
@@ -4926,7 +5067,7 @@
           "bars": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 113,
+          "id": 149,
           "legend": {
             "avg": true,
             "current": true,
@@ -5063,7 +5204,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 114,
+          "id": 150,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -5148,7 +5289,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 115,
+          "id": 151,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -5234,7 +5375,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 116,
+          "id": 152,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -5245,6 +5386,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": null,
+            "sortDesc": null,
             "total": false,
             "values": true
           },
@@ -5351,8 +5494,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494096824799,
-      "repeatRowId": 11,
+      "repeatIteration": 1494651642775,
+      "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -5367,7 +5510,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 117,
+          "id": 153,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -5378,6 +5521,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -5467,6 +5611,11 @@
               "alias": "healer",
               "color": "#7EB26D",
               "zindex": -2
+            },
+            {
+              "alias": "exporter",
+              "color": "#F9BA8F",
+              "zindex": -3
             }
           ],
           "span": 12,
@@ -5518,7 +5667,7 @@
           "bars": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 118,
+          "id": 154,
           "legend": {
             "avg": true,
             "current": true,
@@ -5655,7 +5804,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 119,
+          "id": 155,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -5740,7 +5889,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 120,
+          "id": 156,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -5826,7 +5975,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 121,
+          "id": 157,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -5837,6 +5986,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": null,
+            "sortDesc": null,
             "total": false,
             "values": true
           },
@@ -5943,8 +6094,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494096824799,
-      "repeatRowId": 11,
+      "repeatIteration": 1494651642775,
+      "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -5959,7 +6110,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 122,
+          "id": 158,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -5970,6 +6121,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -6059,6 +6211,11 @@
               "alias": "healer",
               "color": "#7EB26D",
               "zindex": -2
+            },
+            {
+              "alias": "exporter",
+              "color": "#F9BA8F",
+              "zindex": -3
             }
           ],
           "span": 12,
@@ -6110,7 +6267,7 @@
           "bars": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 123,
+          "id": 159,
           "legend": {
             "avg": true,
             "current": true,
@@ -6247,7 +6404,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 124,
+          "id": 160,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -6332,7 +6489,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 125,
+          "id": 161,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -6418,7 +6575,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 126,
+          "id": 162,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -6429,6 +6586,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": null,
+            "sortDesc": null,
             "total": false,
             "values": true
           },
@@ -6535,8 +6694,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494096824799,
-      "repeatRowId": 11,
+      "repeatIteration": 1494651642775,
+      "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -6551,7 +6710,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 127,
+          "id": 163,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -6562,6 +6721,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -6651,6 +6811,11 @@
               "alias": "healer",
               "color": "#7EB26D",
               "zindex": -2
+            },
+            {
+              "alias": "exporter",
+              "color": "#F9BA8F",
+              "zindex": -3
             }
           ],
           "span": 12,
@@ -6702,7 +6867,7 @@
           "bars": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 128,
+          "id": 164,
           "legend": {
             "avg": true,
             "current": true,
@@ -6839,7 +7004,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 129,
+          "id": 165,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -6924,7 +7089,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 130,
+          "id": 166,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -7010,7 +7175,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 131,
+          "id": 167,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -7021,6 +7186,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": null,
+            "sortDesc": null,
             "total": false,
             "values": true
           },
@@ -7127,8 +7294,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494096824799,
-      "repeatRowId": 11,
+      "repeatIteration": 1494651642775,
+      "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -7143,7 +7310,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 132,
+          "id": 168,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -7154,6 +7321,7 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -7243,6 +7411,11 @@
               "alias": "healer",
               "color": "#7EB26D",
               "zindex": -2
+            },
+            {
+              "alias": "exporter",
+              "color": "#F9BA8F",
+              "zindex": -3
             }
           ],
           "span": 12,
@@ -7294,7 +7467,7 @@
           "bars": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 133,
+          "id": 169,
           "legend": {
             "avg": true,
             "current": true,
@@ -7431,7 +7604,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 134,
+          "id": 170,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -7516,7 +7689,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 135,
+          "id": 171,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -7602,7 +7775,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 136,
+          "id": 172,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -7613,6 +7786,8 @@
             "min": false,
             "rightSide": true,
             "show": true,
+            "sort": null,
+            "sortDesc": null,
             "total": false,
             "values": true
           },
@@ -7719,8 +7894,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494096824799,
-      "repeatRowId": 11,
+      "repeatIteration": 1494651642775,
+      "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -7736,10 +7911,9 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
-          "value": [
-            "$__all"
-          ]
+          "value": "$__all"
         },
         "datasource": "screepspl.us",
         "hide": 0,
@@ -7761,6 +7935,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -7784,6 +7959,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -7808,9 +7984,7 @@
         "allValue": null,
         "current": {
           "text": "All",
-          "value": [
-            "$__all"
-          ]
+          "value": "$__all"
         },
         "datasource": "screepspl.us",
         "hide": 2,
@@ -7863,5 +8037,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 113
+  "version": 132
 }

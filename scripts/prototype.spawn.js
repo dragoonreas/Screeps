@@ -214,7 +214,7 @@ let prototypeSpawn = function() {
             moveRatio = 0.5;
             bodyTemplate = [ATTACK];
         }
-        else if (roleName == "hauler") {
+        else if (roleName == "hauler" || roleName == "exporter") {
             bodyTemplate = [CARRY]; // haulers also have a single work part that doesn't get multiplied dynamically with avaliable energy
         }
         else if (roleName == "miner") {
@@ -301,7 +301,7 @@ let prototypeSpawn = function() {
         if (roleName == "miner") {
             partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * MINER_WORK_PART_CAP) / bodyCost);
         }
-        else if (roleName == "hauler" 
+        else if (roleName == "exporter" 
             || roleName == "adaptable" 
             || roleName == "demolisher" 
             || roleName == "attacker" 

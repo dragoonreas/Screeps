@@ -90,10 +90,10 @@ let roleBuilder = {
                                              STRUCTURE_NUKER];
                         let i = 0;
                         do {
-                            Memory.constructionStructureToFind = priorityQueue[i]; // TODO: Find out why memory seems to be needed here instead of just a regualar variable
                             constructionSite = creep.pos.findClosestByRange(roomConstructionSites, {
-                                filter: (c) => c.structureType == Memory.constructionStructureToFind
-                            });
+                                filter: function(c) {
+                                    return c.structureType == priorityQueue[i]
+                            }});
                             ++i;
                         }
                         while (i < priorityQueue.length && constructionSite == undefined) // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined

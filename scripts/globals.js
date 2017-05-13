@@ -14,6 +14,7 @@ let globals = function() {
         , scout: require("role.scout")
         , builder: require("role.builder")
         , claimer: require("role.claimer")
+        , exporter: require("role.exporter")
         , recyclable: require("role.recyclable")
     }
     
@@ -79,13 +80,63 @@ let globals = function() {
         , wait21: "\uD83D\uDD65" // 10:30
         , wait22: "\uD83D\uDD5A" // 11:00
         , wait23: "\uD83D\uDD66" // 11:30
+        , sleep: "\uD83D\uDCA4" // for when script is terminated early to refill bucket
         , testPassed: "\uD83C\uDF89" // for when scout reaches its goal location
         , testFinished: "\uD83C\uDFC1" // for when scout has finished its test run
     }
     
     global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
     
-    global.EST_SEC_PER_TICK = 4.25; // time between ticks is currently averaging ~4.25 seconds (as of 2017/04/05)
+    global.resourceWorth = function(resourceType) {
+        switch (resourceType) {
+            case RESOURCE_ENERGY:
+            default: return 1; // 10^0
+            case RESOURCE_HYDROGEN:
+            case RESOURCE_OXYGEN:
+            case RESOURCE_UTRIUM:
+            case RESOURCE_LEMERGIUM:
+            case RESOURCE_KEANIUM:
+            case RESOURCE_ZYNTHIUM:
+            case RESOURCE_CATALYST: return 10; // 10^1
+            case RESOURCE_HYDROXIDE:
+            case RESOURCE_ZYNTHIUM_KEANITE:
+            case RESOURCE_UTRIUM_LEMERGITE: return 100; // 10^2
+            case RESOURCE_UTRIUM_HYDRIDE:
+            case RESOURCE_UTRIUM_OXIDE:
+            case RESOURCE_KEANIUM_HYDRIDE:
+            case RESOURCE_KEANIUM_OXIDE:
+            case RESOURCE_LEMERGIUM_HYDRIDE:
+            case RESOURCE_LEMERGIUM_OXIDE:
+            case RESOURCE_ZYNTHIUM_HYDRIDE:
+            case RESOURCE_ZYNTHIUM_OXIDE:
+            case RESOURCE_GHODIUM_HYDRIDE:
+            case RESOURCE_GHODIUM_OXIDE: return 1000; // 10^3
+            case RESOURCE_UTRIUM_ACID:
+            case RESOURCE_UTRIUM_ALKALIDE:
+            case RESOURCE_KEANIUM_ACID:
+            case RESOURCE_KEANIUM_ALKALIDE:
+            case RESOURCE_LEMERGIUM_ACID:
+            case RESOURCE_LEMERGIUM_ALKALIDE:
+            case RESOURCE_ZYNTHIUM_ACID:
+            case RESOURCE_ZYNTHIUM_ALKALIDE:
+            case RESOURCE_GHODIUM_ACID:
+            case RESOURCE_GHODIUM_ALKALIDE: return 10000; // 10^4
+            case RESOURCE_CATALYZED_UTRIUM_ACID:
+            case RESOURCE_CATALYZED_UTRIUM_ALKALIDE:
+            case RESOURCE_CATALYZED_KEANIUM_ACID:
+            case RESOURCE_CATALYZED_KEANIUM_ALKALIDE:
+            case RESOURCE_CATALYZED_LEMERGIUM_ACID:
+            case RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE:
+            case RESOURCE_CATALYZED_ZYNTHIUM_ACID:
+            case RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE:
+            case RESOURCE_CATALYZED_GHODIUM_ACID:
+            case RESOURCE_CATALYZED_GHODIUM_ALKALIDE: return 100000; // 10^5
+            case RESOURCE_POWER: return 1000000; // 10^6
+        }
+    };
+
+    
+    global.EST_SEC_PER_TICK = 4.84; // time between ticks is currently averaging ~4.84 seconds (as of 2017/05/07)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     

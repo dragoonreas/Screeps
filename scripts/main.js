@@ -151,9 +151,9 @@ _.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
+    [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -207,11 +207,11 @@ _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
     , all: 0
 });*/
 _.set(Memory.rooms, ["W64N31", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
+    [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
-    , all: 0
+    , all: 1
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -240,12 +240,13 @@ _.set(Memory.rooms, ["W87N29", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W87N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });
 _.set(Memory.rooms, ["W86N29", "creepMins"], {
     attacker: 0
     , harvester: 4
     , powerHarvester: 0
-    , upgrader: 2
+    , upgrader: 3
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
     , demolisher: 0
@@ -253,6 +254,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });
 _.set(Memory.rooms, ["W85N23", "creepMins"], {
     attacker: 0
@@ -266,6 +268,7 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });
 _.set(Memory.rooms, ["W86N39", "creepMins"], {
     attacker: 0
@@ -279,6 +282,7 @@ _.set(Memory.rooms, ["W86N39", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });
 _.set(Memory.rooms, ["W85N38", "creepMins"], {
     attacker: 0
@@ -292,12 +296,13 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });
 _.set(Memory.rooms, ["W86N43", "creepMins"], {
     attacker: 0
     , harvester: 4
     , powerHarvester: 0
-    , upgrader: 2
+    , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N43", "minerSources"], {}))
     , adaptable: 0
     , demolisher: 0
@@ -305,6 +310,7 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });
 _.set(Memory.rooms, ["W9N45", "creepMins"], {
     attacker: 0
@@ -318,6 +324,7 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });
 /*_.set(Memory.rooms, ["W81N29", "creepMins"], {
     attacker: 0
@@ -331,6 +338,7 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W81N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });*/
 /*_.set(Memory.rooms, ["W72N28", "creepMins"], {
     attacker: 0
@@ -344,10 +352,11 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W72N28", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: 0
 });*/
 _.set(Memory.rooms, ["W64N31", "creepMins"], {
     attacker: 0
-    , harvester: 6
+    , harvester: 4
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W64N31", "minerSources"], {}))
@@ -357,6 +366,7 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
+    , exporter: (((_.get(Game.rooms, ["W64N31", "storage", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "storage", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
 });
 
 if (Memory.MonCPU == true) { console.log("init>loop init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -383,6 +393,14 @@ module.exports.loop = function () {
     NODE_USAGE.last = Game.time;
     
     resourcesInfo.summarize_rooms(); // Generate stats for screepsplus to retrieve at end of loop
+    
+    if (Game.cpu.tickLimit < 500) { // Update stats and sleep everything else to refill bucket a bit if needed
+        console.log("Refilling bucket: " + Game.cpu.bucket);
+        _.forEach(Game.creeps, (c) => { c.say(ICONS["sleep"], true); });
+        screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
+        Memory.stats.cpu.used = Game.cpu.getUsed();
+        return;
+    }
     
     // Get current creep counts
     for (let roomID of managedRooms) {
@@ -902,52 +920,7 @@ module.exports.loop = function () {
             theRoom.checkForDrops = false;
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
-                _.sortByOrder(droppedResources, (dr) => {
-                    switch (dr.resourceType) {
-                        case RESOURCE_ENERGY:
-                        default: return dr.amount; // amount * 10^0
-                        case RESOURCE_HYDROGEN:
-                        case RESOURCE_OXYGEN:
-                        case RESOURCE_UTRIUM:
-                        case RESOURCE_LEMERGIUM:
-                        case RESOURCE_KEANIUM:
-                        case RESOURCE_ZYNTHIUM:
-                        case RESOURCE_CATALYST: return dr.amount * 10; // amount * 10^1
-                        case RESOURCE_HYDROXIDE:
-                        case RESOURCE_ZYNTHIUM_KEANITE:
-                        case RESOURCE_UTRIUM_LEMERGITE: return dr.amount * 100; // amount * 10^2
-                        case RESOURCE_UTRIUM_HYDRIDE:
-                        case RESOURCE_UTRIUM_OXIDE:
-                        case RESOURCE_KEANIUM_HYDRIDE:
-                        case RESOURCE_KEANIUM_OXIDE:
-                        case RESOURCE_LEMERGIUM_HYDRIDE:
-                        case RESOURCE_LEMERGIUM_OXIDE:
-                        case RESOURCE_ZYNTHIUM_HYDRIDE:
-                        case RESOURCE_ZYNTHIUM_OXIDE:
-                        case RESOURCE_GHODIUM_HYDRIDE:
-                        case RESOURCE_GHODIUM_OXIDE: return dr.amount * 1000; // amount * 10^3
-                        case RESOURCE_UTRIUM_ACID:
-                        case RESOURCE_UTRIUM_ALKALIDE:
-                        case RESOURCE_KEANIUM_ACID:
-                        case RESOURCE_KEANIUM_ALKALIDE:
-                        case RESOURCE_LEMERGIUM_ACID:
-                        case RESOURCE_LEMERGIUM_ALKALIDE:
-                        case RESOURCE_ZYNTHIUM_ACID:
-                        case RESOURCE_ZYNTHIUM_ALKALIDE:
-                        case RESOURCE_GHODIUM_ACID:
-                        case RESOURCE_GHODIUM_ALKALIDE: return dr.amount * 10000; // amount * 10^4
-                        case RESOURCE_CATALYZED_UTRIUM_ACID:
-                        case RESOURCE_CATALYZED_UTRIUM_ALKALIDE:
-                        case RESOURCE_CATALYZED_KEANIUM_ACID:
-                        case RESOURCE_CATALYZED_KEANIUM_ALKALIDE:
-                        case RESOURCE_CATALYZED_LEMERGIUM_ACID:
-                        case RESOURCE_CATALYZED_LEMERGIUM_ALKALIDE:
-                        case RESOURCE_CATALYZED_ZYNTHIUM_ACID:
-                        case RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE:
-                        case RESOURCE_CATALYZED_GHODIUM_ACID:
-                        case RESOURCE_CATALYZED_GHODIUM_ALKALIDE: return dr.amount * 100000; // amount * 10^5
-                        case RESOURCE_POWER: return dr.amount * 1000000; // amount * 10^6
-                    }}, "desc");
+                _.sortByOrder(droppedResources, (dr) => (resourceWorth(dr.resourceType) * dr.amount), "desc");
                 for (let droppedResource of droppedResources) {
 					let hasAssignedCreep = _.some(Game.creeps, (c) => (
 					    c.memory.droppedResourceID == droppedResource.id
@@ -1098,6 +1071,7 @@ module.exports.loop = function () {
                 runningRole = true;
             }
             else if (_.sum(creep.carry) > creep.carry.energy 
+                && creep.memory.role != "exporter" 
                 && theStorage != undefined 
                 && theStorage.my == true 
                 && _.sum(theStorage.store) < theStorage.storeCapacity 

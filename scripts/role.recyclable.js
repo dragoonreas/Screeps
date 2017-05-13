@@ -18,17 +18,18 @@ let roleRecyclable = {
             }
         }
         
-		if (_.sum(creep.carry) > 0 && theStorage != undefined) {
+		if (_.sum(creep.carry) > 0 && theStorage != undefined && _.sum(theStorage.store) < theStorage.storeCapacity) {
             for (let resourceType in creep.carry) {
                 let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                     creep.travelTo(theStorage);
+                    break;
                 }
                 else if (err == OK) {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
+                    break;
                 }
-                break;
             }
         }
         else if (recycleContainer != undefined && theSpawn != undefined && recycleContainer.pos.isNearTo(theSpawn) && creep.pos.isEqualTo(recycleContainer) == false) {

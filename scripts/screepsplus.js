@@ -35,15 +35,27 @@ function add_stats_callback(cbfunc) {
 // Update the Memory.stats with useful information for trend analysis and graphing.
 // Also calls all registered stats callback functions before returning.
 function collect_stats() {
-
+    
     // Don't overwrite things if other modules are putting stuff into Memory.stats
     if (Memory.stats == null) {
         Memory.stats = { tick: Game.time };
     }
     
-    let ticksPast = Game.time - _.get(Memory.stats, ["currentTick"], 0);
+    let ticksPast = Game.time - _.get(Memory.stats, ["currentTick"], Game.time + 1);
     Memory.stats.ticksSkipped = ticksPast - 1;
-    Memory.stats.timeSinceLastTick = (Date.now() - (Memory.stats.currentTime || Date.now())) / ticksPast;
+    Memory.stats.timeSinceLastTick = (Date.now() - _.get(Memory.stats, ["currentTime"], (Date.now() + (EST_SEC_PER_TICK * ticksPast * 1000)))) / ticksPast;
+    
+    if (Memory.stats.ticksSkipped < 0) {
+        console.log(toStr(Game.time) + " was repeated from " + Memory.stats.ticksSkipped + " tick(s) ago");
+    }
+    else if (Memory.stats.ticksSkipped > 0) {
+        console.log(toStr(Memory.stats.ticksSkipped) + " ticks skipped");
+    }
+    
+    if (Memory.stats.timeSinceLastTick < 1000) {
+        //console.log("Low tick duration of " + Memory.stats.timeSinceLastTick + "ms between nodes " + Memory.stats.node.lastResetAt + " & " + NODE_USAGE.first + " detected after " + ((Memory.stats.currentTick == undefined) ? "?" : ticksPast) + " tick(s) and " + (Memory.stats.node.hasReset == 1 ? "a" : "no") + " global reset");
+    }
+    Memory.stats.node.lastResetAt = NODE_USAGE.first;
     
     Memory.stats.currentTick = Game.time;
     Memory.stats.currentTime = Date.now();
@@ -61,24 +73,24 @@ function collect_stats() {
     // Note: This is fragile and will change if the Game.cpu API changes
     Memory.stats.cpu = Game.cpu;
     // Memory.stats.cpu.used = Game.cpu.getUsed(); // AT END OF MAIN LOOP
-
+    
     // Note: This is fragile and will change if the Game.gcl API changes
     Memory.stats.gcl = Game.gcl;
-
+    
     const memory_used = RawMemory.get().length;
     // console.log('Memory used: ' + memory_used);
     Memory.stats.memory = {
         used: memory_used,
         // Other memory stats here?
     };
-
+    
     Memory.stats.market = {
         credits: _.round(Game.market.credits, 2),
         num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
     };
-
+    
     Memory.stats.roomSummary = resources.summarize_rooms();
-
+    
     // Add callback functions which we can call to add additional
     // statistics to here, and have a way to register them.
     // 1. Merge in the current repair ratchets into the room summary

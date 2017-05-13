@@ -110,15 +110,15 @@ module.exports = function(globalOpts = {}){
             let newRange = _.min([options.range, destPos.x, 49 - destPos.x, destPos.y, 49 - destPos.y]);
             let goals = [];
             if (newRange != options.range) {
-                if (newRange > 0 && newRange <= 3) {
-                    let top = destPos.y - newRange;
-                    let bottom = destPos.y + newRange;
-                    let left = destPos.x - newRange;
-                    let right = destPos.x + newRange;
-                    let areaLength = newRange * 2;
+                if (newRange >= 0 && newRange <= 3) {
+                    let top = destPos.y - _.min([options.range, destPos.y]);
+                    let bottom = destPos.y + _.min([options.range, 49 - destPos.y]);
+                    let left = destPos.x - _.min([options.range, destPos.x]);
+                    let right = destPos.x + _.min([options.range, 49 - destPos.x]);
+                    let areaWidth = right - left;
                     let yOffset = bottom - destPos.y;
                     for (let y = top; y <= bottom; ++y) {
-                        for (let x = left; x <= right; x += (((y - yOffset) % areaLength == 0) ? 1 : areaLength)) {
+                        for (let x = left; x <= right; x += (((y == top) || (y == bottom)) ? 1 : areaWidth)) {
                             goals.push({ pos: new RoomPosition(x, y, destPos.roomName), range: 0 });
                         }
                     }
