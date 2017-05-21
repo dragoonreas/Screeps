@@ -1,5 +1,7 @@
 let roleDemolisher = {
     run: function(creep) {
+        creep.memory.executingRole = "demolisher";
+        
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.demolishStructure = undefined;
@@ -27,8 +29,8 @@ let roleDemolisher = {
                 if (demoTarget == undefined) {
                     let demolishStructurePos = _.get(creep.memory, ["demolishStructure", "pos"], undefined);
                     if (_.isString(_.get(demolishStructurePos, ["roomName"], undefined)) && (demolishStructurePos.roomName != creep.room.name)) {
-                        creep.say(ICONS["moveTo"] + demolishStructurePos.roomName, true);
                         creep.travelTo(_.create(RoomPosition.prototype, demolishStructurePos));
+                        creep.say(travelToIcons(creep) + demolishStructurePos.roomName, true);
                         return;
                     }
                     
@@ -36,8 +38,8 @@ let roleDemolisher = {
                     creep.memory.demolishStructure = undefined;
                     
                     if (creep.room.name != sentTo) {
-                        creep.say(ICONS["moveTo"] + sentTo, true);
                         creep.travelTo(new RoomPosition(25, 25, sentTo));
+                        creep.say(travelToIcons(creep) + sentTo, true);
                         return;
                     }
                     
@@ -73,14 +75,14 @@ let roleDemolisher = {
                 
                 if (demoTarget != undefined) {
                     if (demoTarget instanceof ConstructionSite) {
-                        creep.say(ICONS["moveTo"] + ICONS["dismantle"] + ICONS["constructionSite"], true);
                         creep.travelTo(demoTarget, { range: 0 });
+                        creep.say(travelToIcons(creep) + ICONS["dismantle"] + ICONS["constructionSite"], true);
                     }
                     else {
                         let err = creep.dismantle(demoTarget);
                         if(err == ERR_NOT_IN_RANGE) {
-                            creep.say(ICONS["moveTo"] + ICONS["dismantle"] + ICONS[demoTarget.structureType], true);
                             creep.travelTo(demoTarget);
+                            creep.say(travelToIcons(creep) + ICONS["dismantle"] + ICONS[demoTarget.structureType], true);
                         }
                         else if (err == OK) {
                             creep.say(ICONS["dismantle"] + ICONS[demoTarget.structureType], true);

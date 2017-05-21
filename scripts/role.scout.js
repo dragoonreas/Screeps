@@ -1,5 +1,7 @@
 let roleScout = {
     run: function(creep) {
+        creep.memory.executingRole = "scout";
+        
         _.defaults(creep.memory, {
             waypoint: 0
         });
@@ -12,8 +14,8 @@ let roleScout = {
         if (creep.memory.goalReached != true) {
             if (creep.memory.roomID == "W72N28") {
                 if (creep.room.name != "W64N31" || creep.pos.isNearTo(30, 16) == false) {
-                    creep.say(ICONS["moveTo"] + "W64N31", true);
                     creep.travelTo(new RoomPosition(30, 16, "W64N31"));
+                    creep.say(travelToIcons(creep) + "W64N31", true);
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);
@@ -41,24 +43,24 @@ let roleScout = {
                 }
                 
                 if (creep.memory.waypoint == 0) {
-                    creep.say(ICONS["moveTo"] + "W85N45", true);
                     creep.travelTo(new RoomPosition(13, 49, "W85N45"));
+                    creep.say(travelToIcons(creep) + "W85N45", true);
                 }
                 else if (creep.memory.waypoint == 1) {
-                    creep.say(ICONS["moveTo"] + "W85N45", true);
                     creep.travelTo(new RoomPosition(19, 14, "W85N45"));
+                    creep.say(travelToIcons(creep) + "W85N45", true);
                 }
                 else if (creep.memory.waypoint == 2) {
-                    creep.say(ICONS["moveTo"] + "W5N44", true);
                     creep.travelTo(new RoomPosition(25, 25, "W5N44"));
+                    creep.say(travelToIcons(creep) + "W5N44", true);
                 }
                 else if (creep.memory.waypoint == 3) {
-                    creep.say(ICONS["moveTo"] + "W7N44", true);
                     creep.travelTo(new RoomPosition(25, 25, "W7N44"));
+                    creep.say(travelToIcons(creep) + "W7N44", true);
                 }
                 else if (creep.memory.waypoint == 4 || creep.pos.isNearTo(26, 37) == false) {
-                    creep.say(ICONS["moveTo"] + "W9N45", true);
                     creep.travelTo(new RoomPosition(26, 37, "W9N45"));
+                    creep.say(travelToIcons(creep) + "W9N45", true);
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);

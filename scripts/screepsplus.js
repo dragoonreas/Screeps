@@ -46,10 +46,10 @@ function collect_stats() {
     Memory.stats.timeSinceLastTick = (Date.now() - _.get(Memory.stats, ["currentTime"], (Date.now() + (EST_SEC_PER_TICK * ticksPast * 1000)))) / ticksPast;
     
     if (Memory.stats.ticksSkipped < 0) {
-        console.log(toStr(Game.time) + " was repeated from " + Memory.stats.ticksSkipped + " tick(s) ago");
+        console.log(toStr(Game.time) + " was repeated from " + (-1 * Memory.stats.ticksSkipped) + " tick(s) ago");
     }
     else if (Memory.stats.ticksSkipped > 0) {
-        console.log(toStr(Memory.stats.ticksSkipped) + " ticks skipped");
+        console.log(toStr(Memory.stats.ticksSkipped) + " tick(s) skipped");
     }
     
     if (Memory.stats.timeSinceLastTick < 1000) {

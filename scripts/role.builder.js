@@ -1,6 +1,8 @@
 // TODO: Help build ally construction sites (without accidently steping on them)
 let roleBuilder = {
     run: function(creep) {
+        creep.memory.executingRole = "builder";
+        
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
@@ -22,10 +24,10 @@ let roleBuilder = {
                 let constructionSiteMemRoomName = _.get(creep.memory, ["constructionSite", "pos", "roomName"], undefined); 
                 if (Game.rooms[constructionSiteMemRoomName] == undefined) {
                     constructionSitePos = _.create(RoomPosition.prototype, constructionSiteMemPos);
-                    creep.say(ICONS["moveTo"] + constructionSitePos.roomName, true);
                     creep.travelTo(constructionSitePos, {
                         range: 3
                     });
+                    creep.say(travelToIcons(creep) + constructionSitePos.roomName, true);
                     return;
                 }
                 else if (repairStructureID == undefined) {
@@ -117,10 +119,10 @@ let roleBuilder = {
             if(constructionSite != undefined) {
                 let err = creep.build(constructionSite);
                 if(err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
                     creep.travelTo(constructionSite, {
                         range: 3
                     });
+                    creep.say(travelToIcons(creep) + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["build"] + ICONS["constructionSite"] + _.get(ICONS, constructionSite.structureType, "?"), true);
@@ -183,8 +185,8 @@ let roleBuilder = {
             }
             
             if (err == ERR_NOT_IN_RANGE) {
-                creep.say(ICONS["moveTo"] + ICONS["harvest"] + ICONS["source"], true);
                 creep.travelTo(source);
+                creep.say(travelToIcons(creep) + ICONS["harvest"] + ICONS["source"], true);
             }
             else if (err == OK) {
                 creep.say(ICONS["harvest"] + ICONS["source"], true);
@@ -193,8 +195,8 @@ let roleBuilder = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTAINER], true);
                     creep.travelTo(theRecycleContainer);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
@@ -207,8 +209,8 @@ let roleBuilder = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                     creep.travelTo(theStorage);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
@@ -221,8 +223,8 @@ let roleBuilder = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
                     creep.travelTo(theTerminal);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);

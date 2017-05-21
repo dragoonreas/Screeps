@@ -1,6 +1,11 @@
 if (Memory.MonCPU == true) { console.log("start>init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 
 // Setup globals and prototypes
+global.NODE_USAGE = { 
+    first: Game.time
+    , last: Game.time
+    , total: 0
+}; // NOTE: Can't put this in the global file since the require caches can be reset outside of a global reset
 require("globals")(); // NOTE: All globals not from an external resource should be declared here
 require("prototype.creep")(); // NOTE: Must be required after globals.js
 require("prototype.room")(); // NOTE: Must be required after globals.js
@@ -13,7 +18,8 @@ require("traveler")({
     , installPrototype: true
     , visualisePathStyle: { 
         lineStyle: "solid"
-        , strokeWidth: .1 
+        , strokeWidth: .1
+        , opacity: .25
 }}); // TODO: Make a custom version of Creep.moveTo and remove this stopgap solution
 
 // Setup constants
@@ -31,6 +37,8 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
     , "rooms": {}
     , "spawns": {}
     , "flags": {}
+    , "MonCPU": false
+    , "refillBucket": false
     , "TooAngelDealings": { // can pay a friend tax to opt into this AIs non-agressive list (wish more people did this...)
         "idiotRating": 0 // stay below 0 to be friendly with this AI (value needs to be entered manually based on what their creep by the controller says)
     }
@@ -105,7 +113,7 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
 _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
     "W87N39"
     , "W88N39"
-    , "W85N41"
+    , "W87N41"
 ]);
 _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     "W86N38"
@@ -153,7 +161,7 @@ _.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -246,7 +254,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     attacker: 0
     , harvester: 4
     , powerHarvester: 0
-    , upgrader: 3
+    , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
     , demolisher: 0
@@ -394,12 +402,22 @@ module.exports.loop = function () {
     
     resourcesInfo.summarize_rooms(); // Generate stats for screepsplus to retrieve at end of loop
     
-    if (Game.cpu.tickLimit < 500) { // Update stats and sleep everything else to refill bucket a bit if needed
+    if (_.get(Memory, ["refillBucket"], false) == true || Game.cpu.tickLimit < 500) { // Update stats and sleep everything else to refill bucket a bit if needed
         console.log("Refilling bucket: " + Game.cpu.bucket);
-        _.forEach(Game.creeps, (c) => { c.say(ICONS["sleep"], true); });
+        _.forEach(Game.creeps, (c) => {
+            c.memory.executingRole = "sleep";
+            c.say(ICONS["sleep"], true);
+        });
+        if (Game.cpu.bucket > 9500) {
+            _.set(Memory, ["refillBucket"], false);
+        }
         screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
+        Memory.stats.tickSlept = 1;
         Memory.stats.cpu.used = Game.cpu.getUsed();
         return;
+    }
+    else {
+        Memory.stats.tickSlept = 0;
     }
     
     // Get current creep counts
@@ -1032,7 +1050,50 @@ module.exports.loop = function () {
 		let targetCounts = _.countBy(towerTargets);
 		_.forEach(targetCounts, (c,t) => (
 		    console.log(c + " tower(s) in " + roomID + " attacking hostile from " + t)
-	    ));
+        ));
+        
+        if (_.get(theRoom, ["controller", "my"], false) == true && _.get(theRoom, ["controller", "level"], 0) == 8) {
+            let observer = _.first(theRoom.find(FIND_MY_STRUCTURES, { filter: (s) => (s.structureType == STRUCTURE_OBSERVER) })); // TODO: Store this structure id in room memory
+            if (false && observer != undefined && Game.cpu.bucket > 7500) { // TODO: Turn this back on once sparse room memory has been implemented and room positions are stored as world position strings instead of objects in memory
+                let roomCoord = parseRoomName(roomID);
+                if (roomCoord != undefined) {
+                    let westCoord = _.max([(roomCoord.xx - OBSERVER_RANGE), 1]);
+                    let eastCoord = _.min([(roomCoord.xx + OBSERVER_RANGE), WORLD_WIDTH]);
+                    let northCoord = _.max([(roomCoord.yy - OBSERVER_RANGE), 1]);
+                    let southCoord = _.min([(roomCoord.yy + OBSERVER_RANGE), WORLD_HEIGHT]);
+                    let observableRoomCount = Math.abs(eastCoord - westCoord) * Math.abs(southCoord - northCoord);
+                    let roomMemExpirations = {};
+                    for (let yRoomCoord = northCoord; yRoomCoord <= southCoord; ++yRoomCoord) {
+                        for (let xRoomCoord = westCoord; xRoomCoord <= eastCoord; ++xRoomCoord) {
+                            let theRoomName = generateRoomName(xRoomCoord, yRoomCoord);
+                            if (theRoomName == undefined) {
+                                continue;
+                            }
+                            let roomMemExpiration = _.get(Memory.rooms, [theRoomName, "memoryExpiration"], 0);
+                            if (roomMemExpiration < _.max([theRoom.memory.memoryExpiration, (Game.time + observableRoomCount)])) {
+                                roomMemExpirations[theRoomName] = roomMemExpiration;
+                            }
+                        }
+                    }
+                    let nextRoomMemExpiration = _.min(roomMemExpirations);
+                    if (nextRoomMemExpiration < theRoom.memory.memoryExpiration) {
+                        let roomToObserve = _.findKey(roomMemExpirations, (v) => (v == nextRoomMemExpiration));
+                        observer.observeRoom(roomToObserve);
+                        _.set(Memory.rooms, [roomToObserve, "memoryExpiration"], theRoom.memory.memoryExpiration);
+                        console.log("Observing " + roomToObserve + " from " + roomID + " next tick");
+                    }
+                }
+            }
+            
+            let powerSpawn = _.first(theRoom.find(FIND_MY_STRUCTURES, { filter: (s) => (
+                s.structureType == STRUCTURE_POWER_SPAWN 
+                && s.power > 0 
+                && s.energy >= POWER_SPAWN_ENERGY_RATIO
+            )})); // TODO: Store this structure id in room memory and do the power & energy checks in the if statement instead
+            if (powerSpawn != undefined) {
+                powerSpawn.processPower();
+            }
+        }
     }
     
     if (Memory.MonCPU == true) { console.log("room>creeps:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -1080,6 +1141,7 @@ module.exports.loop = function () {
                 runningRole = true;
             }
             else if (creep.memory.role == "healer") { // TODO: Make this a proper role
+                creep.memory.executingRole = "healer";
                 let target = creep.pos.findClosestByRange(FIND_MY_CREEPS, { 
                     filter: (c) => (c.hits < c.hitsMax
                 )}); // TODO: Also heal ally creeps

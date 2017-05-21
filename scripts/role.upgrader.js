@@ -1,5 +1,7 @@
 let roleUpgrader = {
     run: function(creep) {
+        creep.memory.executingRole = "upgrader";
+        
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
@@ -12,10 +14,10 @@ let roleUpgrader = {
             let theController = Game.rooms[creep.memory.roomID].controller;
             let err = creep.upgradeController(theController);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTROLLER], true);
                 creep.travelTo(theController, {
                     range: 3
                 });
+                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTROLLER], true);
             }
             else if (err == OK) {
                 creep.say(ICONS["upgradeController"] + ICONS[STRUCTURE_CONTROLLER], true);
@@ -48,8 +50,8 @@ let roleUpgrader = {
             let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
             let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.say(ICONS["moveTo"] + ICONS["harvest"] + ICONS["source"], true);
                 creep.travelTo(source);
+                creep.say(travelToIcons(creep) + ICONS["harvest"] + ICONS["source"], true);
             }
             else if (err == ERR_NOT_ENOUGH_RESOURCES 
                 && creep.carry.energy > 0) {
@@ -65,8 +67,8 @@ let roleUpgrader = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTAINER], true);
                     creep.travelTo(theRecycleContainer);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
@@ -79,8 +81,8 @@ let roleUpgrader = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                     creep.travelTo(theStorage);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
                 }
                 else if (err == ERR_NOT_ENOUGH_RESOURCES 
                     && creep.carry.energy > 0) {
@@ -94,8 +96,8 @@ let roleUpgrader = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
                     creep.travelTo(theTerminal);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
                 }
                 else if (err == ERR_NOT_ENOUGH_RESOURCES 
                     && creep.carry.energy > 0) {

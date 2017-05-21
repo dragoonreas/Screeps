@@ -1,5 +1,7 @@
 let roleClaimer = {
    run: function(creep) {
+        creep.memory.executingRole = "claimer";
+        
         let reservedControllerIDs = [
             "5873bb7f11e3e4361b4d5f13"
             , "5873bbab11e3e4361b4d6401"
@@ -25,81 +27,80 @@ let roleClaimer = {
                     creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
                 }
                 else if (creep.memory.controllerID == "577b935b0f9d51615fa48076" && creep.room.name != "W9N45") {
-                    creep.say(ICONS["moveTo"] + controllerMem.pos.roomName, true);
                     ROLES["scout"].run(creep);
                 }
                 else {
-                    creep.say(ICONS["moveTo"] + controllerMem.pos.roomName, true);
                     creep.travelTo(_.create(RoomPosition.prototype, controllerMem.pos));
+                    creep.say(travelToIcons(creep) + controllerMem.pos.roomName, true);
                 }
             }
             else if (creep.memory.controllerID == "5873bb7f11e3e4361b4d5f13") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W88N29", true);
                 creep.travelTo(new RoomPosition(13, 32, "W88N29"));
+                creep.say(travelToIcons(creep) + "W88N29", true);
             }
             else if (creep.memory.controllerID == "5873bbab11e3e4361b4d6401") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W86N28", true);
                 creep.travelTo(new RoomPosition(31, 12, "W86N28"));
+                creep.say(travelToIcons(creep) + "W86N28", true);
             }
             else if (creep.memory.controllerID == "5873bbe111e3e4361b4d6ac5") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W84N23", true);
                 creep.travelTo(new RoomPosition(23, 22, "W84N23"));
+                creep.say(travelToIcons(creep) + "W84N23", true);
             }
             else if (creep.memory.controllerID == "5873bb9411e3e4361b4d6139") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W87N39", true);
                 creep.travelTo(new RoomPosition(24, 40, "W87N39"));
+                creep.say(travelToIcons(creep) + "W87N39", true);
             }
             else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63d1") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W86N38", true);
                 creep.travelTo(new RoomPosition(44, 5, "W86N38"));
+                creep.say(travelToIcons(creep) + "W86N38", true);
             }
             else if (creep.memory.controllerID == "5873bb9311e3e4361b4d612e") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W87N43", true);
                 creep.travelTo(new RoomPosition(8, 39, "W87N43"));
+                creep.say(travelToIcons(creep) + "W87N43", true);
             }
             else if (creep.memory.controllerID == "577b935b0f9d51615fa4807a") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W9N44", true);
                 creep.travelTo(new RoomPosition(44, 31, "W9N44"));
+                creep.say(travelToIcons(creep) + "W9N44", true);
             }
             else if (creep.memory.controllerID == "5873bc2811e3e4361b4d725a") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W81N28", true);
                 creep.travelTo(new RoomPosition(10, 38, "W81N28"));
+                creep.say(travelToIcons(creep) + "W81N28", true);
             }
             else if (creep.memory.controllerID == "5836b6eb8b8b9619519ef90b") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W72N29", true);
                 creep.travelTo(new RoomPosition(7, 9, "W72N29"));
+                creep.say(travelToIcons(creep) + "W72N29", true);
             }
             else if (creep.memory.controllerID == "57ef9cad86f108ae6e60ca51") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.say(ICONS["moveTo"] + "W64N32", true);
                 creep.travelTo(new RoomPosition(31, 28, "W64N32"));
+                creep.say(travelToIcons(creep) + "W64N32", true);
             }
             else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63cd") {
-                creep.say(ICONS["moveTo"] + "W86N39", true);
                 creep.travelTo(new RoomPosition(19, 19, "W86N39"));
+                creep.say(travelToIcons(creep) + "W86N39", true);
             }
             else if (creep.memory.controllerID == "5873bbc711e3e4361b4d6732") {
-                creep.say(ICONS["moveTo"] + "W85N38", true);
                 creep.travelTo(new RoomPosition(43, 37, "W85N38"));
+                creep.say(travelToIcons(creep) + "W85N38", true);
             }
             else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63c3") {
-                creep.say(ICONS["moveTo"] + "W86N43", true);
                 creep.travelTo(new RoomPosition(30, 17, "W86N43"));
+                creep.say(travelToIcons(creep) + "W86N43", true);
             }
             else if (creep.memory.controllerID == "577b935b0f9d51615fa48076") {
-                creep.say(ICONS["moveTo"] + "W9N45", true);
                 ROLES["scout"].run(creep);
+                creep.say(travelToIcons(creep) + "W9N45", true);
             }
             else if (creep.memory.controllerID == "5873bc2711e3e4361b4d7257") {
-                creep.say(ICONS["moveTo"] + "W81N29", true);
                 creep.travelTo(new RoomPosition(34, 31, "W81N29"));
+                creep.say(travelToIcons(creep) + "W81N29", true);
             }
             else if (creep.memory.controllerID == "5836b6eb8b8b9619519ef910") {
-                creep.say(ICONS["moveTo"] + "W72N28", true);
                 creep.travelTo(new RoomPosition(17, 36, "W72N28"));
+                creep.say(travelToIcons(creep) + "W72N28", true);
             }
             else if (creep.memory.controllerID == "57ef9cad86f108ae6e60ca55") {
-                creep.say(ICONS["moveTo"] + "W64N31", true);
                 creep.travelTo(new RoomPosition(30, 16, "W64N31"));
+                creep.say(travelToIcons(creep) + "W64N31", true);
             }
             else {
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
@@ -116,8 +117,8 @@ let roleClaimer = {
                     err = creep.attackController(theController);
                 }
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTROLLER], true);
                     creep.travelTo(theController);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTROLLER], true);
                 }
                 else if (err == ERR_NO_BODYPART) {
                     creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
@@ -129,8 +130,8 @@ let roleClaimer = {
             else if (_.some(reservedControllerIDs, (cID) => (cID == creep.memory.controllerID)) == false) { // NOTE: Using _.some in this way breaks earlier than _.each when false
                 err = creep.claimController(theController);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTROLLER], true);
                     creep.travelTo(theController);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTROLLER], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["claimController"] + ICONS[STRUCTURE_CONTROLLER], true);
@@ -141,8 +142,8 @@ let roleClaimer = {
             if (err == ERR_GCL_NOT_ENOUGH) {
                 err = creep.reserveController(theController);
                 if (creep.reserveController(theController) == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTROLLER], true);
                     creep.travelTo(theController);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTROLLER], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["reserveController"] + ICONS[STRUCTURE_CONTROLLER], true);

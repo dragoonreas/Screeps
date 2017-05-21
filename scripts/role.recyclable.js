@@ -1,5 +1,7 @@
 let roleRecyclable = {
     run: function(creep) {
+        creep.memory.executingRole = "recyclable";
+        
         let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
         let recycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
         let theSpawn = Game.getObjectById(creep.memory.recycleSpawnID);
@@ -22,8 +24,8 @@ let roleRecyclable = {
             for (let resourceType in creep.carry) {
                 let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                     creep.travelTo(theStorage);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
                     break;
                 }
                 else if (err == OK) {
@@ -33,14 +35,14 @@ let roleRecyclable = {
             }
         }
         else if (recycleContainer != undefined && theSpawn != undefined && recycleContainer.pos.isNearTo(theSpawn) && creep.pos.isEqualTo(recycleContainer) == false) {
-            creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTAINER], true);
             creep.travelTo(recycleContainer);
+            creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
 		}
 		else if (theSpawn != undefined) {
             let err = theSpawn.recycleCreep(creep);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_SPAWN], true);
                 creep.travelTo(theSpawn);
+                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_SPAWN], true);
             }
             else if (err == OK) {
                 creep.say(ICONS["recycle"], true);

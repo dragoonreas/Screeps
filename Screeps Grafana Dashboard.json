@@ -97,7 +97,9 @@
             "mode": "time",
             "name": null,
             "show": true,
-            "values": []
+            "values": [
+              "total"
+            ]
           },
           "yaxes": [
             {
@@ -1169,7 +1171,7 @@
                 "query": {
                   "params": [
                     "C",
-                    "5m",
+                    "15m",
                     "now"
                   ]
                 },
@@ -1183,7 +1185,7 @@
             "executionErrorState": "keep_state",
             "frequency": "60s",
             "handler": 1,
-            "message": "Average bucket below 500 CPU for the past 5 minutes.",
+            "message": "Average bucket below 500 CPU for the past 15 minutes.",
             "name": "Low Bucket",
             "noDataState": "ok",
             "notifications": [
@@ -1621,6 +1623,11 @@
               "bars": false,
               "color": "#7EB26D",
               "lines": true
+            },
+            {
+              "alias": "Tick Slept",
+              "color": "#614D93",
+              "zindex": 0
             }
           ],
           "span": 12,
@@ -1682,6 +1689,12 @@
               "hide": true,
               "refId": "K",
               "target": "alias(derivative(screeps.currentTick), 'Ticks/Graph Update')",
+              "textEditor": false
+            },
+            {
+              "hide": false,
+              "refId": "L",
+              "target": "alias(transformNull(screeps.tickSlept, 0), 'Tick Slept')",
               "textEditor": false
             }
           ],
@@ -1824,6 +1837,7 @@
             "avg": true,
             "current": false,
             "hideEmpty": true,
+            "hideZero": true,
             "max": false,
             "min": false,
             "rightSide": true,
@@ -4294,7 +4308,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494651642775,
+      "repeatIteration": 1495288817015,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -4894,7 +4908,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494651642775,
+      "repeatIteration": 1495288817015,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -5494,7 +5508,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494651642775,
+      "repeatIteration": 1495288817015,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -6094,7 +6108,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494651642775,
+      "repeatIteration": 1495288817015,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -6694,7 +6708,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494651642775,
+      "repeatIteration": 1495288817015,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7294,7 +7308,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494651642775,
+      "repeatIteration": 1495288817015,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7894,7 +7908,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1494651642775,
+      "repeatIteration": 1495288817015,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7911,9 +7925,10 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
-          "value": "$__all"
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "screepspl.us",
         "hide": 0,
@@ -7935,7 +7950,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -7959,7 +7973,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -8037,5 +8050,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 132
+  "version": 144
 }

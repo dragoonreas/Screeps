@@ -1,6 +1,8 @@
 // TODO: Repair ally structures and help fill their towers
 let roleRepairer = {
     run: function(creep) {
+        creep.memory.executingRole = "repairer";
+        
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
@@ -22,10 +24,10 @@ let roleRepairer = {
                 && structureMemPos != undefined 
                 && Game.rooms[structureMemRoomName] == undefined) {
                 let structurePos = _.create(RoomPosition.prototype, structureMemPos);
-                creep.say(ICONS["moveTo"] + structurePos.roomName, true);
                 creep.travelTo(structurePos, {
                     range: 3
                 });
+                creep.say(travelToIcons(creep) + structurePos.roomName, true);
                 return;
             }
             
@@ -109,10 +111,10 @@ let roleRepairer = {
                 }
                 
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + _.get(ICONS, structure.structureType, "?"), true);
                     creep.travelTo(structure, {
                         range: ((actionIcon == ICONS["repair"]) ? 3 : 1)
                     });
+                    creep.say(travelToIcons(creep) + _.get(ICONS, structure.structureType, "?"), true);
                 }
                 else if (err == OK) {
                     creep.say(actionIcon + _.get(ICONS, structure.structureType, "?"), true);
@@ -165,8 +167,8 @@ let roleRepairer = {
             }
             
             if (err == ERR_NOT_IN_RANGE) {
-                creep.say(ICONS["moveTo"] + ICONS["harvest"] + ICONS["source"], true);
                 creep.travelTo(source);
+                creep.say(travelToIcons(creep) + ICONS["harvest"] + ICONS["source"], true);
             }
             else if (err == OK) {
                 creep.say(ICONS["harvest"] + ICONS["source"], true);
@@ -175,8 +177,8 @@ let roleRepairer = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_CONTAINER], true);
                     creep.travelTo(theRecycleContainer);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
@@ -189,8 +191,8 @@ let roleRepairer = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                     creep.travelTo(theStorage);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
@@ -203,8 +205,8 @@ let roleRepairer = {
                 creep.cancelOrder("harvest");
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
                     creep.travelTo(theTerminal);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);

@@ -1,6 +1,8 @@
 // TODO: Creep.say emotes
 let rolePowerHarvester = {
     run: function(creep) {
+        creep.memory.executingRole = "powerHarvester";
+        
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined;

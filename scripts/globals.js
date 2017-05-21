@@ -56,6 +56,9 @@ let globals = function() {
         , reserveController: "\uD83D\uDD12"
         , attackController: "\uD83D\uDDE1" // NOTE: Same as attack
         , recycle: "\u267B"
+        , stuck0: "\u2753" // ?
+        , stuck1: "\u2049" // ?!
+        , stuck2: "\u203C" // !!
         , wait0: "\uD83D\uDD5B" // 12:00
         , wait1: "\uD83D\uDD67" // 12:30
         , wait2: "\uD83D\uDD50" // 01:00
@@ -83,6 +86,13 @@ let globals = function() {
         , sleep: "\uD83D\uDCA4" // for when script is terminated early to refill bucket
         , testPassed: "\uD83C\uDF89" // for when scout reaches its goal location
         , testFinished: "\uD83C\uDFC1" // for when scout has finished its test run
+    }
+    
+    global.travelToIcons = function(creep) {
+        if (creep == undefined) {
+            return ICONS["moveTo"];
+        }
+        return (_.get(ICONS, ["stuck" + (_.get(creep, ["memory", "_travel", "stuck"], 0) - 1)], "") + ICONS["moveTo"]);
     }
     
     global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
@@ -140,12 +150,6 @@ let globals = function() {
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     
-    global.NODE_USAGE = { 
-        first: Game.time
-        , last: Game.time
-        , total: 0
-    };
-    
     global.toStr = (obj) => JSON.stringify(obj, null, 2); // shortcut to stringify an object (idea credit: warinternal, from the Screeps Slack)
     
     /*
@@ -171,7 +175,53 @@ let globals = function() {
     		configurable: true,
     		enumerable: false
     	});
-    } 
+    }
+    
+    /*
+        The following is copied from the path finder in the screeps driver at:
+        https://github.com/screeps/driver/blob/master/lib/path-finder.js
+    */
+    //const MAX_WORLD_SIZE = 255; // Talk to marcel before growing world larger than W127N127 :: E127S127
+    // Convert a room name to/from usable coordinates ("E1N1" -> { xx: 129, yy: 126 })
+    global.parseRoomName = function(roomName) {
+        let room = /^([WE])([0-9]+)([NS])([0-9]+)$/.exec(roomName);
+        if (!room) {
+            return; //throw new Error("Invalid room name " + roomName);
+        }
+        let rx = (WORLD_WIDTH >> 1) + ((room[1] === "W") ? (-Number(room[2])) : (Number(room[2]) + 1));
+        let ry = (WORLD_HEIGHT >> 1) + ((room[3] === "N") ? (-Number(room[4])) : (Number(room[4]) + 1));
+        if (((rx > 0) && (rx <= WORLD_WIDTH) && (ry > 0) && (ry <= WORLD_HEIGHT)) == false) {
+            return; //throw new Error("Invalid room name " + roomName);
+        }
+        return { xx: rx, yy: ry };
+    }
+    // Converts return value of 'parseRoomName' back into a normal room name
+    global.generateRoomName = function(xx, yy) {
+        return (
+            ((xx <= (WORLD_WIDTH >> 1)) ? ("W" + ((WORLD_WIDTH >> 1) - xx)) : ("E" + (xx - (WORLD_WIDTH >> 1) - 1))) 
+            + ((yy <= (WORLD_HEIGHT >> 1)) ? ("N" + ((WORLD_HEIGHT >> 1) - yy)) : ("S" + (yy - (WORLD_HEIGHT >> 1) - 1)))
+        );
+    }
+    // Helper function to convert RoomPosition objects into global coordinate objects
+    global.toWorldPosition = function(rp) {
+        let xx = (rp.x | 0), yy = (rp.y | 0);
+        if (((xx >= 0) && (xx < 50) && (yy >= 0) && (yy < 50)) == false) {
+            return; //throw new Error("Invalid room position");
+        }
+        let offset = parseRoomName(rp.roomName);
+        return {
+            xx: (xx + offset.xx * 50)
+            , yy: (yy + offset.yy * 50)
+        };
+    }
+    // Converts back to a RoomPosition
+    global.fromWorldPosition = function(wp) {
+        return new RoomPosition(
+            wp[0] % 50
+            , wp[1] % 50
+            , generateRoomName(Math.floor(wp[0] / 50), Math.floor(wp[1] / 50))
+        );
+    }
     
     /*
         For Screeps Visual: https://github.com/screepers/screeps-visual

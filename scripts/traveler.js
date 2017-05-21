@@ -449,6 +449,28 @@ module.exports = function(globalOpts = {}){
                 return;
             }
             // Init the path style
+            if (pathStyle.stroke == undefined) {
+                switch (creep.memory.executingRole) {
+                    case "adaptable": pathStyle.stroke = "#99440a"; break;
+                    case "attacker": pathStyle.stroke = "#e24d42"; break;
+                    case "builder": pathStyle.stroke = "#1f78c1"; break;
+                    case "claimer": pathStyle.stroke = "#ba43a9"; break;
+                    case "collector": pathStyle.stroke = "#fff"; break;
+                    case "demolisher": pathStyle.stroke = "#052b51"; break;
+                    case "exporter": pathStyle.stroke = "#f9ba8f"; break;
+                    case "harvester": pathStyle.stroke = "#eab839"; break;
+                    case "hauler": pathStyle.stroke = "#ef843c"; break;
+                    case "healer": pathStyle.stroke = "#7eb26d"; break;
+                    case "hoarder": pathStyle.stroke = "#fff"; break;
+                    case "miner": pathStyle.stroke = "#967302"; break;
+                    case "powerHarvester": pathStyle.stroke = "#58140c"; break;
+                    case "recyclable": pathStyle.stroke = "#3f6833"; break;
+                    case "repairer": pathStyle.stroke = "#6ed0e0"; break;
+                    case "scout": pathStyle.stroke = "#dedaf7"; break;
+                    case "upgrader": pathStyle.stroke = "#511749"; break;
+                    default: pathStyle.stroke = "#fff"; break;
+                }
+            }
             if (gOpts.visualisePathStyle) {
                 pathStyle = _.defaults(pathStyle, gOpts.visualisePathStyle);
             }

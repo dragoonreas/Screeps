@@ -1,5 +1,7 @@
 let roleExporter = {
     run: function(creep) {
+        creep.memory.executingRole = "exporter";
+        
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }
@@ -39,8 +41,8 @@ let roleExporter = {
                     let resourceType = _.max(_.keys(theStorage.store), (r) => (resourceWorth(r)));
                     let err = creep.withdraw(theStorage, resourceType);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_STORAGE], true);
                         creep.travelTo(theStorage);
+                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
                     }
                     else if (err == OK) {
                         creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
@@ -50,8 +52,8 @@ let roleExporter = {
                     let resourceType = _.max(_.keys(theTerminal.store), (r) => (resourceWorth(r)));
                     let err = creep.withdraw(theTerminal, resourceType);
                     if (err == ERR_NOT_IN_RANGE) {
-                        creep.say(ICONS["moveTo"] + ICONS[STRUCTURE_TERMINAL], true);
                         creep.travelTo(theTerminal);
+                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
                     }
                     else if (err == OK) {
                         creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
@@ -71,11 +73,11 @@ let roleExporter = {
                     _.set(Memory.rooms, [sentFrom, "creepCounts", "exporter"], _.get(Memory.rooms, [sentFrom, "creepCounts", "exporter"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
                 }
-                creep.say(ICONS["moveTo"] + sentTo, true);
                 if (sentTo == "W9N45") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
+                    creep.say(travelToIcons(creep) + sentTo, true);
                     creep.travelTo(new RoomPosition(25, 25, sentTo));
                 }
             }
