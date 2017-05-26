@@ -20,7 +20,10 @@ let roleRecyclable = {
             }
         }
         
-		if (_.sum(creep.carry) > 0 && theStorage != undefined && _.sum(theStorage.store) < theStorage.storeCapacity) {
+		if (_.sum(creep.carry) > 0 
+            && theStorage != undefined 
+            && _.sum(theStorage.store) < theStorage.storeCapacity 
+            && theStorage.my == true) {
             for (let resourceType in creep.carry) {
                 let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
                 if (err == ERR_NOT_IN_RANGE) {
@@ -34,7 +37,10 @@ let roleRecyclable = {
                 }
             }
         }
-        else if (recycleContainer != undefined && theSpawn != undefined && recycleContainer.pos.isNearTo(theSpawn) && creep.pos.isEqualTo(recycleContainer) == false) {
+        else if (recycleContainer != undefined 
+            && theSpawn != undefined 
+            && recycleContainer.pos.isNearTo(theSpawn) 
+            && creep.pos.isEqualTo(recycleContainer) == false) {
             creep.travelTo(recycleContainer);
             creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
 		}

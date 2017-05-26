@@ -135,6 +135,8 @@ function summarize_room_internal(room) {
     // const creep_types = new Set(creeps.map(c => c.memory.role));
     let creep_counts = _.countBy(creeps, c => c.memory.role);
     _.defaults(creep_counts, DEFAULT_ROLE_COUNTS);
+    let creep_exe_counts = _.countBy(creeps, c => c.memory.executingRole);
+    _.defaults(creep_exe_counts, DEFAULT_ROLE_COUNTS);
     
     // Other things we can count:
     // Tower count, energy
@@ -179,6 +181,7 @@ function summarize_room_internal(room) {
         link_energy,
         num_creeps,
         creep_counts,
+        creep_exe_counts,
         creep_energy,
         num_enemies,
         num_spawns,

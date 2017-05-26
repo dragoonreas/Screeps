@@ -2,11 +2,13 @@ let roleUpgrader = {
     run: function(creep) {
         creep.memory.executingRole = "upgrader";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false
+            && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
         }
-        else if (creep.memory.working == true && creep.carry.energy == 0) {
+        else if (creep.memory.working == true
+            && creep.carry.energy == 0) {
             creep.memory.working = false;
         }
         
@@ -63,8 +65,9 @@ let roleUpgrader = {
             else if (creep.memory.role == "builder" || creep.memory.role == "repairer") {
                 return ERR_NOT_ENOUGH_RESOURCES;
             }
-            else if (theRecycleContainer != undefined && theRecycleContainer.store.energy > 0 && creep.memory.speeds["1"] <= 1) {
-                creep.cancelOrder("harvest");
+            else if (theRecycleContainer != undefined
+                && theRecycleContainer.store.energy > 0
+                && creep.memory.speeds["1"] <= 1) {
                 err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theRecycleContainer);
@@ -77,8 +80,9 @@ let roleUpgrader = {
                     creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
                 }
             }
-            else if (theStorage != undefined && theStorage.store.energy > 0 && creep.memory.speeds["1"] <= 1) {
-                creep.cancelOrder("harvest");
+            else if (theStorage != undefined
+                && theStorage.store.energy > 0
+                && creep.memory.speeds["1"] <= 1) {
                 err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);
@@ -92,8 +96,11 @@ let roleUpgrader = {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
                 }
             }
-            else if (theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2) && creep.memory.speeds["1"] <= 1) {
-                creep.cancelOrder("harvest");
+            else if (theTerminal != undefined
+                && (theTerminal.store.energy > (theTerminal.storeCapacity / 2)
+                    || (theTerminal.my == false
+                        && theTerminal.store.energy > 0))
+                && creep.memory.speeds["1"] <= 1) {
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);

@@ -3,11 +3,13 @@ let roleHauler = {
     run: function(creep) {
         creep.memory.executingRole = "hauler";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false
+            && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined;
         }
-        else if (creep.memory.working == true && creep.carry.energy == 0) {
+        else if (creep.memory.working == true
+            && creep.carry.energy == 0) {
             creep.memory.working = false;
             creep.memory.depositStructure = undefined;
             creep.memory.constructionSite = undefined; // can be a builder when working
@@ -16,14 +18,19 @@ let roleHauler = {
         
         if (creep.memory.working == false) {
             let source = Game.getObjectById(creep.memory.sourceID);
-            if (source == undefined || source.energy == 0 || _.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas" || _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") != "dragoonreas") {
+            if (source == undefined
+                || source.energy == 0
+                || _.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas"
+                || _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") != "dragoonreas") {
                 if (source != undefined) {
                     source = undefined;
                     creep.memory.sourceID = undefined;
                 }
                 
                 let sourceMem = Memory.sources[creep.memory.sourceID];
-                if (sourceMem != undefined && sourceMem.regenAt <= Game.time && creep.room.name != sourceMem.pos.roomName) {
+                if (sourceMem != undefined
+                    && sourceMem.regenAt <= Game.time
+                    && creep.room.name != sourceMem.pos.roomName) {
                     creep.travelTo(_.create(RoomPosition.prototype, sourceMem.pos));
                     creep.say(travelToIcons(creep) + sourceMem.pos.roomName, true);
                     return;
@@ -109,7 +116,8 @@ let roleHauler = {
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);
                         if (source != undefined) {
-                            if (_.get(source.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" && _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") == "dragoonreas") {
+                            if (_.get(source.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas"
+                                && _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") == "dragoonreas") {
                                 if (source.regenAt <= Game.time) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
                                     creep.memory.sourceID = sourceID;
                                     break;
@@ -126,7 +134,8 @@ let roleHauler = {
                         else {
                             sourceMem = Memory.sources[sourceID];
                             if (sourceMem != undefined) {
-                                if (_.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "owner", "username"], "dragoonreas") == "dragoonreas" && _.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "reservation", "owner"], "dragoonreas") == "dragoonreas") {
+                                if (_.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "owner", "username"], "dragoonreas") == "dragoonreas"
+                                    && _.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "reservation", "owner"], "dragoonreas") == "dragoonreas") {
                                     if (sourceMem.regenAt <= Game.time) {
                                         creep.memory.sourceID = sourceID;
                                         creep.travelTo(_.create(RoomPosition.prototype, sourceMem.pos));
@@ -384,8 +393,10 @@ let roleHauler = {
                 return;
             }
             
-            if (structure == undefined || structure.energy == structure.energyCapacity) {
-                if (_.isString(creep.memory.roomID) == true && creep.room.name != creep.memory.roomID) {
+            if (structure == undefined
+                || structure.energy == structure.energyCapacity) {
+                if (_.isString(creep.memory.roomID) == true
+                    && creep.room.name != creep.memory.roomID) {
                     creep.memory.depositStructure = undefined;
                     creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
                     creep.say(travelToIcons(creep) + creep.memory.roomID, true);
@@ -436,7 +447,9 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + _.get(ICONS, structure.structureType, "?") + "?", true);
                 }
             }
-            else if (theTerminal != undefined && theTerminal.store.energy < (theTerminal.storeCapacity / 2)) {
+            else if (theTerminal != undefined
+                     && theTerminal.store.energy < (theTerminal.storeCapacity / 2)
+                     && theTerminal.my == true) {
                 let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
@@ -450,7 +463,11 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
-            else if (creep.memory.roomID == "W87N29" && theTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && theTerminal.store.energy < Memory.TooAngelDealings.totalCost) {
+            else if (creep.memory.roomID == "W87N29"
+                     && theTerminal != undefined
+                     && Memory.TooAngelDealings.isFriendly == false
+                     && theTerminal.store.energy < Memory.TooAngelDealings.totalCost
+                     && theTerminal.my == true) {
                 let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
@@ -464,7 +481,9 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
-            else if (theStorage != undefined && theStorage.store.energy < (theStorage.storeCapacity / 2)) {
+            else if (theStorage != undefined
+                     && theStorage.store.energy < (theStorage.storeCapacity / 2)
+                     && theStorage.my == true) {
                 let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);

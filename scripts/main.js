@@ -380,6 +380,8 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
 if (Memory.MonCPU == true) { console.log("init>loop init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 
 module.exports.loop = function () {
+    // TODO: Cache Memory in global to reuse when nodes aren't swapped between consecutive ticks (see pinned file in #share-thy-code channel in Screeps slack)
+    
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
     
     if (Memory.MonCPU == true) { console.log("loop init>stats:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

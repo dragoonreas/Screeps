@@ -3,12 +3,14 @@ let roleBuilder = {
     run: function(creep) {
         creep.memory.executingRole = "builder";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false
+            && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
             creep.memory.demolishStructure = undefined; // can be a demolisher
         }
-        else if (creep.memory.working == true && creep.carry.energy == 0) {
+        else if (creep.memory.working == true
+            && creep.carry.energy == 0) {
             creep.memory.working = false;
             creep.memory.constructionSite = undefined;
             creep.memory.repairStructure = undefined; // can be a repairer when working
@@ -52,7 +54,8 @@ let roleBuilder = {
                 return;
             }
             
-            if (constructionSite == undefined && _.size(Game.constructionSites) > 0) {
+            if (constructionSite == undefined
+                && _.size(Game.constructionSites) > 0) {
                 let roomConstructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
                 /*
                 if (roomConstructionSites.length == 0) { // TODO: Change this block to check if there's any in rooms the creep can reasonably reach with construction sites needing to be built in them
@@ -98,7 +101,8 @@ let roleBuilder = {
                             }});
                             ++i;
                         }
-                        while (i < priorityQueue.length && constructionSite == undefined) // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined
+                        while (i < priorityQueue.length
+                            && constructionSite == undefined) // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined
                         
                         if (constructionSite != undefined) {
                             creep.memory.constructionSite = { 
@@ -160,7 +164,9 @@ let roleBuilder = {
                 && (((theStorage == undefined 
                             || theStorage.store.energy == 0) 
                         && (theTerminal == undefined 
-                            || theTerminal.store.energy <= (theTerminal.storeCapacity / 2))) 
+                            || (theTerminal.store.energy <= (theTerminal.storeCapacity / 2)
+                                || (theTerminal.my == false
+                                    && theTerminal.store.energy > 0))))
                     || (((_.size(Game.constructionSites) == 0) 
                             || (Game.rooms[creep.memory.roomID] == undefined 
                                 || Game.rooms[creep.memory.roomID].find(FIND_MY_CONSTRUCTION_SITES).length == 0))
@@ -170,7 +176,11 @@ let roleBuilder = {
                         return;
                     }
                 }
-                if ((creep.memory.roomID == "W9N45" || creep.memory.roomID == "W81N29" || creep.memory.roomID == "W72N28" || creep.memory.roomID == "W64N31") && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
+                if ((creep.memory.roomID == "W9N45"
+                        || creep.memory.roomID == "W81N29"
+                        || creep.memory.roomID == "W72N28"
+                        || creep.memory.roomID == "W64N31")
+                    && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
                 }
                 else {
@@ -191,8 +201,8 @@ let roleBuilder = {
             else if (err == OK) {
                 creep.say(ICONS["harvest"] + ICONS["source"], true);
             }
-            else if (theRecycleContainer != undefined && theRecycleContainer.store.energy > 0) {
-                creep.cancelOrder("harvest");
+            else if (theRecycleContainer != undefined
+                && theRecycleContainer.store.energy > 0) {
                 err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theRecycleContainer);
@@ -205,8 +215,8 @@ let roleBuilder = {
                     creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
                 }
             }
-            else if (theStorage != undefined && theStorage.store.energy > 0) {
-                creep.cancelOrder("harvest");
+            else if (theStorage != undefined
+                && theStorage.store.energy > 0) {
                 err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);
@@ -219,8 +229,10 @@ let roleBuilder = {
                     creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
                 }
             }
-            else if (theTerminal != undefined && theTerminal.store.energy > (theTerminal.storeCapacity / 2)) {
-                creep.cancelOrder("harvest");
+            else if (theTerminal != undefined
+                && (theTerminal.store.energy > (theTerminal.storeCapacity / 2)
+                    || (theTerminal.my == false
+                        && theTerminal.store.energy > 0))) {
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);

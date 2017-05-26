@@ -56,9 +56,9 @@ let globals = function() {
         , reserveController: "\uD83D\uDD12"
         , attackController: "\uD83D\uDDE1" // NOTE: Same as attack
         , recycle: "\u267B"
-        , stuck0: "\u2753" // ?
-        , stuck1: "\u2049" // ?!
-        , stuck2: "\u203C" // !!
+        , stuck0: "\uD83D\uDCA5"
+        , stuck1: "\uD83D\uDCAB"
+        , stuck2: "\uD83D\uDCA2"
         , wait0: "\uD83D\uDD5B" // 12:00
         , wait1: "\uD83D\uDD67" // 12:30
         , wait2: "\uD83D\uDD50" // 01:00
