@@ -60,7 +60,7 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
         , "InfiniteJoe" // PINK alliance (not yet added to their whitelist)
         , "KermitFrog" // PINK alliance (not yat added to their whitelist)
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
-});
+}); // TODO: Get alliance data from user "LeagueOfAutomatedNations" public segment every 20min
 
 // Make sure all required room memory objects exist
 for (let roomID in Game.rooms) {
@@ -159,7 +159,7 @@ _.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
@@ -374,7 +374,7 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: (((_.get(Game.rooms, ["W64N31", "storage", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "storage", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
+    , exporter: (((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
 });
 
 if (Memory.MonCPU == true) { console.log("init>loop init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

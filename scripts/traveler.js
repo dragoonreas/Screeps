@@ -516,6 +516,25 @@ module.exports = function(globalOpts = {}){
             });
             // Draw the path
             creep.room.visual.poly(path, pathStyle);
+            // Draw line to target
+            if (pathData.length == (path.length - 1)) {
+                let goal = _.create(RoomPosition.prototype, {
+                    x: _.get(creep.memory, ["_travel", "dest", "x"], _.last(path)[0])
+                    , y: _.get(creep.memory, ["_travel", "dest", "y"], _.last(path)[1])
+                    , roomName: _.get(creep.memory, ["_travel", "dest", "roomName"], creep.room.name)
+                });
+                let dest = _.create(RoomPosition.prototype, {
+                    x: _.last(path)[0]
+                    , y: _.last(path)[1]
+                    , roomName: creep.room.name
+                });
+                if (dest.getRangeTo(goal) > 0) {
+                    pathStyle.width = pathStyle.strokeWidth;
+                    pathStyle.color = pathStyle.stroke;
+                    pathStyle.lineStyle = "dotted";
+                    creep.room.visual.line(dest, goal, pathStyle);
+                }
+            }
         }
     }
     
