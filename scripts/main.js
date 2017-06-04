@@ -1028,12 +1028,12 @@ module.exports.loop = function () {
                     Game.notify("Tower in " + roomID + " attacking hostile from " + target.owner.username, target.ticksToLive / EST_TICKS_PER_MIN);
                 }
             }
-            else { // Else repair a structure if needed
+            else { // Else repair a non-decaying structure if needed
                 target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (s) => (s.hits < s.hitsMax 
+                        && s.structureType != STRUCTURE_RAMPART
                         && s.structureType != STRUCTURE_WALL
                         && s.structureType != STRUCTURE_ROAD
-                        && s.structureType != STRUCTURE_RAMPART
                         && s.structureType != STRUCTURE_CONTAINER
                 )});
                 if(target != undefined) {
@@ -1044,7 +1044,17 @@ module.exports.loop = function () {
                         filter: (c) => (c.hits < c.hitsMax
                     )}); // TODO: Also heal ally creeps
                     if (target != undefined) {
-                        tower.heal(target); // TODO: Maybe prioritise healing creeps before structures?
+                        tower.heal(target); // TODO: Maybe prioritise healing creeps before non-decaying structures?
+                    }
+                    else { // Else repair a road or container if needed
+                        target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                            filter: (s) => (s.hits < s.hitsMax 
+                                && s.structureType != STRUCTURE_RAMPART
+                                && s.structureType != STRUCTURE_WALL
+                        )});
+                        if(target != undefined) {
+                            tower.repair(target);
+                        }
                     }
                 }
             }

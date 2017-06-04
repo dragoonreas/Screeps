@@ -65,7 +65,7 @@ let roleRepairer = {
                         repairerTypeFound = true;
                     }
                     
-                    if (repairerTypeFound == true) {
+                    if (repairerTypeFound == true && repairerType != STRUCTURE_CONTAINER && repairerType != STRUCTURE_ROAD) {
                         if (repairerType == STRUCTURE_ROAD) {
                             structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                             	filter: (s) => (s.hits < s.hitsMax 
@@ -82,7 +82,9 @@ let roleRepairer = {
                             }
                             else {
                                 theStructures = creep.room.find(FIND_STRUCTURES, {
-                                    filter: (s) => (s.hits < s.hitsMax
+                                    filter: (s) => (s.hits < s.hitsMax 
+                                        && s.structureType != STRUCTURE_ROAD 
+                                        && s.structureType != STRUCTURE_CONTAINER
                                 )});
                             }
                             
