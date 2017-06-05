@@ -31,7 +31,7 @@ let roleUpgrader = {
         else {
             let source = undefined;
             switch (creep.memory.roomID) {
-                case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6157"); break;
+                //case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6157"); break;
                 case "W86N29": source = Game.getObjectById("5873bbab11e3e4361b4d63fd"); break;
                 case "W85N23": source = Game.getObjectById("5873bbc911e3e4361b4d677d"); break;
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63ce"); break;
@@ -41,6 +41,7 @@ let roleUpgrader = {
                 case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7256"); break;
                 case "W72N28": source = Game.getObjectById("5836b6eb8b8b9619519ef90f"); break;
                 case "W64N31": source = Game.getObjectById("57ef9cad86f108ae6e60ca56"); break;
+                case "W55N31": source = Game.getObjectById("579fa8950700be0674d2de55"); break;
             }
             
             let err = ERR_INVALID_TARGET;

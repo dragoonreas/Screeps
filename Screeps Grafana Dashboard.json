@@ -1074,11 +1074,12 @@
             {
               "alias": "Incomplete Path",
               "bars": false,
-              "color": "#890F02",
+              "color": "#BF1B00",
               "nullPointMode": "null",
+              "pointradius": 2,
               "points": true,
               "stack": false,
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "New Destination",
@@ -1105,6 +1106,16 @@
             {
               "alias": "Avg/Creep CPU",
               "color": "#F29191"
+            },
+            {
+              "alias": "Collision",
+              "bars": false,
+              "color": "#E0752D",
+              "nullPointMode": "null",
+              "pointradius": 1,
+              "points": true,
+              "stack": false,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -1157,6 +1168,11 @@
               "refId": "I",
               "target": "alias(divideSeries(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), #F), 'Avg/Creep CPU')",
               "targetFull": "alias(divideSeries(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')), 'Avg/Creep CPU')"
+            },
+            {
+              "hide": true,
+              "refId": "J",
+              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.collision, 3, 5), 'Collision')"
             }
           ],
           "thresholds": [],
@@ -3267,8 +3283,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W64N31",
-              "value": "W64N31"
+              "text": "W55N31",
+              "value": "W55N31"
             }
           },
           "seriesOverrides": [
@@ -3430,8 +3446,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W64N31",
-              "value": "W64N31"
+              "text": "W55N31",
+              "value": "W55N31"
             }
           },
           "seriesOverrides": [
@@ -3587,8 +3603,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W64N31",
-              "value": "W64N31"
+              "text": "W55N31",
+              "value": "W55N31"
             }
           },
           "seriesOverrides": [
@@ -3735,8 +3751,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W64N31",
-              "value": "W64N31"
+              "text": "W55N31",
+              "value": "W55N31"
             }
           },
           "span": 2,
@@ -3821,8 +3837,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W64N31",
-              "value": "W64N31"
+              "text": "W55N31",
+              "value": "W55N31"
             }
           },
           "span": 2,
@@ -3906,8 +3922,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W64N31",
-              "value": "W64N31"
+              "text": "W55N31",
+              "value": "W55N31"
             }
           },
           "seriesOverrides": [
@@ -4045,8 +4061,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
+              "text": "W64N31",
+              "value": "W64N31"
             }
           },
           "seriesOverrides": [
@@ -4208,8 +4224,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
+              "text": "W64N31",
+              "value": "W64N31"
             }
           },
           "seriesOverrides": [
@@ -4365,8 +4381,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
+              "text": "W64N31",
+              "value": "W64N31"
             }
           },
           "seriesOverrides": [
@@ -4513,8 +4529,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
+              "text": "W64N31",
+              "value": "W64N31"
             }
           },
           "span": 2,
@@ -4599,8 +4615,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
+              "text": "W64N31",
+              "value": "W64N31"
             }
           },
           "span": 2,
@@ -4684,8 +4700,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
+              "text": "W64N31",
+              "value": "W64N31"
             }
           },
           "seriesOverrides": [
@@ -4778,7 +4794,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496404220081,
+      "repeatIteration": 1496604298875,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -4823,8 +4839,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N38",
-              "value": "W85N38"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
           "seriesOverrides": [
@@ -4986,8 +5002,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N38",
-              "value": "W85N38"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
           "seriesOverrides": [
@@ -5143,8 +5159,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N38",
-              "value": "W85N38"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
           "seriesOverrides": [
@@ -5291,8 +5307,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N38",
-              "value": "W85N38"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
           "span": 2,
@@ -5377,8 +5393,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N38",
-              "value": "W85N38"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
           "span": 2,
@@ -5462,8 +5478,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W85N38",
-              "value": "W85N38"
+              "text": "W85N23",
+              "value": "W85N23"
             }
           },
           "seriesOverrides": [
@@ -5556,7 +5572,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496404220081,
+      "repeatIteration": 1496604298875,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -5601,8 +5617,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N29",
-              "value": "W86N29"
+              "text": "W85N38",
+              "value": "W85N38"
             }
           },
           "seriesOverrides": [
@@ -5764,8 +5780,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N29",
-              "value": "W86N29"
+              "text": "W85N38",
+              "value": "W85N38"
             }
           },
           "seriesOverrides": [
@@ -5921,8 +5937,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N29",
-              "value": "W86N29"
+              "text": "W85N38",
+              "value": "W85N38"
             }
           },
           "seriesOverrides": [
@@ -6069,8 +6085,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N29",
-              "value": "W86N29"
+              "text": "W85N38",
+              "value": "W85N38"
             }
           },
           "span": 2,
@@ -6155,8 +6171,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N29",
-              "value": "W86N29"
+              "text": "W85N38",
+              "value": "W85N38"
             }
           },
           "span": 2,
@@ -6240,8 +6256,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N29",
-              "value": "W86N29"
+              "text": "W85N38",
+              "value": "W85N38"
             }
           },
           "seriesOverrides": [
@@ -6334,7 +6350,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496404220081,
+      "repeatIteration": 1496604298875,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -6379,8 +6395,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N39",
-              "value": "W86N39"
+              "text": "W86N29",
+              "value": "W86N29"
             }
           },
           "seriesOverrides": [
@@ -6542,8 +6558,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N39",
-              "value": "W86N39"
+              "text": "W86N29",
+              "value": "W86N29"
             }
           },
           "seriesOverrides": [
@@ -6699,8 +6715,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N39",
-              "value": "W86N39"
+              "text": "W86N29",
+              "value": "W86N29"
             }
           },
           "seriesOverrides": [
@@ -6847,8 +6863,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N39",
-              "value": "W86N39"
+              "text": "W86N29",
+              "value": "W86N29"
             }
           },
           "span": 2,
@@ -6933,8 +6949,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N39",
-              "value": "W86N39"
+              "text": "W86N29",
+              "value": "W86N29"
             }
           },
           "span": 2,
@@ -7018,8 +7034,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N39",
-              "value": "W86N39"
+              "text": "W86N29",
+              "value": "W86N29"
             }
           },
           "seriesOverrides": [
@@ -7112,7 +7128,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496404220081,
+      "repeatIteration": 1496604298875,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7157,8 +7173,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N43",
-              "value": "W86N43"
+              "text": "W86N39",
+              "value": "W86N39"
             }
           },
           "seriesOverrides": [
@@ -7320,8 +7336,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N43",
-              "value": "W86N43"
+              "text": "W86N39",
+              "value": "W86N39"
             }
           },
           "seriesOverrides": [
@@ -7477,8 +7493,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N43",
-              "value": "W86N43"
+              "text": "W86N39",
+              "value": "W86N39"
             }
           },
           "seriesOverrides": [
@@ -7625,8 +7641,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N43",
-              "value": "W86N43"
+              "text": "W86N39",
+              "value": "W86N39"
             }
           },
           "span": 2,
@@ -7711,8 +7727,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N43",
-              "value": "W86N43"
+              "text": "W86N39",
+              "value": "W86N39"
             }
           },
           "span": 2,
@@ -7796,8 +7812,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W86N43",
-              "value": "W86N43"
+              "text": "W86N39",
+              "value": "W86N39"
             }
           },
           "seriesOverrides": [
@@ -7890,7 +7906,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496404220081,
+      "repeatIteration": 1496604298875,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7935,8 +7951,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W87N29",
-              "value": "W87N29"
+              "text": "W86N43",
+              "value": "W86N43"
             }
           },
           "seriesOverrides": [
@@ -8098,8 +8114,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W87N29",
-              "value": "W87N29"
+              "text": "W86N43",
+              "value": "W86N43"
             }
           },
           "seriesOverrides": [
@@ -8255,8 +8271,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W87N29",
-              "value": "W87N29"
+              "text": "W86N43",
+              "value": "W86N43"
             }
           },
           "seriesOverrides": [
@@ -8403,8 +8419,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W87N29",
-              "value": "W87N29"
+              "text": "W86N43",
+              "value": "W86N43"
             }
           },
           "span": 2,
@@ -8489,8 +8505,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W87N29",
-              "value": "W87N29"
+              "text": "W86N43",
+              "value": "W86N43"
             }
           },
           "span": 2,
@@ -8574,8 +8590,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W87N29",
-              "value": "W87N29"
+              "text": "W86N43",
+              "value": "W86N43"
             }
           },
           "seriesOverrides": [
@@ -8668,7 +8684,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496404220081,
+      "repeatIteration": 1496604298875,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -9446,7 +9462,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496404220081,
+      "repeatIteration": 1496604298875,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -9478,7 +9494,7 @@
         "options": [],
         "query": "screeps.roomSummary.*",
         "refresh": 1,
-        "regex": "W(?!17|19|24|53|65|72|81|84)\\d+N\\d+",
+        "regex": "W(?!17|19|24|53|65|72|81|84|87)\\d+N\\d+",
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -9612,5 +9628,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 156
+  "version": 160
 }

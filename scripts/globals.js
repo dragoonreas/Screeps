@@ -56,6 +56,7 @@ let globals = function() {
         , reserveController: "\uD83D\uDD12"
         , attackController: "\uD83D\uDDE1" // NOTE: Same as attack
         , recycle: "\u267B"
+        , tired: "\uD83D\uDCA6"
         , stuck0: "\uD83D\uDCA5"
         , stuck1: "\uD83D\uDCAB"
         , stuck2: "\uD83D\uDCA2"
@@ -89,10 +90,16 @@ let globals = function() {
     }
     
     global.travelToIcons = function(creep) {
-        if (creep == undefined) {
-            return ICONS["moveTo"];
+        let travelStatusIcon = "";
+        if (creep != undefined) {
+            if (creep.fatigue > 0) {
+                travelStatusIcon = ICONS["tired"];
+            } else {
+                let stuckCount = _.get(creep, ["memory", "_travel", "stuck"], 0);
+                travelStatusIcon = _.get(ICONS, ["stuck" + (stuckCount - 1)], "");
+            }
         }
-        return (_.get(ICONS, ["stuck" + (_.get(creep, ["memory", "_travel", "stuck"], 0) - 1)], "") + ICONS["moveTo"]);
+        return (travelStatusIcon + ICONS["moveTo"]);
     }
     
     global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));

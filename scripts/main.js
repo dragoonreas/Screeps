@@ -45,12 +45,13 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
     , "agressivePlayers": [ // these players attack first and ask questions later (if at all)
         "rysade"
         , "roncli" // uses players with no RCL 8 rooms as testing grounds to improve their combat code with
-        , "rudykocur"
+        , "rudykocur" // uses nukes
         , "McGnomington" // open to negotiations
         , "Archangel"
         , "Vultured"
         , "vrs" // open to negotiations
         , "a2coder" // indiscriminately agressive towards PINK alliance members
+        , "GiantDwarf" // uses nukes
     ]
     , "nonAgressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
         "Bovius" // allows passage through their remote mining rooms
@@ -98,10 +99,6 @@ for (let roomID in Game.rooms) {
 }
 
 // Setup room memory objects for owned rooms
-_.set(Memory.rooms, ["W87N29", "harvestRooms"], [
-    "W88N29"
-    , "W89N29"
-]);
 _.set(Memory.rooms, ["W86N29", "harvestRooms"], [
     "W86N28"
     , "W85N29"
@@ -143,7 +140,12 @@ _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
 _.set(Memory.rooms, ["W64N31", "harvestRooms"], [
     "W64N32"
     , "W63N31"
-    , "W65N31"
+    //, "W65N31" // converted to a novice room
+]);
+_.set(Memory.rooms, ["W55N31", "harvestRooms"], [
+    "W56N31"
+    , "W54N31"
+    , "W55N32"
 ]);
 
 /*
@@ -151,13 +153,6 @@ _.set(Memory.rooms, ["W64N31", "harvestRooms"], [
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["W87N29", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
@@ -221,6 +216,13 @@ _.set(Memory.rooms, ["W64N31", "repairerTypeMins"], {
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
+_.set(Memory.rooms, ["W55N31", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_WALL]: 0
+    , all: 0
+});
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
 let managedRooms = [];
@@ -236,20 +238,6 @@ for (let roomID in Memory.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["W87N29", "creepMins"], {
-    attacker: 0
-    , harvester: 4
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W87N29", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: 0
-    , scout: 0
-    , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W87N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
-    , builder: 1
-    , exporter: 0
-});
 _.set(Memory.rooms, ["W86N29", "creepMins"], {
     attacker: 0
     , harvester: 4
@@ -374,7 +362,21 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: (((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
+    , exporter: 0//(((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
+});
+_.set(Memory.rooms, ["W55N31", "creepMins"], {
+    attacker: 0
+    , harvester: 4
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W55N31", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W55N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+    , exporter: 0
 });
 
 if (Memory.MonCPU == true) { console.log("init>loop init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -455,11 +457,11 @@ module.exports.loop = function () {
         });
         let energyPrice = _.get(_.min(energySellOrders, "price"), "price", 0);
         Memory.TooAngelDealings.energyToFriendly = (parseInt(Memory.TooAngelDealings.idiotRating) + 1) / energyPrice;
-        Memory.TooAngelDealings.totalCost = Memory.TooAngelDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngelDealings.energyToFriendly, "W87N29", "E33N15"); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
+        Memory.TooAngelDealings.totalCost = Memory.TooAngelDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngelDealings.energyToFriendly, "W86N29", "E33N15"); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
         Memory.TooAngelDealings.lastIdiotRating = Memory.TooAngelDealings.idiotRating;
     }
     
-    let dealingsTerminal = Game.rooms["W87N29"].terminal;
+    let dealingsTerminal = Game.rooms["W86N29"].terminal;
     if (dealingsTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store.energy >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngelDealings.totalCost)) {
         if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngelDealings.energyToFriendly, "E33N15", "brain.isFriend('dragoonreas') == true?") == OK) {
             console.log("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
@@ -539,6 +541,7 @@ module.exports.loop = function () {
         "W17N79"
         , "W81N29"
         , "W72N28"
+        , "W87N29"
     ];
     
     // Manage rooms and run towers
@@ -1244,27 +1247,28 @@ module.exports.loop = function () {
         }
     }
     
-    _.set(Memory.rooms, ["W87N29", "creepMins", "adaptable"], ((
+    // TODO: Reorganise bootstrapping network in relation to the removal of W87N29
+    /*_.set(Memory.rooms, ["W87N29", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W85N38", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N38", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));*/ // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W86N29", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
+        //(_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
+        (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0)
         /*|| (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)*/
         /*|| (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)*/
         || (_.get(Memory.rooms, ["W64N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W64N31", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W85N23", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0)
+        //(_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
+        (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W86N39", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W86N43", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N43", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W85N38", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N38", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0)
+        //|| (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W85N38", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W86N43", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N43", "creepCounts", "adaptable"], -1) == 0) 
@@ -1274,6 +1278,9 @@ module.exports.loop = function () {
     _.set(Memory.rooms, ["W86N43", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W85N38", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N38", "creepCounts", "adaptable"], -1) == 0)
+    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    _.set(Memory.rooms, ["W64N31", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

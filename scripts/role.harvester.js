@@ -43,12 +43,12 @@ let roleHarvester = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     let sourceIDs = {
-                        "W87N29": [
+                        /*"W87N29": [
                             "5873bb7f11e3e4361b4d5f14"
                             , "5873bb6711e3e4361b4d5cc5"
                             , "5873bb9511e3e4361b4d6159"
                         ] 
-                        , "W86N29": [
+                        , */"W86N29": [
                             "5873bbab11e3e4361b4d6400"
                             , "5873bbc811e3e4361b4d675b"
                             , "5873bbc811e3e4361b4d675c"
@@ -105,10 +105,18 @@ let roleHarvester = {
                         ]
                         , "W64N31": [
                             "57ef9cad86f108ae6e60ca52" // W64N32
-                            /*, "57ef9cad86f108ae6e60ca50"*/ // W64N32
+                            //, "57ef9cad86f108ae6e60ca50" // W64N32 (may cause blockages)
                             , "57ef9cc386f108ae6e60ccb7" // W63N31
-                            , "57ef9c9886f108ae6e60c7d9" // W65N31
+                            //, "57ef9c9886f108ae6e60c7d9" // W65N31 (now in a novice room)
                             , "57ef9cad86f108ae6e60ca54" // W64N31
+                        ]
+                        , "W55N31": [
+                            "579fa8850700be0674d2dc0f" // W56N31
+                            , "579fa8a60700be0674d2e07b" // W54N31
+                            , "579fa8950700be0674d2de50" // W55N32
+                            , "579fa8950700be0674d2de51" // W55N32
+                            , "579fa8a60700be0674d2e07c" // W54N31
+                            , "579fa8950700be0674d2de53" // W55N31
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -308,16 +316,40 @@ let roleHarvester = {
                                 creep.say(travelToIcons(creep) + "W63N31", true);
                                 return;
                             }
-                            else if (sourceID == "57ef9c9886f108ae6e60c7d9") { // TODO: Remove this after the source has been added to memory
+                            /*else if (sourceID == "57ef9c9886f108ae6e60c7d9") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
                                 creep.travelTo(new RoomPosition(26, 42, "W65N31"));
                                 creep.say(travelToIcons(creep) + "W65N31", true);
                                 return;
-                            }
+                            }*/
                             else if (sourceID == "57ef9cad86f108ae6e60ca54") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
                                 creep.travelTo(new RoomPosition(40, 8, "W64N31"));
                                 creep.say(travelToIcons(creep) + "W64N31", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8850700be0674d2dc0f") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(46, 24, "W56N31"));
+                                creep.say(travelToIcons(creep) + "W56N31", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8a60700be0674d2e07b") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(5, 27, "W54N31"));
+                                creep.say(travelToIcons(creep) + "W54N31", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8950700be0674d2de50") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(27, 40, "W55N32"));
+                                creep.say(travelToIcons(creep) + "W55N32", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8950700be0674d2de53") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(33, 6, "W55N31"));
+                                creep.say(travelToIcons(creep) + "W55N31", true);
                                 return;
                             }
                         }
@@ -462,7 +494,7 @@ let roleHarvester = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
-            else if (creep.memory.roomID == "W87N29"
+            else if (creep.memory.roomID == "W86N29"
                      && theTerminal != undefined
                      && Memory.TooAngelDealings.isFriendly == false
                      && theTerminal.store.energy < Memory.TooAngelDealings.totalCost

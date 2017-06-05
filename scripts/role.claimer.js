@@ -102,6 +102,10 @@ let roleClaimer = {
                 creep.travelTo(new RoomPosition(30, 16, "W64N31"));
                 creep.say(travelToIcons(creep) + "W64N31", true);
             }
+            else if (creep.memory.controllerID == "579fa8950700be0674d2de54") {
+                creep.travelTo(new RoomPosition(27, 42, "W55N31"));
+                creep.say(travelToIcons(creep) + "W55N31", true);
+            }
             else {
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
                 //creep.memory.role = "recyclable"; // recycle this creep since it can't seem to do anything

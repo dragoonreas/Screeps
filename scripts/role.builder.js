@@ -142,7 +142,7 @@ let roleBuilder = {
         else {
             let source = undefined;
             switch (creep.memory.roomID) {
-                case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6159"); break;
+                //case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6159"); break;
                 case "W86N29": source = Game.getObjectById("5873bbab11e3e4361b4d63fc"); break;
                 case "W85N23": source = Game.getObjectById("5873bbc911e3e4361b4d677e"); break;
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63cf"); break;
@@ -152,6 +152,7 @@ let roleBuilder = {
                 case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7255"); break;
                 case "W72N28": source = Game.getObjectById("5836b6eb8b8b9619519ef90e"); break;
                 case "W64N31": source = Game.getObjectById("57ef9cad86f108ae6e60ca54"); break;
+                case "W55N31": source = Game.getObjectById("579fa8950700be0674d2de53"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
@@ -179,7 +180,8 @@ let roleBuilder = {
                 if ((creep.memory.roomID == "W9N45"
                         || creep.memory.roomID == "W81N29"
                         || creep.memory.roomID == "W72N28"
-                        || creep.memory.roomID == "W64N31")
+                        || creep.memory.roomID == "W64N31"
+                        || creep.memory.roomID == "W55N31")
                     && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
                 }

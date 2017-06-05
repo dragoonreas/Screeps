@@ -226,6 +226,14 @@ module.exports = function(globalOpts = {}){
                 }
                 return OK;
             }
+            let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);
+            let creepRole = _.get(creep.memory, ["role"], "noRole");
+            if (_.get(global, ["summarized_rooms", creepRoomID, "traveler", creepRole, "count"], 0) == 0) {
+                _.set(global, ["summarized_rooms", creepRoomID, "traveler", creepRole, "count"], 1); // NOTE: global.summarized_rooms is reset each tick near the beginning of the game loop
+            }
+            else {
+                ++global.summarized_rooms[creepRoomID].traveler[creepRole].count;
+            }
             // check if creep is stuck
             let hasMoved = true;
             if (travelData.prev) { // TODO: Account for border hoping
@@ -233,18 +241,11 @@ module.exports = function(globalOpts = {}){
                 if (creepPos.inRangeTo(travelData.prev, 0)) {
                     hasMoved = false;
                     travelData.stuck++;
+                    global.summarized_rooms[creepRoomID].traveler[creepRole].collision = (global.summarized_rooms[creepRoomID].traveler[creepRole].collision || 0) + 1;
                 }
                 else {
                     travelData.stuck = 0;
                 }
-            }
-            let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);
-            let creepRole = _.get(creep.memory, ["role"], "noRole");
-            if (_.get(global, ["summarized_rooms", creepRoomID, "traveler", creepRole, "count"], 0) == 0) {
-                _.set(global, ["summarized_rooms", creepRoomID, "traveler", creepRole, "count"], 1);
-            }
-            else {
-                ++global.summarized_rooms[creepRoomID].traveler[creepRole].count;
             }
             // handle case where creep is stuck
             if (travelData.stuck >= gOpts.defaultStuckValue && !options.ignoreStuck) {

@@ -13,7 +13,7 @@ let roleAttacker = {
         
         // TODO: Automate based on ramparts with no building under them near attackers
         /*
-        if (creep.room.name == "W87N29") {
+        if (creep.room.name == "W86N29") {
             let entrances = [
                 { x: 32, y: 7 } // TODO: Update this position
             ];
@@ -22,7 +22,7 @@ let roleAttacker = {
                     break;
                 }
                 if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
-                    creep.travelTo(new RoomPosition(entrances[i].x, entrances[i].y, "W87N29"), {
+                    creep.travelTo(new RoomPosition(entrances[i].x, entrances[i].y, "W86N29"), {
                         allowHostile: true
                         , ignoreHostileCreeps: true
                     });
@@ -93,7 +93,7 @@ let roleAttacker = {
                     creep.say(ICONS["attack"] + _.get(ICONS, structure.structureType, "?"), true);
                 }
             }/*
-            else if (creep.room.name == "W87N29") { // TODO: Automate based on ramparts with no building under them near attackers
+            else if (creep.room.name == "W86N29") { // TODO: Automate based on ramparts with no building under them near attackers
                 let entrances = [
                     { x: 32, y: 7 } // TODO: Update this position
                 ];
@@ -102,7 +102,7 @@ let roleAttacker = {
                         break;
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
-                        creep.travelTo(new RoomPosition(entrances[i].x, entrances[i].y, "W87N29"){
+                        creep.travelTo(new RoomPosition(entrances[i].x, entrances[i].y, "W86N29"){
                             allowHostile: true
                             , ignoreHostileCreeps: true
                         });

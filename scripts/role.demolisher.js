@@ -62,6 +62,7 @@ let roleDemolisher = {
                             && s.structureType != STRUCTURE_POWER_BANK 
                             && _.sum(_.get(s, ["store"], { energy: 0 })) == 0 
                             && _.get(s, ["energy"], 0) == 0
+                            && s.hitsMax > 0 // NOTE: Novice walls have zero hitsMax
                         )});
                     }
                     
