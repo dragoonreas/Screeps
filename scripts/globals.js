@@ -114,7 +114,7 @@ let globals = function() {
             }
         }
     }
-
+    
     global.incrementIdleCreepCount = function(creep) {
         if (creep instanceof Creep) {
             let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);

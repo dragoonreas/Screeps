@@ -318,7 +318,8 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.spawns_spawning, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Spawning')"
+              "target": "aliasSub(screeps.roomSummary.$Room.spawns_spawning, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Spawning')",
+              "textEditor": false
             },
             {
               "hide": true,
@@ -3452,89 +3453,106 @@
           },
           "seriesOverrides": [
             {
-              "alias": "adaptable",
+              "alias": "/.*adaptable/",
               "color": "#99440A",
               "zindex": -2
             },
             {
-              "alias": "attacker",
+              "alias": "/.*attacker/",
               "color": "#E24D42",
               "zindex": -2
             },
             {
-              "alias": "builder",
+              "alias": "/.*builder/",
               "color": "#1F78C1",
               "zindex": 0
             },
             {
-              "alias": "claimer",
+              "alias": "/.*claimer/",
               "color": "#BA43A9",
               "zindex": -1
             },
             {
-              "alias": "demolisher",
+              "alias": "/.*demolisher/",
               "color": "#052B51",
               "zindex": -3
             },
             {
-              "alias": "harvester",
+              "alias": "/.*harvester/",
               "color": "#EAB839",
               "zindex": 3
             },
             {
-              "alias": "hauler",
+              "alias": "/.*hauler/",
               "color": "#EF843C",
               "zindex": -3
             },
             {
-              "alias": "miner",
+              "alias": "/.*miner/",
               "color": "#967302",
               "zindex": -3
             },
             {
-              "alias": "powerHarvester",
+              "alias": "/.*powerHarvester/",
               "color": "#58140C",
               "zindex": -3
             },
             {
-              "alias": "recyclable",
+              "alias": "/.*recyclable/",
               "color": "#3F6833",
               "zindex": -2
             },
             {
-              "alias": "repairer",
+              "alias": "/.*repairer/",
               "color": "#6ED0E0",
               "zindex": 1
             },
             {
-              "alias": "scout",
+              "alias": "/.*scout/",
               "color": "#DEDAF7",
               "zindex": -3
             },
             {
-              "alias": "upgrader",
+              "alias": "/.*upgrader/",
               "color": "#511749",
               "zindex": 2
             },
             {
-              "alias": "healer",
+              "alias": "/.*healer/",
               "color": "#7EB26D",
               "zindex": -2
             },
             {
-              "alias": "exporter",
+              "alias": "/.*exporter/",
               "color": "#F9BA8F",
               "zindex": -3
             },
             {
-              "alias": "sleep",
+              "alias": "/.*sleep/",
               "color": "#705DA0",
               "zindex": -3
             },
             {
-              "alias": "spawn",
+              "alias": "/.*spawn/",
               "color": "#BADFF4",
               "zindex": -3
+            },
+            {
+              "alias": "/^Idle.*/",
+              "lines": false,
+              "nullPointMode": "null as zero",
+              "pointradius": 1,
+              "points": true,
+              "stack": false,
+              "yaxis": 2
+            },
+            {
+              "alias": "/^Confused.*/",
+              "bars": true,
+              "lines": false,
+              "nullPointMode": "null as zero",
+              "stack": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -3547,6 +3565,14 @@
               "refId": "A",
               "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+            },
+            {
+              "refId": "C",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
             }
           ],
           "thresholds": [],
@@ -3578,9 +3604,9 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
-              "min": null,
+              "min": "0.5",
               "show": true
             }
           ]
@@ -4241,89 +4267,103 @@
           },
           "seriesOverrides": [
             {
-              "alias": "adaptable",
+              "alias": "/.*adaptable/",
               "color": "#99440A",
               "zindex": -2
             },
             {
-              "alias": "attacker",
+              "alias": "/.*attacker/",
               "color": "#E24D42",
               "zindex": -2
             },
             {
-              "alias": "builder",
+              "alias": "/.*builder/",
               "color": "#1F78C1",
               "zindex": 0
             },
             {
-              "alias": "claimer",
+              "alias": "/.*claimer/",
               "color": "#BA43A9",
               "zindex": -1
             },
             {
-              "alias": "demolisher",
+              "alias": "/.*demolisher/",
               "color": "#052B51",
               "zindex": -3
             },
             {
-              "alias": "harvester",
+              "alias": "/.*harvester/",
               "color": "#EAB839",
               "zindex": 3
             },
             {
-              "alias": "hauler",
+              "alias": "/.*hauler/",
               "color": "#EF843C",
               "zindex": -3
             },
             {
-              "alias": "miner",
+              "alias": "/.*miner/",
               "color": "#967302",
               "zindex": -3
             },
             {
-              "alias": "powerHarvester",
+              "alias": "/.*powerHarvester/",
               "color": "#58140C",
               "zindex": -3
             },
             {
-              "alias": "recyclable",
+              "alias": "/.*recyclable/",
               "color": "#3F6833",
               "zindex": -2
             },
             {
-              "alias": "repairer",
+              "alias": "/.*repairer/",
               "color": "#6ED0E0",
               "zindex": 1
             },
             {
-              "alias": "scout",
+              "alias": "/.*scout/",
               "color": "#DEDAF7",
               "zindex": -3
             },
             {
-              "alias": "upgrader",
+              "alias": "/.*upgrader/",
               "color": "#511749",
               "zindex": 2
             },
             {
-              "alias": "healer",
+              "alias": "/.*healer/",
               "color": "#7EB26D",
               "zindex": -2
             },
             {
-              "alias": "exporter",
+              "alias": "/.*exporter/",
               "color": "#F9BA8F",
               "zindex": -3
             },
             {
-              "alias": "sleep",
+              "alias": "/.*sleep/",
               "color": "#705DA0",
               "zindex": -3
             },
             {
-              "alias": "spawn",
+              "alias": "/.*spawn/",
               "color": "#BADFF4",
               "zindex": -3
+            },
+            {
+              "alias": "/^Idle.*/",
+              "lines": false,
+              "points": true,
+              "stack": false,
+              "yaxis": 2
+            },
+            {
+              "alias": "/^Confused.*/",
+              "bars": true,
+              "lines": false,
+              "stack": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -4336,6 +4376,14 @@
               "refId": "A",
               "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+            },
+            {
+              "refId": "C",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
             }
           ],
           "thresholds": [],
@@ -4367,9 +4415,9 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
-              "min": null,
+              "min": "0.5",
               "show": true
             }
           ]
@@ -4816,7 +4864,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496908989025,
+      "repeatIteration": 1496943393424,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -5030,89 +5078,103 @@
           },
           "seriesOverrides": [
             {
-              "alias": "adaptable",
+              "alias": "/.*adaptable/",
               "color": "#99440A",
               "zindex": -2
             },
             {
-              "alias": "attacker",
+              "alias": "/.*attacker/",
               "color": "#E24D42",
               "zindex": -2
             },
             {
-              "alias": "builder",
+              "alias": "/.*builder/",
               "color": "#1F78C1",
               "zindex": 0
             },
             {
-              "alias": "claimer",
+              "alias": "/.*claimer/",
               "color": "#BA43A9",
               "zindex": -1
             },
             {
-              "alias": "demolisher",
+              "alias": "/.*demolisher/",
               "color": "#052B51",
               "zindex": -3
             },
             {
-              "alias": "harvester",
+              "alias": "/.*harvester/",
               "color": "#EAB839",
               "zindex": 3
             },
             {
-              "alias": "hauler",
+              "alias": "/.*hauler/",
               "color": "#EF843C",
               "zindex": -3
             },
             {
-              "alias": "miner",
+              "alias": "/.*miner/",
               "color": "#967302",
               "zindex": -3
             },
             {
-              "alias": "powerHarvester",
+              "alias": "/.*powerHarvester/",
               "color": "#58140C",
               "zindex": -3
             },
             {
-              "alias": "recyclable",
+              "alias": "/.*recyclable/",
               "color": "#3F6833",
               "zindex": -2
             },
             {
-              "alias": "repairer",
+              "alias": "/.*repairer/",
               "color": "#6ED0E0",
               "zindex": 1
             },
             {
-              "alias": "scout",
+              "alias": "/.*scout/",
               "color": "#DEDAF7",
               "zindex": -3
             },
             {
-              "alias": "upgrader",
+              "alias": "/.*upgrader/",
               "color": "#511749",
               "zindex": 2
             },
             {
-              "alias": "healer",
+              "alias": "/.*healer/",
               "color": "#7EB26D",
               "zindex": -2
             },
             {
-              "alias": "exporter",
+              "alias": "/.*exporter/",
               "color": "#F9BA8F",
               "zindex": -3
             },
             {
-              "alias": "sleep",
+              "alias": "/.*sleep/",
               "color": "#705DA0",
               "zindex": -3
             },
             {
-              "alias": "spawn",
+              "alias": "/.*spawn/",
               "color": "#BADFF4",
               "zindex": -3
+            },
+            {
+              "alias": "/^Idle.*/",
+              "lines": false,
+              "points": true,
+              "stack": false,
+              "yaxis": 2
+            },
+            {
+              "alias": "/^Confused.*/",
+              "bars": true,
+              "lines": false,
+              "stack": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -5125,6 +5187,14 @@
               "refId": "A",
               "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+            },
+            {
+              "refId": "C",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
             }
           ],
           "thresholds": [],
@@ -5156,9 +5226,9 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
-              "min": null,
+              "min": "0.5",
               "show": true
             }
           ]
@@ -5605,7 +5675,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496908989025,
+      "repeatIteration": 1496943393424,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -5819,89 +5889,103 @@
           },
           "seriesOverrides": [
             {
-              "alias": "adaptable",
+              "alias": "/.*adaptable/",
               "color": "#99440A",
               "zindex": -2
             },
             {
-              "alias": "attacker",
+              "alias": "/.*attacker/",
               "color": "#E24D42",
               "zindex": -2
             },
             {
-              "alias": "builder",
+              "alias": "/.*builder/",
               "color": "#1F78C1",
               "zindex": 0
             },
             {
-              "alias": "claimer",
+              "alias": "/.*claimer/",
               "color": "#BA43A9",
               "zindex": -1
             },
             {
-              "alias": "demolisher",
+              "alias": "/.*demolisher/",
               "color": "#052B51",
               "zindex": -3
             },
             {
-              "alias": "harvester",
+              "alias": "/.*harvester/",
               "color": "#EAB839",
               "zindex": 3
             },
             {
-              "alias": "hauler",
+              "alias": "/.*hauler/",
               "color": "#EF843C",
               "zindex": -3
             },
             {
-              "alias": "miner",
+              "alias": "/.*miner/",
               "color": "#967302",
               "zindex": -3
             },
             {
-              "alias": "powerHarvester",
+              "alias": "/.*powerHarvester/",
               "color": "#58140C",
               "zindex": -3
             },
             {
-              "alias": "recyclable",
+              "alias": "/.*recyclable/",
               "color": "#3F6833",
               "zindex": -2
             },
             {
-              "alias": "repairer",
+              "alias": "/.*repairer/",
               "color": "#6ED0E0",
               "zindex": 1
             },
             {
-              "alias": "scout",
+              "alias": "/.*scout/",
               "color": "#DEDAF7",
               "zindex": -3
             },
             {
-              "alias": "upgrader",
+              "alias": "/.*upgrader/",
               "color": "#511749",
               "zindex": 2
             },
             {
-              "alias": "healer",
+              "alias": "/.*healer/",
               "color": "#7EB26D",
               "zindex": -2
             },
             {
-              "alias": "exporter",
+              "alias": "/.*exporter/",
               "color": "#F9BA8F",
               "zindex": -3
             },
             {
-              "alias": "sleep",
+              "alias": "/.*sleep/",
               "color": "#705DA0",
               "zindex": -3
             },
             {
-              "alias": "spawn",
+              "alias": "/.*spawn/",
               "color": "#BADFF4",
               "zindex": -3
+            },
+            {
+              "alias": "/^Idle.*/",
+              "lines": false,
+              "points": true,
+              "stack": false,
+              "yaxis": 2
+            },
+            {
+              "alias": "/^Confused.*/",
+              "bars": true,
+              "lines": false,
+              "stack": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -5914,6 +5998,14 @@
               "refId": "A",
               "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+            },
+            {
+              "refId": "C",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
             }
           ],
           "thresholds": [],
@@ -5945,9 +6037,9 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
-              "min": null,
+              "min": "0.5",
               "show": true
             }
           ]
@@ -6394,7 +6486,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496908989025,
+      "repeatIteration": 1496943393424,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -6608,89 +6700,103 @@
           },
           "seriesOverrides": [
             {
-              "alias": "adaptable",
+              "alias": "/.*adaptable/",
               "color": "#99440A",
               "zindex": -2
             },
             {
-              "alias": "attacker",
+              "alias": "/.*attacker/",
               "color": "#E24D42",
               "zindex": -2
             },
             {
-              "alias": "builder",
+              "alias": "/.*builder/",
               "color": "#1F78C1",
               "zindex": 0
             },
             {
-              "alias": "claimer",
+              "alias": "/.*claimer/",
               "color": "#BA43A9",
               "zindex": -1
             },
             {
-              "alias": "demolisher",
+              "alias": "/.*demolisher/",
               "color": "#052B51",
               "zindex": -3
             },
             {
-              "alias": "harvester",
+              "alias": "/.*harvester/",
               "color": "#EAB839",
               "zindex": 3
             },
             {
-              "alias": "hauler",
+              "alias": "/.*hauler/",
               "color": "#EF843C",
               "zindex": -3
             },
             {
-              "alias": "miner",
+              "alias": "/.*miner/",
               "color": "#967302",
               "zindex": -3
             },
             {
-              "alias": "powerHarvester",
+              "alias": "/.*powerHarvester/",
               "color": "#58140C",
               "zindex": -3
             },
             {
-              "alias": "recyclable",
+              "alias": "/.*recyclable/",
               "color": "#3F6833",
               "zindex": -2
             },
             {
-              "alias": "repairer",
+              "alias": "/.*repairer/",
               "color": "#6ED0E0",
               "zindex": 1
             },
             {
-              "alias": "scout",
+              "alias": "/.*scout/",
               "color": "#DEDAF7",
               "zindex": -3
             },
             {
-              "alias": "upgrader",
+              "alias": "/.*upgrader/",
               "color": "#511749",
               "zindex": 2
             },
             {
-              "alias": "healer",
+              "alias": "/.*healer/",
               "color": "#7EB26D",
               "zindex": -2
             },
             {
-              "alias": "exporter",
+              "alias": "/.*exporter/",
               "color": "#F9BA8F",
               "zindex": -3
             },
             {
-              "alias": "sleep",
+              "alias": "/.*sleep/",
               "color": "#705DA0",
               "zindex": -3
             },
             {
-              "alias": "spawn",
+              "alias": "/.*spawn/",
               "color": "#BADFF4",
               "zindex": -3
+            },
+            {
+              "alias": "/^Idle.*/",
+              "lines": false,
+              "points": true,
+              "stack": false,
+              "yaxis": 2
+            },
+            {
+              "alias": "/^Confused.*/",
+              "bars": true,
+              "lines": false,
+              "stack": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -6703,6 +6809,14 @@
               "refId": "A",
               "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+            },
+            {
+              "refId": "C",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
             }
           ],
           "thresholds": [],
@@ -6734,9 +6848,9 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
-              "min": null,
+              "min": "0.5",
               "show": true
             }
           ]
@@ -7183,7 +7297,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496908989025,
+      "repeatIteration": 1496943393424,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7397,89 +7511,103 @@
           },
           "seriesOverrides": [
             {
-              "alias": "adaptable",
+              "alias": "/.*adaptable/",
               "color": "#99440A",
               "zindex": -2
             },
             {
-              "alias": "attacker",
+              "alias": "/.*attacker/",
               "color": "#E24D42",
               "zindex": -2
             },
             {
-              "alias": "builder",
+              "alias": "/.*builder/",
               "color": "#1F78C1",
               "zindex": 0
             },
             {
-              "alias": "claimer",
+              "alias": "/.*claimer/",
               "color": "#BA43A9",
               "zindex": -1
             },
             {
-              "alias": "demolisher",
+              "alias": "/.*demolisher/",
               "color": "#052B51",
               "zindex": -3
             },
             {
-              "alias": "harvester",
+              "alias": "/.*harvester/",
               "color": "#EAB839",
               "zindex": 3
             },
             {
-              "alias": "hauler",
+              "alias": "/.*hauler/",
               "color": "#EF843C",
               "zindex": -3
             },
             {
-              "alias": "miner",
+              "alias": "/.*miner/",
               "color": "#967302",
               "zindex": -3
             },
             {
-              "alias": "powerHarvester",
+              "alias": "/.*powerHarvester/",
               "color": "#58140C",
               "zindex": -3
             },
             {
-              "alias": "recyclable",
+              "alias": "/.*recyclable/",
               "color": "#3F6833",
               "zindex": -2
             },
             {
-              "alias": "repairer",
+              "alias": "/.*repairer/",
               "color": "#6ED0E0",
               "zindex": 1
             },
             {
-              "alias": "scout",
+              "alias": "/.*scout/",
               "color": "#DEDAF7",
               "zindex": -3
             },
             {
-              "alias": "upgrader",
+              "alias": "/.*upgrader/",
               "color": "#511749",
               "zindex": 2
             },
             {
-              "alias": "healer",
+              "alias": "/.*healer/",
               "color": "#7EB26D",
               "zindex": -2
             },
             {
-              "alias": "exporter",
+              "alias": "/.*exporter/",
               "color": "#F9BA8F",
               "zindex": -3
             },
             {
-              "alias": "sleep",
+              "alias": "/.*sleep/",
               "color": "#705DA0",
               "zindex": -3
             },
             {
-              "alias": "spawn",
+              "alias": "/.*spawn/",
               "color": "#BADFF4",
               "zindex": -3
+            },
+            {
+              "alias": "/^Idle.*/",
+              "lines": false,
+              "points": true,
+              "stack": false,
+              "yaxis": 2
+            },
+            {
+              "alias": "/^Confused.*/",
+              "bars": true,
+              "lines": false,
+              "stack": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -7492,6 +7620,14 @@
               "refId": "A",
               "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+            },
+            {
+              "refId": "C",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
             }
           ],
           "thresholds": [],
@@ -7523,9 +7659,9 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
-              "min": null,
+              "min": "0.5",
               "show": true
             }
           ]
@@ -7972,7 +8108,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496908989025,
+      "repeatIteration": 1496943393424,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -8186,89 +8322,103 @@
           },
           "seriesOverrides": [
             {
-              "alias": "adaptable",
+              "alias": "/.*adaptable/",
               "color": "#99440A",
               "zindex": -2
             },
             {
-              "alias": "attacker",
+              "alias": "/.*attacker/",
               "color": "#E24D42",
               "zindex": -2
             },
             {
-              "alias": "builder",
+              "alias": "/.*builder/",
               "color": "#1F78C1",
               "zindex": 0
             },
             {
-              "alias": "claimer",
+              "alias": "/.*claimer/",
               "color": "#BA43A9",
               "zindex": -1
             },
             {
-              "alias": "demolisher",
+              "alias": "/.*demolisher/",
               "color": "#052B51",
               "zindex": -3
             },
             {
-              "alias": "harvester",
+              "alias": "/.*harvester/",
               "color": "#EAB839",
               "zindex": 3
             },
             {
-              "alias": "hauler",
+              "alias": "/.*hauler/",
               "color": "#EF843C",
               "zindex": -3
             },
             {
-              "alias": "miner",
+              "alias": "/.*miner/",
               "color": "#967302",
               "zindex": -3
             },
             {
-              "alias": "powerHarvester",
+              "alias": "/.*powerHarvester/",
               "color": "#58140C",
               "zindex": -3
             },
             {
-              "alias": "recyclable",
+              "alias": "/.*recyclable/",
               "color": "#3F6833",
               "zindex": -2
             },
             {
-              "alias": "repairer",
+              "alias": "/.*repairer/",
               "color": "#6ED0E0",
               "zindex": 1
             },
             {
-              "alias": "scout",
+              "alias": "/.*scout/",
               "color": "#DEDAF7",
               "zindex": -3
             },
             {
-              "alias": "upgrader",
+              "alias": "/.*upgrader/",
               "color": "#511749",
               "zindex": 2
             },
             {
-              "alias": "healer",
+              "alias": "/.*healer/",
               "color": "#7EB26D",
               "zindex": -2
             },
             {
-              "alias": "exporter",
+              "alias": "/.*exporter/",
               "color": "#F9BA8F",
               "zindex": -3
             },
             {
-              "alias": "sleep",
+              "alias": "/.*sleep/",
               "color": "#705DA0",
               "zindex": -3
             },
             {
-              "alias": "spawn",
+              "alias": "/.*spawn/",
               "color": "#BADFF4",
               "zindex": -3
+            },
+            {
+              "alias": "/^Idle.*/",
+              "lines": false,
+              "points": true,
+              "stack": false,
+              "yaxis": 2
+            },
+            {
+              "alias": "/^Confused.*/",
+              "bars": true,
+              "lines": false,
+              "stack": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -8281,6 +8431,14 @@
               "refId": "A",
               "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+            },
+            {
+              "refId": "C",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
             }
           ],
           "thresholds": [],
@@ -8312,9 +8470,9 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
-              "min": null,
+              "min": "0.5",
               "show": true
             }
           ]
@@ -8761,7 +8919,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496908989025,
+      "repeatIteration": 1496943393424,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -8975,89 +9133,103 @@
           },
           "seriesOverrides": [
             {
-              "alias": "adaptable",
+              "alias": "/.*adaptable/",
               "color": "#99440A",
               "zindex": -2
             },
             {
-              "alias": "attacker",
+              "alias": "/.*attacker/",
               "color": "#E24D42",
               "zindex": -2
             },
             {
-              "alias": "builder",
+              "alias": "/.*builder/",
               "color": "#1F78C1",
               "zindex": 0
             },
             {
-              "alias": "claimer",
+              "alias": "/.*claimer/",
               "color": "#BA43A9",
               "zindex": -1
             },
             {
-              "alias": "demolisher",
+              "alias": "/.*demolisher/",
               "color": "#052B51",
               "zindex": -3
             },
             {
-              "alias": "harvester",
+              "alias": "/.*harvester/",
               "color": "#EAB839",
               "zindex": 3
             },
             {
-              "alias": "hauler",
+              "alias": "/.*hauler/",
               "color": "#EF843C",
               "zindex": -3
             },
             {
-              "alias": "miner",
+              "alias": "/.*miner/",
               "color": "#967302",
               "zindex": -3
             },
             {
-              "alias": "powerHarvester",
+              "alias": "/.*powerHarvester/",
               "color": "#58140C",
               "zindex": -3
             },
             {
-              "alias": "recyclable",
+              "alias": "/.*recyclable/",
               "color": "#3F6833",
               "zindex": -2
             },
             {
-              "alias": "repairer",
+              "alias": "/.*repairer/",
               "color": "#6ED0E0",
               "zindex": 1
             },
             {
-              "alias": "scout",
+              "alias": "/.*scout/",
               "color": "#DEDAF7",
               "zindex": -3
             },
             {
-              "alias": "upgrader",
+              "alias": "/.*upgrader/",
               "color": "#511749",
               "zindex": 2
             },
             {
-              "alias": "healer",
+              "alias": "/.*healer/",
               "color": "#7EB26D",
               "zindex": -2
             },
             {
-              "alias": "exporter",
+              "alias": "/.*exporter/",
               "color": "#F9BA8F",
               "zindex": -3
             },
             {
-              "alias": "sleep",
+              "alias": "/.*sleep/",
               "color": "#705DA0",
               "zindex": -3
             },
             {
-              "alias": "spawn",
+              "alias": "/.*spawn/",
               "color": "#BADFF4",
               "zindex": -3
+            },
+            {
+              "alias": "/^Idle.*/",
+              "lines": false,
+              "points": true,
+              "stack": false,
+              "yaxis": 2
+            },
+            {
+              "alias": "/^Confused.*/",
+              "bars": true,
+              "lines": false,
+              "stack": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -9070,6 +9242,14 @@
               "refId": "A",
               "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+            },
+            {
+              "refId": "C",
+              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
             }
           ],
           "thresholds": [],
@@ -9101,9 +9281,9 @@
             {
               "format": "short",
               "label": null,
-              "logBase": 1,
+              "logBase": 2,
               "max": null,
-              "min": null,
+              "min": "0.5",
               "show": true
             }
           ]
@@ -9550,7 +9730,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496908989025,
+      "repeatIteration": 1496943393424,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -9567,6 +9747,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "tags": [],
           "text": "All",
           "value": [
@@ -9593,6 +9774,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -9616,10 +9798,9 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
-          "value": [
-            "$__all"
-          ]
+          "value": "$__all"
         },
         "datasource": "screepspl.us",
         "hide": 2,
@@ -9641,6 +9822,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -9652,6 +9834,56 @@
         "name": "ExecutedRole",
         "options": [],
         "query": "screeps.roomSummary.*.creep_exe_counts.*",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "screepspl.us",
+        "hide": 2,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "ConfusedRole",
+        "options": [],
+        "query": "screeps.roomSummary.*.creep_confusion_counts.*",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "screepspl.us",
+        "hide": 2,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "IdleRole",
+        "options": [],
+        "query": "screeps.roomSummary.*.creep_idle_counts.*",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -9718,5 +9950,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 168
+  "version": 170
 }
