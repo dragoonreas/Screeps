@@ -3283,8 +3283,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W55N31",
-              "value": "W55N31"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "seriesOverrides": [
@@ -3446,8 +3446,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W55N31",
-              "value": "W55N31"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "seriesOverrides": [
@@ -3525,6 +3525,16 @@
               "alias": "exporter",
               "color": "#F9BA8F",
               "zindex": -3
+            },
+            {
+              "alias": "sleep",
+              "color": "#705DA0",
+              "zindex": -3
+            },
+            {
+              "alias": "spawn",
+              "color": "#BADFF4",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -3535,7 +3545,8 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)"
+              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -3603,8 +3614,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W55N31",
-              "value": "W55N31"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "seriesOverrides": [
@@ -3751,8 +3762,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W55N31",
-              "value": "W55N31"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "span": 2,
@@ -3837,8 +3848,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W55N31",
-              "value": "W55N31"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "span": 2,
@@ -3922,8 +3933,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W55N31",
-              "value": "W55N31"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "seriesOverrides": [
@@ -4303,6 +4314,16 @@
               "alias": "exporter",
               "color": "#F9BA8F",
               "zindex": -3
+            },
+            {
+              "alias": "sleep",
+              "color": "#705DA0",
+              "zindex": -3
+            },
+            {
+              "alias": "spawn",
+              "color": "#BADFF4",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -4313,7 +4334,8 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)"
+              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -4794,7 +4816,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496604298875,
+      "repeatIteration": 1496908989025,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -5081,6 +5103,16 @@
               "alias": "exporter",
               "color": "#F9BA8F",
               "zindex": -3
+            },
+            {
+              "alias": "sleep",
+              "color": "#705DA0",
+              "zindex": -3
+            },
+            {
+              "alias": "spawn",
+              "color": "#BADFF4",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -5091,7 +5123,8 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)"
+              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -5572,7 +5605,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496604298875,
+      "repeatIteration": 1496908989025,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -5859,6 +5892,16 @@
               "alias": "exporter",
               "color": "#F9BA8F",
               "zindex": -3
+            },
+            {
+              "alias": "sleep",
+              "color": "#705DA0",
+              "zindex": -3
+            },
+            {
+              "alias": "spawn",
+              "color": "#BADFF4",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -5869,7 +5912,8 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)"
+              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -6350,7 +6394,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496604298875,
+      "repeatIteration": 1496908989025,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -6637,6 +6681,16 @@
               "alias": "exporter",
               "color": "#F9BA8F",
               "zindex": -3
+            },
+            {
+              "alias": "sleep",
+              "color": "#705DA0",
+              "zindex": -3
+            },
+            {
+              "alias": "spawn",
+              "color": "#BADFF4",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -6647,7 +6701,8 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)"
+              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -7128,7 +7183,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496604298875,
+      "repeatIteration": 1496908989025,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7415,6 +7470,16 @@
               "alias": "exporter",
               "color": "#F9BA8F",
               "zindex": -3
+            },
+            {
+              "alias": "sleep",
+              "color": "#705DA0",
+              "zindex": -3
+            },
+            {
+              "alias": "spawn",
+              "color": "#BADFF4",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -7425,7 +7490,8 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)"
+              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -7906,7 +7972,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496604298875,
+      "repeatIteration": 1496908989025,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -8193,6 +8259,16 @@
               "alias": "exporter",
               "color": "#F9BA8F",
               "zindex": -3
+            },
+            {
+              "alias": "sleep",
+              "color": "#705DA0",
+              "zindex": -3
+            },
+            {
+              "alias": "spawn",
+              "color": "#BADFF4",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -8203,7 +8279,8 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)"
+              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -8684,7 +8761,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496604298875,
+      "repeatIteration": 1496908989025,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -8971,6 +9048,16 @@
               "alias": "exporter",
               "color": "#F9BA8F",
               "zindex": -3
+            },
+            {
+              "alias": "sleep",
+              "color": "#705DA0",
+              "zindex": -3
+            },
+            {
+              "alias": "spawn",
+              "color": "#BADFF4",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -8981,7 +9068,8 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)"
+              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -9462,7 +9550,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1496604298875,
+      "repeatIteration": 1496908989025,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -9494,7 +9582,7 @@
         "options": [],
         "query": "screeps.roomSummary.*",
         "refresh": 1,
-        "regex": "W(?!17|19|24|53|65|72|81|84|87)\\d+N\\d+",
+        "regex": "W(?!17|19|24|55|65|72|81|84|87)\\d+N(?!32)\\d+",
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -9529,7 +9617,9 @@
         "allValue": null,
         "current": {
           "text": "All",
-          "value": "$__all"
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "screepspl.us",
         "hide": 2,
@@ -9561,7 +9651,7 @@
         "multi": true,
         "name": "ExecutedRole",
         "options": [],
-        "query": "screeps.roomSummary.*.creep_counts.*",
+        "query": "screeps.roomSummary.*.creep_exe_counts.*",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -9628,5 +9718,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 160
+  "version": 168
 }

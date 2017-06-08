@@ -147,6 +147,11 @@ _.set(Memory.rooms, ["W55N31", "harvestRooms"], [
     , "W54N31"
     , "W55N32"
 ]);
+_.set(Memory.rooms, ["W53N39", "harvestRooms"], [
+    "W54N39"
+    //, "W53N38" // TODO: Uncomment when ramparts decay or are demolished
+    , "W52N39"
+]);
 
 /*
     TODO:
@@ -189,9 +194,9 @@ _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -210,18 +215,25 @@ _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
     , all: 0
 });*/
 _.set(Memory.rooms, ["W64N31", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W55N31", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 1
     , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+/*_.set(Memory.rooms, ["W55N31", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
     , all: 0
+});*/
+_.set(Memory.rooms, ["W53N39", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 3
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -364,7 +376,7 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , builder: 1
     , exporter: 0//(((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
 });
-_.set(Memory.rooms, ["W55N31", "creepMins"], {
+/*_.set(Memory.rooms, ["W55N31", "creepMins"], {
     attacker: 0
     , harvester: 4
     , powerHarvester: 0
@@ -375,6 +387,20 @@ _.set(Memory.rooms, ["W55N31", "creepMins"], {
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["W55N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+    , exporter: 0
+});*/
+_.set(Memory.rooms, ["W53N39", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W53N39", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 1
+    , scout: 0
+    , claimer: 1
+    , repairer: _.reduce(_.get(Memory.rooms, ["W53N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
 });
@@ -541,7 +567,8 @@ module.exports.loop = function () {
         "W17N79"
         , "W81N29"
         , "W72N28"
-        , "W87N29"
+        , "W87N29" // TODO: Remove this when the rest of the code relating to this room's been removed
+        , "W55N31"
     ];
     
     // Manage rooms and run towers
@@ -1052,7 +1079,8 @@ module.exports.loop = function () {
                     else { // Else repair a road or container if needed
                         target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                             filter: (s) => (s.hits < s.hitsMax 
-                                && s.structureType != STRUCTURE_RAMPART
+                                && (s.structureType != STRUCTURE_RAMPART
+                                    || s.hits <= RAMPART_DECAY_AMOUNT)
                                 && s.structureType != STRUCTURE_WALL
                         )});
                         if(target != undefined) {
@@ -1257,8 +1285,8 @@ module.exports.loop = function () {
         //(_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
         (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0)
-        /*|| (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)*/
-        /*|| (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)*/
+        //|| (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)
+        //|| (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)
         || (_.get(Memory.rooms, ["W64N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W64N31", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W85N23", "creepMins", "adaptable"], ((
@@ -1280,7 +1308,8 @@ module.exports.loop = function () {
         || (_.get(Memory.rooms, ["W85N38", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N38", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W64N31", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) 
+        /*(_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) 
+        || */(_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N39", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

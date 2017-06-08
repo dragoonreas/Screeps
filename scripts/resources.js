@@ -24,7 +24,12 @@
 // 3. Number of structures differs at controller level (CONTROLLER_STRUCTURES, no arrays)
 // 
 
-const DEFAULT_ROLE_COUNTS = _.mapValues(ROLES, () => (0));
+let DEFAULT_ROLE_COUNTS = _.mapValues(ROLES, () => (0));
+DEFAULT_ROLE_COUNTS.healer = 0;
+
+let DEFAULT_ROLE_EXE_COUNTS = DEFAULT_ROLE_COUNTS;
+DEFAULT_ROLE_EXE_COUNTS.spawn = 0;
+DEFAULT_ROLE_EXE_COUNTS.sleep = 0;
 
 // Determines the number of containers that are adjacent to sources.
 // NOTE: THIS MUST MATCH CALCULATIONS IN role.harvester2.determine_destination()!!!
@@ -136,7 +141,7 @@ function summarize_room_internal(room) {
     let creep_counts = _.countBy(creeps, c => c.memory.role);
     _.defaults(creep_counts, DEFAULT_ROLE_COUNTS);
     let creep_exe_counts = _.countBy(creeps, c => c.memory.executingRole);
-    _.defaults(creep_exe_counts, DEFAULT_ROLE_COUNTS);
+    _.defaults(creep_exe_counts, DEFAULT_ROLE_EXE_COUNTS);
     
     // Other things we can count:
     // Tower count, energy

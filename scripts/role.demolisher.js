@@ -43,7 +43,7 @@ let roleDemolisher = {
                         return;
                     }
                     
-                    demoTarget = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, { filter: (cs) => (
+                    demoTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: (cs) => (
                         _.get(cs, "my", false) == false 
                         && _.some(Memory.nonAgressivePlayers, _.get(cs, ["owner", "username"], "")) == false 
                         && cs.structureType != STRUCTURE_ROAD 
@@ -51,7 +51,7 @@ let roleDemolisher = {
                     )});
                     
                     if (demoTarget == undefined) {
-                        demoTarget = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (s) => (
+                        demoTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, { filter: (s) => (
                             _.get(s, "my", false) == false 
                             && _.some(Memory.nonAgressivePlayers, _.get(s, ["owner", "username"], "")) == false 
                             && s.structureType != STRUCTURE_ROAD 
@@ -62,7 +62,7 @@ let roleDemolisher = {
                             && s.structureType != STRUCTURE_POWER_BANK 
                             && _.sum(_.get(s, ["store"], { energy: 0 })) == 0 
                             && _.get(s, ["energy"], 0) == 0
-                            && s.hitsMax > 0 // NOTE: Novice walls have zero hitsMax
+                            && _.get(s, ["hits"], 0) > 0
                         )});
                     }
                     
