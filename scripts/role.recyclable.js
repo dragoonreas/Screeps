@@ -56,6 +56,7 @@ let roleRecyclable = {
             }
 		}
 		else {
+            incrementConfusedCreepCount(creep);
             creep.say(ICONS[STRUCTURE_SPAWN] + "?", true);
             creep.suicide();
 		}

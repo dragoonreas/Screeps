@@ -134,6 +134,7 @@ let roleMiner = {
         
         // Can't do anything if there's no source
         if (source == undefined) {
+            incrementConfusedCreepCount(creep);
             creep.say(ICONS["harvest"] + "?", true);
             return;
         }
@@ -227,6 +228,7 @@ let roleMiner = {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_LINK], true);
                 }
                 else {
+                    incrementIdleCreepCount(creep);
                     switch (creep.saying) {
                         case ICONS["wait0"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait1"] + ICONS["harvest"] + ICONS["source"], true); break;
                         case ICONS["wait1"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait2"] + ICONS["harvest"] + ICONS["source"], true); break;
@@ -309,6 +311,7 @@ let roleMiner = {
                 creep.say(ICONS["harvest"] + ICONS["source"], true);
             }
             else {
+                incrementIdleCreepCount(creep);
                 switch (creep.saying) {
                     case ICONS["wait0"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait1"] + ICONS["harvest"] + ICONS["source"], true); break;
                     case ICONS["wait1"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait2"] + ICONS["harvest"] + ICONS["source"], true); break;

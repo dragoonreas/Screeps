@@ -105,6 +105,7 @@ let roleScout = {
                 }
             }
             else {
+                incrementConfusedCreepCount(creep);
                 creep.say("?", true);
             }
         }

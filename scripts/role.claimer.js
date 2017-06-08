@@ -121,6 +121,7 @@ let roleClaimer = {
                 creep.say(travelToIcons(creep) + "W53N39", true);
             }
             else {
+                incrementConfusedCreepCount(creep);
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
                 //creep.memory.role = "recyclable"; // recycle this creep since it can't seem to do anything
             }
@@ -173,6 +174,7 @@ let roleClaimer = {
                     Memory.rooms[creep.memory.roomID].creepMins.claimer = 0;
                 }
                 */
+               incrementConfusedCreepCount(creep);
                 console.log("Can't interact with controller in " + _.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], creep.room.name) + ": " + err);
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
                 creep.memory.role = "recyclable"; // recycle this creep since it can't seem to do anything

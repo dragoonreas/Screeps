@@ -126,6 +126,7 @@ let roleRepairer = {
                     creep.say(actionIcon + _.get(ICONS, structure.structureType, "?"), true);
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(actionIcon + _.get(ICONS, structure.structureType, "?") + "?", true);
                 }
             }
@@ -206,6 +207,7 @@ let roleRepairer = {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
                 }
             }
@@ -220,6 +222,7 @@ let roleRepairer = {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
                 }
             }
@@ -236,6 +239,7 @@ let roleRepairer = {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
@@ -245,9 +249,11 @@ let roleRepairer = {
                 ROLES["repairer"].run(creep);
             }
             else if (err == ERR_INVALID_TARGET) {
+                incrementConfusedCreepCount(creep);
                 creep.say(ICONS["harvest"] + "?", true);
             }
             else {
+                incrementIdleCreepCount(creep);
                 switch (creep.saying) {
                     case ICONS["wait0"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait1"] + ICONS["harvest"] + ICONS["source"], true); break;
                     case ICONS["wait1"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait2"] + ICONS["harvest"] + ICONS["source"], true); break;

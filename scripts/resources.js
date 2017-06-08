@@ -142,6 +142,8 @@ function summarize_room_internal(room) {
     _.defaults(creep_counts, DEFAULT_ROLE_COUNTS);
     let creep_exe_counts = _.countBy(creeps, c => c.memory.executingRole);
     _.defaults(creep_exe_counts, DEFAULT_ROLE_EXE_COUNTS);
+    let creep_confusion_counts = DEFAULT_ROLE_COUNTS;
+    let creep_idle_counts = DEFAULT_ROLE_COUNTS;
     
     // Other things we can count:
     // Tower count, energy
@@ -187,6 +189,8 @@ function summarize_room_internal(room) {
         num_creeps,
         creep_counts,
         creep_exe_counts,
+        creep_confusion_counts,
+        creep_idle_counts,
         creep_energy,
         num_enemies,
         num_spawns,

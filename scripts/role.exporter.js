@@ -142,6 +142,7 @@ let roleExporter = {
             }
         }
         else {
+            incrementConfusedCreepCount(creep);
             creep.say("?", true);
         }
     }

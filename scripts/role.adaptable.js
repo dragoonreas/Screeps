@@ -101,6 +101,7 @@ let roleAdaptable = {
             }
         }
         else {
+            incrementConfusedCreepCount(creep);
             creep.say("?", true);
         }
     }

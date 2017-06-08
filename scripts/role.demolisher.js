@@ -102,6 +102,7 @@ let roleDemolisher = {
                 }
             }
             else {
+                incrementConfusedCreepCount(creep);
                 creep.say("?", true);
             }
         }

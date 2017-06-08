@@ -20,6 +20,7 @@ let roleHoarder = {
             }
         }
         else {
+            incrementConfusedCreepCount(creep);
             creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
         }
     }

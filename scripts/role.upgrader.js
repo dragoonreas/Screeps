@@ -25,6 +25,7 @@ let roleUpgrader = {
                 creep.say(ICONS["upgradeController"] + ICONS[STRUCTURE_CONTROLLER], true);
             }
             else {
+                incrementConfusedCreepCount(creep);
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
             }
         }
@@ -79,6 +80,7 @@ let roleUpgrader = {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
                 }
             }
@@ -117,12 +119,14 @@ let roleUpgrader = {
                 }
             }
             else if (err == ERR_INVALID_TARGET) {
+                incrementConfusedCreepCount(creep);
                 creep.say(ICONS["harvest"] + "?", true);
             }
             else if (creep.memory.speeds["2"] < 2) {
                 ROLES["harvester"].run(creep);
             }
             else {
+                incrementIdleCreepCount(creep);
                 switch (creep.saying) {
                     case ICONS["wait0"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait1"] + ICONS["harvest"] + ICONS["source"], true); break;
                     case ICONS["wait1"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait2"] + ICONS["harvest"] + ICONS["source"], true); break;

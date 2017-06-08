@@ -101,6 +101,32 @@ let globals = function() {
         }
         return (travelStatusIcon + ICONS["moveTo"]);
     }
+
+    global.incrementConfusedCreepCount = function(creep) {
+        if (creep instanceof Creep) {
+            let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);
+            let creepRole = _.get(creep.memory, ["role"], "noRole");
+            if (_.get(global, ["summarized_rooms", creepRoomID, "creep_confusion_counts", creepRole], 0) == 0) {
+                _.set(global, ["summarized_rooms", creepRoomID, "creep_confusion_counts", creepRole], 1); // NOTE: global.summarized_rooms is reset each tick near the beginning of the game loop
+            }
+            else {
+                ++global.summarized_rooms[creepRoomID].creep_confusion_counts[creepRole];
+            }
+        }
+    }
+
+    global.incrementIdleCreepCount = function(creep) {
+        if (creep instanceof Creep) {
+            let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);
+            let creepRole = _.get(creep.memory, ["role"], "noRole");
+            if (_.get(global, ["summarized_rooms", creepRoomID, "creep_idle_counts", creepRole], 0) == 0) {
+                _.set(global, ["summarized_rooms", creepRoomID, "creep_idle_counts", creepRole], 1); // NOTE: global.summarized_rooms is reset each tick near the beginning of the game loop
+            }
+            else {
+                ++global.summarized_rooms[creepRoomID].creep_idle_counts[creepRole];
+            }
+        }
+    }
     
     global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
     

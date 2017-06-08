@@ -401,6 +401,7 @@ let roleHauler = {
                     creep.say(ICONS["harvest"] + ICONS["source"], true);
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS["harvest"] + ICONS["source"] + "?", true);
                 }
             }
@@ -408,6 +409,7 @@ let roleHauler = {
                 creep.memory.working = true;
             }
             else {
+                incrementIdleCreepCount(creep);
                 switch (creep.saying) {
                     case ICONS["wait0"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait1"] + ICONS["harvest"] + ICONS["source"], true); break;
                     case ICONS["wait1"] + ICONS["harvest"] + ICONS["source"]: creep.say(ICONS["wait2"] + ICONS["harvest"] + ICONS["source"], true); break;
@@ -509,6 +511,7 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + _.get(ICONS, structure.structureType, "?"), true);
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS["transfer"] + _.get(ICONS, structure.structureType, "?") + "?", true);
                 }
             }
@@ -525,6 +528,7 @@ let roleHauler = {
                     //console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, (theTerminal.storeCapacity / 2) - theTerminal.store.energy)).toLocaleString() + "/" + (theTerminal.storeCapacity / 2).toLocaleString());
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
@@ -543,6 +547,7 @@ let roleHauler = {
                     //console.log("TooAngel dealing terminal at: " + (theTerminal.store.energy + Math.min(creep.carry.energy, Memory.TooAngelDealings.totalCost - theTerminal.store.energy)).toLocaleString() + "/" + Memory.TooAngelDealings.totalCost.toLocaleString());
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
@@ -559,6 +564,7 @@ let roleHauler = {
                     //console.log(theStorage.room.name + " storage reserve at: " + (theStorage.store.energy + Math.min(creep.carry.energy, (theStorage.storeCapacity / 2) - theStorage.store.energy)).toLocaleString() + "/" + (theStorage.storeCapacity / 2).toLocaleString());
                 }
                 else {
+                    incrementConfusedCreepCount(creep);
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE] + "?", true);
                 }
             }
