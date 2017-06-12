@@ -85,7 +85,6 @@ let roleRepairer = {
                                 theStructures = creep.room.find(FIND_STRUCTURES, {
                                     filter: (s) => (s.hits < s.hitsMax 
                                         && s.structureType != STRUCTURE_ROAD 
-                                        && s.structureType != STRUCTURE_CONTAINER
                                 )});
                             }
                             
