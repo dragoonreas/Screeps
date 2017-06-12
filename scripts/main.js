@@ -142,15 +142,25 @@ _.set(Memory.rooms, ["W64N31", "harvestRooms"], [
     , "W63N31"
     //, "W65N31" // converted to a novice room
 ]);
-_.set(Memory.rooms, ["W55N31", "harvestRooms"], [
+/*_.set(Memory.rooms, ["W55N31", "harvestRooms"], [
     "W56N31"
     , "W54N31"
     , "W55N32"
-]);
+]);*/
 _.set(Memory.rooms, ["W53N39", "harvestRooms"], [
     "W54N39"
-    //, "W53N38" // TODO: Uncomment when ramparts decay or are demolished
+    //, "W53N38" // converted to novice room
     , "W52N39"
+]);
+_.set(Memory.rooms, ["W53N42", "harvestRooms"], [
+    "W53N41"
+    , "W52N42"
+    , "W53N43"
+]);
+_.set(Memory.rooms, ["W52N47", "harvestRooms"], [
+    "W51N47"
+    , "W53N47"
+    , "W52N48"
 ]);
 
 /*
@@ -194,9 +204,9 @@ _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
+    [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -215,9 +225,9 @@ _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
     , all: 0
 });*/
 _.set(Memory.rooms, ["W64N31", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
+    [STRUCTURE_CONTAINER]: 1
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -231,9 +241,23 @@ _.set(Memory.rooms, ["W64N31", "repairerTypeMins"], {
 _.set(Memory.rooms, ["W53N39", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 1
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+_.set(Memory.rooms, ["W53N42", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
-    , all: 3
+    , all: 0
+});
+_.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 0
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -322,7 +346,7 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
 });
 _.set(Memory.rooms, ["W9N45", "creepMins"], {
     attacker: 0
-    , harvester: 6
+    , harvester: 5
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W9N45", "minerSources"], {}))
@@ -364,7 +388,7 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
 });*/
 _.set(Memory.rooms, ["W64N31", "creepMins"], {
     attacker: 0
-    , harvester: 4
+    , harvester: 3
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W64N31", "minerSources"], {}))
@@ -392,15 +416,43 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
 });*/
 _.set(Memory.rooms, ["W53N39", "creepMins"], {
     attacker: 0
-    , harvester: 6
+    , harvester: 5
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W53N39", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 1
+    , demolisher: 0
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W53N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+    , exporter: 0
+});
+_.set(Memory.rooms, ["W53N42", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 4
+    , miner: 0//_.size(_.get(Game.rooms, ["W53N42", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W53N42", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 2
+    , exporter: 0
+});
+_.set(Memory.rooms, ["W52N47", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W52N47", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W52N47", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
 });
@@ -438,8 +490,11 @@ module.exports.loop = function () {
             c.memory.executingRole = "sleep";
             c.say(ICONS["sleep"], true);
         });
-        if (Game.cpu.bucket > 9500) {
+        if (Game.cpu.bucket > 9500 || CAN_REFILL_BUCKET === false) {
             _.set(Memory, ["refillBucket"], false);
+        }
+        else if (Game.cpu.tickLimit < 500 && CAN_REFILL_BUCKET === true) {
+            _.set(Memory, ["refillBucket"], true);
         }
         screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
         Memory.stats.tickSlept = 1;
@@ -630,9 +685,18 @@ module.exports.loop = function () {
 		let towers = theRoom.find(FIND_MY_STRUCTURES, {
             filter: (s) => (
                 s.structureType == STRUCTURE_TOWER 
-				&& s.energy >= TOWER_ENERGY_COST 
-                && s.isActive() == true
         )});
+        if (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (v) => (v >= towers.length))) { // Don't filter by isActive if we can avoid it
+            towers = _.filter(towers, (s) => (
+				s.energy >= TOWER_ENERGY_COST 
+                && s.isActive() == true
+            ));
+        }
+        else {
+            towers = _.filter(towers, (s) => (
+				s.energy >= TOWER_ENERGY_COST 
+            ));
+        }
 		
         let mayHaveRamparts = (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], (v) => (v > 0)) == false);
         
@@ -1058,34 +1122,27 @@ module.exports.loop = function () {
                     Game.notify("Tower in " + roomID + " attacking hostile from " + target.owner.username, target.ticksToLive / EST_TICKS_PER_MIN);
                 }
             }
-            else { // Else repair a non-decaying structure if needed
-                target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (s) => (s.hits < s.hitsMax 
-                        && s.structureType != STRUCTURE_RAMPART
-                        && s.structureType != STRUCTURE_WALL
-                        && s.structureType != STRUCTURE_ROAD
-                        && s.structureType != STRUCTURE_CONTAINER
-                )});
-                if(target != undefined) {
-                    tower.repair(target);
+            else { // Else heal a creep if needed
+                target = tower.pos.findClosestByRange(FIND_MY_CREEPS, { 
+                    filter: (c) => (c.hits < c.hitsMax
+                )}); // TODO: Also heal ally creeps
+                if (target != undefined) {
+                    tower.heal(target);
                 }
-                else { // Else heal a creep if needed
-                    target = tower.pos.findClosestByRange(FIND_MY_CREEPS, { 
-                        filter: (c) => (c.hits < c.hitsMax
-                    )}); // TODO: Also heal ally creeps
-                    if (target != undefined) {
-                        tower.heal(target); // TODO: Maybe prioritise healing creeps before non-decaying structures?
+                else { // Else repair a non-decaying structure if needed
+                    target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (s) => (s.hits < s.hitsMax 
+                            && s.structureType != STRUCTURE_WALL
+                            && (s.structureType != STRUCTURE_RAMPART
+                                || s.hits <= RAMPART_DECAY_AMOUNT)
+                            && (s.structureType != STRUCTURE_CONTAINER
+                                || s.hits <= CONTAINER_DECAY)
+                    )});
+                    if(target != undefined) {
+                        tower.repair(target);
                     }
-                    else { // Else repair a road or container if needed
-                        target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                            filter: (s) => (s.hits < s.hitsMax 
-                                && (s.structureType != STRUCTURE_RAMPART
-                                    || s.hits <= RAMPART_DECAY_AMOUNT)
-                                && s.structureType != STRUCTURE_WALL
-                        )});
-                        if(target != undefined) {
-                            tower.repair(target);
-                        }
+                    else {
+                        break;
                     }
                 }
             }
@@ -1190,7 +1247,11 @@ module.exports.loop = function () {
                 )}); // TODO: Also heal ally creeps
                 if (target != undefined) {
                     if (creep.heal(target) == ERR_NOT_IN_RANGE) {
+                        creep.rangedHeal(target);
                         creep.travelTo(target);
+                    }
+                    else {
+                        creep.rangedHeal(target);
                     }
                 }
                 else {
@@ -1209,14 +1270,6 @@ module.exports.loop = function () {
                 console.log(creep.name + " has unknown role: " + creep.memory.role);
             }
         }
-        
-        // Make sure ramparts near the creep are supplying cover to both it's current position and anywhere it may end up at the start of the next tick
-        let rampartsNearCreep = creep.pos.findInRange(FIND_MY_STRUCTURES, 1, (s) => (
-            s.structureType == STRUCTURE_RAMPART 
-        ));
-        _.forEach(rampartsNearCreep, (rnc) => {
-            privateRamparts[rnc.id] = true;
-        });
     }
     
     if (Memory.MonCPU == true) { console.log("creeps>spawn:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -1263,16 +1316,6 @@ module.exports.loop = function () {
                 }
             }
         }
-        else if (_.get(spawn, ["spawning", "remainingTime"], 0) == 1) {
-            
-            // Make sure ramparts are supplying cover to anywhere the spawning creep may end up at the start of the next tick
-            let rampartsNearSpawn = spawn.pos.findInRange(FIND_MY_STRUCTURES, 1, (s) => (
-                s.structureType == STRUCTURE_RAMPART 
-            ));
-            _.forEach(rampartsNearSpawn, (rnc) => {
-                privateRamparts[rnc.id] = true;
-            });
-        }
     }
     
     // TODO: Reorganise bootstrapping network in relation to the removal of W87N29
@@ -1311,6 +1354,10 @@ module.exports.loop = function () {
         /*(_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) 
         || */(_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N39", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    _.set(Memory.rooms, ["W53N39", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W53N42", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N42", "creepCounts", "adaptable"], -1) == 0) 
+        //|| (_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) 
+    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
@@ -1323,7 +1370,7 @@ module.exports.loop = function () {
         if (privateState == false && _.filter(r.pos.lookFor(LOOK_STRUCTURES), (s) => (
             s.structureType != STRUCTURE_RAMPART 
             && s.structureType != STRUCTURE_ROAD
-        )).length > 0) {
+        )).length > 0) { // TODO: Allow members of alliance to withdraw from storage/terminal/etc...
             privateState = true;
         }
         

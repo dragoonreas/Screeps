@@ -6,6 +6,7 @@ let roleAttacker = {
             creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID), {
                 allowHostile: true
                 , ignoreHostileCreeps: true
+                , range: 23
             });
             creep.say(travelToIcons(creep) + creep.memory.roomID, true);
             return;

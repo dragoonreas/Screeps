@@ -65,7 +65,8 @@ let roleRepairer = {
                         repairerTypeFound = true;
                     }
                     
-                    if (repairerTypeFound == true && repairerType != STRUCTURE_CONTAINER && repairerType != STRUCTURE_ROAD) {
+                    if (repairerTypeFound == true 
+                        && repairerType != STRUCTURE_ROAD) { // TODO: Add check for roads when towers aren't avaliable to repair them
                         if (repairerType == STRUCTURE_ROAD) {
                             structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                             	filter: (s) => (s.hits < s.hitsMax 
@@ -150,6 +151,8 @@ let roleRepairer = {
                 case "W64N31": source = Game.getObjectById("57ef9cad86f108ae6e60ca54"); break;
                 case "W55N31": source = Game.getObjectById("579fa8950700be0674d2de53"); break;
                 case "W53N39": source = Game.getObjectById("579fa8b40700be0674d2e27d"); break;
+                case "W53N42": source = Game.getObjectById("579fa8b30700be0674d2e277"); break;
+                case "W52N47": source = Game.getObjectById("579fa8c40700be0674d2e3e8"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);

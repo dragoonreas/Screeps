@@ -204,6 +204,10 @@ function summarize_room_internal(room) {
         num_source_containers,
     };
     
+    if (num_enemies > 0) {
+        CAN_REFILL_BUCKET = false;
+    }
+    
     // console.log('Room ' + room.name + ': ' + JSON.stringify(retval));
     return retval;
 } // summarize_room
@@ -215,14 +219,16 @@ function summarize_rooms() {
     if (global.summarized_room_timestamp == now) {
         return global.summarized_rooms;
     }
-
+    
+    global.CAN_REFILL_BUCKET = true;
+    
     let retval = {};
-
+    
     for (let r in Game.rooms) {
         let summary = summarize_room_internal(Game.rooms[r]);
         retval[r] = summary;
     }
-
+    
     global.summarized_room_timestamp = now;
     global.summarized_rooms = retval;
 

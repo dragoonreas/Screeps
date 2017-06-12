@@ -23,6 +23,8 @@ const MINER_WORK_PART_CAP = ((SOURCE_ENERGY_CAPACITY / ENERGY_REGEN_TIME) / HARV
 const UPGRADER_RCL_SCALING_CAP = 5;
 const UPGRADER_ENERGY_CAP = CONTROLLER_STRUCTURES[STRUCTURE_SPAWN][UPGRADER_RCL_SCALING_CAP] * SPAWN_ENERGY_CAPACITY + CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][UPGRADER_RCL_SCALING_CAP] * EXTENSION_ENERGY_CAPACITY[UPGRADER_RCL_SCALING_CAP];
 
+const DEMOLISHER_WORK_TO_CARRY_RATIO = _.ceil(1 / (DISMANTLE_POWER * DISMANTLE_COST));
+
 const RESERVE_CLAIM_PART_CAP = 2;
 const ATTACK_CLAIM_PART_MULTIPLIER = 5;
 
@@ -128,6 +130,24 @@ let prototypeSpawn = function() {
                     creepMemory.roomSentTo = "W53N39";
                 }
             }
+            else if (this.room.name == "W53N39") {
+                if (Memory.rooms.W53N42.creepCounts.builder == 0 && Memory.rooms.W53N42.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W53N42";
+                }/*
+                else if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W52N47";
+                }*/
+            }
+        }
+        else if (roleName == "exporter") {
+            if (this.room.name == "W86N43") {
+                creepMemory.roomSentTo = this.room.name;
+                creepMemory.roomSentFrom = "W83N47";
+            }
+            else if (this.room.name == "W52N47") {
+                creepMemory.roomSentTo = this.room.name;
+                creepMemory.roomSentFrom = "W53N39";
+            }
         }
         else if (roleName == "demolisher") {
             if (this.room.name == "W86N29") {
@@ -137,7 +157,10 @@ let prototypeSpawn = function() {
                 creepMemory.roomSentTo = "W87N39";
             }
             else if (this.room.name == "W53N39") {
-                creepMemory.roomSentTo = "W53N38";
+                creepMemory.roomSentTo = "W52N47";
+            }
+            else if (this.room.name == "W52N47") {
+                creepMemory.roomSentTo = "W53N47";
             }
         }
         else if (roleName == "claimer") {
@@ -213,6 +236,22 @@ let prototypeSpawn = function() {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     creepMemory.controllerID = "579fa8a50700be0674d2e04b"; // harvest room
                 }
+                else {
+                    creepMemory.controllerID = "579fa8b30700be0674d2e276";
+                }
+            }
+            else if (this.room.name == "W53N42") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    creepMemory.controllerID = "579fa8b40700be0674d2e27a"; // harvest room
+                }
+                else {
+                    creepMemory.controllerID = "579fa8c40700be0674d2e3e9";
+                }
+            }
+            else if (this.room.name == "W52N47") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    creepMemory.controllerID = "579fa8d40700be0674d2e575"; // harvest room
+                }
             }
             let controllerRoom = _.get(Memory.controllers, [creepMemory.controllerID, "pos", "roomName"], "");
             if (_.includes(_.get(Memory.rooms, [this.room.name, "harvestRooms"], []), controllerRoom) == true && Game.time < _.get(Memory.rooms, [controllerRoom, "avoidTravelUntil"], 0)) {
@@ -222,6 +261,14 @@ let prototypeSpawn = function() {
         else if (roleName == "powerHarvester") {
             creepMemory.harvestRoom = { id: "W53N32", x: 25, y: 25 }; // TODO: Populate this automatically
         }
+        
+        
+        let energyAvaliable = this.room.energyCapacityAvailable;
+        if ((Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) { // TODO: Allow harvesters to scale gradually instead of jump between lowest to maximum scale
+            energyAvaliable = _.max([this.room.energyAvailable, SPAWN_ENERGY_CAPACITY]); // start small if forced to build up from scratch
+        }
+        
+        creepMemory.energyAvaliableOnSpawn = energyAvaliable;
         
         /*
             The move ratio is the ratio of move parts to the total of all the other types of parts in the body of the creep.
@@ -256,7 +303,15 @@ let prototypeSpawn = function() {
             bodyTemplate = [CARRY, ATTACK, HEAL];
         }
         else if (roleName == "upgrader") {
-            if (this.room.name == "W86N39" || this.room.name == "W85N38" || this.room.name == "W9N45" || this.room.name == "W72N28" || this.room.name == "W64N31" || this.room.name == "W55N31" || this.room.name == "W53N39") { // these rooms have a source in range of the controller
+            if (this.room.name == "W86N39"
+                || this.room.name == "W85N38" 
+                || this.room.name == "W9N45" 
+                || this.room.name == "W72N28" 
+                || this.room.name == "W64N31" 
+                || this.room.name == "W55N31" 
+                || this.room.name == "W53N39" 
+                || this.room.name == "W53N42" 
+                || this.room.name == "W52N47") { // these rooms have a source in range of the controller
                 moveRatio = 0;
             }
             else if (this.room.controller.level > 3 && _.size(this.room.sources) > 1) { // NOTE: Assumes roads built between the dedicated upgrader source (2 source rooms only) and the controller at RCL 4 onwards
@@ -266,6 +321,16 @@ let prototypeSpawn = function() {
         else if (roleName == "scout") {
             //bodyTemplate = []; // moveRatio is set automatically when an empty body template is used, so no use setting it here
             bodyTemplate = [TOUGH]; // since scouts are mainly used for claimer test runs, use a tough piece to stand in for the extra weight of the claim piece
+        }
+        else if (roleName == "demolisher") {
+            let minHarvestingDemolisherCost = (DEMOLISHER_WORK_TO_CARRY_RATIO * BODYPART_COST[WORK]) + BODYPART_COST[CARRY] + (Math.ceil((DEMOLISHER_WORK_TO_CARRY_RATIO + 1) * moveRatio) * BODYPART_COST[MOVE]);
+            if (minHarvestingDemolisherCost <= energyAvaliable) {
+                bodyTemplate = _.fill(Array(DEMOLISHER_WORK_TO_CARRY_RATIO), WORK);
+                bodyTemplate.push(CARRY);
+            }
+            else {
+                bodyTemplate = [WORK];
+            }
         }
         else if (roleName == "claimer") {
             bodyTemplate = [CLAIM];
@@ -285,13 +350,6 @@ let prototypeSpawn = function() {
         }
         
         let bodyCost = _.sum(bodyTemplate, (bp) => (BODYPART_COST[bp]));
-        
-        let energyAvaliable = this.room.energyCapacityAvailable;
-        if ((Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) { // TODO: Allow harvesters to scale gradually instead of jump between lowest to maximum scale
-            energyAvaliable = _.max([this.room.energyAvailable, SPAWN_ENERGY_CAPACITY]); // start small if forced to build up from scratch
-        }
-        
-        creepMemory.energyAvaliableOnSpawn = energyAvaliable;
         
         if (moveRatio == 0) {
             energyAvaliable -= BODYPART_COST[MOVE]; // when move ratio is 0, remove energy from the total avaliable to account for the 1 mandatory move part that will be added that's not included in the body cost

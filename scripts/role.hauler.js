@@ -128,6 +128,19 @@ let roleHauler = {
                             , "579fa8c50700be0674d2e402" // W52N39
                             , "579fa8b40700be0674d2e27d" // W53N39
                         ]
+                        , "W53N42": [
+                            "579fa8b40700be0674d2e279" // W53N41
+                            , "579fa8c50700be0674d2e3f9" // W52N42
+                            , "579fa8b30700be0674d2e273" // W53N43
+                            , "579fa8b30700be0674d2e277" // W53N42
+                        ]
+                        , "W52N47": [
+                            "579fa8d40700be0674d2e574" // W51N47
+                            , "579fa8d40700be0674d2e576" // W51N47
+                            , "579fa8b30700be0674d2e265" // W53N47
+                            , "579fa8c40700be0674d2e3e6" // W52N48
+                            , "579fa8c40700be0674d2e3e8" // W52N47
+                        ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
@@ -386,6 +399,54 @@ let roleHauler = {
                                 creep.say(travelToIcons(creep) + "W53N39", true);
                                 return;
                             }
+                            else if (sourceID == "579fa8b40700be0674d2e279") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(27, 9, "W53N41"));
+                                creep.say(travelToIcons(creep) + "W53N41", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8c50700be0674d2e3f9") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(31, 20, "W52N42"));
+                                creep.say(travelToIcons(creep) + "W52N42", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8b30700be0674d2e273") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(32, 35, "W53N43"));
+                                creep.say(travelToIcons(creep) + "W53N43", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8b30700be0674d2e275") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(23, 4, "W53N42"));
+                                creep.say(travelToIcons(creep) + "W53N42", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8d40700be0674d2e574") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(10, 25, "W51N47"));
+                                creep.say(travelToIcons(creep) + "W51N47", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8d40700be0674d2e576") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(39, 43, "W51N47"));
+                                creep.say(travelToIcons(creep) + "W51N47", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8b30700be0674d2e265") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(40, 34, "W53N47"));
+                                creep.say(travelToIcons(creep) + "W53N47", true);
+                                return;
+                            }
+                            else if (sourceID == "579fa8c40700be0674d2e3e6") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(4, 32, "W52N48"));
+                                creep.say(travelToIcons(creep) + "W52N48", true);
+                                return;
+                            }
                         }
                     }
                 }
@@ -465,7 +526,9 @@ let roleHauler = {
                 if (_.isString(creep.memory.roomID) == true
                     && creep.room.name != creep.memory.roomID) {
                     creep.memory.depositStructure = undefined;
-                    creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
+                    creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID), {
+                        range: 23
+                    });
                     creep.say(travelToIcons(creep) + creep.memory.roomID, true);
                     return;
                 }
@@ -480,11 +543,14 @@ let roleHauler = {
                         }
                     });
                 }
+                let repairerCount = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "creepCounts", "repairer"], 0);
                 if (structure == undefined) {
                     structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
                         filter: (s) => {
-                            return s.structureType == STRUCTURE_TOWER 
-                                && s.energy < s.energyCapacity;
+                            return (s.structureType == STRUCTURE_TOWER 
+                                && s.energy < s.energyCapacity 
+                                && (repairerCount == 0 
+                                    || s.energy < TOWER_REFILL_THRESHOLD));
                         }
                     });
                 }

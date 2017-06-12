@@ -355,7 +355,7 @@ module.exports = function(globalOpts = {}){
         static addStructuresToMatrix(room, matrix, roadCost) {
             for (let structure of room.find(FIND_STRUCTURES)) {
                 if (structure instanceof StructureRampart) {
-                    if (structure.my == false && !(_.includes(Memory.nonAgressivePlayers, structure.owner.username) && structure.isPublic == true) == false) {
+                    if (structure.my == false && (_.includes(Memory.nonAgressivePlayers, structure.owner.username) && structure.isPublic == true) == false) {
                         matrix.set(structure.pos.x, structure.pos.y, 0xff);
                     }
                 }

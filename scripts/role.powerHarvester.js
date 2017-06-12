@@ -39,7 +39,9 @@ let rolePowerHarvester = {
                     creep.suicide();
                 }
                 else {
-                    creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID));
+                    creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID), {
+                        range: 23
+                    });
                 }
             }
         }

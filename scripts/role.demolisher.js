@@ -2,13 +2,14 @@ let roleDemolisher = {
     run: function(creep) {
         creep.memory.executingRole = "demolisher";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false && _.sum(creep.carry) == (creep.carryCapacity || -1)) {
             creep.memory.working = true;
             creep.memory.demolishStructure = undefined;
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
             creep.memory.depositStructureID = undefined; // can be a harvester when working
+            creep.memory.waypoint = 0; // ensures waypoints reset when home
         }
         
         let sentTo = creep.memory.roomSentTo;
@@ -38,8 +39,15 @@ let roleDemolisher = {
                     creep.memory.demolishStructure = undefined;
                     
                     if (creep.room.name != sentTo) {
-                        creep.travelTo(new RoomPosition(25, 25, sentTo));
-                        creep.say(travelToIcons(creep) + sentTo, true);
+                        if (sentTo == "W52N47") {
+                            ROLES["scout"].run(creep);
+                        }
+                        else {
+                            creep.travelTo(new RoomPosition(25, 25, sentTo), {
+                                range: 23
+                            });
+                            creep.say(travelToIcons(creep) + sentTo, true);
+                        }
                         return;
                     }
                     
@@ -93,11 +101,21 @@ let roleDemolisher = {
                 else if (creep.memory.role == "demolisher") {
                     creep.say(ICONS["dismantle"] + "?", true);
                     _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "demolisher"],  0);
-                    creep.memory.role = "harvester";
+                    if (creep.carryCapacity > 0) {
+                        creep.memory.role = "harvester";
+                    }
+                    else {
+                        creep.memory.role = "recyclable";
+                    }
                 }
                 else {
-                    creep.say(ICONS["dismantle"] + "?", true);
-                    ROLES["harvester"].run(creep);
+                    if (creep.carryCapacity > 0) {
+                        ROLES["harvester"].run(creep);
+                    }
+                    else {
+                        incrementConfusedCreepCount(creep);
+                        creep.say(ICONS["dismantle"] + "?", true);
+                    }
                     return;
                 }
             }
@@ -107,7 +125,15 @@ let roleDemolisher = {
             }
         }
         else {
-            ROLES["harvester"].run(creep);
+            if (sentTo == "W52N47" && creep.memory.roomID == "W53N39" && creep.memory.waypoint > 0) {
+                if (creep.room.name == "W52N47") {
+                    creep.memory.waypoint = 2;
+                }
+                ROLES["scout"].run(creep);
+            }
+            else {
+                ROLES["harvester"].run(creep);
+            }
         }
     }
 };
