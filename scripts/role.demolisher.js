@@ -5,11 +5,12 @@ let roleDemolisher = {
         if (creep.memory.working == false && _.sum(creep.carry) == (creep.carryCapacity || -1)) {
             creep.memory.working = true;
             creep.memory.demolishStructure = undefined;
+            creep.memory.waypoint = 0; // TODO: Ensure waypoints reset when at destination in called roles
         }
         else if (creep.memory.working == true && creep.carry.energy == 0) {
             creep.memory.working = false;
             creep.memory.depositStructureID = undefined; // can be a harvester when working
-            creep.memory.waypoint = 0; // ensures waypoints reset when home
+            creep.memory.waypoint = 0; // TODO: Ensure waypoints reset when at destination in called roles
         }
         
         let sentTo = creep.memory.roomSentTo;

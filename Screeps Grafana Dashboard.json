@@ -1138,7 +1138,7 @@
             {
               "hide": true,
               "refId": "C",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.incompletePath, 3, 5), 'Incomplete Path')"
+              "target": "alias(transformNull(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.incompletePath, 3, 5), 0), 'Incomplete Path')"
             },
             {
               "hide": true,
@@ -1174,7 +1174,7 @@
             {
               "hide": true,
               "refId": "J",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.collision, 3, 5), 'Collision')"
+              "target": "alias(transformNull(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.collision, 3, 5), 0), 'Collision')"
             }
           ],
           "thresholds": [],
@@ -3285,8 +3285,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N39",
-              "value": "W53N39"
+              "text": "W52N47",
+              "value": "W52N47"
             }
           },
           "seriesOverrides": [
@@ -3448,8 +3448,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N39",
-              "value": "W53N39"
+              "text": "W52N47",
+              "value": "W52N47"
             }
           },
           "seriesOverrides": [
@@ -3641,8 +3641,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N39",
-              "value": "W53N39"
+              "text": "W52N47",
+              "value": "W52N47"
             }
           },
           "seriesOverrides": [
@@ -3789,8 +3789,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N39",
-              "value": "W53N39"
+              "text": "W52N47",
+              "value": "W52N47"
             }
           },
           "span": 2,
@@ -3875,8 +3875,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N39",
-              "value": "W53N39"
+              "text": "W52N47",
+              "value": "W52N47"
             }
           },
           "span": 2,
@@ -3960,8 +3960,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N39",
-              "value": "W53N39"
+              "text": "W52N47",
+              "value": "W52N47"
             }
           },
           "seriesOverrides": [
@@ -4099,8 +4099,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N42",
-              "value": "W53N42"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "seriesOverrides": [
@@ -4262,8 +4262,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N42",
-              "value": "W53N42"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "seriesOverrides": [
@@ -4455,8 +4455,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N42",
-              "value": "W53N42"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "seriesOverrides": [
@@ -4603,8 +4603,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N42",
-              "value": "W53N42"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "span": 2,
@@ -4689,8 +4689,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N42",
-              "value": "W53N42"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "span": 2,
@@ -4774,8 +4774,8 @@
           "scopedVars": {
             "Room": {
               "selected": false,
-              "text": "W53N42",
-              "value": "W53N42"
+              "text": "W53N39",
+              "value": "W53N39"
             }
           },
           "seriesOverrides": [
@@ -4868,7 +4868,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497208079280,
+      "repeatIteration": 1497353111695,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -5682,7 +5682,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497208079280,
+      "repeatIteration": 1497353111695,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -6496,7 +6496,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497208079280,
+      "repeatIteration": 1497353111695,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7310,7 +7310,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497208079280,
+      "repeatIteration": 1497353111695,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -8124,7 +8124,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497208079280,
+      "repeatIteration": 1497353111695,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -8938,7 +8938,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497208079280,
+      "repeatIteration": 1497353111695,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -9752,7 +9752,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497208079280,
+      "repeatIteration": 1497353111695,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -10566,7 +10566,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497208079280,
+      "repeatIteration": 1497353111695,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -10583,10 +10583,9 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
-          "value": [
-            "$__all"
-          ]
+          "value": "$__all"
         },
         "datasource": "screepspl.us",
         "hide": 0,
@@ -10597,7 +10596,7 @@
         "options": [],
         "query": "screeps.roomSummary.*",
         "refresh": 1,
-        "regex": "W(?!17|19|24|55|65|72|81|84|87)\\d+N(?!32)\\d+",
+        "regex": "W(?!17|19|24|55|65|72|81|84|87)\\d+N(?!32|42)\\d+",
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -10608,6 +10607,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10631,6 +10631,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10654,6 +10655,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10677,6 +10679,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10700,6 +10703,7 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10777,5 +10781,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 173
+  "version": 176
 }

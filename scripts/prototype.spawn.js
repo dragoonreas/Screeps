@@ -131,12 +131,12 @@ let prototypeSpawn = function() {
                 }
             }
             else if (this.room.name == "W53N39") {
-                if (Memory.rooms.W53N42.creepCounts.builder == 0 && Memory.rooms.W53N42.creepCounts.adaptable == 0) {
+                /*if (Memory.rooms.W53N42.creepCounts.builder == 0 && Memory.rooms.W53N42.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W53N42";
-                }/*
-                else if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
+                }
+                else */if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W52N47";
-                }*/
+                }
             }
         }
         else if (roleName == "exporter") {

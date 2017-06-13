@@ -31,6 +31,8 @@ const resourcesInfo = require("resources");
 const screepsPlus = require("screepsplus"); // Used to put stats in memory for agent to collect and push to Grafana dashboard
 //const visualiser = require("visualiser"); // NOTE: Must be called after globals initialisation
 
+// TODO: Only do all the following memory initialisation on code commits instead of global resets
+
 // Make sure all required root memory objects exist
 _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngel AI users, potentual agressive players, potential allies and allies
     "creeps": {}
@@ -152,11 +154,11 @@ _.set(Memory.rooms, ["W53N39", "harvestRooms"], [
     //, "W53N38" // converted to novice room
     , "W52N39"
 ]);
-_.set(Memory.rooms, ["W53N42", "harvestRooms"], [
+/*_.set(Memory.rooms, ["W53N42", "harvestRooms"], [
     "W53N41"
     , "W52N42"
     , "W53N43"
-]);
+]);*/
 _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
     "W51N47"
     , "W53N47"
@@ -245,13 +247,13 @@ _.set(Memory.rooms, ["W53N39", "repairerTypeMins"], {
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
-_.set(Memory.rooms, ["W53N42", "repairerTypeMins"], {
+/*_.set(Memory.rooms, ["W53N42", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 0
-});
+});*/
 _.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
@@ -428,20 +430,20 @@ _.set(Memory.rooms, ["W53N39", "creepMins"], {
     , builder: 1
     , exporter: 0
 });
-_.set(Memory.rooms, ["W53N42", "creepMins"], {
+/*_.set(Memory.rooms, ["W53N42", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
-    , upgrader: 4
+    , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W53N42", "minerSources"], {}))
     , adaptable: 0
     , demolisher: 0
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["W53N42", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
-    , builder: 2
+    , builder: 1
     , exporter: 0
-});
+});*/
 _.set(Memory.rooms, ["W52N47", "creepMins"], {
     attacker: 0
     , harvester: 6
@@ -595,8 +597,10 @@ module.exports.loop = function () {
             && (Memory.rooms[roomID].memoryExpiration || 0) < Game.time) {
             console.log("Running garbage collection on room memory: " + roomID);
             delete Memory.rooms[roomID];
+            continue;
         }
-        else if (_.size(_.get(Memory.rooms[roomID], "invaderWeightings", {})) > 0) {
+        
+        if (_.size(_.get(Memory.rooms[roomID], "invaderWeightings", {})) > 0) {
             
             // Garbage collection for invader weightings
             for (let invaderID in Memory.rooms[roomID].invaderWeightings) {
@@ -611,6 +615,8 @@ module.exports.loop = function () {
         if (Game.rooms[roomID] != undefined) {
             Game.rooms[roomID].dangerZones = [];
         }
+        
+        Memory.rooms[roomID].clearPathCaches = false;
     }
     
     if (Memory.MonCPU == true) { console.log("gc>room:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -624,6 +630,7 @@ module.exports.loop = function () {
         , "W72N28"
         , "W87N29" // TODO: Remove this when the rest of the code relating to this room's been removed
         , "W55N31"
+        , "W53N42"
     ];
     
     // Manage rooms and run towers
@@ -991,7 +998,7 @@ module.exports.loop = function () {
                     if (c.memory.role != "miner") {
                         c.memory.sourceID = undefined;
                     }
-                    c.memory._travel = undefined;
+                    c.room.clearPathCaches = true;
                     c.memory._move = undefined;
                 });
                 theRoom.avoidTravelUntil = Game.time + (youngestInvader.ticksToLive || 0);
@@ -1355,8 +1362,8 @@ module.exports.loop = function () {
         || */(_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N39", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W53N39", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W53N42", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N42", "creepCounts", "adaptable"], -1) == 0) 
-        //|| (_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) 
+        /*(_.get(Memory.rooms, ["W53N42", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N42", "creepCounts", "adaptable"], -1) == 0) 
+        || */(_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

@@ -16,7 +16,7 @@ let roleClaimer = {
             , "579fa8850700be0674d2dc0e" // W56N31
             , "579fa8a50700be0674d2e04b" // W54N39
             , "579fa8b40700be0674d2e27a" // W53N41
-            , "579fa8c40700be0674d2e3e9" // W52N47
+            , "579fa8d40700be0674d2e575" // W51N47
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
             ROLES["recyclable"].run(creep);
@@ -192,9 +192,10 @@ let roleClaimer = {
                     Memory.rooms[creep.memory.roomID].creepMins.claimer = 0;
                 }
                 */
-               incrementConfusedCreepCount(creep);
+                incrementConfusedCreepCount(creep);
                 console.log("Can't interact with controller in " + _.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], creep.room.name) + ": " + err);
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
+                // TODO: Try and repurpose this as a reserver for the first vacant harvest room of the room it was sent to/from
                 creep.memory.role = "recyclable"; // recycle this creep since it can't seem to do anything
             }
         }

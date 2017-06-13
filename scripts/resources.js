@@ -51,7 +51,6 @@ function count_source_containers(room) {
     return retval;
 } // num_source_containers
 
-
 // Summarizes the situation in a room in a single object.
 // Room can be a string room name or an actual room object.
 function summarize_room_internal(room) {
@@ -73,7 +72,7 @@ function summarize_room_internal(room) {
     const controller_safemode = room.controller.safeMode ? room.controller.safeMode : 0;
     const controller_safemode_avail = room.controller.safeModeAvailable;
     const controller_safemode_cooldown = room.controller.safeModeCooldown;
-    const has_storage = room.storage != null;
+    const has_storage = ((room.storage != null) ? 1 : 0);
     const storage_energy = room.storage ? room.storage.store[RESOURCE_ENERGY] : 0;
     const storage_minerals = room.storage ? _.sum(room.storage.store) - storage_energy : 0;
     const energy_avail = room.energyAvailable;
@@ -109,10 +108,10 @@ function summarize_room_internal(room) {
     const num_construction_sites = const_sites.length;
     const num_my_construction_sites = my_const_sites.length;
     const num_source_containers = count_source_containers(room);
-    const has_terminal = room.terminal != null;
+    const has_terminal = ((room.terminal != null) ? 1 : 0);
     const terminal_energy = room.terminal ? room.terminal.store[RESOURCE_ENERGY] : 0;
     const terminal_minerals = room.terminal ? _.sum(room.terminal.store) - terminal_energy : 0;
-
+    
     // Get info on all our structures
     // TODO: Split roads to those on swamps vs those on dirt
     const structure_types = new Set(room.find(FIND_STRUCTURES).map(s => s.structureType));
