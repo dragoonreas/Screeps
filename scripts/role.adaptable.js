@@ -23,7 +23,7 @@ let roleAdaptable = {
                 case "W81N29": sentTo = "W81N29"; break;
                 case "W72N28": sentTo = "W72N28"; break;
                 case "W64N31": sentTo = "W53N39"; break;
-                case "W53N39": sentTo = "W53N42"; break;
+                case "W53N39": sentTo = "W52N47"; break;
                 case "W53N42": sentTo = "W53N42"; break;
                 case "W52N47": sentTo = "W52N47"; break;
             }
@@ -70,7 +70,7 @@ let roleAdaptable = {
                 }
                 if (sentTo == "W9N45" 
                     || sentTo == "W53N39" 
-                    || sentTo == "W52N47") { // NOTE: Any rooms that require waypoints to get to should be added here
+                    /*|| sentTo == "W52N47"*/) { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
@@ -85,8 +85,7 @@ let roleAdaptable = {
                 if (creep.memory.roomID == "W81N29" 
                     || creep.memory.roomID == "W72N28" 
                     || creep.memory.roomID == "W55N31" 
-                    || creep.memory.roomID == "W53N42" 
-                    || creep.memory.roomID == "W52N47") { // Allows these creeps to demolish in the room they're sent to
+                    || creep.memory.roomID == "W53N42") { // Allows these creeps to demolish in the room they're sent to
                     creep.memory.roomSentFrom = undefined;
                 }
                 else if (_.get(Memory, ["rooms", sentTo, "creepCounts", "builder"], 0) >= _.get(Memory, ["rooms", sentTo, "creepMins", "builder"], 0)) {

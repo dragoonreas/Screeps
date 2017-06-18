@@ -164,6 +164,10 @@ _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
     , "W53N47"
     , "W52N48"
 ]);
+/*
+    Future Expansion Candidates:
+    - W46N67
+*/
 
 /*
     TODO:
@@ -206,8 +210,8 @@ _.set(Memory.rooms, ["W86N43", "repairerTypeMins"], {
     , all: 1
 });
 _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 0
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
@@ -257,9 +261,9 @@ _.set(Memory.rooms, ["W53N39", "repairerTypeMins"], {
 _.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_RAMPART]: 2
     , [STRUCTURE_WALL]: 0
-    , all: 0
+    , all: 1
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -400,7 +404,7 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: 0//(((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
+    , exporter: 1//(((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W55N31", "creepMins"], {
     attacker: 0
@@ -453,7 +457,7 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , adaptable: 0
     , demolisher: 0
     , scout: 0
-    , claimer: 0
+    , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W52N47", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
@@ -1111,6 +1115,7 @@ module.exports.loop = function () {
         
         // Run towers in the room
         let towerTargets = [];
+        let numRoadRepairers = _.get(Memory.rooms, [roomID, "repairerTypeMins", STRUCTURE_ROAD], 0);
 		for (let towerID in towers) {
             let tower = towers[towerID];
             
@@ -1144,6 +1149,9 @@ module.exports.loop = function () {
                                 || s.hits <= RAMPART_DECAY_AMOUNT)
                             && (s.structureType != STRUCTURE_CONTAINER
                                 || s.hits <= CONTAINER_DECAY)
+                            && (s.structureType != STRUCTURE_ROAD
+                                || numRoadRepairers == 0
+                                || s.hits <= (ROAD_DECAY_AMOUNT * ((s.hitsMax == ROAD_HITS) ? 1 : CONSTRUCTION_COST_ROAD_SWAMP_RATIO)))
                     )});
                     if(target != undefined) {
                         tower.repair(target);
@@ -1220,7 +1228,7 @@ module.exports.loop = function () {
                 ["1"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
                 , ["2"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)
                 , ["10"]: Math.max(Math.ceil(((creep.body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1)
-            } // TODO: Add default for closest active spawn room to be set as creep.memory.roomID, and also set energyAvaliableOnSpawn & spawnTick to a default like in the creep garbage collection
+            } // TODO: Add default for closest active spawn/room to be set as creep.memory.spawnID/creep.memory.roomID, and also set energyAvaliableOnSpawn & spawnTick to a default like in the creep garbage collection
         });
         
         let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined); // Get home room storage if avaliable

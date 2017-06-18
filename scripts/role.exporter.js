@@ -7,6 +7,9 @@ let roleExporter = {
         }
         else if (creep.memory.working == true && _.sum(creep.carry) == 0) {
             creep.memory.working = false;
+            if (creep.memory.stopExporting == undefined) {
+                creep.memory.stopExporting = Game.time;
+            }
         }
         
         let sentTo = creep.memory.roomSentTo;
@@ -50,9 +53,13 @@ let roleExporter = {
                 });
             }
             else {
+                if (creep.memory.startExporting == undefined) {
+                    creep.memory.startExporting = Game.time;
+                }
                 let theStorage = Game.rooms[sentFrom].storage;
                 let theTerminal = Game.rooms[sentFrom].terminal;
-                if (_.get(creep.room, ["controller", "my"], false) == true) {
+                if (_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
+                    || _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") {
                     if (theStorage != undefined && _.sum(theStorage.store) > 0 && theStorage.my == false) {
                         let resourceType = _.max(_.keys(theStorage.store), (r) => (resourceWorth(r)));
                         let err = creep.withdraw(theStorage, resourceType);
@@ -76,6 +83,7 @@ let roleExporter = {
                         }
                     }
                     else {
+                        // TODO: Check for other inactive, hostile structures that contain withdrawable resources before giving up
                         _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "exporter"], 0);
                         if (_.sum(creep.carry) == 0) {
                             creep.memory.role = "recyclable";
@@ -105,7 +113,7 @@ let roleExporter = {
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
                 }
                 if (sentTo == "W9N45"
-                    || (sentTo == "W53N39")) { // NOTE: Any rooms that require waypoints to get to should be added here
+                    || sentTo == "W53N39") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
@@ -116,13 +124,18 @@ let roleExporter = {
                 }
             }
             else {
-                if (sentFrom == sentTo) {
+                let tripStartTime = _.get(creep.memory, ["startExporting"], Game.time - (CREEP_LIFE_TIME - creep.ticksToLive));
+                let tripEndTime = _.get(creep.memory, ["stopExporting"], Game.time + 1);
+                let returnTripTime = (tripEndTime - tripStartTime) * 2;
+                let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
+                if (sentFrom == sentTo 
+                    || tripsLeft > 0) {
                     if (_.sum(creep.carry) > creep.carry.energy) {
                         ROLES["hoarder"].run(creep);
                     }
-                    else if (_.sum(creep.carry) > 0) { 
-                        let theStorage = Game.rooms[sentFrom].storage;
-                        let theTerminal = Game.rooms[sentFrom].terminal;
+                    else {
+                        let theStorage = _.get(Game.rooms, [sentTo, "storage"], undefined);
+                        let theTerminal = _.get(Game.rooms, [sentTo, "terminal"], undefined);
                         if (theStorage != undefined 
                             && _.sum(theStorage.store) < theStorage.storeCapacity 
                             && theStorage.my == true) {
@@ -156,18 +169,11 @@ let roleExporter = {
                             }
                         }
                         else {
-                            _.set(Memory.rooms, [sentFrom, "creepMins", "exporter"], 0);
+                            //_.set(Memory.rooms, [sentFrom, "creepMins", "exporter"], 0); // TODO: Need a new memory key to keep where the creep originally spawned from since roomID can be changed and they don't have to be spawned from the sentFrom room
                             if (_.sum(creep.carry) == 0) {
                                 creep.memory.role = "recyclable";
                                 ROLES["recyclable"].run(creep);
                             }
-                        }
-                    }
-                    else {
-                        _.set(Memory.rooms, [sentFrom, "creepMins", "exporter"], 0);
-                        if (_.sum(creep.carry) == 0) {
-                            creep.memory.role = "recyclable";
-                            ROLES["recyclable"].run(creep);
                         }
                     }
                 }

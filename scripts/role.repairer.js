@@ -66,7 +66,8 @@ let roleRepairer = {
                     }
                     
                     if (repairerTypeFound == true 
-                        && repairerType != STRUCTURE_ROAD) { // TODO: Add check for roads when towers aren't avaliable to repair them
+                        && (repairerType != STRUCTURE_ROAD
+                        || creep.memory.repairerType == STRUCTURE_ROAD)) { // TODO: Add check for roads when towers aren't avaliable to repair them
                         if (repairerType == STRUCTURE_ROAD) {
                             structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                             	filter: (s) => (s.hits < s.hitsMax 

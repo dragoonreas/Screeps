@@ -40,7 +40,7 @@ let roleDemolisher = {
                     creep.memory.demolishStructure = undefined;
                     
                     if (creep.room.name != sentTo) {
-                        if (sentTo == "W52N47") {
+                        if (sentTo == "") { // NOTE: Any rooms that require waypoints to get to should be added here
                             ROLES["scout"].run(creep);
                         }
                         else {

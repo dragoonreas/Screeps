@@ -31,7 +31,8 @@
             "alignAsTable": true,
             "avg": false,
             "current": true,
-            "hideZero": true,
+            "hideEmpty": true,
+            "hideZero": false,
             "max": true,
             "min": true,
             "rightSide": true,
@@ -206,6 +207,7 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "screepspl.us",
+          "decimals": null,
           "editable": true,
           "error": false,
           "fill": 0,
@@ -214,6 +216,8 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": true,
+            "hideZero": true,
             "max": false,
             "min": false,
             "show": false,
@@ -290,6 +294,8 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": true,
+            "hideZero": true,
             "max": false,
             "min": false,
             "show": false,
@@ -378,7 +384,7 @@
           "legend": {
             "avg": false,
             "current": false,
-            "hideEmpty": false,
+            "hideEmpty": true,
             "hideZero": true,
             "max": false,
             "min": false,
@@ -456,6 +462,8 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": true,
+            "hideZero": true,
             "max": false,
             "min": false,
             "show": false,
@@ -532,6 +540,7 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": true,
             "max": false,
             "min": false,
             "show": false,
@@ -695,6 +704,8 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": true,
+            "hideZero": false,
             "max": false,
             "min": false,
             "show": false,
@@ -771,6 +782,7 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": true,
             "max": false,
             "min": false,
             "show": false,
@@ -859,6 +871,8 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": true,
+            "hideZero": false,
             "max": false,
             "min": false,
             "show": false,
@@ -935,7 +949,8 @@
           "legend": {
             "avg": false,
             "current": false,
-            "hideZero": false,
+            "hideEmpty": true,
+            "hideZero": true,
             "max": false,
             "min": false,
             "show": false,
@@ -2532,6 +2547,8 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": true,
+            "hideZero": true,
             "max": false,
             "min": false,
             "show": false,
@@ -2803,6 +2820,8 @@
           "legend": {
             "avg": false,
             "current": false,
+            "hideEmpty": false,
+            "hideZero": false,
             "max": false,
             "min": false,
             "show": false,
@@ -3293,27 +3312,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -3338,32 +3357,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -3374,7 +3393,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -3456,32 +3475,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -3511,22 +3530,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -3536,7 +3555,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -3545,7 +3564,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -3553,7 +3573,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -3564,16 +3585,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -4107,27 +4128,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -4152,32 +4173,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -4188,7 +4209,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -4270,32 +4291,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -4325,22 +4346,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -4350,7 +4371,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -4359,7 +4380,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -4367,7 +4389,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -4378,16 +4401,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -4868,7 +4891,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497353111695,
+      "repeatIteration": 1497753441299,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -4921,27 +4944,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -4966,32 +4989,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -5002,7 +5025,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -5084,32 +5107,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -5139,22 +5162,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -5164,7 +5187,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -5173,7 +5196,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -5181,7 +5205,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -5192,16 +5217,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -5682,7 +5707,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497353111695,
+      "repeatIteration": 1497753441299,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -5735,27 +5760,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -5780,32 +5805,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -5816,7 +5841,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -5898,32 +5923,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -5953,22 +5978,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -5978,7 +6003,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -5987,7 +6012,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -5995,7 +6021,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -6006,16 +6033,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -6496,7 +6523,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497353111695,
+      "repeatIteration": 1497753441299,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -6549,27 +6576,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -6594,32 +6621,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -6630,7 +6657,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -6712,32 +6739,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -6767,22 +6794,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -6792,7 +6819,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -6801,7 +6828,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -6809,7 +6837,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -6820,16 +6849,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -7310,7 +7339,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497353111695,
+      "repeatIteration": 1497753441299,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -7363,27 +7392,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -7408,32 +7437,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -7444,7 +7473,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -7526,32 +7555,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -7581,22 +7610,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -7606,7 +7635,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -7615,7 +7644,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -7623,7 +7653,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -7634,16 +7665,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -8124,7 +8155,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497353111695,
+      "repeatIteration": 1497753441299,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -8177,27 +8208,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -8222,32 +8253,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -8258,7 +8289,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -8340,32 +8371,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -8395,22 +8426,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -8420,7 +8451,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -8429,7 +8460,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -8437,7 +8469,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -8448,16 +8481,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -8938,7 +8971,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497353111695,
+      "repeatIteration": 1497753441299,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -8991,27 +9024,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -9036,32 +9069,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -9072,7 +9105,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -9154,32 +9187,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -9209,22 +9242,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -9234,7 +9267,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -9243,7 +9276,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -9251,7 +9285,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -9262,16 +9297,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -9752,7 +9787,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497353111695,
+      "repeatIteration": 1497753441299,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -9805,27 +9840,27 @@
             {
               "alias": "adaptable",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": 0
             },
             {
               "alias": "attacker",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "builder",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 3
             },
             {
               "alias": "claimer",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 2
             },
             {
               "alias": "demolisher",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "harvester",
@@ -9850,32 +9885,32 @@
             {
               "alias": "recyclable",
               "color": "#3F6833",
-              "zindex": -2
+              "zindex": -3
             },
             {
               "alias": "repairer",
               "color": "#6ED0E0",
-              "zindex": 1
+              "zindex": 3
             },
             {
               "alias": "scout",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "upgrader",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 3
             },
             {
               "alias": "healer",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": 1
             },
             {
               "alias": "exporter",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
@@ -9886,7 +9921,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5)"
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
             }
           ],
           "thresholds": [],
@@ -9968,32 +10003,32 @@
             {
               "alias": "/.*adaptable/",
               "color": "#99440A",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*attacker/",
               "color": "#E24D42",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*builder/",
               "color": "#1F78C1",
-              "zindex": 0
+              "zindex": 1
             },
             {
               "alias": "/.*claimer/",
               "color": "#BA43A9",
-              "zindex": -1
+              "zindex": 1
             },
             {
               "alias": "/.*demolisher/",
               "color": "#052B51",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/.*harvester/",
               "color": "#EAB839",
-              "zindex": 3
+              "zindex": 1
             },
             {
               "alias": "/.*hauler/",
@@ -10023,22 +10058,22 @@
             {
               "alias": "/.*scout/",
               "color": "#DEDAF7",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*upgrader/",
               "color": "#511749",
-              "zindex": 2
+              "zindex": 1
             },
             {
               "alias": "/.*healer/",
               "color": "#7EB26D",
-              "zindex": -2
+              "zindex": -1
             },
             {
               "alias": "/.*exporter/",
               "color": "#F9BA8F",
-              "zindex": -3
+              "zindex": -2
             },
             {
               "alias": "/.*sleep/",
@@ -10048,7 +10083,7 @@
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": -3
+              "zindex": 0
             },
             {
               "alias": "/^Idle.*/",
@@ -10057,7 +10092,8 @@
               "pointradius": 1,
               "points": true,
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 3
             },
             {
               "alias": "/^Confused.*/",
@@ -10065,7 +10101,8 @@
               "lines": false,
               "nullPointMode": "null as zero",
               "stack": false,
-              "yaxis": 2
+              "yaxis": 2,
+              "zindex": 2
             }
           ],
           "spaceLength": 10,
@@ -10076,16 +10113,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole, 5)",
+              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1')"
+              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -10566,7 +10603,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497353111695,
+      "repeatIteration": 1497753441299,
       "repeatRowId": 12,
       "showTitle": true,
       "title": "$Room",
@@ -10583,9 +10620,10 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
-          "value": "$__all"
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "screepspl.us",
         "hide": 0,
@@ -10607,7 +10645,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10631,7 +10668,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10655,7 +10691,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10679,7 +10714,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10703,7 +10737,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -10781,5 +10814,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 176
+  "version": 183
 }

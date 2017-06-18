@@ -32,8 +32,9 @@ let prototypeSpawn = function() {
     StructureSpawn.prototype.createCustomCreep = function(roleName) {
         
         let creepMemory = {
-            roomID: this.room.name 
-            , role: roleName 
+            spawnID: this.name
+            , roomID: this.room.name
+            , role: roleName
             , executingRole: "spawn"
             , working: false // TODO: Only apply the working property to creeps with carry parts
         };
@@ -143,6 +144,10 @@ let prototypeSpawn = function() {
             if (this.room.name == "W86N43") {
                 creepMemory.roomSentTo = this.room.name;
                 creepMemory.roomSentFrom = "W83N47";
+            }
+            else if (this.room.name == "W64N31") {
+                creepMemory.roomSentTo = this.room.name;
+                creepMemory.roomSentFrom = "W64N32";
             }
             else if (this.room.name == "W52N47") {
                 creepMemory.roomSentTo = this.room.name;
