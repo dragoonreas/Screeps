@@ -122,6 +122,7 @@ _.set(Memory.rooms, ["W86N43", "harvestRooms"], [
     "W87N43"
     , "W87N44"
     , "W85N45"
+    , "W85N43"
 ]);
 _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
     "W9N44"
@@ -176,7 +177,7 @@ _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
 */
 _.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
@@ -231,7 +232,7 @@ _.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
     , all: 0
 });*/
 _.set(Memory.rooms, ["W64N31", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
+    [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
@@ -404,7 +405,7 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: 1//(((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { energy: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
+    , exporter: 0//(((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { [RESOURCE_ENERGY]: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W55N31", "creepMins"], {
     attacker: 0
@@ -549,7 +550,7 @@ module.exports.loop = function () {
     }
     
     let dealingsTerminal = Game.rooms["W86N29"].terminal;
-    if (dealingsTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store.energy >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngelDealings.totalCost)) {
+    if (dealingsTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store[RESOURCE_ENERGY] >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngelDealings.totalCost)) {
         if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngelDealings.energyToFriendly, "E33N15", "brain.isFriend('dragoonreas') == true?") == OK) {
             console.log("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
             Game.notify("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
@@ -1200,13 +1201,11 @@ module.exports.loop = function () {
                 }
             }
             
-            let powerSpawn = _.first(theRoom.find(FIND_MY_STRUCTURES, { filter: (s) => (
-                s.structureType == STRUCTURE_POWER_SPAWN 
-                && s.power > 0 
-                && s.energy >= POWER_SPAWN_ENERGY_RATIO
-            )})); // TODO: Store this structure id in room memory and do the power & energy checks in the if statement instead
-            if (powerSpawn != undefined) {
-                powerSpawn.processPower();
+            let thePowerSpawn = theRoom.powerSpawn;
+            if (_.get(thePowerSpawn, ["my"], false) == true 
+                && thePowerSpawn.power > 0 
+                && thePowerSpawn.energy >= POWER_SPAWN_ENERGY_RATIO) {
+                thePowerSpawn.processPower();
             }
         }
     }
@@ -1232,12 +1231,15 @@ module.exports.loop = function () {
         });
         
         let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined); // Get home room storage if avaliable
+        let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined); // Get home room terminal if avaliable
         
         // Run a role that's not stored in creep.memory.role
         let runningRole = false;
         // TODO: If a creep is damaged, check that it still has enough active body parts to run it's role, and if not go back home to either repair via a tower or recycle if no tower is avaliable
-        if (creep.memory.role != "attacker" && creep.memory.role != "powerHarvester") {
-            if (creep.hits < creep.hitsMax && creep.memory.role != "adaptable") {
+        if (creep.memory.role != "attacker" 
+            && creep.memory.role != "powerHarvester") {
+            if (creep.hits < creep.hitsMax 
+                && creep.memory.role != "adaptable") {
                 creep.memory.droppedResourceID = undefined;
                 ROLES["recyclable"].run(creep);
                 runningRole = true;
@@ -1246,12 +1248,16 @@ module.exports.loop = function () {
                 ROLES["collector"].run(creep);
                 runningRole = true;
             }
-            else if (_.sum(creep.carry) > creep.carry.energy 
+            else if (_.sum(creep.carry) > creep.carry[RESOURCE_ENERGY] 
                 && creep.memory.role != "exporter" 
-                && theStorage != undefined 
-                && theStorage.my == true 
-                && _.sum(theStorage.store) < theStorage.storeCapacity 
-                && theStorage.isActive() == true) {
+                && (creep.memory.role != "builder" 
+                    || ((_.sum(creep.carry) - (creep.carry[RESOURCE_POWER] || 0)) > creep.carry[RESOURCE_ENERGY]))
+                && ((theStorage != undefined 
+                    && theStorage.my == true 
+                    && _.sum(theStorage.store) < theStorage.storeCapacity) 
+                || (theTerminal != undefined 
+                    && theTerminal.my == true 
+                    && _.sum(theTerminal.store) < theTerminal.storeCapacity))) {
                 ROLES["hoarder"].run(creep);
                 runningRole = true;
             }
@@ -1271,6 +1277,7 @@ module.exports.loop = function () {
                 }
                 else {
                     creep.memory.role = "recyclable";
+                    ROLES["recyclable"].run(creep);
                 }
                 runningRole = true;
             }

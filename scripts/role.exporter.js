@@ -60,7 +60,9 @@ let roleExporter = {
                 let theTerminal = Game.rooms[sentFrom].terminal;
                 if (_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
                     || _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") {
-                    if (theStorage != undefined && _.sum(theStorage.store) > 0 && theStorage.my == false) {
+                    if (theStorage != undefined 
+                        && _.sum(theStorage.store) > 0 
+                        && theStorage.my == false) {
                         let resourceType = _.max(_.keys(theStorage.store), (r) => (resourceWorth(r)));
                         let err = creep.withdraw(theStorage, resourceType);
                         if (err == ERR_NOT_IN_RANGE) {
@@ -71,7 +73,9 @@ let roleExporter = {
                             creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
                         }
                     }
-                    else if (theTerminal != undefined && _.sum(theTerminal.store) > 0 && theTerminal.my == false) {
+                    else if (theTerminal != undefined 
+                        && _.sum(theTerminal.store) > 0 
+                        && theTerminal.my == false) {
                         let resourceType = _.max(_.keys(theTerminal.store), (r) => (resourceWorth(r)));
                         let err = creep.withdraw(theTerminal, resourceType);
                         if (err == ERR_NOT_IN_RANGE) {
@@ -130,7 +134,7 @@ let roleExporter = {
                 let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
                 if (sentFrom == sentTo 
                     || tripsLeft > 0) {
-                    if (_.sum(creep.carry) > creep.carry.energy) {
+                    if (_.sum(creep.carry) > creep.carry[RESOURCE_ENERGY]) {
                         ROLES["hoarder"].run(creep);
                     }
                     else {

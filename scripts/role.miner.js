@@ -151,7 +151,7 @@ let roleMiner = {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }
-        else if (creep.memory.working == true && creep.carry.energy == 0) {
+        else if (creep.memory.working == true && creep.carry[RESOURCE_ENERGY] == 0) {
             creep.memory.working = false;
         }
         
@@ -221,7 +221,7 @@ let roleMiner = {
                 if (droppedResource != undefined && creep.pickup(droppedResource) == OK) {
                     creep.say(ICONS["pickup"] + ICONS["resource"], true);
                 }
-                else if (theContainer != undefined && theContainer instanceof StructureContainer && theContainer.store.energy > 0 && creep.withdraw(theContainer, RESOURCE_ENERGY) == OK) {
+                else if (theContainer != undefined && theContainer instanceof StructureContainer && theContainer.store[RESOURCE_ENERGY] > 0 && creep.withdraw(theContainer, RESOURCE_ENERGY) == OK) {
                     creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
                 }
                 else if (theLink != undefined && theLink instanceof StructureContainer && theLink.energy > 0 && creep.withdraw(theLink, RESOURCE_ENERGY) == OK) {

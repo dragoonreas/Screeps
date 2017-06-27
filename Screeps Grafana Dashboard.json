@@ -1613,7 +1613,7 @@
                 "type": "query"
               }
             ],
-            "executionErrorState": "alerting",
+            "executionErrorState": "keep_state",
             "frequency": "60s",
             "handler": 1,
             "message": "No new data received for the past 5 minutes.",
@@ -2527,6 +2527,90 @@
       "repeatRowId": null,
       "showTitle": false,
       "title": "Dashboard Row",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": "100",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "screepspl.us",
+          "fill": 1,
+          "id": 139,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": false,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(screeps.power, 'Processed')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Power",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
+      "showTitle": false,
+      "title": "Power",
       "titleSize": "h6"
     },
     {
@@ -4093,7 +4177,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 139,
+          "id": 140,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -4256,7 +4340,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 140,
+          "id": 141,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -4456,7 +4540,7 @@
           "dashes": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 141,
+          "id": 142,
           "legend": {
             "avg": true,
             "current": true,
@@ -4594,92 +4678,6 @@
             "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": false
-          },
-          "id": 142,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W53N39",
-              "value": "W53N39"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
-            },
-            {
-              "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
-            }
-          ],
-          "thresholds": "",
-          "title": "RCL Progress",
-          "type": "singlestat",
-          "valueFontSize": "100%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": null,
-          "format": "s",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
           },
           "id": 143,
           "interval": null,
@@ -4728,6 +4726,92 @@
             {
               "hide": true,
               "refId": "A",
+              "target": "screeps.roomSummary.$Room.controller_needed"
+            },
+            {
+              "refId": "B",
+              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
+              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
+            }
+          ],
+          "thresholds": "",
+          "title": "RCL Progress",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "datasource": null,
+          "format": "s",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 144,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W53N39",
+              "value": "W53N39"
+            }
+          },
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": true,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "hide": true,
+              "refId": "A",
               "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
               "textEditor": false
             },
@@ -4770,7 +4854,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 144,
+          "id": 145,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -4891,8 +4975,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441299,
-      "repeatRowId": 12,
+      "repeatIteration": 1497753441362,
+      "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -4909,7 +4993,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 145,
+          "id": 146,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -5072,7 +5156,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 146,
+          "id": 147,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -5272,7 +5356,7 @@
           "dashes": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 147,
+          "id": 148,
           "legend": {
             "avg": true,
             "current": true,
@@ -5410,92 +5494,6 @@
             "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": false
-          },
-          "id": 148,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W64N31",
-              "value": "W64N31"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
-            },
-            {
-              "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
-            }
-          ],
-          "thresholds": "",
-          "title": "RCL Progress",
-          "type": "singlestat",
-          "valueFontSize": "100%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": null,
-          "format": "s",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
           },
           "id": 149,
           "interval": null,
@@ -5544,6 +5542,92 @@
             {
               "hide": true,
               "refId": "A",
+              "target": "screeps.roomSummary.$Room.controller_needed"
+            },
+            {
+              "refId": "B",
+              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
+              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
+            }
+          ],
+          "thresholds": "",
+          "title": "RCL Progress",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "datasource": null,
+          "format": "s",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 150,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W64N31",
+              "value": "W64N31"
+            }
+          },
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": true,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "hide": true,
+              "refId": "A",
               "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
               "textEditor": false
             },
@@ -5586,7 +5670,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 150,
+          "id": 151,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -5707,8 +5791,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441299,
-      "repeatRowId": 12,
+      "repeatIteration": 1497753441362,
+      "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -5725,7 +5809,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 151,
+          "id": 152,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -5888,7 +5972,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 152,
+          "id": 153,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -6088,7 +6172,7 @@
           "dashes": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 153,
+          "id": 154,
           "legend": {
             "avg": true,
             "current": true,
@@ -6226,92 +6310,6 @@
             "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": false
-          },
-          "id": 154,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W85N23",
-              "value": "W85N23"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
-            },
-            {
-              "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
-            }
-          ],
-          "thresholds": "",
-          "title": "RCL Progress",
-          "type": "singlestat",
-          "valueFontSize": "100%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": null,
-          "format": "s",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
           },
           "id": 155,
           "interval": null,
@@ -6360,6 +6358,92 @@
             {
               "hide": true,
               "refId": "A",
+              "target": "screeps.roomSummary.$Room.controller_needed"
+            },
+            {
+              "refId": "B",
+              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
+              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
+            }
+          ],
+          "thresholds": "",
+          "title": "RCL Progress",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "datasource": null,
+          "format": "s",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 156,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W85N23",
+              "value": "W85N23"
+            }
+          },
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": true,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "hide": true,
+              "refId": "A",
               "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
               "textEditor": false
             },
@@ -6402,7 +6486,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 156,
+          "id": 157,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -6523,8 +6607,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441299,
-      "repeatRowId": 12,
+      "repeatIteration": 1497753441362,
+      "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -6541,7 +6625,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 157,
+          "id": 158,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -6704,7 +6788,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 158,
+          "id": 159,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -6904,7 +6988,7 @@
           "dashes": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 159,
+          "id": 160,
           "legend": {
             "avg": true,
             "current": true,
@@ -7042,92 +7126,6 @@
             "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": false
-          },
-          "id": 160,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W85N38",
-              "value": "W85N38"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
-            },
-            {
-              "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
-            }
-          ],
-          "thresholds": "",
-          "title": "RCL Progress",
-          "type": "singlestat",
-          "valueFontSize": "100%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": null,
-          "format": "s",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
           },
           "id": 161,
           "interval": null,
@@ -7176,6 +7174,92 @@
             {
               "hide": true,
               "refId": "A",
+              "target": "screeps.roomSummary.$Room.controller_needed"
+            },
+            {
+              "refId": "B",
+              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
+              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
+            }
+          ],
+          "thresholds": "",
+          "title": "RCL Progress",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "datasource": null,
+          "format": "s",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 162,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W85N38",
+              "value": "W85N38"
+            }
+          },
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": true,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "hide": true,
+              "refId": "A",
               "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
               "textEditor": false
             },
@@ -7218,7 +7302,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 162,
+          "id": 163,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -7339,8 +7423,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441299,
-      "repeatRowId": 12,
+      "repeatIteration": 1497753441362,
+      "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -7357,7 +7441,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 163,
+          "id": 164,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -7520,7 +7604,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 164,
+          "id": 165,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -7720,7 +7804,7 @@
           "dashes": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 165,
+          "id": 166,
           "legend": {
             "avg": true,
             "current": true,
@@ -7858,92 +7942,6 @@
             "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": false
-          },
-          "id": 166,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W86N29",
-              "value": "W86N29"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
-            },
-            {
-              "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
-            }
-          ],
-          "thresholds": "",
-          "title": "RCL Progress",
-          "type": "singlestat",
-          "valueFontSize": "100%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": null,
-          "format": "s",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
           },
           "id": 167,
           "interval": null,
@@ -7992,6 +7990,92 @@
             {
               "hide": true,
               "refId": "A",
+              "target": "screeps.roomSummary.$Room.controller_needed"
+            },
+            {
+              "refId": "B",
+              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
+              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
+            }
+          ],
+          "thresholds": "",
+          "title": "RCL Progress",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "datasource": null,
+          "format": "s",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 168,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N29",
+              "value": "W86N29"
+            }
+          },
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": true,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "hide": true,
+              "refId": "A",
               "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
               "textEditor": false
             },
@@ -8034,7 +8118,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 168,
+          "id": 169,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -8155,8 +8239,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441299,
-      "repeatRowId": 12,
+      "repeatIteration": 1497753441362,
+      "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -8173,7 +8257,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 169,
+          "id": 170,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -8336,7 +8420,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 170,
+          "id": 171,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -8536,7 +8620,7 @@
           "dashes": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 171,
+          "id": 172,
           "legend": {
             "avg": true,
             "current": true,
@@ -8674,92 +8758,6 @@
             "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": false
-          },
-          "id": 172,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W86N39",
-              "value": "W86N39"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
-            },
-            {
-              "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
-            }
-          ],
-          "thresholds": "",
-          "title": "RCL Progress",
-          "type": "singlestat",
-          "valueFontSize": "100%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": null,
-          "format": "s",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
           },
           "id": 173,
           "interval": null,
@@ -8808,6 +8806,92 @@
             {
               "hide": true,
               "refId": "A",
+              "target": "screeps.roomSummary.$Room.controller_needed"
+            },
+            {
+              "refId": "B",
+              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
+              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
+            }
+          ],
+          "thresholds": "",
+          "title": "RCL Progress",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "datasource": null,
+          "format": "s",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 174,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N39",
+              "value": "W86N39"
+            }
+          },
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": true,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "hide": true,
+              "refId": "A",
               "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
               "textEditor": false
             },
@@ -8850,7 +8934,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 174,
+          "id": 175,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -8971,8 +9055,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441299,
-      "repeatRowId": 12,
+      "repeatIteration": 1497753441362,
+      "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -8989,7 +9073,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 175,
+          "id": 176,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -9152,7 +9236,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 176,
+          "id": 177,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -9352,7 +9436,7 @@
           "dashes": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 177,
+          "id": 178,
           "legend": {
             "avg": true,
             "current": true,
@@ -9490,92 +9574,6 @@
             "show": false,
             "thresholdLabels": false,
             "thresholdMarkers": false
-          },
-          "id": 178,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "scopedVars": {
-            "Room": {
-              "selected": false,
-              "text": "W86N43",
-              "value": "W86N43"
-            }
-          },
-          "span": 2,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": true,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": true
-          },
-          "tableColumn": "",
-          "targets": [
-            {
-              "hide": true,
-              "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
-            },
-            {
-              "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
-            }
-          ],
-          "thresholds": "",
-          "title": "RCL Progress",
-          "type": "singlestat",
-          "valueFontSize": "100%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": true,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": null,
-          "format": "s",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": false,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
           },
           "id": 179,
           "interval": null,
@@ -9624,6 +9622,92 @@
             {
               "hide": true,
               "refId": "A",
+              "target": "screeps.roomSummary.$Room.controller_needed"
+            },
+            {
+              "refId": "B",
+              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
+              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
+            }
+          ],
+          "thresholds": "",
+          "title": "RCL Progress",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "datasource": null,
+          "format": "s",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 180,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "scopedVars": {
+            "Room": {
+              "selected": false,
+              "text": "W86N43",
+              "value": "W86N43"
+            }
+          },
+          "span": 2,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": true,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "hide": true,
+              "refId": "A",
               "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
               "textEditor": false
             },
@@ -9666,7 +9750,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 180,
+          "id": 181,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -9787,8 +9871,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441299,
-      "repeatRowId": 12,
+      "repeatIteration": 1497753441362,
+      "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -9805,7 +9889,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 181,
+          "id": 182,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -9968,7 +10052,7 @@
           "datasource": "screepspl.us",
           "decimals": 0,
           "fill": 1,
-          "id": 182,
+          "id": 183,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -10168,7 +10252,7 @@
           "dashes": false,
           "datasource": "screepspl.us",
           "fill": 0,
-          "id": 183,
+          "id": 184,
           "legend": {
             "avg": true,
             "current": true,
@@ -10307,7 +10391,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": false
           },
-          "id": 184,
+          "id": 185,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -10393,7 +10477,7 @@
             "thresholdLabels": false,
             "thresholdMarkers": true
           },
-          "id": 185,
+          "id": 186,
           "interval": null,
           "links": [],
           "mappingType": 1,
@@ -10482,7 +10566,7 @@
           "datasource": "screepspl.us",
           "decimals": 3,
           "fill": 0,
-          "id": 186,
+          "id": 187,
           "legend": {
             "alignAsTable": true,
             "avg": false,
@@ -10603,8 +10687,8 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441299,
-      "repeatRowId": 12,
+      "repeatIteration": 1497753441362,
+      "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
       "titleSize": "h6"
@@ -10620,6 +10704,7 @@
       {
         "allValue": null,
         "current": {
+          "tags": [],
           "text": "All",
           "value": [
             "$__all"
@@ -10814,5 +10899,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 183
+  "version": 185
 }

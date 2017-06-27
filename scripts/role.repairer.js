@@ -10,7 +10,7 @@ let roleRepairer = {
             creep.memory.demolishStructure = undefined; // can be a demolisher
         }
         else if (creep.memory.working == true
-            && creep.carry.energy == 0) {
+            && creep.carry[RESOURCE_ENERGY] == 0) {
             creep.memory.working = false;
             creep.memory.repairStructure = undefined;
             creep.memory.constructionSite = undefined; // can be a builder when working
@@ -161,13 +161,13 @@ let roleRepairer = {
             if (source != undefined
                 && source.energy == 0
                 && (theRecycleContainer == undefined
-                    || theRecycleContainer.store.energy == 0)
+                    || theRecycleContainer.store[RESOURCE_ENERGY] == 0)
                 && (theStorage == undefined
-                    || theStorage.store.energy == 0)
+                    || theStorage.store[RESOURCE_ENERGY] == 0)
                 && (theTerminal == undefined
-                    || (theTerminal.store.energy <= (theTerminal.storeCapacity / 2)
+                    || (theTerminal.store[RESOURCE_ENERGY] <= (theTerminal.storeCapacity / 2)
                         || (theTerminal.my == false
-                            && theTerminal.store.energy == 0)))) {
+                            && theTerminal.store[RESOURCE_ENERGY] == 0)))) {
                 if (_.get(Memory, ["rooms", creep.memory.roomID, "creepCounts", "upgrader"], 0) == 0) {
                     if (ROLES["upgrader"].run(creep) != ERR_NOT_ENOUGH_RESOURCES) {
                         return;
@@ -176,8 +176,8 @@ let roleRepairer = {
                 if ((creep.memory.roomID == "W9N45"
                         || creep.memory.roomID == "W81N29"
                         || creep.memory.roomID == "W72N28"
-                        || creep.memory.roomID == "W64N31"
-                        || creep.memory.roomID == "W55N31")
+                        || creep.memory.roomID == "W55N31"
+                        || creep.memory.roomID == "W52N47")
                     && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
                 }
@@ -200,7 +200,7 @@ let roleRepairer = {
                 creep.say(ICONS["harvest"] + ICONS["source"], true);
             }
             else if (theRecycleContainer != undefined
-                && theRecycleContainer.store.energy > 0) {
+                && theRecycleContainer.store[RESOURCE_ENERGY] > 0) {
                 err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theRecycleContainer);
@@ -215,7 +215,7 @@ let roleRepairer = {
                 }
             }
             else if (theStorage != undefined
-                && theStorage.store.energy > 0) {
+                && theStorage.store[RESOURCE_ENERGY] > 0) {
                 err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);
@@ -230,9 +230,9 @@ let roleRepairer = {
                 }
             }
             else if (theTerminal != undefined
-                && (theTerminal.store.energy > (theTerminal.storeCapacity / 2)
+                && (theTerminal.store[RESOURCE_ENERGY] > (theTerminal.storeCapacity / 2)
                     || (theTerminal.my == false
-                        && theTerminal.store.energy > 0))) {
+                        && theTerminal.store[RESOURCE_ENERGY] > 0))) {
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
@@ -247,7 +247,7 @@ let roleRepairer = {
                 }
             }
             else if (err == ERR_NOT_ENOUGH_RESOURCES 
-                && creep.carry.energy > 0) {
+                && creep.carry[RESOURCE_ENERGY] > 0) {
                 creep.memory.working = true;
                 ROLES["repairer"].run(creep);
             }

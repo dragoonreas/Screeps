@@ -10,7 +10,9 @@ let roleBuilder = {
             creep.memory.demolishStructure = undefined; // can be a demolisher
         }
         else if (creep.memory.working == true
-            && creep.carry.energy == 0) {
+            && (creep.carry[RESOURCE_ENERGY] == 0 
+                && (creep.memory.role != "builder" 
+                    || (creep.carry[RESOURCE_POWER] || 0) == 0))) {
             creep.memory.working = false;
             creep.memory.constructionSite = undefined;
             creep.memory.repairStructure = undefined; // can be a repairer when working
@@ -55,7 +57,8 @@ let roleBuilder = {
             }
             
             if (constructionSite == undefined
-                && _.size(Game.constructionSites) > 0) {
+                && _.size(Game.constructionSites) > 0
+                && (creep.carry[RESOURCE_POWER] || 0) == 0) {
                 let roomConstructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
                 /*
                 if (roomConstructionSites.length == 0) { // TODO: Change this block to check if there's any in rooms the creep can reasonably reach with construction sites needing to be built in them
@@ -137,7 +140,29 @@ let roleBuilder = {
                 }
             }
             else {
-                ROLES["harvester"].run(creep);
+                let thePowerSpawn = _.get(Game.rooms, [creep.memory.roomID, "powerSpawn"], undefined);
+                if (creep.memory.role == "builder" 
+                    && thePowerSpawn != undefined 
+                    && thePowerSpawn.my == true 
+                    && thePowerSpawn.power < Math.floor(thePowerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) 
+                    && (creep.carry[RESOURCE_POWER] || 0) > 0) {
+                    let err = creep.transfer(thePowerSpawn, RESOURCE_POWER);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.travelTo(thePowerSpawn);
+                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_POWER_SPAWN], true);
+                    }
+                    else if (err == OK) {
+                        creep.say(ICONS["transfer"] + ICONS[STRUCTURE_POWER_SPAWN], true);
+                    }
+                    else {
+                        incrementConfusedCreepCount(creep);
+                        creep.say(ICONS["transfer"] + ICONS[STRUCTURE_POWER_SPAWN] + "?", true);
+                    }
+                } else if (creep.memory.role != "builder" 
+                    || (creep.carry[RESOURCE_POWER] || 0) == 0 
+                    || ROLES["hoarder"].run(creep) == ERR_INVALID_TARGET) {
+                    ROLES["harvester"].run(creep);
+                }
             }
         }
         else {
@@ -162,29 +187,88 @@ let roleBuilder = {
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
             let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
             let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
-            if (source != undefined 
-                && source.energy == 0 
-                && (theRecycleContainer == undefined 
-                    || theRecycleContainer.store.energy == 0) 
-                && (((theStorage == undefined 
-                            || theStorage.store.energy == 0) 
-                        && (theTerminal == undefined 
-                            || (theTerminal.store.energy <= (theTerminal.storeCapacity / 2)
-                                || (theTerminal.my == false
-                                    && theTerminal.store.energy > 0))))
-                    || (((_.size(Game.constructionSites) == 0) 
-                            || (Game.rooms[creep.memory.roomID] == undefined 
-                                || Game.rooms[creep.memory.roomID].find(FIND_MY_CONSTRUCTION_SITES).length == 0))
-                        /*&& _.get(Game.rooms, [creep.memory.roomID, "energyAvailable"], 0) == _.get(Game.rooms, [creep.memory.roomID, "energyCapacityAvailable"], 0)*/))) {
-                if (_.get(Memory, ["rooms", creep.memory.roomID, "creepCounts", "upgrader"], 0) == 0) {
-                    if (ROLES["upgrader"].run(creep) != ERR_NOT_ENOUGH_RESOURCES) {
+            let thePowerSpawn = _.get(Game.rooms, [creep.memory.roomID, "powerSpawn"], undefined);
+            if ((creep.memory.role == "builder" 
+                    && (creep.carry[RESOURCE_POWER] || 0) > 0) 
+                || (source != undefined 
+                    && source.energy == 0 
+                    && (theRecycleContainer == undefined 
+                        || theRecycleContainer.store[RESOURCE_ENERGY] == 0) 
+                    && (((theStorage == undefined 
+                                || theStorage.store[RESOURCE_ENERGY] == 0) 
+                            && (theTerminal == undefined 
+                                || (theTerminal.store[RESOURCE_ENERGY] <= (theTerminal.storeCapacity / 2)
+                                    || (theTerminal.my == false
+                                        && theTerminal.store[RESOURCE_ENERGY] > 0))))
+                        || (((_.size(Game.constructionSites) == 0) 
+                                || (Game.rooms[creep.memory.roomID] == undefined 
+                                    || Game.rooms[creep.memory.roomID].find(FIND_MY_CONSTRUCTION_SITES).length == 0))
+                            /*&& _.get(Game.rooms, [creep.memory.roomID, "energyAvailable"], 0) == _.get(Game.rooms, [creep.memory.roomID, "energyCapacityAvailable"], 0)*/)))) {
+                if (creep.memory.role == "builder" 
+                    && thePowerSpawn != undefined 
+                    && thePowerSpawn.my == true 
+                    && thePowerSpawn.power < Math.floor(thePowerSpawn.energy / POWER_SPAWN_ENERGY_RATIO)) { 
+                    let requiredPower = Math.floor(thePowerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - (thePowerSpawn.power + (creep.carry[RESOURCE_POWER] || 0));
+                    if (requiredPower > 0 
+                        && ((theStorage != undefined 
+                                && (theStorage.store[RESOURCE_POWER] || 0) > 0) 
+                            ||  theTerminal != undefined 
+                                && (theTerminal.store[RESOURCE_POWER] || 0) > 0)) {
+                        if (theStorage != undefined 
+                            && (theStorage.store[RESOURCE_POWER] || 0) > 0) {
+                            let err = creep.withdraw(theStorage, RESOURCE_POWER, _.min([requiredPower, theStorage.store[RESOURCE_POWER], (creep.carryCapacity - _.sum(creep.carry))]));
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(theStorage);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
+                            }
+                            else {
+                                incrementConfusedCreepCount(creep);
+                                creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
+                            }
+                        } else if (theTerminal != undefined 
+                            && (theTerminal.store[RESOURCE_POWER] || 0) > 0) {
+                            let err = creep.withdraw(theTerminal, RESOURCE_POWER, _.min([requiredPower, theTerminal.store[RESOURCE_POWER], (creep.carryCapacity - _.sum(creep.carry))]));
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(theTerminal);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
+                            }
+                            else {
+                                incrementConfusedCreepCount(creep);
+                                creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
+                            }
+                        } else {
+                            incrementConfusedCreepCount(creep);
+                            creep.say(ICONS["withdraw"] + "?", true);
+                        }
+                        
                         return;
                     }
+                    else if ((creep.carry[RESOURCE_POWER] || 0) > 0) {
+                        creep.memory.working = true;
+                        ROLES["builder"].run(creep);
+                        return;
+                    } // NOTE: Drops out here to try and do other things when no power in storage or terminal
                 }
+                else if (creep.memory.role == "builder" 
+                    && (creep.carry[RESOURCE_POWER] || 0) > 0 
+                    && ROLES["hoarder"].run(creep) != ERR_INVALID_TARGET) {
+                    return;
+                }
+                
+                if (_.get(Memory, ["rooms", creep.memory.roomID, "creepCounts", "upgrader"], 0) == 0 
+                    && ROLES["upgrader"].run(creep) != ERR_NOT_ENOUGH_RESOURCES) {
+                    return;
+                }
+                
                 if ((creep.memory.roomID == "W9N45"
                         || creep.memory.roomID == "W81N29"
                         || creep.memory.roomID == "W72N28"
-                        || creep.memory.roomID == "W64N31"
                         || creep.memory.roomID == "W55N31"
                         || creep.memory.roomID == "W52N47")
                     && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
@@ -193,6 +277,7 @@ let roleBuilder = {
                 else {
                     ROLES["harvester"].run(creep);
                 }
+                
                 return;
             }
             
@@ -209,7 +294,7 @@ let roleBuilder = {
                 creep.say(ICONS["harvest"] + ICONS["source"], true);
             }
             else if (theRecycleContainer != undefined
-                && theRecycleContainer.store.energy > 0) {
+                && theRecycleContainer.store[RESOURCE_ENERGY] > 0) {
                 err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theRecycleContainer);
@@ -224,7 +309,7 @@ let roleBuilder = {
                 }
             }
             else if (theStorage != undefined
-                && theStorage.store.energy > 0) {
+                && theStorage.store[RESOURCE_ENERGY] > 0) {
                 err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);
@@ -239,9 +324,9 @@ let roleBuilder = {
                 }
             }
             else if (theTerminal != undefined
-                && (theTerminal.store.energy > (theTerminal.storeCapacity / 2)
+                && (theTerminal.store[RESOURCE_ENERGY] > (theTerminal.storeCapacity / 2)
                     || (theTerminal.my == false
-                        && theTerminal.store.energy > 0))) {
+                        && theTerminal.store[RESOURCE_ENERGY] > 0))) {
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
@@ -256,7 +341,7 @@ let roleBuilder = {
                 }
             }
             else if (err == ERR_NOT_ENOUGH_RESOURCES 
-                && creep.carry.energy > 0) {
+                && creep.carry[RESOURCE_ENERGY] > 0) {
                 creep.memory.working = true;
                 ROLES["builder"].run(creep);
             }

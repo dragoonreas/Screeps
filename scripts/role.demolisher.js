@@ -7,7 +7,7 @@ let roleDemolisher = {
             creep.memory.demolishStructure = undefined;
             creep.memory.waypoint = 0; // TODO: Ensure waypoints reset when at destination in called roles
         }
-        else if (creep.memory.working == true && creep.carry.energy == 0) {
+        else if (creep.memory.working == true && creep.carry[RESOURCE_ENERGY] == 0) {
             creep.memory.working = false;
             creep.memory.depositStructureID = undefined; // can be a harvester when working
             creep.memory.waypoint = 0; // TODO: Ensure waypoints reset when at destination in called roles
@@ -69,7 +69,7 @@ let roleDemolisher = {
                             && s.structureType != STRUCTURE_CONTROLLER 
                             && s.structureType != STRUCTURE_KEEPER_LAIR 
                             && s.structureType != STRUCTURE_POWER_BANK 
-                            && _.sum(_.get(s, ["store"], { energy: 0 })) == 0 
+                            && _.sum(_.get(s, ["store"], { [RESOURCE_ENERGY]: 0 })) == 0 
                             && _.get(s, ["energy"], 0) == 0
                             && _.get(s, ["hits"], 0) > 0
                         )});

@@ -55,10 +55,10 @@ let rolePowerHarvester = {
                 }
             }
             else {
-                if (creep.carry.energy != _.sum(creep.carry)) {
+                if (creep.carry[RESOURCE_ENERGY] != _.sum(creep.carry)) {
                     ROLES["hoarder"].run(creep);
                 }
-                else if (creep.carry.energy > 0) {
+                else if (creep.carry[RESOURCE_ENERGY] > 0) {
                     ROLES["harvester"].run(creep);
                 }
             }

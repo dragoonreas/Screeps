@@ -79,7 +79,7 @@ function summarize_room_internal(room) {
     const energy_cap = room.energyCapacityAvailable;
     const containers = room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_CONTAINER });
     const num_containers = containers == null ? 0 : containers.length;
-    const container_energy = _.sum(containers, c => c.store.energy);
+    const container_energy = _.sum(containers, c => c.store[RESOURCE_ENERGY]);
     const sources = room.find(FIND_SOURCES);
     const num_sources = sources == null ? 0 : sources.length;
     const source_energy = _.sum(sources, s => s.energy); // TODO: Include harvest room sources and calculate energy wasted for sources that renew but aren't immidiatly mined
@@ -95,7 +95,7 @@ function summarize_room_internal(room) {
     const creeps = _.filter(Game.creeps, c => c.memory.roomID == room.name && c.my);
     const num_creeps = creeps ? creeps.length : 0;
     const enemy_creeps = room.find(FIND_HOSTILE_CREEPS, { filter: (i) => (_.includes(Memory.nonAgressivePlayers, i.owner.username) == false) });
-    const creep_energy = _.sum(Game.creeps, c => c.memory.roomID == room.name ? c.carry.energy : 0);
+    const creep_energy = _.sum(Game.creeps, c => c.memory.roomID == room.name ? c.carry[RESOURCE_ENERGY] : 0);
     const num_enemies = enemy_creeps ? enemy_creeps.length : 0;
     const spawns = room.find(FIND_MY_SPAWNS);
     const num_spawns = spawns ? spawns.length : 0;

@@ -6,7 +6,7 @@ let roleAdaptable = {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
         }
-        else if (creep.memory.working == true && creep.carry.energy == 0) {
+        else if (creep.memory.working == true && creep.carry[RESOURCE_ENERGY] == 0) {
             creep.memory.working = false;
         }
         
@@ -40,8 +40,12 @@ let roleAdaptable = {
         if (_.isString(sentTo) == true) {
             let theStorage = Game.rooms[sentFrom].storage;
             let theTerminal = Game.rooms[sentFrom].terminal;
-            if (creep.room.name == sentFrom && _.sum(creep.carry) < creep.carryCapacity && ((theStorage != undefined && theStorage.store.energy > 0) || (theTerminal != undefined && theTerminal.store.energy > 0))) {
-                if (theStorage != undefined && theStorage.store.energy > 0) {
+            if (creep.room.name == sentFrom 
+                && _.sum(creep.carry) < creep.carryCapacity 
+                && ((theStorage != undefined && theStorage.store[RESOURCE_ENERGY] > 0) 
+                    || (theTerminal != undefined && theTerminal.store[RESOURCE_ENERGY] > 0))) {
+                if (theStorage != undefined 
+                    && theStorage.store[RESOURCE_ENERGY] > 0) {
                     let err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.travelTo(theStorage);
@@ -51,7 +55,8 @@ let roleAdaptable = {
                         creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
                     }
                 }
-                else if (theTerminal != undefined && theTerminal.store.energy > 0) {
+                else if (theTerminal != undefined 
+                    && theTerminal.store[RESOURCE_ENERGY] > 0) {
                     let err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.travelTo(theTerminal);

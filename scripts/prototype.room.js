@@ -132,6 +132,16 @@ let prototypeRoom = function() {
         });
     }
     
+    if (Room.prototype.powerSpawn == undefined) { // NOTE: Must be defined after global.defineCachedGetter
+        defineCachedGetter(Room.prototype, "powerSpawn", (r) => {
+            if (r.controller == undefined) { return undefined; }
+            let powerSpawns = r.find(FIND_STRUCTURES, { filter: (s) => (
+                s.structureType == STRUCTURE_POWER_SPAWN
+            )});
+            return _.first(powerSpawns);
+        });
+    }
+    
     if (Room.prototype.checkForDrops == undefined) {
         Object.defineProperty(Room.prototype, "checkForDrops", {
             get: function() {
