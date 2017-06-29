@@ -58,9 +58,11 @@ let roleHarvester = {
                         ] 
                         , "W85N23": [
                             "5873bbe111e3e4361b4d6ac4"
+                            , "5873bbac11e3e4361b4d6423"
                             , "5873bbc911e3e4361b4d676e"
                             , "5873bbc911e3e4361b4d676f"
                             , "5873bbc911e3e4361b4d6770"
+                            , "5873bbac11e3e4361b4d6424"
                             , "5873bbc911e3e4361b4d677e"
                         ]
                         , "W86N39": [
@@ -208,6 +210,12 @@ let roleHarvester = {
                                 creep.memory.sourceID = sourceID;
                                 creep.travelTo(new RoomPosition(3, 3, "W84N23"));
                                 creep.say(travelToIcons(creep) + "W84N23", true);
+                                return;
+                            }
+                            else if (sourceID == "5873bbac11e3e4361b4d6423") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(32, 10, "W86N23"));
+                                creep.say(travelToIcons(creep) + "W86N23", true);
                                 return;
                             }
                             else if (sourceID == "5873bbc911e3e4361b4d676e") { // TODO: Remove this after the source has been added to memory

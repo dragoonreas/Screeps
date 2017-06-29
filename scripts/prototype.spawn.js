@@ -141,7 +141,11 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "exporter") {
-            if (this.room.name == "W86N43") {
+            if (this.room.name == "W86N29") {
+                creepMemory.roomSentTo = this.room.name;
+                creepMemory.roomSentFrom = "W83N33";
+            }
+            else if (this.room.name == "W86N43") {
                 creepMemory.roomSentTo = this.room.name;
                 creepMemory.roomSentFrom = "W83N47";
             }
@@ -267,7 +271,6 @@ let prototypeSpawn = function() {
             creepMemory.harvestRoom = { id: "W53N32", x: 25, y: 25 }; // TODO: Populate this automatically
         }
         
-        
         let energyAvaliable = this.room.energyCapacityAvailable;
         if ((Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) { // TODO: Allow harvesters to scale gradually instead of jump between lowest to maximum scale
             energyAvaliable = _.max([this.room.energyAvailable, SPAWN_ENERGY_CAPACITY]); // start small if forced to build up from scratch
@@ -318,6 +321,7 @@ let prototypeSpawn = function() {
                 || this.room.name == "W53N42" 
                 || this.room.name == "W52N47") { // these rooms have a source in range of the controller
                 moveRatio = 0;
+                bodyTemplate = [WORK]; // these upgraders also have at least one carry part that gets multiplied dynamically with avaliable energy later
             }
             else if (this.room.controller.level > 3 && _.size(this.room.sources) > 1) { // NOTE: Assumes roads built between the dedicated upgrader source (2 source rooms only) and the controller at RCL 4 onwards
                 moveRatio = 0.5;
@@ -370,6 +374,7 @@ let prototypeSpawn = function() {
         
         /*
             Base general worker size off capacity to fill 3 extentions from a single haul
+            NOTES:  [WORK,CARRY,MOVE,MOVE] has 50 carry & costs 250, so carry*5=cost
             RCL     Room.energyCapacityAvaliable    Creep.carryCapacity energyToSpawn   totalNumberOfParts
             1-6:      300-2300          ( 50/50)*3= 150*5=               750/5/50*4=    12
             7:       5600               (100/50)*3= 300*5=              1500/5/50*4=    24
@@ -391,6 +396,8 @@ let prototypeSpawn = function() {
         */
         const GENERAL_WORKER_CARRY_PART_CAP = Math.ceil(this.room.energyCapacityAvailable / DEFAULT_HARVEST_COUNT / (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / EXTENSION_ENERGY_CAPACITY[1]) / CARRY_CAPACITY);
         
+        let slowUpgraderCarryCount = 1; // Used for upgraders with moveRatio == 0
+        
         let partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), GENERAL_WORKER_CARRY_PART_CAP);
         if (roleName == "miner") {
             partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * MINER_WORK_PART_CAP) / bodyCost);
@@ -404,12 +411,17 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "upgrader") {
             if (moveRatio == 0) {
-                const TOTAL_CARRY = (bodyPartCounts[CARRY] || 1) * CARRY_CAPACITY;
+                /*const TOTAL_CARRY = (bodyPartCounts[CARRY] || 1) * CARRY_CAPACITY;
                 const TICKS_TO_FILL = TOTAL_CARRY / ((bodyPartCounts[WORK] || 1) * HARVEST_POWER);
-                const TICK_TO_UPGRADE = TOTAL_CARRY / ((bodyPartCounts[WORK] || 1) * UPGRADE_CONTROLLER_POWER);
-                const TOTAL_UPGRADER_PARTS_REQUIRED = ((SOURCE_ENERGY_CAPACITY / TOTAL_CARRY) * (TICKS_TO_FILL + TICK_TO_UPGRADE)) / ENERGY_REGEN_TIME;
+                const TICKS_TO_UPGRADE = TOTAL_CARRY / ((bodyPartCounts[WORK] || 1) * UPGRADE_CONTROLLER_POWER);
+                const TOTAL_UPGRADER_PARTS_REQUIRED = ((SOURCE_ENERGY_CAPACITY / TOTAL_CARRY) * (TICKS_TO_FILL + TICKS_TO_UPGRADE)) / ENERGY_REGEN_TIME;
                 const UPGRADER_PART_MULTIPLIER_CAP = Math.ceil(TOTAL_UPGRADER_PARTS_REQUIRED / (_.get(Memory.rooms, [this.room.name, "creepMins", "upgrader"], 1) || 1));
-                partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * UPGRADER_PART_MULTIPLIER_CAP) / bodyCost);
+                partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * UPGRADER_PART_MULTIPLIER_CAP) / bodyCost);*/
+                const TOTAL_UPGRADER_WORK_PARTS_REQUIRED = Math.ceil((SOURCE_ENERGY_CAPACITY / ENERGY_REGEN_TIME) / Math.min(HARVEST_POWER, UPGRADE_CONTROLLER_POWER));
+                const UPGRADER_WORK_PART_CAP = Math.ceil(TOTAL_UPGRADER_WORK_PARTS_REQUIRED / (_.get(Memory.rooms, [this.room.name, "creepMins", "upgrader"], 1) || 1));
+                // TODO: Figure out max needed carry capacity using constants
+                energyAvaliable -= (BODYPART_COST[CARRY] * slowUpgraderCarryCount);
+                partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * UPGRADER_WORK_PART_CAP) / bodyCost);
             }
             else {
                 partMultiplier = Math.floor(Math.min(energyAvaliable, UPGRADER_ENERGY_CAP) / bodyCost);
@@ -435,10 +447,13 @@ let prototypeSpawn = function() {
             partMultiplier = 1; // for creeps that don't scale with energy avaliable
         }
         
-        // can't MAX_CREEP_SIZE directly as we need to account for parts not included in the bodyTemplate
+        // can't use MAX_CREEP_SIZE directly as we need to account for parts not included in the bodyTemplate
         let maxCreepSize = MAX_CREEP_SIZE;
         if (moveRatio == 0) {
             --maxCreepSize;
+            if (roleName == "upgrader") {
+                maxCreepSize -= slowUpgraderCarryCount;
+            }
         }
         if (roleName == "hauler" 
             || roleName == "miner") {
@@ -460,6 +475,10 @@ let prototypeSpawn = function() {
         }
         if (roleName == "miner") {
             body.push(CARRY);
+        }
+        else if (roleName == "upgrader" 
+            && moveRatio == 0) {
+            body.push(_.fill(Array(slowUpgraderCarryCount), CARRY));
         }
         
         // Add the move part(s)
@@ -499,7 +518,7 @@ let prototypeSpawn = function() {
         if (_.isString(result) == true) {
             ++Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role];
             
-            if (roleName == "repairer" && _.isString(result) == true) {
+            if (roleName == "repairer") {
                 ++Memory.rooms[creepMemory.roomID].repairerTypeCounts[creepMemory.repairerType];
             }
         }

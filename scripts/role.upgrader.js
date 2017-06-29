@@ -3,7 +3,10 @@ let roleUpgrader = {
         creep.memory.executingRole = "upgrader";
         
         if (creep.memory.working == false
-            && _.sum(creep.carry) == creep.carryCapacity) {
+            && (_.sum(creep.carry) == creep.carryCapacity 
+                || (creep.memory.role == "upgrader" 
+                    && creep.memory.speeds["1"] > 1 
+                    && (_.sum(creep.carry) + (creep.getActiveBodyparts(WORK) * HARVEST_POWER)) > creep.carryCapacity))) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
         }
@@ -12,7 +15,8 @@ let roleUpgrader = {
             creep.memory.working = false;
         }
         
-        if(creep.memory.working == true) {
+        if (creep.memory.working == true 
+            && creep.memory.topUp !== true) {
             let theController = Game.rooms[creep.memory.roomID].controller;
             let err = creep.upgradeController(theController);
             if (err == ERR_NOT_IN_RANGE) {
@@ -23,6 +27,12 @@ let roleUpgrader = {
             }
             else if (err == OK) {
                 creep.say(ICONS["upgradeController"] + ICONS[STRUCTURE_CONTROLLER], true);
+                if (creep.memory.role == "upgrader" 
+                    && creep.memory.speeds["1"] > 1 
+                    && (_.sum(creep.carry) + (creep.getActiveBodyparts(WORK) * HARVEST_POWER)) <= creep.carryCapacity) {
+                    creep.memory.topUp = true;
+                    ROLES["upgrader"].run(creep);
+                }
             }
             else {
                 incrementConfusedCreepCount(creep);
@@ -30,6 +40,8 @@ let roleUpgrader = {
             }
         }
         else {
+            creep.memory.topUp = undefined;
+            
             let source = undefined;
             switch (creep.memory.roomID) {
                 //case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6157"); break;

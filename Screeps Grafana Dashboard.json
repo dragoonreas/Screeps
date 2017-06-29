@@ -1666,15 +1666,6 @@
               "yaxis": 2
             },
             {
-              "alias": "Tick Duration",
-              "bars": false,
-              "color": "#B7DBAB",
-              "fill": 0,
-              "lines": true,
-              "linewidth": 1,
-              "zindex": 2
-            },
-            {
               "alias": "Node Usage",
               "bars": false,
               "color": "#6ED0E0",
@@ -1723,6 +1714,29 @@
               "alias": "Tick Slept",
               "color": "#614D93",
               "zindex": 0
+            },
+            {
+              "alias": "Tick Duration",
+              "bars": false,
+              "color": "#B7DBAB",
+              "fill": 0,
+              "lines": true,
+              "linewidth": 1,
+              "zindex": 2
+            },
+            {
+              "alias": "Tick Duration (alt)",
+              "bars": false,
+              "color": "#629E51",
+              "fill": 0,
+              "lines": true,
+              "linewidth": 1,
+              "zindex": 2
+            },
+            {
+              "alias": "Ticks/Graph Update",
+              "color": "#2F575E",
+              "zindex": -3
             }
           ],
           "spaceLength": 10,
@@ -1792,6 +1806,12 @@
               "refId": "L",
               "target": "alias(transformNull(screeps.tickSlept, 0), 'Tick Slept')",
               "textEditor": false
+            },
+            {
+              "hide": true,
+              "refId": "M",
+              "target": "alias(scale(invert(perSecond(screeps.currentTick)), 1000),\"Tick Duration (alt)\")",
+              "textEditor": true
             }
           ],
           "thresholds": [],
@@ -2129,7 +2149,7 @@
             "max": true,
             "min": true,
             "rightSide": true,
-            "show": true,
+            "show": false,
             "total": false,
             "values": true
           },
@@ -2222,7 +2242,9 @@
             "mode": "time",
             "name": null,
             "show": true,
-            "values": []
+            "values": [
+              "total"
+            ]
           },
           "yaxes": [
             {
@@ -2539,16 +2561,17 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "screepspl.us",
-          "fill": 1,
+          "fill": 0,
           "id": 139,
           "legend": {
-            "avg": false,
-            "current": false,
+            "avg": true,
+            "current": true,
             "max": false,
             "min": false,
-            "show": false,
+            "rightSide": true,
+            "show": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
           "linewidth": 1,
@@ -2558,15 +2581,49 @@
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {
+              "alias": "Processed",
+              "color": "#BF1B00",
+              "fill": 1,
+              "legend": false,
+              "linewidth": 2,
+              "zindex": -1
+            },
+            {
+              "alias": "Processed/s",
+              "color": "#F9BA8F",
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "Processed/s MA",
+              "color": "#EAB839",
+              "legend": false,
+              "linewidth": 2,
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
           "spaceLength": 10,
           "span": 12,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
+              "hide": false,
               "refId": "A",
               "target": "alias(screeps.power, 'Processed')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(perSecond(screeps.power), 'Processed/s')",
+              "textEditor": false
+            },
+            {
+              "refId": "C",
+              "target": "alias(movingAverage(perSecond(screeps.power), '1hour'), 'Processed/s MA')",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -2600,7 +2657,7 @@
               "label": null,
               "logBase": 1,
               "max": null,
-              "min": null,
+              "min": "0",
               "show": true
             }
           ]
@@ -4166,7 +4223,7 @@
       "titleSize": "h6"
     },
     {
-      "collapse": false,
+      "collapse": true,
       "height": "175",
       "panels": [
         {
@@ -4975,7 +5032,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441362,
+      "repeatIteration": 1497753441368,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -5791,7 +5848,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441362,
+      "repeatIteration": 1497753441368,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -6607,7 +6664,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441362,
+      "repeatIteration": 1497753441368,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -7423,7 +7480,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441362,
+      "repeatIteration": 1497753441368,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -8239,7 +8296,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441362,
+      "repeatIteration": 1497753441368,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -9055,7 +9112,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441362,
+      "repeatIteration": 1497753441368,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -9871,7 +9928,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441362,
+      "repeatIteration": 1497753441368,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -10687,7 +10744,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1497753441362,
+      "repeatIteration": 1497753441368,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -10704,7 +10761,6 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
           "text": "All",
           "value": [
             "$__all"
@@ -10868,7 +10924,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -10899,5 +10955,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 185
+  "version": 191
 }

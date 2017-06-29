@@ -107,6 +107,7 @@ _.set(Memory.rooms, ["W86N29", "harvestRooms"], [
 ]);
 _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
     "W84N23"
+    , "W86N23"
     , "W85N25"
 ]);
 _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
@@ -293,7 +294,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: 0
+    , exporter: 1
 });
 _.set(Memory.rooms, ["W85N23", "creepMins"], {
     attacker: 0

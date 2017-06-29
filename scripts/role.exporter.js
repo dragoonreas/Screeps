@@ -48,6 +48,7 @@ let roleExporter = {
         
         if (creep.memory.working == false) {
             if (creep.room.name != sentFrom) {
+                creep.say(travelToIcons(creep) + sentFrom, true);
                 creep.travelTo(new RoomPosition(25, 25, sentFrom), {
                     range: 23
                 });
