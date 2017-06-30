@@ -113,7 +113,7 @@ let roleHarvester = {
                             "57ef9cad86f108ae6e60ca52" // W64N32
                             //, "57ef9cad86f108ae6e60ca50" // W64N32 (may cause blockages)
                             , "57ef9cc386f108ae6e60ccb7" // W63N31
-                            //, "57ef9c9886f108ae6e60c7d9" // W65N31 (now in a novice room)
+                            , "57ef9c9886f108ae6e60c7d9" // W65N31
                             , "57ef9cad86f108ae6e60ca54" // W64N31
                         ]
                         , "W55N31": [
@@ -127,8 +127,8 @@ let roleHarvester = {
                         , "W53N39": [
                             "579fa8a50700be0674d2e04c" // W54N39
                             , "579fa8a50700be0674d2e04d" // W54N39
-                            //, "579fa8b40700be0674d2e283" // W53N38 (now in an occupied novice room)
-                            //, "579fa8b40700be0674d2e281" // W53N38 (now in an occupied novice room)
+                            //, "579fa8b40700be0674d2e283" // W53N38 (now in an occupied room)
+                            //, "579fa8b40700be0674d2e281" // W53N38 (now in an occupied room)
                             , "579fa8c50700be0674d2e400" // W52N39
                             , "579fa8c50700be0674d2e402" // W52N39
                             , "579fa8b40700be0674d2e27d" // W53N39
@@ -356,12 +356,12 @@ let roleHarvester = {
                                 creep.say(travelToIcons(creep) + "W63N31", true);
                                 return;
                             }
-                            /*else if (sourceID == "57ef9c9886f108ae6e60c7d9") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "57ef9c9886f108ae6e60c7d9") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
                                 creep.travelTo(new RoomPosition(26, 42, "W65N31"));
                                 creep.say(travelToIcons(creep) + "W65N31", true);
                                 return;
-                            }*/
+                            }
                             else if (sourceID == "57ef9cad86f108ae6e60ca54") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
                                 creep.travelTo(new RoomPosition(40, 8, "W64N31"));

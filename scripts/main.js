@@ -1,4 +1,4 @@
-if (Memory.MonCPU == true) { console.log("start>init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+if (Memory.MonCPU == true) { console.log("globalStart>init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 
 // Setup globals and prototypes
 global.NODE_USAGE = { 
@@ -144,7 +144,7 @@ _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
 _.set(Memory.rooms, ["W64N31", "harvestRooms"], [
     "W64N32"
     , "W63N31"
-    //, "W65N31" // converted to a novice room
+    , "W65N31"
 ]);
 /*_.set(Memory.rooms, ["W55N31", "harvestRooms"], [
     "W56N31"
@@ -153,7 +153,7 @@ _.set(Memory.rooms, ["W64N31", "harvestRooms"], [
 ]);*/
 _.set(Memory.rooms, ["W53N39", "harvestRooms"], [
     "W54N39"
-    //, "W53N38" // converted to novice room
+    //, "W53N38" // now an occupied room
     , "W52N39"
 ]);
 /*_.set(Memory.rooms, ["W53N42", "harvestRooms"], [
@@ -294,7 +294,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: 1
+    , exporter: 0
 });
 _.set(Memory.rooms, ["W85N23", "creepMins"], {
     attacker: 0
@@ -465,14 +465,28 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , exporter: 0
 });
 
-if (Memory.MonCPU == true) { console.log("init>loop init:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+if (Memory.MonCPU == true) { console.log("init>loopStart:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 
 module.exports.loop = function () {
-    // TODO: Cache Memory in global to reuse when nodes aren't swapped between consecutive ticks (see pinned file in #share-thy-code channel in Screeps slack)
+    
+    let loopStartCPUUsed = Game.cpu.getUsed();
+    
+    if (global.LastMemory 
+        && NODE_USAGE.last == (Game.time - 1)) {
+        delete global.Memory;
+        global.Memory = global.LastMemory;
+        RawMemory._parsed = global.LastMemory;
+    }
+    else {
+        Memory;
+        global.LastMemory = RawMemory._parsed;
+    }
+    
+    if (Memory.MonCPU == true) { console.log("loopStart>memory:",loopStartCPUUsed.toFixed(2).toLocaleString()); }
     
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
     
-    if (Memory.MonCPU == true) { console.log("loop init>stats:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+    if (Memory.MonCPU == true) { console.log("memory>stats:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     if (NODE_USAGE.first == NODE_USAGE.last) {
         _.set(Memory, ["stats", "node", "hasReset"], 1);
