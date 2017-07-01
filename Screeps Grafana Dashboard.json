@@ -5032,7 +5032,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1498794893523,
+      "repeatIteration": 1498835239844,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -5848,7 +5848,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1498794893523,
+      "repeatIteration": 1498835239844,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -6664,7 +6664,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1498794893523,
+      "repeatIteration": 1498835239844,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -7480,7 +7480,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1498794893523,
+      "repeatIteration": 1498835239844,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -8296,7 +8296,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1498794893523,
+      "repeatIteration": 1498835239844,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -9112,7 +9112,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1498794893523,
+      "repeatIteration": 1498835239844,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -9928,7 +9928,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1498794893523,
+      "repeatIteration": 1498835239844,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -10744,7 +10744,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1498794893523,
+      "repeatIteration": 1498835239844,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -10955,5 +10955,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 194
+  "version": 195
 }

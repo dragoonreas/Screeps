@@ -36,6 +36,7 @@ module.exports = function(globalOpts = {}){
         defaultStuckValue: 3,
         reportThreshold:   50,
         visualisePathStyle:undefined,
+        endOnBorder:       false
     });
     class Traveler {
         constructor() {
@@ -98,27 +99,29 @@ module.exports = function(globalOpts = {}){
             _.defaults(options, {
                 ignoreCreeps: true,
                 range: 1,
+                endOnBorder: gOpts.endOnBorder,
                 maxOps: gOpts.maxOps,
                 obstacles: []
             });
             let origPos = (origin.pos || origin), destPos = (destination.pos || destination);
             let allowedRooms;
-            if (options.useFindRoute || (options.useFindRoute === undefined &&
-                Game.map.getRoomLinearDistance(origPos.roomName, destPos.roomName) > 2)) {
+            if (options.useFindRoute || (options.useFindRoute === undefined && Game.map.getRoomLinearDistance(origPos.roomName, destPos.roomName) > 2)) {
                 allowedRooms = this.findAllowedRooms(origPos.roomName, destPos.roomName, options);
             }
-            let newRange = _.min([options.range, destPos.x, 49 - destPos.x, destPos.y, 49 - destPos.y]);
+            let lowBorder = ((options.endOnBorder == false) ? 1 : 0);
+            let highBorder = ((options.endOnBorder == false) ? 48 : 49);
+            let newRange = _.min([options.range, Math.max(0, destPos.x - lowBorder), Math.max(0, highBorder - destPos.x), Math.max(0, destPos.y - lowBorder), Math.max(0, highBorder - destPos.y)]);
             let goals = [];
-            if (newRange != options.range) {
+            if (newRange != options.range) { // TODO: Find algorithm to fill the goal area with the least number of square goals (positions with ranges) instead of this block
                 if (newRange >= 0 && newRange <= 3) {
-                    let top = destPos.y - _.min([options.range, destPos.y]);
-                    let bottom = destPos.y + _.min([options.range, 49 - destPos.y]);
-                    let left = destPos.x - _.min([options.range, destPos.x]);
-                    let right = destPos.x + _.min([options.range, 49 - destPos.x]);
+                    let top = destPos.y - _.min([options.range, Math.max(0, destPos.y - lowBorder)]);
+                    let bottom = destPos.y + _.min([options.range, Math.max(0, highBorder - destPos.y)]);
+                    let left = destPos.x - _.min([options.range, Math.max(0, destPos.x - lowBorder)]);
+                    let right = destPos.x + _.min([options.range, Math.max(0, highBorder - destPos.x)]);
                     let areaWidth = right - left;
-                    let yOffset = bottom - destPos.y;
+                    let yOffset = bottom - destPos.y; // TODO: Figure out what this was/is for
                     for (let y = top; y <= bottom; ++y) {
-                        for (let x = left; x <= right; x += (((y == top) || (y == bottom)) ? 1 : areaWidth)) {
+                        for (let x = left; x <= right; x += (((y == top) || (y == bottom)) ? 1 : areaWidth)) { // NOTE: This actually makes a rectangular ring of goals around the target, not a filled in rectangle
                             goals.push({ pos: new RoomPosition(x, y, destPos.roomName), range: 0 });
                         }
                     }
@@ -130,6 +133,46 @@ module.exports = function(globalOpts = {}){
             if (goals.length == 0) {
                 goals.push({ pos: destPos, range: options.range });
             }
+            /*
+            // Room visuals to display goals for creeps
+            let origRoomPos = _.create(RoomPosition.prototype, origPos);
+            let executingRole = _.get(_.first(_.filter(Game.creeps, (c) => (c.pos.isEqualTo(origRoomPos)))), ["memory", "executingRole"], undefined);
+            if (executingRole != undefined) {
+                let theRoomVisual = new RoomVisual(destPos.roomName);
+                let goalStyle = {
+                    opacity: 0.1
+                };
+                switch (executingRole) {
+                    case "adaptable": goalStyle.fill = "#99440a"; break;
+                    case "attacker": goalStyle.fill = "#e24d42"; break;
+                    case "builder": goalStyle.fill = "#1f78c1"; break;
+                    case "claimer": goalStyle.fill = "#ba43a9"; break;
+                    case "collector": goalStyle.fill = "#fff"; break;
+                    case "demolisher": goalStyle.fill = "#052b51"; break;
+                    case "exporter": goalStyle.fill = "#f9ba8f"; break;
+                    case "harvester": goalStyle.fill = "#eab839"; break;
+                    case "hauler": goalStyle.fill = "#ef843c"; break;
+                    case "healer": goalStyle.fill = "#7eb26d"; break;
+                    case "hoarder": goalStyle.fill = "#fff"; break;
+                    case "miner": goalStyle.fill = "#967302"; break;
+                    case "powerHarvester": goalStyle.fill = "#58140c"; break;
+                    case "recyclable": goalStyle.fill = "#3f6833"; break;
+                    case "repairer": goalStyle.fill = "#6ed0e0"; break;
+                    case "scout": goalStyle.fill = "#dedaf7"; break;
+                    case "upgrader": goalStyle.fill = "#511749"; break;
+                    default: goalStyle.fill = "#fff"; break;
+                }
+                _.forEach(goals, (g) => {
+                    theRoomVisual.rect(
+                        g.pos.x - (g.range + 0.5)
+                        , g.pos.y - (g.range + 0.5)
+                        , g.range * 2 + 1
+                        , g.range * 2 + 1
+                        , goalStyle
+                    );
+                });
+            }
+            */
             let callback = (roomName) => {
                 if (options.roomCallback) {
                     let outcome = options.roomCallback(roomName, options.ignoreCreeps);
@@ -212,13 +255,14 @@ module.exports = function(globalOpts = {}){
             if (!destination) {
                 return ERR_INVALID_ARGS;
             }
+            _.defaults(options, {
+                endOnBorder: gOpts.endOnBorder,
+                range: 1
+            });
             // manage case where creep is nearby destination
-            let rangeToDestination = creepPos.getRangeTo(destPos);
-            if (rangeToDestination <= options.range) {
-                return OK;
-            }
-            else if (rangeToDestination <= 1) {
-                if (rangeToDestination === 1 && !options.range) {
+            let rangeToDestination = creepPos.getRangeTo(destPos); // NOTE: Range is Infinity when in a different room from the destination
+            if (rangeToDestination <= options.range && (options.endOnBorder === true || (creep.pos.x != 0 && creep.pos.x != 49 && creep.pos.y != 0 && creep.pos.y != 49))) {
+                if (rangeToDestination === 1 && options.range === 1) {
                     if (options.returnData) {
                         options.returnData.nextPos = destPos;
                     }
@@ -408,7 +452,7 @@ module.exports = function(globalOpts = {}){
             let bottom = ((_.get(exits, BOTTOM, undefined) == undefined) ? 48 : 49);
             let left = ((_.get(exits, LEFT, undefined) == undefined) ? 1 : 0);
             for (let y = top; y <= bottom; ++y) {
-                for (let x = left; x <= right; x += ((y % 49 == 0) ? 1 : 49)) {
+                for (let x = left; x <= right; x += ((y % 49 == 0) ? 1 : (49 - left))) {
                     if (matrix.get(x, y) < 0x03 && Game.map.getTerrainAt(x, y, room.name) != "wall") {
                         matrix.set(x, y, 0x03);
                     }
