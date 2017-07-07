@@ -102,8 +102,9 @@ for (let roomID in Game.rooms) {
 
 // Setup room memory objects for owned rooms
 _.set(Memory.rooms, ["W86N29", "harvestRooms"], [
-    "W86N28"
-    , "W85N29"
+    "W85N29"
+    , "W86N28"
+    , "W86N31"
 ]);
 _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
     "W84N23"
@@ -113,7 +114,8 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
 _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
     "W87N39"
     , "W88N39"
-    , "W87N41"
+    , "W86N41"
+    , "W85N41"
 ]);
 _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     "W86N38"
@@ -123,7 +125,7 @@ _.set(Memory.rooms, ["W86N43", "harvestRooms"], [
     "W87N43"
     , "W87N44"
     , "W85N45"
-    , "W85N43"
+    , "W87N45"
 ]);
 _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
     "W9N44"
@@ -262,8 +264,8 @@ _.set(Memory.rooms, ["W53N39", "repairerTypeMins"], {
 });*/
 _.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 2
+    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
