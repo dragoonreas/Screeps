@@ -1064,56 +1064,42 @@ module.exports.loop = function () {
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
                 _.sortByOrder(droppedResources, (dr) => (resourceWorth(dr.resourceType) * dr.amount), "desc");
+                let collectorCreeps = theRoom.find(FIND_MY_CREEPS, {
+                    filter: (c) => (
+                        c.spawning == false 
+                        &&  c.memory.droppedResourceID == undefined 
+                        && c.hits == c.hitsMax 
+                        && c.memory.speeds["2"] <= 2 
+                        && c.memory.role != "miner" 
+                        && c.memory.role != "attacker" 
+                        && c.memory.role != "powerHarvester"
+                        && c.memory.role != "adaptable" 
+                        && c.memory.role != "scout"
+                        && c.memory.role != "claimer" 
+                        && c.memory.role != "recyclable" 
+                        && c.carryCapacity > 0
+                )});
                 for (let droppedResource of droppedResources) {
 					let hasAssignedCreep = _.some(Game.creeps, (c) => (
 					    c.memory.droppedResourceID == droppedResource.id
                     ));
 					if (hasAssignedCreep == false) {
-                        let creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
-                            filter: (c) => (c.spawning == false 
-                                && c.memory.droppedResourceID == undefined 
-                                && c.hits == c.hitsMax 
-                                && c.memory.speeds["2"] <= 2 
-                                && c.memory.role != "miner" 
-                                && c.memory.role != "attacker" 
-                                && c.memory.role != "powerHarvester"
-                                && c.memory.role != "adaptable" 
-                                && c.memory.role != "scout"
-                                && c.memory.role != "claimer" 
-                                && c.memory.role != "recyclable" 
-                                && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount
+                        let creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                c.memory.droppedResourceID == undefined 
+                                && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
+                                && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                         )});
                         if (creep == undefined) {
-                            creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
-                                filter: (c) => (c.spawning == false 
-                                    && c.memory.droppedResourceID == undefined 
-                                    && c.hits == c.hitsMax 
-                                    && c.memory.speeds["2"] <= 2 
-                                    && c.memory.role != "miner" 
-                                    && c.memory.role != "attacker" 
-                                    && c.memory.role != "powerHarvester"
-                                    && c.memory.role != "adaptable" 
-                                    && c.memory.role != "scout"
-                                    && c.memory.role != "claimer" 
-                                    && c.memory.role != "recyclable" 
-                                    && c.carryCapacity > 0 
-                                    && _.sum(c.carry) == 0
+                            creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                    c.memory.droppedResourceID == undefined 
+                                    && _.sum(c.carry) == 0 
+                                    && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                             )});
                             if (creep == undefined) {
-                                creep = droppedResource.pos.findClosestByRange(FIND_MY_CREEPS, {
-                                    filter: (c) => (c.spawning == false 
-                                        && c.memory.droppedResourceID == undefined 
-                                        && c.hits == c.hitsMax 
-                                        && c.memory.speeds["2"] <= 2 
-                                        && c.memory.role != "miner" 
-                                        && c.memory.role != "attacker" 
-                                        && c.memory.role != "powerHarvester"
-                                        && c.memory.role != "adaptable" 
-                                        && c.memory.role != "scout"
-                                        && c.memory.role != "claimer" 
-                                        && c.memory.role != "recyclable" 
-                                        && c.carryCapacity > 0 
-                                        && _.sum(c.carry) < c.carryCapacity
+                                creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                        c.memory.droppedResourceID == undefined 
+                                        && _.sum(c.carry) < c.carryCapacity 
+                                        && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                 )});
                             }
                         }
