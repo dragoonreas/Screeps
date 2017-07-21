@@ -351,7 +351,7 @@ module.exports = function(globalOpts = {}){
                 if (ret.incomplete) {
                     //console.log(`TRAVELER: incomplete path for ${creep.name}`);
                     global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
-                    if (ret.ops < 2000 && options.useFindRoute === undefined && travelData.stuck < gOpts.defaultStuckValue) {
+                    if (ret.ops < 20000 && options.useFindRoute === undefined && travelData.stuck < gOpts.defaultStuckValue) {
                         options.useFindRoute = false;
                         cpu = Game.cpu.getUsed();
                         ret = this.findTravelPath(creep, destPos, options);
@@ -368,7 +368,12 @@ module.exports = function(globalOpts = {}){
                         global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
                     }
                 }
-                travelData.path = Traveler.serializePath(creepPos, ret.path);
+                if (ret.incomplete) {
+                    creep.moveTo(destPos, options);
+                }
+                else {
+                    travelData.path = Traveler.serializePath(creepPos, ret.path);
+                }
                 travelData.stuck = 0;
             }
             if (!travelData.path || travelData.path.length === 0) {
@@ -415,10 +420,10 @@ module.exports = function(globalOpts = {}){
                 }
             }
             for (let site of room.find(FIND_CONSTRUCTION_SITES)) {
-                if (((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == false) || site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) && matrix.get(site.pos.x, site.pos.y) < 0xfe) { // try not to block own (or possibly own) construction sites
+                if ((site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) && matrix.get(site.pos.x, site.pos.y) < 0xfe) { // try not to step on possible ally construction site
                     matrix.set(site.pos.x, site.pos.y, 0xfe);
                 }
-                else if (site.my == true || _.includes(Memory.nonAgressivePlayers, site.owner.username)) { // ensure we don't step on an ally construction site
+                else if ((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == true) || _.includes(Memory.nonAgressivePlayers, site.owner.username)) { // ensure we don't step on an ally construction site and don't block our own construction site
                     matrix.set(site.pos.x, site.pos.y, 0xff);
                 }
             }
@@ -571,7 +576,7 @@ module.exports = function(globalOpts = {}){
                 let dest = _.create(RoomPosition.prototype, {
                     x: _.last(path)[0]
                     , y: _.last(path)[1]
-                    , roomName: creep.room.name
+                    , roomName: _.get(creep.memory, ["_travel", "dest", "roomName"], creep.room.name)
                 });
                 if (dest.getRangeTo(goal) > 0) {
                     pathStyle.width = pathStyle.strokeWidth;

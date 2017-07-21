@@ -69,6 +69,8 @@ let roleDemolisher = {
                             && s.structureType != STRUCTURE_CONTROLLER 
                             && s.structureType != STRUCTURE_KEEPER_LAIR 
                             && s.structureType != STRUCTURE_POWER_BANK 
+                            && (s.structureType != STRUCTURE_RAMPART 
+                                || s.isPublic == false)
                             && _.sum(_.get(s, ["store"], { [RESOURCE_ENERGY]: 0 })) == 0 
                             && _.get(s, ["energy"], 0) == 0
                             && _.get(s, ["hits"], 0) > 0

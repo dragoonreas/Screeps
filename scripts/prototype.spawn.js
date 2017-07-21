@@ -139,6 +139,14 @@ let prototypeSpawn = function() {
                     creepMemory.roomSentTo = "W52N47";
                 }
             }
+            else if (this.room.name == "W52N47") {
+                if (Memory.rooms.W48N52.creepCounts.builder == 0 && Memory.rooms.W48N52.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W48N52";
+                }
+                /*else if (Memory.rooms.W42N51.creepCounts.builder == 0 && Memory.rooms.W42N51.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W42N51";
+                }*/
+            }
         }
         else if (roleName == "exporter") {
             if (this.room.name == "W86N29") {
@@ -169,7 +177,7 @@ let prototypeSpawn = function() {
                 creepMemory.roomSentTo = "W52N47";
             }
             else if (this.room.name == "W52N47") {
-                creepMemory.roomSentTo = "W53N47";
+                creepMemory.roomSentTo = "W48N51";
             }
         }
         else if (roleName == "claimer") {
@@ -261,6 +269,22 @@ let prototypeSpawn = function() {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     creepMemory.controllerID = "579fa8d40700be0674d2e575"; // harvest room
                 }
+                else {
+                    creepMemory.controllerID = "579fa8e90700be0674d2e742";
+                }
+            }
+            else if (this.room.name == "W48N52") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    creepMemory.controllerID = "579fa8e60700be0674d2e700"; // harvest room
+                }
+                else {
+                    creepMemory.controllerID = "579fa8f80700be0674d2e928";
+                }
+            }
+            else if (this.room.name == "W52N47") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    creepMemory.controllerID = "579fa8fa0700be0674d2e965"; // harvest room
+                }
             }
             let controllerRoom = _.get(Memory.controllers, [creepMemory.controllerID, "pos", "roomName"], "");
             if (_.includes(_.get(Memory.rooms, [this.room.name, "harvestRooms"], []), controllerRoom) == true && Game.time < _.get(Memory.rooms, [controllerRoom, "avoidTravelUntil"], 0)) {
@@ -319,7 +343,9 @@ let prototypeSpawn = function() {
                 || this.room.name == "W55N31" 
                 || this.room.name == "W53N39" 
                 || this.room.name == "W53N42" 
-                || this.room.name == "W52N47") { // these rooms have a source in range of the controller
+                || this.room.name == "W52N47" 
+                || this.room.name == "W48N52"
+                || this.room.name == "W42N51") { // these rooms have a source in range of the controller
                 moveRatio = 0;
                 bodyTemplate = [WORK]; // these upgraders also have at least one carry part that gets multiplied dynamically with avaliable energy later
             }
@@ -416,7 +442,7 @@ let prototypeSpawn = function() {
                 const TICKS_TO_UPGRADE = TOTAL_CARRY / ((bodyPartCounts[WORK] || 1) * UPGRADE_CONTROLLER_POWER);
                 const TOTAL_UPGRADER_PARTS_REQUIRED = ((SOURCE_ENERGY_CAPACITY / TOTAL_CARRY) * (TICKS_TO_FILL + TICKS_TO_UPGRADE)) / ENERGY_REGEN_TIME;
                 const UPGRADER_PART_MULTIPLIER_CAP = Math.ceil(TOTAL_UPGRADER_PARTS_REQUIRED / (_.get(Memory.rooms, [this.room.name, "creepMins", "upgrader"], 1) || 1));
-                partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * UPGRADER_PART_MULTIPLIER_CAP) / bodyCost);*/
+                partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * UPGRADER_PART_MULTIPLIER_CAP) / bodyCost); // NOTE: Still useful for rooms where controller is 4 tiles away from the source instead of 3*/
                 const TOTAL_UPGRADER_WORK_PARTS_REQUIRED = Math.ceil((SOURCE_ENERGY_CAPACITY / ENERGY_REGEN_TIME) / Math.min(HARVEST_POWER, UPGRADE_CONTROLLER_POWER));
                 const UPGRADER_WORK_PART_CAP = Math.ceil(TOTAL_UPGRADER_WORK_PARTS_REQUIRED / (_.get(Memory.rooms, [this.room.name, "creepMins", "upgrader"], 1) || 1));
                 // TODO: Figure out max needed carry capacity using constants

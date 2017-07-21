@@ -17,6 +17,8 @@ let roleClaimer = {
             , "579fa8a50700be0674d2e04b" // W54N39
             , "579fa8b40700be0674d2e27a" // W53N41
             , "579fa8d40700be0674d2e575" // W51N47
+            , "579fa8e60700be0674d2e700" // W49N52
+            , "579fa8fa0700be0674d2e965" // W41N51
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
             ROLES["recyclable"].run(creep);
@@ -94,6 +96,14 @@ let roleClaimer = {
                 creep.travelTo(new RoomPosition(29, 32, "W51N47"));
                 creep.say(travelToIcons(creep) + "W51N47", true);
             }
+            else if (creep.memory.controllerID == "579fa8e60700be0674d2e700") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(12, 43, "W49N52"));
+                creep.say(travelToIcons(creep) + "W49N52", true);
+            }
+            else if (creep.memory.controllerID == "579fa8fa0700be0674d2e965") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(42, 17, "W41N51"));
+                creep.say(travelToIcons(creep) + "W41N51", true);
+            }
             else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63cd") {
                 creep.travelTo(new RoomPosition(19, 19, "W86N39"));
                 creep.say(travelToIcons(creep) + "W86N39", true);
@@ -137,6 +147,14 @@ let roleClaimer = {
             else if (creep.memory.controllerID == "579fa8c40700be0674d2e3e9") {
                 creep.travelTo(new RoomPosition(35, 28, "W52N47"));
                 creep.say(travelToIcons(creep) + "W52N47", true);
+            }
+            else if (creep.memory.controllerID == "579fa8e90700be0674d2e742") {
+                creep.travelTo(new RoomPosition(38, 7, "W48N52"));
+                creep.say(travelToIcons(creep) + "W48N52", true);
+            }
+            else if (creep.memory.controllerID == "579fa8f80700be0674d2e928") {
+                creep.travelTo(new RoomPosition(26, 28, "W42N51"));
+                creep.say(travelToIcons(creep) + "W42N51", true);
             }
             else {
                 incrementConfusedCreepCount(creep);

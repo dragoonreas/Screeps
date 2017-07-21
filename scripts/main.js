@@ -115,7 +115,6 @@ _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
     "W87N39"
     , "W88N39"
     , "W86N41"
-    , "W85N41"
 ]);
 _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     "W86N38"
@@ -168,9 +167,21 @@ _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
     , "W53N47"
     , "W52N48"
 ]);
+_.set(Memory.rooms, ["W48N52", "harvestRooms"], [
+    "W49N52"
+    , "W48N53"
+    , "W48N51"
+]);
+_.set(Memory.rooms, ["W42N51", "harvestRooms"], [
+    "W41N51"
+    , "W41N49"
+    , "W39N51"
+]);
 /*
     Future Expansion Candidates:
-    - W46N67
+    - W9N53:
+        - source to controller: 4
+        - adjacent room/source: 1/1
 */
 
 /*
@@ -268,6 +279,20 @@ _.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
+});
+_.set(Memory.rooms, ["W48N52", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 0
+});
+_.set(Memory.rooms, ["W42N51", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 0
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -466,6 +491,34 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , builder: 1
     , exporter: 0
 });
+_.set(Memory.rooms, ["W48N52", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W48N52", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W48N52", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+    , exporter: 0
+});
+_.set(Memory.rooms, ["W42N51", "creepMins"], {
+    attacker: 0
+    , harvester: 6
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W42N51", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: 0
+    , scout: 0
+    , claimer: 0
+    , repairer: _.reduce(_.get(Memory.rooms, ["W42N51", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , builder: 1
+    , exporter: 0
+});
 
 if (Memory.MonCPU == true) { console.log("init>loopStart:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 
@@ -653,6 +706,7 @@ module.exports.loop = function () {
         , "W87N29" // TODO: Remove this when the rest of the code relating to this room's been removed
         , "W55N31"
         , "W53N42"
+        //, "W48N52"
     ];
     
     // Manage rooms and run towers
@@ -1382,6 +1436,10 @@ module.exports.loop = function () {
     _.set(Memory.rooms, ["W53N39", "creepMins", "adaptable"], ((
         /*(_.get(Memory.rooms, ["W53N42", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N42", "creepCounts", "adaptable"], -1) == 0) 
         || */(_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) 
+    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    _.set(Memory.rooms, ["W52N47", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W48N52", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W48N52", "creepCounts", "adaptable"], -1) == 0) 
+        //|| (_.get(Memory.rooms, ["W42N51", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W42N51", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
