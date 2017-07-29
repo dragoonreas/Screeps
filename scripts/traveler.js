@@ -49,6 +49,9 @@ module.exports = function(globalOpts = {}){
             let allowedRooms = { [origin]: true, [destination]: true };
             let ret = Game.map.findRoute(origin, destination, {
                 routeCallback: (roomName) => {
+                    if (Game.map.isRoomAvailable(roomName) == false) {
+                        return false;
+                    }
                     if (options.routeCallback) {
                         let outcome = options.routeCallback(roomName);
                         if (outcome !== undefined) {
@@ -174,6 +177,9 @@ module.exports = function(globalOpts = {}){
             }
             */
             let callback = (roomName) => {
+                if (Game.map.isRoomAvailable(roomName) == false) {
+                    return false;
+                }
                 if (options.roomCallback) {
                     let outcome = options.roomCallback(roomName, options.ignoreCreeps);
                     if (outcome !== undefined) {

@@ -154,37 +154,36 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "exporter") {
-            creepMemory.roomSentTo = this.room.name;
-            creepMemory.roomSentFrom = this.room.name;
-            /*if (this.room.name == "W86N29") {
-                creepMemory.roomSentTo = this.room.name;
-                creepMemory.roomSentFrom = "W83N33";
+            switch (this.room.name) {
+                /*"W86N29":
+                    creepMemory.roomSentTo = this.room.name;
+                    creepMemory.roomSentFrom = "W83N33";
+                    break;
+                "W86N43":
+                    creepMemory.roomSentTo = this.room.name;
+                    creepMemory.roomSentFrom = "W83N47";
+                    break;
+                "W64N31":
+                    creepMemory.roomSentTo = this.room.name;
+                    creepMemory.roomSentFrom = "W64N32";
+                    break;
+                "W52N47":
+                    creepMemory.roomSentTo = this.room.name;
+                    creepMemory.roomSentFrom = "W53N39";
+                    break;*/
+                default:
+                    creepMemory.roomSentTo = this.room.name;
+                    creepMemory.roomSentFrom = this.room.name;
+                    break;
             }
-            else if (this.room.name == "W86N43") {
-                creepMemory.roomSentTo = this.room.name;
-                creepMemory.roomSentFrom = "W83N47";
-            }
-            else if (this.room.name == "W64N31") {
-                creepMemory.roomSentTo = this.room.name;
-                creepMemory.roomSentFrom = "W64N32";
-            }
-            else if (this.room.name == "W52N47") {
-                creepMemory.roomSentTo = this.room.name;
-                creepMemory.roomSentFrom = "W53N39";
-            }*/
         }
         else if (roleName == "demolisher") {
-            if (this.room.name == "W86N29") {
-                creepMemory.roomSentTo = "W81N29";
-            }
-            else if (this.room.name == "W86N39") {
-                creepMemory.roomSentTo = "W87N39";
-            }
-            else if (this.room.name == "W53N39") {
-                creepMemory.roomSentTo = "W52N47";
-            }
-            else if (this.room.name == "W52N47") {
-                creepMemory.roomSentTo = "W48N51";
+            switch (this.room.name) {
+                "W86N29": creepMemory.roomSentTo = "W81N29"; break;
+                "W86N39": creepMemory.roomSentTo = "W87N39"; break;
+                "W53N39": creepMemory.roomSentTo = "W52N47"; break;
+                "W52N47": creepMemory.roomSentTo = "W48N51"; break;
+                default: creepMemory.roomSentTo = this.room.name; break;
             }
         }
         else if (roleName == "claimer") {
@@ -299,7 +298,7 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "powerHarvester") {
-            creepMemory.harvestRoom = { id: "W53N32", x: 25, y: 25 }; // TODO: Populate this automatically
+            creepMemory.harvestRoom = { id: this.room.name, x: 25, y: 25 }; // TODO: Populate this automatically
         }
         
         let energyAvaliable = this.room.energyCapacityAvailable;

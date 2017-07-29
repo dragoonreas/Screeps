@@ -21,7 +21,6 @@ let roleExporter = {
                 case "W86N39": sentTo = "W85N38"; break;
                 case "W85N38": sentTo = "W86N43"; break;
                 case "W86N43": sentTo = "W86N39"; break;
-                case "W9N45": sentTo = "W9N45"; break;
                 case "W81N29": sentTo = "W86N29"; break;
                 case "W72N28": sentTo = "W86N29"; break;
                 case "W64N31": sentTo = "W86N29"; break;
@@ -30,7 +29,7 @@ let roleExporter = {
                 case "W53N42": sentTo = "W53N39"; break;
                 case "W52N47": sentTo = "W53N39"; break;
                 case "W48N52": sentTo = "W52N47"; break;
-                case "W42N51": sentTo = "W42N51"; break;
+                default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {
                 creep.memory.roomSentTo = sentTo;

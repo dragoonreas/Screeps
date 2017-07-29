@@ -32,7 +32,7 @@ let roleClaimer = {
                 if ((_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") && canAttack == false) { // TODO: Add additional checks to make sure we're not accidently attacking an ally
                     creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
                 }
-                else if (creep.memory.controllerID == "577b935b0f9d51615fa48076" && creep.room.name != "W9N45") {
+                else if (creep.memory.controllerID == "577b935b0f9d51615fa48076" && creep.room.name != "W9N45") { // NOTE: Any controllers that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
