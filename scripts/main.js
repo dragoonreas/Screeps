@@ -167,11 +167,11 @@ _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
     , "W53N47"
     , "W52N48"
 ]);
-_.set(Memory.rooms, ["W48N52", "harvestRooms"], [
+/*_.set(Memory.rooms, ["W48N52", "harvestRooms"], [
     "W49N52"
     , "W48N53"
     , "W48N51"
-]);
+]);*/
 _.set(Memory.rooms, ["W42N51", "harvestRooms"], [
     "W41N51"
     , "W41N49"
@@ -280,19 +280,19 @@ _.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
-_.set(Memory.rooms, ["W48N52", "repairerTypeMins"], {
+/*_.set(Memory.rooms, ["W48N52", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 0
-});
+});*/
 _.set(Memory.rooms, ["W42N51", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
-    , all: 0
+    , all: 1
 });
 
 // NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
@@ -491,7 +491,7 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , builder: 1
     , exporter: 0
 });
-_.set(Memory.rooms, ["W48N52", "creepMins"], {
+/*_.set(Memory.rooms, ["W48N52", "creepMins"], {
     attacker: 0
     , harvester: 6
     , powerHarvester: 0
@@ -504,7 +504,7 @@ _.set(Memory.rooms, ["W48N52", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W48N52", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
-});
+});*/
 _.set(Memory.rooms, ["W42N51", "creepMins"], {
     attacker: 0
     , harvester: 6
@@ -514,7 +514,7 @@ _.set(Memory.rooms, ["W42N51", "creepMins"], {
     , adaptable: 0
     , demolisher: 0
     , scout: 0
-    , claimer: 0
+    , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W42N51", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
@@ -542,6 +542,8 @@ module.exports.loop = function () {
     require("prototype.memory")(); // TODO: Try and find a way to make this a prototype of memory so this doesn't have to be done each tick
     
     if (Memory.MonCPU == true) { console.log("memory>stats:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+    
+    require("prototype.game.market")();
     
     if (NODE_USAGE.first == NODE_USAGE.last) {
         _.set(Memory, ["stats", "node", "hasReset"], 1);
@@ -604,24 +606,24 @@ module.exports.loop = function () {
     if (Memory.MonCPU == true) { console.log("stats>ta:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     // Update TooAngel 
+    let taDealingFromRoom = "W86N29";
+    let taDealingToRoom = "E33N15";
     Memory.TooAngelDealings.isFriendly = (Memory.TooAngelDealings.idiotRating < 0); // TODO: Since more than just TooAngel uses this AI, need to setup an array of players to use this with
-    if (
-        Memory.TooAngelDealings.isFriendly == false 
-        && Memory.TooAngelDealings.lastIdiotRating != Memory.TooAngelDealings.idiotRating
-    ) {
-        let energySellOrders = Game.market.getAllOrders({
-          type: ORDER_SELL
-          , resourceType: RESOURCE_ENERGY
-        });
+    if (Memory.TooAngelDealings.isFriendly == false 
+        && Memory.TooAngelDealings.lastIdiotRating != Memory.TooAngelDealings.idiotRating) {
+        let energySellOrders = Game.market.orderCache(ORDER_SELL, RESOURCE_ENERGY);
         let energyPrice = _.get(_.min(energySellOrders, "price"), "price", 0);
         Memory.TooAngelDealings.energyToFriendly = (parseInt(Memory.TooAngelDealings.idiotRating) + 1) / energyPrice;
-        Memory.TooAngelDealings.totalCost = Memory.TooAngelDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngelDealings.energyToFriendly, "W86N29", "E33N15"); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
+        Memory.TooAngelDealings.totalCost = Memory.TooAngelDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngelDealings.energyToFriendly, taDealingFromRoom, taDealingToRoom); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
         Memory.TooAngelDealings.lastIdiotRating = Memory.TooAngelDealings.idiotRating;
     }
     
-    let dealingsTerminal = Game.rooms["W86N29"].terminal;
-    if (dealingsTerminal != undefined && Memory.TooAngelDealings.isFriendly == false && dealingsTerminal != undefined && dealingsTerminal.store[RESOURCE_ENERGY] >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngelDealings.totalCost)) {
-        if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngelDealings.energyToFriendly, "E33N15", "brain.isFriend('dragoonreas') == true?") == OK) {
+    let dealingsTerminal = _.get(Game.rooms, [taDealingFromRoom, "terminal"], undefined);
+    if (dealingsTerminal != undefined 
+        && Memory.TooAngelDealings.isFriendly == false 
+        && dealingsTerminal != undefined 
+        && dealingsTerminal.store[RESOURCE_ENERGY] >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngelDealings.totalCost)) {
+        if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngelDealings.energyToFriendly, taDealingToRoom, "brain.isFriend('dragoonreas') == true?") == OK) {
             console.log("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
             Game.notify("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
             Memory.TooAngelDealings.idiotRating = -1;
@@ -706,7 +708,7 @@ module.exports.loop = function () {
         , "W87N29" // TODO: Remove this when the rest of the code relating to this room's been removed
         , "W55N31"
         , "W53N42"
-        //, "W48N52"
+        , "W48N52"
     ];
     
     // Manage rooms and run towers
@@ -1173,7 +1175,7 @@ module.exports.loop = function () {
         
         // Run towers in the room
         let towerTargets = [];
-        let numRoadRepairers = _.get(Memory.rooms, [roomID, "repairerTypeMins", STRUCTURE_ROAD], 0);
+        let numRoadRepairers = _.get(Memory.rooms, [roomID, "repairerTypeCounts", STRUCTURE_ROAD], 0);
 		for (let towerID in towers) {
             let tower = towers[towerID];
             
@@ -1225,6 +1227,7 @@ module.exports.loop = function () {
 		    console.log(c + " tower(s) in " + roomID + " attacking hostile from " + t)
         ));
         
+        let requiredPower = 0;
         if (_.get(theRoom, ["controller", "my"], false) == true && _.get(theRoom, ["controller", "level"], 0) == 8) {
             let observer = _.first(theRoom.find(FIND_MY_STRUCTURES, { filter: (s) => (s.structureType == STRUCTURE_OBSERVER) })); // TODO: Store this structure id in room memory
             if (false && observer != undefined && Game.cpu.bucket > 7500) { // TODO: Turn this back on once sparse room memory has been implemented and room positions are stored as world position strings instead of objects in memory
@@ -1259,10 +1262,78 @@ module.exports.loop = function () {
             }
             
             let thePowerSpawn = theRoom.powerSpawn;
-            if (_.get(thePowerSpawn, ["my"], false) == true 
-                && thePowerSpawn.power > 0 
-                && thePowerSpawn.energy >= POWER_SPAWN_ENERGY_RATIO) {
-                thePowerSpawn.processPower();
+            if (_.get(thePowerSpawn, ["my"], false) == true) {
+                if (thePowerSpawn.power > 0 
+                    && thePowerSpawn.energy >= POWER_SPAWN_ENERGY_RATIO) {
+                    thePowerSpawn.processPower();
+                }
+                else {
+                    let terminalPower = _.get(theRoom, ["terminal", "store", RESOURCE_POWER], 0);
+                    let storagePower = _.get(theRoom, ["storage", "store", RESOURCE_POWER], 0);
+                    let creepPower = _.sum(Game.creeps, (c) => (c.memory.roomID == roomID ? _.get(c, ["carry", RESOURCE_POWER], 0) : 0));
+                    requiredPower = Math.floor(thePowerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - (thePowerSpawn.power + terminalPower + storagePower + creepPower);
+                }
+            }
+        }
+        
+        if (Game.cpu.bucket > 7500 
+            && _.get(theRoom, ["controller", "my"], false) == true 
+            && _.get(theRoom, ["controller", "level"], 0) >= 6 
+            && _.get(theRoom, ["terminal", "my"], false) == true
+            && theRoom.terminal.cooldown == 0) {
+            let theTerminal = theRoom.terminal;
+            let madeDeal = false;
+            for (let resourceName in theTerminal.store) {
+                let resourceCount = theTerminal.store[resourceName];
+                if (resourceCount > 0 
+                    && resourceName != RESOURCE_ENERGY 
+                    && resourceName != RESOURCE_POWER) {
+                    let buyOrders = Game.market.orderCache(ORDER_BUY, resourceName);
+                    if (buyOrders.length > 0) {
+                        buyOrders = _.groupBy(buyOrders, (o) => (o.price));
+                        buyOrders = _.max(buyOrders, (v, k) => (k));
+                        let buyOrder = _.min(buyOrders, (o) => (
+                            Game.market.calcTransactionCost(resourceCount, roomID, o.roomName)
+                        ));
+                        let amountToSend = Math.min(resourceCount, buyOrder.amount);
+                        let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
+                        if (energyCost <= theTerminal.store[RESOURCE_ENERGY]) {
+                            let result = Game.market.deal(buyOrder.id, amountToSend, roomID);
+                            if (result == OK) {
+                                madeDeal = true;
+                                console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend) + " (" + buyOrder.price + " each) credits");
+                                break; // Each terminal can only do one deal per tick
+                            }
+                        }
+                    }
+                }
+            }
+            
+            let freeSpace = theTerminal.storeCapacity - _.sum(theTerminal.store);
+            if (madeDeal == false 
+                && requiredPower >= 10 
+                && freeSpace >= 10) {
+                let sellOrders = _.filter(Game.market.orderCache(ORDER_SELL, RESOURCE_POWER), (o) => (
+                    o.price < 2
+                ));
+                if (sellOrders.length > 0) {
+                    sellOrders = _.groupBy(sellOrders, (o) => (o.price));
+                    sellOrders = _.min(sellOrders, (v, k) => (k))
+                    let sellOrder = _.min(sellOrders, (o) => (
+                        Game.market.calcTransactionCost(requiredPower, roomID, o.roomName)
+                    ));
+                    let amountToBuy = _.min([requiredPower, freeSpace, sellOrder.amount]);
+                    let energyCost = Game.market.calcTransactionCost(amountToBuy, roomID, sellOrder.roomName);
+                    if (energyCost <= theTerminal.store[RESOURCE_ENERGY]) {
+                        let result = Game.market.deal(sellOrder.id, amountToBuy, roomID);
+                        if (result == OK) {
+                            console.log("Buying " + amountToBuy + " " + RESOURCE_POWER + " from " + sellOrder.roomName + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (sellOrder.price * amountToBuy) + " (" + sellOrder.price + " each) credits");
+                        }
+                        else {
+                            console.log(roomID, result);
+                        }
+                    }
+                }
             }
         }
     }
@@ -1429,6 +1500,9 @@ module.exports.loop = function () {
         (_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W85N38", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N38", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    _.set(Memory.rooms, ["W9N45", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W9N45", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W9N45", "creepCounts", "adaptable"], -1) == 0)
+    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W64N31", "creepMins", "adaptable"], ((
         /*(_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) 
         || */(_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N39", "creepCounts", "adaptable"], -1) == 0) 
@@ -1438,8 +1512,8 @@ module.exports.loop = function () {
         || */(_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["W52N47", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W48N52", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W48N52", "creepCounts", "adaptable"], -1) == 0) 
-        //|| (_.get(Memory.rooms, ["W42N51", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W42N51", "creepCounts", "adaptable"], -1) == 0)
+        /*(_.get(Memory.rooms, ["W48N52", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W48N52", "creepCounts", "adaptable"], -1) == 0) 
+        || */(_.get(Memory.rooms, ["W42N51", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W42N51", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

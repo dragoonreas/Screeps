@@ -86,7 +86,7 @@ let roleScout = {
             }
             else if (creep.memory.roomID == "W52N47" || creep.memory.roomSentTo == "W42N51") {
                 let waypoints = [
-                    "W60N50"
+                    "W50N50"
                     , "W42N51"
                 ];
                 if (creep.memory.waypoint < waypoints.length && creep.room.name == waypoints[creep.memory.waypoint]) {
@@ -94,10 +94,10 @@ let roleScout = {
                 }
                 
                 if (creep.memory.waypoint == 0) {
-                    creep.travelTo(new RoomPosition(25, 25, "W60N50"), { 
+                    creep.travelTo(new RoomPosition(25, 25, "W50N50"), { 
                         range: 23
                     });
-                    creep.say(travelToIcons(creep) + "W60N50", true);
+                    creep.say(travelToIcons(creep) + "W50N50", true);
                 }
                 else if (creep.memory.waypoint == 1 || creep.pos.isNearTo(26, 28) == false) {
                     creep.travelTo(new RoomPosition(26, 28, "W42N51"));

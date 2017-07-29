@@ -65,7 +65,13 @@ let roleExporter = {
                     || _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") {
                     if (theStorage != undefined 
                         && _.sum(theStorage.store) > 0 
-                        && theStorage.my == false) {
+                        && (theStorage.my == false
+                            || (sentTo == sentFrom 
+                                && _.sum(theStorage.store) > theStorage.store[RESOURCE_ENERGY] 
+                                && theTerminal != undefined 
+                                && theTerminal.my == true 
+                                && _.sum(theTerminal.store) < theTerminal.storeCapacity
+                                && (_.sum(theTerminal.store) - theTerminal.store[RESOURCE_ENERGY]) < Math.min((theTerminal.storeCapacity - theTerminal.store[RESOURCE_ENERGY]), (theTerminal.storeCapacity / 2))))) {
                         let resourceType = _.max(_.keys(theStorage.store), (r) => (resourceWorth(r)));
                         let err = creep.withdraw(theStorage, resourceType);
                         if (err == ERR_NOT_IN_RANGE) {
@@ -141,25 +147,9 @@ let roleExporter = {
                         ROLES["hoarder"].run(creep);
                     }
                     else {
-                        let theStorage = _.get(Game.rooms, [sentTo, "storage"], undefined);
                         let theTerminal = _.get(Game.rooms, [sentTo, "terminal"], undefined);
-                        if (theStorage != undefined 
-                            && _.sum(theStorage.store) < theStorage.storeCapacity 
-                            && theStorage.my == true) {
-                            for (let resourceType in creep.carry) {
-                                let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
-                                if (err == ERR_NOT_IN_RANGE) {
-                                    creep.travelTo(theStorage);
-                                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
-                                    break;
-                                }
-                                else if (err == OK) {
-                                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
-                                    break;
-                                }
-                            }
-                        }
-                        else if (theTerminal != undefined 
+                        let theStorage = _.get(Game.rooms, [sentTo, "storage"], undefined);
+                        if (theTerminal != undefined 
                             && _.sum(theTerminal.store) < theTerminal.storeCapacity 
                             && theTerminal.my == true) {
                             for (let resourceType in creep.carry) {
@@ -171,6 +161,22 @@ let roleExporter = {
                                 }
                                 else if (err == OK) {
                                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
+                                    break;
+                                }
+                            }
+                        }
+                        else if (theStorage != undefined 
+                            && _.sum(theStorage.store) < theStorage.storeCapacity 
+                            && theStorage.my == true) {
+                            for (let resourceType in creep.carry) {
+                                let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
+                                if (err == ERR_NOT_IN_RANGE) {
+                                    creep.travelTo(theStorage);
+                                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
+                                    break;
+                                }
+                                else if (err == OK) {
+                                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
                                     break;
                                 }
                             }

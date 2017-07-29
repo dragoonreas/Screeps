@@ -95,7 +95,8 @@ let roleAdaptable = {
                     || creep.memory.roomID == "W55N31") { // Allows these creeps to demolish in the room they're sent to
                     creep.memory.roomSentFrom = undefined;
                 }
-                else if (_.get(Memory, ["rooms", sentTo, "creepCounts", "builder"], 0) >= _.get(Memory, ["rooms", sentTo, "creepMins", "builder"], 0)) {
+                else if (_.get(Memory, ["rooms", sentTo, "creepCounts", "builder"], 0) >= _.get(Memory, ["rooms", sentTo, "creepMins", "builder"], 0) 
+                    && _.get(creep.room, ["controller", "level"], 0) > 1) {
                     let builders = _.filter(Game.creeps, (c) => (
                         c.memory.roomID == sentTo 
                         && c.memory.role == "builder"

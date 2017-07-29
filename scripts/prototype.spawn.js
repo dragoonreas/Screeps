@@ -123,6 +123,11 @@ let prototypeSpawn = function() {
                     creepMemory.roomSentTo = "W85N38";
                 }
             }
+            else if (this.room.name == "W9N45") {
+                if (Memory.rooms.W9N45.creepCounts.builder == 0 && Memory.rooms.W9N45.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W9N45";
+                }
+            }
             else if (this.room.name == "W64N31") {
                 /*if (Memory.rooms.W55N31.creepCounts.builder == 0 && Memory.rooms.W55N31.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W55N31";
@@ -140,16 +145,18 @@ let prototypeSpawn = function() {
                 }
             }
             else if (this.room.name == "W52N47") {
-                if (Memory.rooms.W48N52.creepCounts.builder == 0 && Memory.rooms.W48N52.creepCounts.adaptable == 0) {
+                /*if (Memory.rooms.W48N52.creepCounts.builder == 0 && Memory.rooms.W48N52.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W48N52";
                 }
-                /*else if (Memory.rooms.W42N51.creepCounts.builder == 0 && Memory.rooms.W42N51.creepCounts.adaptable == 0) {
+                else */if (Memory.rooms.W42N51.creepCounts.builder == 0 && Memory.rooms.W42N51.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W42N51";
-                }*/
+                }
             }
         }
         else if (roleName == "exporter") {
-            if (this.room.name == "W86N29") {
+            creepMemory.roomSentTo = this.room.name;
+            creepMemory.roomSentFrom = this.room.name;
+            /*if (this.room.name == "W86N29") {
                 creepMemory.roomSentTo = this.room.name;
                 creepMemory.roomSentFrom = "W83N33";
             }
@@ -164,7 +171,7 @@ let prototypeSpawn = function() {
             else if (this.room.name == "W52N47") {
                 creepMemory.roomSentTo = this.room.name;
                 creepMemory.roomSentFrom = "W53N39";
-            }
+            }*/
         }
         else if (roleName == "demolisher") {
             if (this.room.name == "W86N29") {
@@ -281,7 +288,7 @@ let prototypeSpawn = function() {
                     creepMemory.controllerID = "579fa8f80700be0674d2e928";
                 }
             }
-            else if (this.room.name == "W52N47") {
+            else if (this.room.name == "W42N51") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     creepMemory.controllerID = "579fa8fa0700be0674d2e965"; // harvest room
                 }
