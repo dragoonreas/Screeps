@@ -155,19 +155,19 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "exporter") {
             switch (this.room.name) {
-                /*"W86N29":
+                /*case "W86N29":
                     creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = "W83N33";
                     break;
-                "W86N43":
+                case "W86N43":
                     creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = "W83N47";
                     break;
-                "W64N31":
+                case "W64N31":
                     creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = "W64N32";
                     break;
-                "W52N47":
+                case "W52N47":
                     creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = "W53N39";
                     break;*/
@@ -179,10 +179,10 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "demolisher") {
             switch (this.room.name) {
-                "W86N29": creepMemory.roomSentTo = "W81N29"; break;
-                "W86N39": creepMemory.roomSentTo = "W87N39"; break;
-                "W53N39": creepMemory.roomSentTo = "W52N47"; break;
-                "W52N47": creepMemory.roomSentTo = "W48N51"; break;
+                case "W86N29": creepMemory.roomSentTo = "W81N29"; break;
+                case "W86N39": creepMemory.roomSentTo = "W87N39"; break;
+                case "W53N39": creepMemory.roomSentTo = "W52N47"; break;
+                case "W52N47": creepMemory.roomSentTo = "W48N51"; break;
                 default: creepMemory.roomSentTo = this.room.name; break;
             }
         }
