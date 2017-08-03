@@ -142,6 +142,22 @@ let prototypeRoom = function() {
         });
     }
     
+    if (Room.prototype.canHarvestMineral == undefined) { // NOTE: Must be defined after global.defineCachedGetter
+        defineCachedGetter(Room.prototype, "canHarvestMineral", (r) => {
+            let theMineral = _.first(r.find(FIND_MINERALS, { filter: (m) => (
+                        m.mineralAmount > 0
+            )}));
+            if (theMineral == undefined) { return false; }
+            let theExtractor = _.first(_.filter(theMineral.pos.lookFor(LOOK_STRUCTURES), (s) => (
+                            s.structureType == STRUCTURE_EXTRACTOR 
+                            && (_.get(s, ["owner", "username"], undefined) === undefined 
+                                || (_.get(s, ["room", "controller", "my"], false) == true 
+                                    && _.get(s, ["room", "controller", "level"], 0) >= _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_EXTRACTOR], (v) => (v > 0))))
+            )));
+            return (theExtractor != undefined);
+        });
+    }
+    
     if (Room.prototype.checkForDrops == undefined) {
         Object.defineProperty(Room.prototype, "checkForDrops", {
             get: function() {

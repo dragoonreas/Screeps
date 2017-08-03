@@ -434,7 +434,8 @@ let prototypeSpawn = function() {
         if (roleName == "miner") {
             partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * MINER_WORK_PART_CAP) / bodyCost);
         }
-        else if (roleName == "exporter" 
+        else if (roleName == "rockhound" 
+            || roleName == "exporter" 
             || roleName == "adaptable" 
             || roleName == "demolisher" 
             || roleName == "attacker" 

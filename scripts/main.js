@@ -124,7 +124,6 @@ _.set(Memory.rooms, ["W86N43", "harvestRooms"], [
     "W87N43"
     , "W87N44"
     , "W85N45"
-    , "W87N45"
 ]);
 _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
     "W9N44"
@@ -313,7 +312,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     attacker: 0
     , harvester: 4
     , powerHarvester: 0
-    , upgrader: 2
+    , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
     , demolisher: 0
@@ -322,6 +321,7 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W86N29", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["W85N23", "creepMins"], {
     attacker: 0
@@ -336,6 +336,7 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W85N23", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["W86N39", "creepMins"], {
     attacker: 0
@@ -350,6 +351,7 @@ _.set(Memory.rooms, ["W86N39", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W86N39", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["W85N38", "creepMins"], {
     attacker: 0
@@ -364,6 +366,7 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W85N38", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["W86N43", "creepMins"], {
     attacker: 0
@@ -378,6 +381,7 @@ _.set(Memory.rooms, ["W86N43", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W86N43", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["W9N45", "creepMins"], {
     attacker: 0
@@ -392,6 +396,7 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W9N45", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W81N29", "creepMins"], {
     attacker: 0
@@ -406,6 +411,7 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W81N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W81N29", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 /*_.set(Memory.rooms, ["W72N28", "creepMins"], {
     attacker: 0
@@ -420,6 +426,7 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W72N28", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W72N28", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["W64N31", "creepMins"], {
     attacker: 0
@@ -434,6 +441,7 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0//(((_.get(Game.rooms, ["W64N31", "terminal", "my"], true) == false) && (_.sum(_.get(Game.rooms, ["W64N31", "terminal", "store"], { [RESOURCE_ENERGY]: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0)
+    , rockhound: (_.get(Game.rooms, ["W64N31", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W55N31", "creepMins"], {
     attacker: 0
@@ -448,6 +456,7 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W55N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W55N31", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["W53N39", "creepMins"], {
     attacker: 0
@@ -462,6 +471,7 @@ _.set(Memory.rooms, ["W53N39", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W53N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W53N39", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W53N42", "creepMins"], {
     attacker: 0
@@ -476,6 +486,7 @@ _.set(Memory.rooms, ["W53N39", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W53N42", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W53N42", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["W52N47", "creepMins"], {
     attacker: 0
@@ -490,6 +501,7 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W52N47", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W52N47", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W48N52", "creepMins"], {
     attacker: 0
@@ -504,6 +516,7 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W48N52", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W48N52", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["W42N51", "creepMins"], {
     attacker: 0
@@ -518,6 +531,7 @@ _.set(Memory.rooms, ["W42N51", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["W42N51", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
+    , rockhound: (_.get(Game.rooms, ["W42N51", "canHarvestMineral"], false) ? 1 : 0)
 });
 
 if (Memory.MonCPU == true) { console.log("init>loopStart:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -1119,11 +1133,11 @@ module.exports.loop = function () {
             theRoom.checkForDrops = false;
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
             if (droppedResources.length > 0) {
-                _.sortByOrder(droppedResources, (dr) => (resourceWorth(dr.resourceType) * dr.amount), "desc");
+                droppedResources = _.sortByOrder(droppedResources, (dr) => (resourceWorth(dr.resourceType) * dr.amount), "desc");
                 let collectorCreeps = theRoom.find(FIND_MY_CREEPS, {
                     filter: (c) => (
                         c.spawning == false 
-                        &&  c.memory.droppedResourceID == undefined 
+                        && c.memory.droppedResourceID == undefined 
                         && c.hits == c.hitsMax 
                         && c.memory.speeds["2"] <= 2 
                         && c.memory.role != "miner" 
@@ -1367,7 +1381,8 @@ module.exports.loop = function () {
         if (creep.memory.role != "attacker" 
             && creep.memory.role != "powerHarvester") {
             if (creep.hits < creep.hitsMax 
-                && creep.memory.role != "adaptable") {
+                && creep.memory.role != "adaptable" 
+                && creep.memory.role != "healer") { // TODO: Check if creep has active heal parts instead
                 creep.memory.droppedResourceID = undefined;
                 ROLES["recyclable"].run(creep);
                 runningRole = true;
@@ -1378,6 +1393,7 @@ module.exports.loop = function () {
             }
             else if (_.sum(creep.carry) > creep.carry[RESOURCE_ENERGY] 
                 && creep.memory.role != "exporter" 
+                && creep.memory.role != "rockhound" 
                 && (creep.memory.role != "builder" 
                     || ((_.sum(creep.carry) - (creep.carry[RESOURCE_POWER] || 0)) > creep.carry[RESOURCE_ENERGY]))
                 && ((theStorage != undefined 
@@ -1395,11 +1411,12 @@ module.exports.loop = function () {
                     filter: (c) => (c.hits < c.hitsMax
                 )}); // TODO: Also heal ally creeps
                 if (target != undefined) {
-                    if (creep.heal(target) == ERR_NOT_IN_RANGE) {
+                    let err = creep.heal(target);
+                    if (err == ERR_NOT_IN_RANGE) {
                         creep.rangedHeal(target);
                         creep.travelTo(target);
                     }
-                    else {
+                    else if (err != OK) {
                         creep.rangedHeal(target);
                     }
                 }

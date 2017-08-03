@@ -15,6 +15,7 @@ let globals = function() {
         , builder: require("role.builder")
         , claimer: require("role.claimer")
         , exporter: require("role.exporter")
+        , rockhound: require("role.rockhound")
         , recyclable: require("role.recyclable")
     }
     
