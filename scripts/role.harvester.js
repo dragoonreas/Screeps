@@ -79,12 +79,12 @@ let roleHarvester = {
                             , "5873bbc711e3e4361b4d6731"
                         ]
                         , "W86N43": [
-                            "5873bb9311e3e4361b4d612d"
+                            /*"5873bb9311e3e4361b4d612d"
                             , "5873bb9311e3e4361b4d612b"
                             , "5873bbc611e3e4361b4d6715"
                             , "5873bbc611e3e4361b4d6713"
                             , "5873bbc611e3e4361b4d6714"
-                            , "5873bbaa11e3e4361b4d63c4"
+                            , */"5873bbaa11e3e4361b4d63c4"
                         ]
                         , "W9N45": [
                             "577b935b0f9d51615fa48078"
@@ -657,8 +657,12 @@ let roleHarvester = {
                 }
             }
             
-            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
             let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
+            let terminalEnergy = _.get(theTerminal, ["store", RESOURCE_ENERGY], 0);
+            terminalEnergy = _.isFinite(terminalEnergy) ? terminalEnergy : 0;
+            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
+            let storageEnergy = _.get(theStorage, ["store", RESOURCE_ENERGY], 0);
+            storageEnergy = _.isFinite(storageEnergy) ? storageEnergy : 0;
             let thePowerSpawn = _.get(Game.rooms, [creep.memory.roomID, "powerSpawn"], undefined);
             if (structure != undefined) {
                 let err = creep.transfer(structure, RESOURCE_ENERGY);
@@ -675,9 +679,9 @@ let roleHarvester = {
                 }
             }
             else if (theTerminal != undefined
-                     && theTerminal.store[RESOURCE_ENERGY] < Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + theTerminal.store[RESOURCE_ENERGY]))
+                     && terminalEnergy < Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy))
                      && theTerminal.my == true) {
-                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + theTerminal.store[RESOURCE_ENERGY])) - theTerminal.store[RESOURCE_ENERGY]));
+                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) - terminalEnergy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
@@ -694,9 +698,9 @@ let roleHarvester = {
             else if (creep.memory.roomID == "W86N29"
                      && theTerminal != undefined
                      && Memory.TooAngelDealings.isFriendly == false
-                     && theTerminal.store[RESOURCE_ENERGY] < Memory.TooAngelDealings.totalCost
+                     && terminalEnergy < Memory.TooAngelDealings.totalCost
                      && theTerminal.my == true) {
-                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Memory.TooAngelDealings.totalCost - theTerminal.store[RESOURCE_ENERGY]));
+                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Memory.TooAngelDealings.totalCost - terminalEnergy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
@@ -711,9 +715,9 @@ let roleHarvester = {
                 }
             }
             else if (theStorage != undefined
-                     && theStorage.store[RESOURCE_ENERGY] < Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + theStorage.store[RESOURCE_ENERGY]))
+                     && storageEnergy < Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + storageEnergy))
                      && theStorage.my == true) {
-                let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + theStorage.store[RESOURCE_ENERGY])) - theStorage.store[RESOURCE_ENERGY]));
+                let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + storageEnergy)) - storageEnergy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);
                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);

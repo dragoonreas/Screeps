@@ -862,7 +862,7 @@
               "target": "aliasSub(screeps.roomSummary.$Room.storage_energy, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1')"
             },
             {
-              "hide": false,
+              "hide": true,
               "refId": "B",
               "target": "aliasSub(movingAverage(screeps.roomSummary.$Room.storage_energy, '1hour'), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 MA')",
               "textEditor": false
@@ -1303,8 +1303,8 @@
                 },
                 "query": {
                   "params": [
-                    "C",
-                    "15m",
+                    "D",
+                    "5m",
                     "now"
                   ]
                 },
@@ -1318,9 +1318,9 @@
             "executionErrorState": "keep_state",
             "frequency": "60s",
             "handler": 1,
-            "message": "Average bucket below 500 CPU for the past 15 minutes.",
+            "message": "Average bucket below 500 CPU for the past 5 minutes.",
             "name": "Low Bucket",
-            "noDataState": "ok",
+            "noDataState": "keep_state",
             "notifications": [
               {
                 "id": 9
@@ -1908,7 +1908,7 @@
     },
     {
       "collapse": false,
-      "height": "200px",
+      "height": "150px",
       "panels": [
         {
           "aliasColors": {},
@@ -2538,6 +2538,11 @@
             {
               "alias": "Score",
               "legend": false
+            },
+            {
+              "alias": "Progress",
+              "legend": false,
+              "yaxis": 2
             }
           ],
           "spaceLength": 10,
@@ -2546,6 +2551,7 @@
           "steppedLine": false,
           "targets": [
             {
+              "hide": false,
               "refId": "A",
               "target": "alias(offset(screeps.leaderboard.rank, 1), 'Rank')"
             },
@@ -2553,6 +2559,21 @@
               "hide": false,
               "refId": "B",
               "target": "alias(screeps.leaderboard.score, 'Score')"
+            },
+            {
+              "hide": true,
+              "refId": "C",
+              "target": "alias(screeps.gcl.progress, 'Progress')"
+            },
+            {
+              "hide": true,
+              "refId": "D",
+              "target": "alias(perSecond(screeps.gcl.progress), 'Progress/s')"
+            },
+            {
+              "hide": true,
+              "refId": "E",
+              "target": "alias(perSecond(screeps.leaderboard.score), 'Score/s')"
             }
           ],
           "thresholds": [],
@@ -2597,321 +2618,6 @@
       "repeatRowId": null,
       "showTitle": false,
       "title": "Dashboard Row",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": "100",
-      "panels": [
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
-          "fill": 0,
-          "id": 139,
-          "legend": {
-            "avg": true,
-            "current": true,
-            "max": false,
-            "min": false,
-            "rightSide": true,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [
-            {
-              "alias": "Processed",
-              "color": "#BF1B00",
-              "fill": 1,
-              "legend": false,
-              "linewidth": 2,
-              "zindex": -1
-            },
-            {
-              "alias": "Processed/s",
-              "color": "#F9BA8F",
-              "yaxis": 2,
-              "zindex": 1
-            },
-            {
-              "alias": "Processed/s MA",
-              "color": "#EAB839",
-              "legend": false,
-              "linewidth": 2,
-              "yaxis": 2,
-              "zindex": 2
-            }
-          ],
-          "spaceLength": 10,
-          "span": 12,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "hide": false,
-              "refId": "A",
-              "target": "alias(screeps.power, 'Processed')"
-            },
-            {
-              "refId": "B",
-              "target": "alias(perSecond(screeps.power), 'Processed/s')",
-              "textEditor": false
-            },
-            {
-              "refId": "C",
-              "target": "alias(movingAverage(perSecond(screeps.power), '1hour'), 'Processed/s MA')",
-              "textEditor": false
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Power",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": "0",
-              "show": true
-            }
-          ]
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": null,
-      "repeatRowId": null,
-      "showTitle": false,
-      "title": "Power",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": "100",
-      "panels": [
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
-          "editable": true,
-          "error": false,
-          "fill": 0,
-          "grid": {},
-          "id": 13,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "hideEmpty": true,
-            "hideZero": true,
-            "max": false,
-            "min": false,
-            "show": false,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [
-            {
-              "alias": "/^.*Road$/",
-              "yaxis": 2,
-              "zindex": 1
-            }
-          ],
-          "spaceLength": 10,
-          "span": 6,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.road.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Road')",
-              "textEditor": false
-            },
-            {
-              "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.container.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Container')",
-              "textEditor": false
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Worst Container/Road",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "sort": 0,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
-          "editable": true,
-          "error": false,
-          "fill": 0,
-          "grid": {},
-          "id": 19,
-          "legend": {
-            "alignAsTable": false,
-            "avg": false,
-            "current": false,
-            "hideEmpty": true,
-            "max": false,
-            "min": false,
-            "rightSide": false,
-            "show": false,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [
-            {
-              "alias": "/^.*Wall$/",
-              "zindex": -1
-            }
-          ],
-          "spaceLength": 10,
-          "span": 6,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "hide": false,
-              "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.rampart.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Rampart')",
-              "textEditor": false
-            },
-            {
-              "hide": false,
-              "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Wall')",
-              "textEditor": false
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Worst Rampart/Wall",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "sort": 0,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": [
-              "total"
-            ]
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": null,
-      "repeatRowId": null,
-      "showTitle": false,
-      "title": "Maintenance",
       "titleSize": "h6"
     },
     {
@@ -3408,6 +3114,321 @@
     },
     {
       "collapse": false,
+      "height": "100",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_SCREEPSPL.US}",
+          "fill": 0,
+          "id": 139,
+          "legend": {
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "Processed",
+              "color": "#BF1B00",
+              "fill": 1,
+              "legend": false,
+              "linewidth": 2,
+              "zindex": -1
+            },
+            {
+              "alias": "Processed/s",
+              "color": "#F9BA8F",
+              "yaxis": 2,
+              "zindex": 1
+            },
+            {
+              "alias": "Processed/s MA",
+              "color": "#EAB839",
+              "legend": false,
+              "linewidth": 2,
+              "yaxis": 2,
+              "zindex": 2
+            }
+          ],
+          "spaceLength": 10,
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "alias(screeps.power, 'Processed')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(perSecond(screeps.power), 'Processed/s')",
+              "textEditor": false
+            },
+            {
+              "refId": "C",
+              "target": "alias(movingAverage(perSecond(screeps.power), '1hour'), 'Processed/s MA')",
+              "textEditor": false
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Power",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
+      "showTitle": false,
+      "title": "Power",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": "100",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_SCREEPSPL.US}",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {},
+          "id": 13,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "show": false,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "/^.*Road$/",
+              "yaxis": 2,
+              "zindex": 1
+            }
+          ],
+          "spaceLength": 10,
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.road.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Road')",
+              "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.container.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Container')",
+              "textEditor": false
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Worst Container/Road",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "${DS_SCREEPSPL.US}",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {},
+          "id": 19,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "hideEmpty": true,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "/^.*Wall$/",
+              "zindex": -1
+            }
+          ],
+          "spaceLength": 10,
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "hide": false,
+              "refId": "A",
+              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.rampart.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Rampart')",
+              "textEditor": false
+            },
+            {
+              "hide": false,
+              "refId": "B",
+              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Wall')",
+              "textEditor": false
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Worst Rampart/Wall",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [
+              "total"
+            ]
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
+      "showTitle": false,
+      "title": "Maintenance",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
       "height": "150",
       "panels": [
         {
@@ -3493,78 +3514,63 @@
           "seriesOverrides": [
             {
               "alias": "adaptable",
-              "color": "#99440A",
-              "zindex": 0
+              "color": "#99440A"
             },
             {
               "alias": "attacker",
-              "color": "#E24D42",
-              "zindex": 1
+              "color": "#E24D42"
             },
             {
               "alias": "builder",
-              "color": "#1F78C1",
-              "zindex": 3
+              "color": "#1F78C1"
             },
             {
               "alias": "claimer",
-              "color": "#BA43A9",
-              "zindex": 2
+              "color": "#BA43A9"
             },
             {
               "alias": "demolisher",
-              "color": "#052B51",
-              "zindex": 2
+              "color": "#052B51"
             },
             {
               "alias": "harvester",
-              "color": "#EAB839",
-              "zindex": 3
+              "color": "#EAB839"
             },
             {
               "alias": "hauler",
-              "color": "#EF843C",
-              "zindex": -3
+              "color": "#EF843C"
             },
             {
               "alias": "miner",
-              "color": "#967302",
-              "zindex": -3
+              "color": "#967302"
             },
             {
               "alias": "powerHarvester",
-              "color": "#58140C",
-              "zindex": -3
+              "color": "#58140C"
             },
             {
               "alias": "recyclable",
-              "color": "#3F6833",
-              "zindex": -3
+              "color": "#3F6833"
             },
             {
               "alias": "repairer",
-              "color": "#6ED0E0",
-              "zindex": 3
+              "color": "#6ED0E0"
             },
             {
               "alias": "scout",
-              "color": "#DEDAF7",
-              "zindex": -2
+              "color": "#DEDAF7"
             },
             {
               "alias": "upgrader",
-              "color": "#511749",
-              "zindex": 3
+              "color": "#511749"
             },
             {
               "alias": "healer",
-              "color": "#7EB26D",
-              "zindex": 1
+              "color": "#7EB26D"
             },
             {
               "alias": "exporter",
-              "color": "#F9BA8F",
-              "zindex": -1
+              "color": "#F9BA8F"
             }
           ],
           "spaceLength": 10,
@@ -3575,7 +3581,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_counts.$AssignedRole), 5)"
+              "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
             }
           ],
           "thresholds": [],
@@ -3659,88 +3665,73 @@
           "seriesOverrides": [
             {
               "alias": "/.*adaptable/",
-              "color": "#99440A",
-              "zindex": -1
+              "color": "#99440A"
             },
             {
               "alias": "/.*attacker/",
-              "color": "#E24D42",
-              "zindex": -1
+              "color": "#E24D42"
             },
             {
               "alias": "/.*builder/",
-              "color": "#1F78C1",
-              "zindex": 1
+              "color": "#1F78C1"
             },
             {
               "alias": "/.*claimer/",
-              "color": "#BA43A9",
-              "zindex": 1
+              "color": "#BA43A9"
             },
             {
               "alias": "/.*demolisher/",
-              "color": "#052B51",
-              "zindex": 0
+              "color": "#052B51"
             },
             {
               "alias": "/.*harvester/",
-              "color": "#EAB839",
-              "zindex": 1
+              "color": "#EAB839"
             },
             {
               "alias": "/.*hauler/",
-              "color": "#EF843C",
-              "zindex": -3
+              "color": "#EF843C"
             },
             {
               "alias": "/.*miner/",
-              "color": "#967302",
-              "zindex": -3
+              "color": "#967302"
             },
             {
               "alias": "/.*powerHarvester/",
-              "color": "#58140C",
-              "zindex": -3
+              "color": "#58140C"
             },
             {
               "alias": "/.*recyclable/",
-              "color": "#3F6833",
-              "zindex": -2
+              "color": "#3F6833"
             },
             {
               "alias": "/.*repairer/",
-              "color": "#6ED0E0",
-              "zindex": 1
+              "color": "#6ED0E0"
             },
             {
               "alias": "/.*scout/",
-              "color": "#DEDAF7",
-              "zindex": -2
+              "color": "#DEDAF7"
             },
             {
               "alias": "/.*upgrader/",
-              "color": "#511749",
-              "zindex": 1
+              "color": "#511749"
             },
             {
               "alias": "/.*healer/",
-              "color": "#7EB26D",
-              "zindex": -1
+              "color": "#7EB26D"
             },
             {
               "alias": "/.*exporter/",
-              "color": "#F9BA8F",
-              "zindex": -2
+              "color": "#F9BA8F"
             },
             {
               "alias": "/.*sleep/",
               "color": "#705DA0",
-              "zindex": -3
+              "zindex": 2
             },
             {
               "alias": "/.*spawn/",
               "color": "#BADFF4",
-              "zindex": 0
+              "zindex": -3
             },
             {
               "alias": "/^Idle.*/",
@@ -3770,7 +3761,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(sortByMaxima(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole), 5)",
+              "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole)), 5)",
               "textEditor": false
             },
             {
@@ -4420,5 +4411,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 210
+  "version": 216
 }

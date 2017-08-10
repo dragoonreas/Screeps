@@ -94,10 +94,10 @@ let prototypeSpawn = function() {
                 }
             }
             else if (this.room.name == "W86N39") {
-                if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
+                /*if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N43";
                 }
-                else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
+                else */if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W85N38";
                 }
                 /*else if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
@@ -105,10 +105,10 @@ let prototypeSpawn = function() {
                 }*/
             }
             else if (this.room.name == "W85N38") {
-                if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
+                /*if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N43";
                 }
-                else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                else */if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N39";
                 }
                 else if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
@@ -116,12 +116,15 @@ let prototypeSpawn = function() {
                 }
             }
             else if (this.room.name == "W86N43") {
-                if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "W86N43";
+                }
+                /*else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W86N39";
                 }
                 else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "W85N38";
-                }
+                }*/
             }
             else if (this.room.name == "W9N45") {
                 if (Memory.rooms.W9N45.creepCounts.builder == 0 && Memory.rooms.W9N45.creepCounts.adaptable == 0) {
@@ -166,11 +169,15 @@ let prototypeSpawn = function() {
                 case "W64N31":
                     creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = "W64N32";
-                    break;
+                    break;*/
                 case "W52N47":
                     creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W53N39";
-                    break;*/
+                    creepMemory.roomSentFrom = "W49N52";
+                    break;
+                case "W42N51":
+                    creepMemory.roomSentTo = this.room.name;
+                    creepMemory.roomSentFrom = "W42N56";
+                    break;
                 default:
                     creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = this.room.name;
