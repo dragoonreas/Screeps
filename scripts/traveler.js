@@ -221,11 +221,8 @@ module.exports = function(globalOpts = {}){
                 for (let obstacle of options.obstacles) {
                     matrix.set(obstacle.pos.x, obstacle.pos.y, 0xff);
                 }
-                if (roomName == "W86N39" && destPos.roomName == "W86N39" && destPos.isEqualTo(19, 20) == false) { // stop blocking only access to source at [19,20] in room W86N39 when not harvesting it
-                    matrix.set(20, 21, 0xff);
-                }
-                if (roomName == "W82N39" && destPos.roomName == "W82N39" && destPos.isEqualTo(15, 25) == false) { // stop blocking only access to source at [15,25] in room W82N39 when not harvesting it
-                    matrix.set(14, 26, 0xff);
+                if (roomName == "E8S2" && destPos.roomName == "E8S2" && destPos.isEqualTo(12, 29) == false) { // stop blocking only access to source at [12,29] in room E8S2 when not harvesting it
+                    matrix.set(13, 30, 0xff);
                 }
                 return matrix;
             };

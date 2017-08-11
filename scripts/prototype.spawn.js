@@ -54,130 +54,61 @@ let prototypeSpawn = function() {
         else if (roleName == "adaptable") {
             creepMemory.roomSentFrom = this.room.name;
             // TODO: Update when bootstrapping network is reconfigured
-            /*if (this.room.name == "W87N29") {
-                if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N29";
+            /*if (this.room.name == "E8S2") {
+                if (Memory.rooms.E17S1.creepCounts.builder == 0 && Memory.rooms.E17S1.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E17S1";
                 }
-                else if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W85N23";
-                }
-                else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W85N38";
+                else if (Memory.rooms.E18S3.creepCounts.builder == 0 && Memory.rooms.E18S3.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E18S3";
                 }
             }
-            else */if (this.room.name == "W86N29") {
-                /*if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W87N29";
+            else if (this.room.name == "E18S3") {
+                if (Memory.rooms.E18S9.creepCounts.builder == 0 && Memory.rooms.E18S9.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E18S9";
                 }
-                else */if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W85N23";
+                else if (Memory.rooms.E19S13.creepCounts.builder == 0 && Memory.rooms.E19S13.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E19S13";
                 }
-                else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N39";
-                }
-                /*else if (Memory.rooms.W81N29.creepCounts.builder == 0 && Memory.rooms.W81N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W81N29";
-                }*/
-                /*else if (Memory.rooms.W72N28.creepCounts.builder == 0 && Memory.rooms.W72N28.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W72N28";
-                }*/
-                else if (Memory.rooms.W64N31.creepCounts.builder == 0 && Memory.rooms.W64N31.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W64N31";
+                else if (Memory.rooms.E18S17.creepCounts.builder == 0 && Memory.rooms.E18S17.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E18S17";
                 }
             }
-            else if (this.room.name == "W85N23") {
-                /*if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W87N29";
+            else*/ if (this.room.name == "E1S13") {
+                /*if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E1S13";
                 }
-                else */if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N29";
+                else */if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E2S11";
                 }
-            }
-            else if (this.room.name == "W86N39") {
-                /*if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N43";
+                /*else if (Memory.rooms.E3S15.creepCounts.builder == 0 && Memory.rooms.E3S15.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E3S15";
                 }
-                else */if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W85N38";
-                }
-                /*else if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W87N29";
+                else if (Memory.rooms.E18S17.creepCounts.builder == 0 && Memory.rooms.E18S17.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E18S17";
                 }*/
             }
-            else if (this.room.name == "W85N38") {
-                /*if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N43";
+            else if (this.room.name == "E2S11") {
+                if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E1S13";
                 }
-                else */if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N39";
+                /*else if (Memory.rooms.E3S15.creepCounts.builder == 0 && Memory.rooms.E3S15.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E3S15";
                 }
-                else if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N29";
-                }
-            }
-            else if (this.room.name == "W86N43") {
-                if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N43";
-                }
-                /*else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W86N39";
-                }
-                else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W85N38";
+                else if (Memory.rooms.E18S17.creepCounts.builder == 0 && Memory.rooms.E18S17.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E18S17";
                 }*/
             }
-            else if (this.room.name == "W9N45") {
-                if (Memory.rooms.W9N45.creepCounts.builder == 0 && Memory.rooms.W9N45.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W9N45";
+            else if (this.room.name == "E7S12") {
+                if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E1S13";
                 }
-            }
-            else if (this.room.name == "W64N31") {
-                /*if (Memory.rooms.W55N31.creepCounts.builder == 0 && Memory.rooms.W55N31.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W55N31";
-                }
-                else */if (Memory.rooms.W53N39.creepCounts.builder == 0 && Memory.rooms.W53N39.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W53N39";
-                }
-            }
-            else if (this.room.name == "W53N39") {
-                /*if (Memory.rooms.W53N42.creepCounts.builder == 0 && Memory.rooms.W53N42.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W53N42";
-                }
-                else */if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W52N47";
-                }
-            }
-            else if (this.room.name == "W52N47") {
-                /*if (Memory.rooms.W48N52.creepCounts.builder == 0 && Memory.rooms.W48N52.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W48N52";
-                }
-                else */if (Memory.rooms.W42N51.creepCounts.builder == 0 && Memory.rooms.W42N51.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "W42N51";
+                else if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E2S11";
                 }
             }
         }
         else if (roleName == "exporter") {
             switch (this.room.name) {
-                /*case "W86N29":
-                    creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W83N33";
-                    break;
-                case "W86N43":
-                    creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W83N47";
-                    break;
-                case "W64N31":
-                    creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W64N32";
-                    break;*/
-                case "W52N47":
-                    creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W49N51";
-                    break;
-                case "W42N51":
-                    creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W42N56";
-                    break;
                 default:
                     creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = this.room.name;
@@ -186,117 +117,68 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "demolisher") {
             switch (this.room.name) {
-                case "W86N29": creepMemory.roomSentTo = "W81N29"; break;
-                case "W86N39": creepMemory.roomSentTo = "W87N39"; break;
-                case "W53N39": creepMemory.roomSentTo = "W52N47"; break;
-                case "W52N47": creepMemory.roomSentTo = "W48N51"; break;
+                //case "E1S13": creepMemory.roomSentTo = "E2S13"; break;
                 default: creepMemory.roomSentTo = this.room.name; break;
             }
         }
         else if (roleName == "claimer") {
-            /*if (this.room.name == "W87N29") {
-                creepMemory.controllerID = "5873bb7f11e3e4361b4d5f13"; // harvest room
-            }
-            else */if (this.room.name == "W86N29") {
+            if (this.room.name == "E8S2") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "5873bbab11e3e4361b4d6401"; // harvest room
+                    creepMemory.controllerID = "596e563e638d01000b4ed6dc"; // harvest room
                 }
                 else {
-                    creepMemory.controllerID = "5873bc2711e3e4361b4d7257";
+                    creepMemory.controllerID = "596ce23b3c1b99000a4d32ae";
                 }
             }
-            else if (this.room.name == "W85N23") {
+            else if (this.room.name == "E17S1") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "5873bbe111e3e4361b4d6ac5"; // harvest room
+                    creepMemory.controllerID = ""; // harvest room
                 }
                 else {
-                    creepMemory.controllerID = "5873bccb11e3e4361b4d8313";
+                    creepMemory.controllerID = "596ce23b3c1b99000a4d3292";
                 }
             }
-            else if (this.room.name == "W86N39") {
-                creepMemory.controllerID = "5873bb9411e3e4361b4d6139"; // harvest room
-            }
-            else if (this.room.name == "W85N38") {
-                creepMemory.controllerID = "5873bbaa11e3e4361b4d63d1"; // harvest room
-            }
-            else if (this.room.name == "W86N43") {
+            else if (this.room.name == "E18S3") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "5873bb9311e3e4361b4d612e"; // harvest room
+                    creepMemory.controllerID = "596ce23b3c1b99000a4d32d5"; // harvest room
                 }
                 else {
-                    creepMemory.controllerID = "577b935b0f9d51615fa48076";
+                    creepMemory.controllerID = "596ce23b3c1b99000a4d3364";
                 }
             }
-            else if (this.room.name == "W9N45") {
-                creepMemory.controllerID = "577b935b0f9d51615fa4807a"; // harvest room
+            else if (this.room.name == "E18S9") {
+                //creepMemory.controllerID = "59791d3c55e51c000b0bcc26";
+                creepMemory.controllerID = "59791d3c55e51c000b0bcb47";
             }
-            else if (this.room.name == "W81N29") {
+            else if (this.room.name == "E19S13") {
+                creepMemory.controllerID = "59791d3c55e51c000b0bcc18";
+            }
+            else if (this.room.name == "E18S17") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "5873bc2811e3e4361b4d725a"; // harvest room
+                    creepMemory.controllerID = "59791d3c55e51c000b0bcc0c"; // harvest room
+                }
+            }
+            else if (this.room.name == "E1S13") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    creepMemory.controllerID = "59790a4b833ada000b96f432"; // harvest room
                 }
                 else {
-                    creepMemory.controllerID = "5836b6eb8b8b9619519ef910";
+                    //creepMemory.controllerID = "59790a4b833ada000b96f39a";
+                    creepMemory.controllerID = "59790a4b833ada000b96f397";
                 }
             }
-            else if (this.room.name == "W72N28") {
+            else if (this.room.name == "E2S11") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "5836b6eb8b8b9619519ef90b"; // harvest room
-                }
-                else {
-                    creepMemory.controllerID = "57ef9cad86f108ae6e60ca55";
+                    //creepMemory.controllerID = "59790a4b833ada000b96f45b"; // harvest room
+                    creepMemory.controllerID = "59790a4b833ada000b96f340"; // harvest room
                 }
             }
-            else if (this.room.name == "W64N31") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "57ef9cad86f108ae6e60ca51"; // harvest room
-                }
-                else {
-                    creepMemory.controllerID = "579fa8950700be0674d2de54";
-                }
+            else if (this.room.name == "E3S15") {
+                creepMemory.controllerID = "59790d46833ada000b96f4d6";
             }
-            else if (this.room.name == "W64N31") {
+            else if (this.room.name == "E7S12") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "579fa8850700be0674d2dc0e"; // harvest room
-                }
-                else {
-                    creepMemory.controllerID = "579fa8b40700be0674d2e27f";
-                }
-            }
-            else if (this.room.name == "W53N39") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "579fa8a50700be0674d2e04b"; // harvest room
-                }
-                else {
-                    creepMemory.controllerID = "579fa8b30700be0674d2e276";
-                }
-            }
-            else if (this.room.name == "W53N42") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "579fa8b40700be0674d2e27a"; // harvest room
-                }
-                else {
-                    creepMemory.controllerID = "579fa8c40700be0674d2e3e9";
-                }
-            }
-            else if (this.room.name == "W52N47") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "579fa8d40700be0674d2e575"; // harvest room
-                }
-                else {
-                    creepMemory.controllerID = "579fa8e90700be0674d2e742";
-                }
-            }
-            else if (this.room.name == "W48N52") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "579fa8e60700be0674d2e700"; // harvest room
-                }
-                else {
-                    creepMemory.controllerID = "579fa8f80700be0674d2e928";
-                }
-            }
-            else if (this.room.name == "W42N51") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "579fa8fa0700be0674d2e965"; // harvest room
+                    creepMemory.controllerID = "59790d46833ada000b96f4da"; // harvest room
                 }
             }
             let controllerRoom = _.get(Memory.controllers, [creepMemory.controllerID, "pos", "roomName"], "");
@@ -348,17 +230,12 @@ let prototypeSpawn = function() {
             bodyTemplate = [CARRY, ATTACK, HEAL];
         }
         else if (roleName == "upgrader") {
-            if (this.room.name == "W86N39"
-                || this.room.name == "W85N38" 
-                || this.room.name == "W9N45" 
-                || this.room.name == "W72N28" 
-                || this.room.name == "W64N31" 
-                || this.room.name == "W55N31" 
-                || this.room.name == "W53N39" 
-                || this.room.name == "W53N42" 
-                || this.room.name == "W52N47" 
-                || this.room.name == "W48N52"
-                || this.room.name == "W42N51") { // these rooms have a source in range of the controller
+            if (this.room.name == "E8S2"
+                || this.room.name == "E18S3"
+                || this.room.name == "E18S17"
+                || this.room.name == "E1S13"
+                || this.room.name == "E2S11"
+                || this.room.name == "E7S12") { // these rooms have a source in range of the controller
                 moveRatio = 0;
                 bodyTemplate = [WORK]; // these upgraders also have at least one carry part that gets multiplied dynamically with avaliable energy later
             }

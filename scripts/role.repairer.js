@@ -139,22 +139,17 @@ let roleRepairer = {
         else {
             let source = undefined;
             switch (creep.memory.roomID) {
-                //case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6159"); break;
-                case "W86N29": source = Game.getObjectById("5873bbab11e3e4361b4d63fc"); break;
-                case "W85N23": source = Game.getObjectById("5873bbc911e3e4361b4d677e"); break;
-                case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63cf"); break;
-                case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6731"); break;
-                case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c4"); break;
-                case "W9N45": source = Game.getObjectById("577b935b0f9d51615fa48074"); break;
-                case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7255"); break;
-                case "W72N28": source = Game.getObjectById("5836b6eb8b8b9619519ef90e"); break;
-                case "W64N31": source = Game.getObjectById("57ef9cad86f108ae6e60ca54"); break;
-                case "W55N31": source = Game.getObjectById("579fa8950700be0674d2de53"); break;
-                case "W53N39": source = Game.getObjectById("579fa8b40700be0674d2e27d"); break;
-                case "W53N42": source = Game.getObjectById("579fa8b30700be0674d2e277"); break;
-                case "W52N47": source = Game.getObjectById("579fa8c40700be0674d2e3e8"); break;
-                case "W48N52": source = Game.getObjectById("579fa8e90700be0674d2e743"); break;
-                case "W42N51": source = Game.getObjectById("579fa8f80700be0674d2e929"); break;
+                case "E8S2": source = Game.getObjectById("596cea9da4b0a6000a635bb8"); break;
+                case "E17S1": source = Game.getObjectById("596ce23b3c1b99000a4d32b0"); break;
+                case "E18S3": source = Game.getObjectById("596ce23b3c1b99000a4d3291"); break;
+                case "E18S9": source = Game.getObjectById("596ce23b3c1b99000a4d3363"); break;
+                case "E21S9": source = Game.getObjectById("59791d3c55e51c000b0bcb46"); break;
+                case "E19S13": source = Game.getObjectById("59791d3c55e51c000b0bcc24"); break;
+                case "E18S17": source = Game.getObjectById("59791d3c55e51c000b0bcc1a"); break;
+                case "E1S13": source = Game.getObjectById("59790a4b833ada000b96f434"); break;
+                case "E2S11": source = Game.getObjectById("59790a4b833ada000b96f399"); break;
+                case "E3S15": source = Game.getObjectById("59790a4b833ada000b96f395"); break;
+                case "E7S12": source = Game.getObjectById("59790d46833ada000b96f4d4"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
@@ -175,10 +170,7 @@ let roleRepairer = {
                         return;
                     }
                 }
-                if ((creep.memory.roomID == "W9N45"
-                        || creep.memory.roomID == "W81N29"
-                        || creep.memory.roomID == "W72N28"
-                        || creep.memory.roomID == "W55N31") // Add rooms creeps can demolish in here
+                if ((creep.memory.roomID == "") // Add rooms creeps can demolish in here
                     && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
                 }

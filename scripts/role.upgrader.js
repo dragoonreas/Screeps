@@ -44,22 +44,17 @@ let roleUpgrader = {
             
             let source = undefined;
             switch (creep.memory.roomID) {
-                //case "W87N29": source = Game.getObjectById("5873bb9511e3e4361b4d6157"); break;
-                case "W86N29": source = Game.getObjectById("5873bbab11e3e4361b4d63fd"); break;
-                case "W85N23": source = Game.getObjectById("5873bbc911e3e4361b4d677d"); break;
-                case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63ce"); break;
-                case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6733"); break;
-                case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c2"); break;
-                case "W9N45": source = Game.getObjectById("577b935b0f9d51615fa48075"); break;
-                case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7256"); break;
-                case "W72N28": source = Game.getObjectById("5836b6eb8b8b9619519ef90f"); break;
-                case "W64N31": source = Game.getObjectById("57ef9cad86f108ae6e60ca56"); break;
-                case "W55N31": source = Game.getObjectById("579fa8950700be0674d2de55"); break;
-                case "W53N39": source = Game.getObjectById("579fa8b40700be0674d2e27e"); break;
-                case "W53N42": source = Game.getObjectById("579fa8b30700be0674d2e275"); break;
-                case "W52N47": source = Game.getObjectById("579fa8c40700be0674d2e3ea"); break;
-                case "W48N52": source = Game.getObjectById("579fa8e90700be0674d2e741"); break;
-                case "W42N51": source = Game.getObjectById("579fa8f80700be0674d2e927"); break;
+                case "E8S2": source = Game.getObjectById("596cea9da4b0a6000a635bb6"); break;
+                case "E17S1": source = Game.getObjectById("596ce23b3c1b99000a4d32af"); break;
+                case "E18S3": source = Game.getObjectById("596ce23b3c1b99000a4d3293"); break;
+                case "E18S9": source = Game.getObjectById("596ce23b3c1b99000a4d3365"); break;
+                case "E21S9": source = Game.getObjectById("59791d3c55e51c000b0bcb48"); break;
+                case "E19S13": source = Game.getObjectById("59791d3c55e51c000b0bcc25"); break;
+                case "E18S17": source = Game.getObjectById("59791d3c55e51c000b0bcc19"); break;
+                case "E1S13": source = Game.getObjectById("59790a4b833ada000b96f435"); break;
+                case "E2S11": source = Game.getObjectById("59790a4b833ada000b96f39b"); break;
+                case "E3S15": source = Game.getObjectById("59790a4b833ada000b96f396"); break;
+                case "E7S12": source = Game.getObjectById("59790d46833ada000b96f4d5"); break;
             }
             
             let err = ERR_INVALID_TARGET;

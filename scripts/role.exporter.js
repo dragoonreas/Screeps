@@ -16,20 +16,6 @@ let roleExporter = {
         let sentTo = creep.memory.roomSentTo;
         if (_.isString(sentTo) == false) {
             switch (creep.memory.roomID) {
-                //case "W87N29": sentTo = "W86N29"; break; // NOTE: Update when bootstrapping network reconfigured
-                case "W86N29": sentTo = "W85N23"; break;
-                case "W85N23": sentTo = "W86N29"; break;
-                case "W86N39": sentTo = "W85N38"; break;
-                case "W85N38": sentTo = "W86N43"; break;
-                case "W86N43": sentTo = "W86N39"; break;
-                case "W81N29": sentTo = "W86N29"; break;
-                case "W72N28": sentTo = "W86N29"; break;
-                case "W64N31": sentTo = "W86N29"; break;
-                case "W55N31": sentTo = "W64N31"; break;
-                case "W53N39": sentTo = "W64N31"; break;
-                case "W53N42": sentTo = "W53N39"; break;
-                case "W52N47": sentTo = "W53N39"; break;
-                case "W48N52": sentTo = "W52N47"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {
@@ -235,8 +221,7 @@ let roleExporter = {
                     _.set(Memory.rooms, [sentFrom, "creepCounts", "exporter"], _.get(Memory.rooms, [sentFrom, "creepCounts", "exporter"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
                 }
-                if (sentTo == "W9N45"
-                    || sentTo == "W53N39") { // NOTE: Any rooms that require waypoints to get to should be added here
+                if (sentTo == "") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
