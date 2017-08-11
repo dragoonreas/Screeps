@@ -172,7 +172,7 @@ let prototypeSpawn = function() {
                     break;*/
                 case "W52N47":
                     creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W49N52";
+                    creepMemory.roomSentFrom = "W49N51";
                     break;
                 case "W42N51":
                     creepMemory.roomSentTo = this.room.name;
