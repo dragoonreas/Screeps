@@ -110,8 +110,8 @@ let prototypeSpawn = function() {
         else if (roleName == "exporter") {
             switch (this.room.name) {
                 default:
-                    creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = this.room.name;
+                    creepMemory.roomSentTo = this.room.name;
                     break;
             }
         }

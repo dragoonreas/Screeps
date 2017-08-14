@@ -189,6 +189,12 @@ let globals = function() {
         // TODO: Add room name validation
         let theController = _.get(Game.rooms, [fromRoomName, "controller"], undefined);
         if (theController != undefined && theController.my == true) {
+            let theConstructionSites = theController.room.find(FIND_CONSTRUCTION_SITES);
+            _.invoke(theConstructionSites, "remove");
+            let theStructures = theController.room.find(FIND_STRUCTURES);
+            _.invoke(theStructures, "notifyWhenAttacked", false);
+            let theRamparts = _.filter(theStructures, (s) => (s.structureType == STRUCTURE_RAMPART));
+            _.invoke(theRamparts, "setPublic", true);
             theController.unclaim();
             console.log("Unclaimed room " + fromRoomName);
         }

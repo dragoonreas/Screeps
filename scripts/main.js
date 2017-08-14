@@ -367,7 +367,7 @@ _.set(Memory.rooms, ["E1S13", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["E1S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
-    , rockhound: (_.get(Game.rooms, ["E1S13", "canHarvestMineral"], false) ? 1 : 0)
+    , rockhound: 0 //(_.get(Game.rooms, ["E1S13", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E2S11", "creepMins"], {
     attacker: 0
@@ -382,7 +382,7 @@ _.set(Memory.rooms, ["E2S11", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["E2S11", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
-    , rockhound: (_.get(Game.rooms, ["E2S11", "canHarvestMineral"], false) ? 1 : 0)
+    , rockhound: 0 //(_.get(Game.rooms, ["E2S11", "canHarvestMineral"], false) ? 1 : 0)
 });
 //console.log(toStr(Memory.rooms.E2S11.creepMins));
 /*_.set(Memory.rooms, ["E3S15", "creepMins"], {
@@ -1157,47 +1157,47 @@ module.exports.loop = function () {
             }
             
             let thePowerSpawn = theRoom.powerSpawn;
-            if (_.get(thePowerSpawn, ["my"], false) == true) {
-                if (thePowerSpawn.power > 0 
-                    && thePowerSpawn.energy >= POWER_SPAWN_ENERGY_RATIO) {
+            if (_.get(thePowerSpawn, ["my"], false) == true 
+                && thePowerSpawn.energy >= POWER_SPAWN_ENERGY_RATIO) {
+                if (thePowerSpawn.power > 0) {
                     thePowerSpawn.processPower();
                 }
-                else {
-                    let terminalPower = _.get(theRoom, ["terminal", "store", RESOURCE_POWER], 0);
-                    let storagePower = _.get(theRoom, ["storage", "store", RESOURCE_POWER], 0);
-                    let creepPower = _.sum(Game.creeps, (c) => (c.memory.roomID == roomID ? _.get(c, ["carry", RESOURCE_POWER], 0) : 0));
-                    requiredPower = Math.floor(thePowerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - (thePowerSpawn.power + terminalPower + storagePower + creepPower);
-                }
+                
+                let terminalPower = _.get(theRoom, ["terminal", "store", RESOURCE_POWER], 0);
+                let storagePower = _.get(theRoom, ["storage", "store", RESOURCE_POWER], 0);
+                let creepPower = _.sum(Game.creeps, (c) => (c.memory.roomID == roomID ? _.get(c, ["carry", RESOURCE_POWER], 0) : 0));
+                requiredPower = Math.floor(thePowerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - (thePowerSpawn.power + terminalPower + storagePower + creepPower);
             }
         }
         
-        if (Game.cpu.bucket > 7500 
-            && _.get(theRoom, ["controller", "my"], false) == true 
+        if (_.get(theRoom, ["controller", "my"], false) == true 
             && _.get(theRoom, ["controller", "level"], 0) >= 6 
             && _.get(theRoom, ["terminal", "my"], false) == true
             && theRoom.terminal.cooldown == 0) {
             let theTerminal = theRoom.terminal;
             let madeDeal = false;
-            for (let resourceName in theTerminal.store) {
-                let resourceCount = theTerminal.store[resourceName];
-                if (resourceCount >= 10 
-                    && resourceName != RESOURCE_ENERGY 
-                    && resourceName != RESOURCE_POWER) {
-                    let buyOrders = Game.market.orderCache(ORDER_BUY, resourceName);
-                    if (buyOrders.length > 0) {
-                        buyOrders = _.groupBy(buyOrders, (o) => (o.price));
-                        buyOrders = _.max(buyOrders, (v, k) => (k));
-                        let buyOrder = _.min(buyOrders, (o) => (
-                            Game.market.calcTransactionCost(resourceCount, roomID, o.roomName)
-                        ));
-                        let amountToSend = Math.min(resourceCount, buyOrder.amount);
-                        let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
-                        if (energyCost <= theTerminal.store[RESOURCE_ENERGY]) {
-                            let result = Game.market.deal(buyOrder.id, amountToSend, roomID);
-                            if (result == OK) {
-                                madeDeal = true;
-                                console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend) + " (" + buyOrder.price + " each) credits");
-                                break; // Each terminal can only do one deal per tick
+            if (Game.cpu.bucket > 7500) {
+                for (let resourceName in theTerminal.store) {
+                    let resourceCount = theTerminal.store[resourceName];
+                    if (resourceCount >= 10 
+                        && resourceName != RESOURCE_ENERGY 
+                        && resourceName != RESOURCE_POWER) {
+                        let buyOrders = Game.market.orderCache(ORDER_BUY, resourceName);
+                        if (buyOrders.length > 0) {
+                            buyOrders = _.groupBy(buyOrders, (o) => (o.price));
+                            buyOrders = _.max(buyOrders, (v, k) => (k));
+                            let buyOrder = _.min(buyOrders, (o) => (
+                                Game.market.calcTransactionCost(resourceCount, roomID, o.roomName)
+                            ));
+                            let amountToSend = Math.min(resourceCount, buyOrder.amount);
+                            let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
+                            if (energyCost <= theTerminal.store[RESOURCE_ENERGY]) {
+                                let result = Game.market.deal(buyOrder.id, amountToSend, roomID);
+                                if (result == OK) {
+                                    madeDeal = true;
+                                    console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend) + " (" + buyOrder.price + " each) credits");
+                                    break; // Each terminal can only do one deal per tick
+                                }
                             }
                         }
                     }
