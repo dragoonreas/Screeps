@@ -184,7 +184,7 @@ let prototypeSpawn = function() {
             switch (this.room.name) {
                 case "W86N29": creepMemory.roomSentTo = "W81N29"; break;
                 case "W86N39": creepMemory.roomSentTo = "W87N39"; break;
-                case "W53N39": creepMemory.roomSentTo = "W52N47"; break;
+                case "W53N39": creepMemory.roomSentTo = "W48N42"; break;
                 case "W52N47": creepMemory.roomSentTo = "W48N51"; break;
                 default: creepMemory.roomSentTo = this.room.name; break;
             }

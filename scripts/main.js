@@ -478,7 +478,7 @@ _.set(Memory.rooms, ["W53N39", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W53N39", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: 1
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W53N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
