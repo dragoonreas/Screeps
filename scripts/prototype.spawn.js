@@ -158,29 +158,25 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "exporter") {
             switch (this.room.name) {
-                /*case "W86N29":
-                    creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W83N33";
+                case "W86N39":
+                    creepMemory.roomSentFrom = "W94N49";
+                    creepMemory.roomSentTo = "W85N38";
                     break;
                 case "W86N43":
+                    creepMemory.roomSentFrom = "W94N49";
                     creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W83N47";
                     break;
-                case "W64N31":
-                    creepMemory.roomSentTo = this.room.name;
-                    creepMemory.roomSentFrom = "W64N32";
-                    break;*/
                 case "W52N47":
-                    creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = "W49N51";
+                    creepMemory.roomSentTo = this.room.name;
                     break;
                 case "W42N51":
-                    creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = "W42N56";
+                    creepMemory.roomSentTo = this.room.name;
                     break;
                 default:
-                    creepMemory.roomSentTo = this.room.name;
                     creepMemory.roomSentFrom = this.room.name;
+                    creepMemory.roomSentTo = this.room.name;
                     break;
             }
         }

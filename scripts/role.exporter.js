@@ -5,12 +5,14 @@ let roleExporter = {
         if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
             creep.memory.working = true;
             creep.memory.withdrawStructure = undefined;
+            creep.memory.waypoint = 0;
         }
         else if (creep.memory.working == true && _.sum(creep.carry) == 0) {
             creep.memory.working = false;
             if (creep.memory.stopExporting == undefined) {
                 creep.memory.stopExporting = Game.time;
             }
+            creep.memory.waypoint = 0;
         }
         
         let sentTo = creep.memory.roomSentTo;
@@ -51,10 +53,15 @@ let roleExporter = {
         if (creep.memory.working == false) {
             if (creep.room.name != sentFrom 
                 && creep.memory.withdrawStucture == undefined) {
-                creep.say(travelToIcons(creep) + sentFrom, true);
-                creep.travelTo(new RoomPosition(25, 25, sentFrom), {
-                    range: 23
-                });
+                if (sentFrom == "W94N49") { // NOTE: Any rooms that require waypoints to get to should be added here
+                    ROLES["scout"].run(creep);
+                }
+                else {
+                    creep.say(travelToIcons(creep) + sentFrom, true);
+                    creep.travelTo(new RoomPosition(25, 25, sentFrom), {
+                        range: 23
+                    });
+                }
             }
             else {
                 if (creep.memory.startExporting == undefined) {
@@ -203,6 +210,7 @@ let roleExporter = {
                             }
                             else {
                                 creep.memory.working = true;
+                                creep.memory.waypoint = 0;
                                 ROLES["exporter"].run(creep);
                             }
                         }
@@ -223,6 +231,7 @@ let roleExporter = {
                     }
                     else {
                         creep.memory.working = true;
+                        creep.memory.waypoint = 0;
                         ROLES["exporter"].run(creep);
                     }
                 }
@@ -236,7 +245,8 @@ let roleExporter = {
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
                 }
                 if (sentTo == "W9N45"
-                    || sentTo == "W53N39") { // NOTE: Any rooms that require waypoints to get to should be added here
+                    || sentTo == "W53N39"
+                    || sentFrom == "W94N49") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {

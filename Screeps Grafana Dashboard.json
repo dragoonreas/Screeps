@@ -3486,7 +3486,7 @@
           "dashes": false,
           "datasource": "${DS_SCREEPSPL.US}",
           "decimals": 0,
-          "fill": 1,
+          "fill": 7,
           "id": 35,
           "legend": {
             "alignAsTable": true,
@@ -3504,7 +3504,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 0,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -3571,12 +3571,16 @@
             {
               "alias": "exporter",
               "color": "#F9BA8F"
+            },
+            {
+              "alias": "rockhound",
+              "color": "#2F575E"
             }
           ],
           "spaceLength": 10,
           "span": 10,
           "stack": true,
-          "steppedLine": false,
+          "steppedLine": true,
           "targets": [
             {
               "hide": false,
@@ -3637,7 +3641,7 @@
           "dashes": false,
           "datasource": "${DS_SCREEPSPL.US}",
           "decimals": 0,
-          "fill": 1,
+          "fill": 7,
           "id": 138,
           "legend": {
             "alignAsTable": true,
@@ -3655,7 +3659,7 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 0,
           "links": [],
           "nullPointMode": "connected",
           "percentage": false,
@@ -3726,7 +3730,7 @@
             {
               "alias": "/.*sleep/",
               "color": "#705DA0",
-              "zindex": 2
+              "zindex": -2
             },
             {
               "alias": "/.*spawn/",
@@ -3751,12 +3755,26 @@
               "stack": false,
               "yaxis": 2,
               "zindex": 2
+            },
+            {
+              "alias": "/.*rockhound/",
+              "color": "#2F575E"
+            },
+            {
+              "alias": "/.*collector/",
+              "color": "#FCEACA",
+              "zindex": -1
+            },
+            {
+              "alias": "/.*hoarder/",
+              "color": "#F9E2D2",
+              "zindex": -1
             }
           ],
           "spaceLength": 10,
           "span": 12,
           "stack": true,
-          "steppedLine": false,
+          "steppedLine": true,
           "targets": [
             {
               "hide": false,
@@ -4411,5 +4429,5 @@
   },
   "timezone": "browser",
   "title": "Screeps",
-  "version": 216
+  "version": 219
 }
