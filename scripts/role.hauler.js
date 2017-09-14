@@ -87,6 +87,21 @@ let roleHauler = {
                             , "5873bbc611e3e4361b4d6714"
                             , */"5873bbaa11e3e4361b4d63c4"
                         ]
+                        , "W91N45": [
+                            "58dbc30d8283ff5308a3cf8b" // W92N45
+                            , "58dbc3298283ff5308a3d213" // W91N44
+                            , "58dbc3288283ff5308a3d20d" // W91N46
+                            , "58dbc3288283ff5308a3d20f" // W91N45
+                        ]
+                        , "W94N49": [
+                            /*"58dbc2b78283ff5308a3c5c6" // W95N49
+                            , "58dbc2b78283ff5308a3c5c5" // W95N49
+                            , "58dbc2d48283ff5308a3c967" // W94N48
+                            , "58dbc2f08283ff5308a3cce8" // W93N49
+                            , */"58dbc2d48283ff5308a3c95e" // W94N51
+                            , "58dbc2f08283ff5308a3cce5" // W93N51
+                            , "58dbc2d48283ff5308a3c962" // W94N49
+                        ]
                         , "W9N45": [
                             "577b935b0f9d51615fa48078"
                             , "577b935b0f9d51615fa48079"
@@ -302,6 +317,66 @@ let roleHauler = {
                                 creep.memory.sourceID = sourceID;
                                 creep.travelTo(new RoomPosition(14, 39, "W87N45"));
                                 creep.say(travelToIcons(creep) + "W87N45", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc30d8283ff5308a3cf8b") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(16, 21, "W92N45"));
+                                creep.say(travelToIcons(creep) + "W92N45", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc3298283ff5308a3d213") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(46, 11, "W91N44"));
+                                creep.say(travelToIcons(creep) + "W91N44", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc3288283ff5308a3d20d") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(45, 39, "W91N46"));
+                                creep.say(travelToIcons(creep) + "W91N46", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc3288283ff5308a3d20f") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(18, 4, "W91N45"));
+                                creep.say(travelToIcons(creep) + "W91N45", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc2b78283ff5308a3c5c6") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(31, 32, "W95N49"));
+                                creep.say(travelToIcons(creep) + "W95N49", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc2b78283ff5308a3c5c5") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(28, 11, "W95N49"));
+                                creep.say(travelToIcons(creep) + "W95N49", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc2d48283ff5308a3c967") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(15, 38, "W94N48"));
+                                creep.say(travelToIcons(creep) + "W94N48", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc2f08283ff5308a3cce8") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(33, 10, "W93N49"));
+                                creep.say(travelToIcons(creep) + "W93N49", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc2d48283ff5308a3c95e") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(17, 7, "W94N51"));
+                                creep.say(travelToIcons(creep) + "W94N51", true);
+                                return;
+                            }
+                            else if (sourceID == "58dbc2f08283ff5308a3cce5") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(15, 17, "W93N51"));
+                                creep.say(travelToIcons(creep) + "W93N51", true);
                                 return;
                             }
                             else if (sourceID == "577b935b0f9d51615fa48078") { // TODO: Remove this after the source has been added to memory
@@ -624,6 +699,12 @@ let roleHauler = {
                     return;
                 }
                 
+                if (_.get(creep.room, ["controller", "my"], false) == true 
+                    && creep.room.controller.ticksToDowngrade <= (CREEP_LIFE_TIME * 3)) {
+                    ROLES["upgrader"].run(creep);
+                    return;
+                }
+                
                 structure = undefined;
                 if (creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
                     structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
@@ -679,9 +760,9 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + _.get(ICONS, structure.structureType, "?") + "?", true);
                 }
             }
-            else if (theTerminal != undefined
-                     && terminalEnergy < Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy))
-                     && theTerminal.my == true) {
+            else if (theTerminal != undefined 
+                    && terminalEnergy < Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) 
+                    && theTerminal.my == true) {
                 let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) - terminalEnergy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
@@ -696,11 +777,11 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
-            else if (creep.memory.roomID == "W86N29"
-                     && theTerminal != undefined
-                     && Memory.TooAngelDealings.isFriendly == false
-                     && terminalEnergy < Memory.TooAngelDealings.totalCost
-                     && theTerminal.my == true) {
+            else if (creep.memory.roomID == "W86N29" 
+                    && theTerminal != undefined 
+                    && Memory.TooAngelDealings.isFriendly == false 
+                    && terminalEnergy < Memory.TooAngelDealings.totalCost 
+                    && theTerminal.my == true) {
                 let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Memory.TooAngelDealings.totalCost - terminalEnergy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
@@ -715,9 +796,9 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
-            else if (theStorage != undefined
-                     && storageEnergy < Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + storageEnergy))
-                     && theStorage.my == true) {
+            else if (theStorage != undefined 
+                    && storageEnergy < Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + storageEnergy)) 
+                    && theStorage.my == true) {
                 let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + storageEnergy)) - storageEnergy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);
@@ -733,10 +814,10 @@ let roleHauler = {
                 }
             }
             else if (_.get(thePowerSpawn, ["my"], false) == true 
-                     && thePowerSpawn.energy < thePowerSpawn.energyCapacity) {
+                    && thePowerSpawn.energy < thePowerSpawn.energyCapacity) {
                 let err = creep.transfer(thePowerSpawn, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.travelTo(theStorage);
+                    creep.travelTo(thePowerSpawn);
                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_POWER_SPAWN], true);
                 }
                 else if (err == OK) {

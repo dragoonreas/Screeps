@@ -34,7 +34,7 @@ module.exports = function(globalOpts = {}){
         installPrototype:  true,
         maxOps:            20000,
         defaultStuckValue: 3,
-        reportThreshold:   50,
+        reportThreshold:   2000,
         visualisePathStyle:undefined,
         endOnBorder:       false
     });
@@ -90,7 +90,7 @@ module.exports = function(globalOpts = {}){
                 }
             });
             if (!_.isArray(ret)) {
-                console.log("couldn't findRoute to " + destination);
+                console.log("TRAVELER: No route from " + origin + " to " + destination);
                 return;
             }
             for (let value of ret) {
@@ -327,7 +327,7 @@ module.exports = function(globalOpts = {}){
                 }
             }
             let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(creepPos.roomName);
-            let isPortalRoom = (parsed[1] % 10 === 5) || (parsed[2] % 10 === 5);
+            let isPortalRoom = ((parsed[1] % 10 === 5) && (parsed[2] % 10 === 5));// || ((parsed[1] % 10 === 0) && (parsed[2] % 10 === 0)); // TODO: Fix highway portal checks
             if (isPortalRoom && _.get(travelData, ["start", "roomName"], undefined) != creepPos.roomName) { // TODO: Cache portals
                 let portals = creep.room.find(FIND_STRUCTURES, (s) => (
                     s.structureType == STRUCTURE_PORTAL
@@ -346,44 +346,76 @@ module.exports = function(globalOpts = {}){
                 travelData.dest = destPos;
                 travelData.prev = undefined;
                 global.summarized_rooms[creepRoomID].traveler[creepRole].pathfinding = (global.summarized_rooms[creepRoomID].traveler[creepRole].pathfinding || 0) + 1;
-                let cpu = Game.cpu.getUsed();
-                let ret = this.findTravelPath(creep, destPos, options);
-                travelData.cpu += (Game.cpu.getUsed() - cpu);
-                global.summarized_rooms[creepRoomID].traveler[creepRole].cpu = (global.summarized_rooms[creepRoomID].traveler[creepRole].cpu || 0) + (Game.cpu.getUsed() - cpu);;
-                travelData.count++;
-                if (travelData.cpu > gOpts.reportThreshold) {
-                    //console.log(`TRAVELER: heavy cpu use: ${creep.name}, cpu: ${_.round(travelData.cpu, 2)}, origin: ${creepPos}, dest: ${destination.pos}`);
-                }
-                if (ret.incomplete) {
-                    //console.log(`TRAVELER: incomplete path for ${creep.name}`);
-                    global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
-                    if (ret.ops < 20000 && options.useFindRoute === undefined && travelData.stuck < gOpts.defaultStuckValue) {
-                        options.useFindRoute = false;
-                        cpu = Game.cpu.getUsed();
-                        ret = this.findTravelPath(creep, destPos, options);
-                        global.summarized_rooms[creepRoomID].traveler[creepRole].cpu += (Game.cpu.getUsed() - cpu);
-                        //console.log(`attempting path without findRoute was ${ret.incomplete ? "not" : ""} successful`);
+                if (Game.map.isRoomAvailable(destPos.roomName) == true) {
+                    let cpu = Game.cpu.getUsed();
+                    let ret = this.findTravelPath(creep, destPos, options);
+                    travelData.cpu += (Game.cpu.getUsed() - cpu);
+                    global.summarized_rooms[creepRoomID].traveler[creepRole].cpu = (global.summarized_rooms[creepRoomID].traveler[creepRole].cpu || 0) + (Game.cpu.getUsed() - cpu);;
+                    travelData.count++;
+                    /*if (travelData.cpu > gOpts.reportThreshold) {
+                        console.log(`TRAVELER: heavy cpu use: ${creep.name}, cpu: ${_.round(travelData.cpu, 2)}, origin: ${creepPos}, dest: ${destination.pos}`);
+                    }*/
+                    if (ret.incomplete) {
+                        //console.log(toStr(_.last(ret.path)));
+                        //console.log(`TRAVELER: incomplete path for ${creep.name}`);
                         global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
+                        if (options.useFindRoute === undefined 
+                            && travelData.stuck < gOpts.defaultStuckValue) {
+                            if (Game.map.getRoomLinearDistance(creepPos.roomName, destPos.roomName) > 2) {
+                                options.useFindRoute = false;
+                            }
+                            else {
+                                options.useFindRoute = true;
+                            }
+                            cpu = Game.cpu.getUsed();
+                            ret = this.findTravelPath(creep, destPos, options);
+                            global.summarized_rooms[creepRoomID].traveler[creepRole].cpu += (Game.cpu.getUsed() - cpu);
+                            if (ret.incomplete) {
+                                global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
+                                //console.log(toStr(_.last(ret.path)));
+                            }
+                            //console.log(`attempting path with ${options.useFindRoute ? "" : "out"} findRoute was ${ret.incomplete ? "not" : ""} successful`);
+                            options.useFindRoute = undefined;
+                        }
+                        if (ret.incomplete 
+                            && travelData.stuck < gOpts.defaultStuckValue 
+                            && creep.room.hasHostileCreep == true) {
+                            options.ignoreHostileCreeps = true;
+                            cpu = Game.cpu.getUsed();
+                            ret = this.findTravelPath(creep, destPos, options);
+                            global.summarized_rooms[creepRoomID].traveler[creepRole].cpu += (Game.cpu.getUsed() - cpu);
+                            if (ret.incomplete) {
+                                global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
+                                //console.log(toStr(_.last(ret.path)));
+                            }
+                            //console.log(`attempting path ignoring hostile creeps was ${ret.incomplete ? "not" : ""} successful`);
+                        }
+                        if (ret.incomplete 
+                            && creepPos.roomName != destPos.roomName 
+                            && options.range != 25) {
+                            let roomCentre = Traveler.initPosition(destPos);
+                            roomCentre.x = 25;
+                            roomCentre.y = 25;
+                            options.range = 25;
+                            cpu = Game.cpu.getUsed();
+                            ret = this.findTravelPath(creep, roomCentre, options);
+                            global.summarized_rooms[creepRoomID].traveler[creepRole].cpu += (Game.cpu.getUsed() - cpu);
+                            if (ret.incomplete) {
+                                global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
+                                //console.log(toStr(_.last(ret.path)));
+                            }
+                            //console.log(`attempting path to room was ${ret.incomplete ? "not" : ""} successful`);
+                        }
                     }
-                    if (ret.incomplete && travelData.stuck < gOpts.defaultStuckValue && creep.room.hasHostileCreep == true) {
-                        options.ignoreHostileCreeps = true;
-                        cpu = Game.cpu.getUsed();
-                        ret = this.findTravelPath(creep, destPos, options);
-                        global.summarized_rooms[creepRoomID].traveler[creepRole].cpu += (Game.cpu.getUsed() - cpu);
-                        //console.log(`attempting path ignoring hostile creeps was ${ret.incomplete ? "not" : ""} successful`);
-                        global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
-                    }
-                }
-                if (ret.incomplete) {
-                    creep.moveTo(destPos, options);
-                }
-                else {
-                    travelData.path = Traveler.serializePath(creepPos, ret.path);
+                    //if (ret.incomplete != true) {
+                        travelData.path = Traveler.serializePath(creepPos, ret.path);
+                    //}
                 }
                 travelData.stuck = 0;
             }
             if (!travelData.path || travelData.path.length === 0) {
                 global.summarized_rooms[creepRoomID].traveler[creepRole].noPath = (global.summarized_rooms[creepRoomID].traveler[creepRole].noPath || 0) + 1;
+                console.log("TRAVELER: No path for " + creep.name + " (" + creep.memory.roomID + " " + creep.memory.role + ") from " + creepPos.toString() + " to " + destPos.toString());
                 return ERR_NO_PATH;
             }
             // consume path and move
@@ -613,7 +645,9 @@ module.exports = function(globalOpts = {}){
                 global.traveler = new Traveler();
             }
             let outcome = traveler.travelTo(this, destination, options);
-            if (options.visualisePathStyle !== false && (options.visualisePathStyle || gOpts.visualisePathStyle)) {
+            if (options.visualisePathStyle !== false 
+                && (options.visualisePathStyle || gOpts.visualisePathStyle)
+                /*&& this.room.beingViewed == true*/) {
                 traveler.visualisePath(this, options.visualisePathStyle);
             }
             return outcome;

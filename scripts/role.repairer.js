@@ -83,9 +83,14 @@ let roleRepairer = {
                                 )});
                             }
                             else {
+                                let numRoadRepairers = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "repairerTypeCounts", STRUCTURE_ROAD], 0);
+                        		let numTowers = _.get(creep.room, ["myActiveTowers", "length"], 0);
                                 theStructures = creep.room.find(FIND_STRUCTURES, {
                                     filter: (s) => (s.hits < s.hitsMax 
-                                        && s.structureType != STRUCTURE_ROAD 
+                                        && (s.structureType != STRUCTURE_ROAD
+                                            || (numRoadRepairers == 0 
+                                                && numTowers == 0)
+                                            || s.hits <= (ROAD_DECAY_AMOUNT * ((s.hitsMax == ROAD_HITS) ? 1 : CONSTRUCTION_COST_ROAD_SWAMP_RATIO)))
                                 )});
                             }
                             
@@ -145,6 +150,8 @@ let roleRepairer = {
                 case "W86N39": source = Game.getObjectById("5873bbaa11e3e4361b4d63cf"); break;
                 case "W85N38": source = Game.getObjectById("5873bbc711e3e4361b4d6731"); break;
                 case "W86N43": source = Game.getObjectById("5873bbaa11e3e4361b4d63c4"); break;
+                case "W91N45": source = Game.getObjectById("58dbc3288283ff5308a3d20f"); break;
+                case "W94N49": source = Game.getObjectById("58dbc2d48283ff5308a3c962"); break;
                 case "W9N45": source = Game.getObjectById("577b935b0f9d51615fa48074"); break;
                 case "W81N29": source = Game.getObjectById("5873bc2711e3e4361b4d7255"); break;
                 case "W72N28": source = Game.getObjectById("5836b6eb8b8b9619519ef90e"); break;
@@ -175,9 +182,10 @@ let roleRepairer = {
                         return;
                     }
                 }
-                if ((creep.memory.roomID == "W9N45"
-                        || creep.memory.roomID == "W81N29"
-                        || creep.memory.roomID == "W72N28"
+                if ((creep.memory.roomID == "W91N45" 
+                        || creep.memory.roomID == "W9N45" 
+                        || creep.memory.roomID == "W81N29" 
+                        || creep.memory.roomID == "W72N28" 
                         || creep.memory.roomID == "W55N31") // Add rooms creeps can demolish in here
                     && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
@@ -186,6 +194,12 @@ let roleRepairer = {
                     ROLES["harvester"].run(creep);
                 }
                 return;
+            }
+            else if ((_.get(theStorage, ["my"], true) == false 
+                    && theStorage.store[RESOURCE_ENERGY] > 0) 
+                || (_.get(theTerminal, ["my"], true) == false 
+                    && theTerminal.store[RESOURCE_ENERGY] > 0)) {
+                source = undefined;
             }
             
             let err = ERR_INVALID_TARGET;

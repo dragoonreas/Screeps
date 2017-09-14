@@ -14,7 +14,8 @@ let roleDemolisher = {
         }
         
         let sentTo = creep.memory.roomSentTo;
-        if (_.isString(sentTo) == false || creep.memory.roomSentFrom != undefined) {
+        if (_.isString(sentTo) == false 
+            || creep.memory.roomSentFrom != undefined) {
             creep.memory.roomSentFrom = undefined;
             sentTo = _.get(Memory.rooms, [creep.memory.roomID, "harvestRooms", 0], undefined);
             if (_.isString(sentTo) == true) {
@@ -25,22 +26,23 @@ let roleDemolisher = {
             }
         }
         
-        if (creep.memory.working == false && (sentTo == undefined || _.get(Memory.rooms, [sentTo, "avoidTravelUntil"], 0) < Game.time)) {
+        if (creep.memory.working == false 
+            && (sentTo == undefined 
+                || _.get(Memory.rooms, [sentTo, "avoidTravelUntil"], 0) < Game.time)) {
             if (sentTo != undefined) {
                 let demoTarget = Game.getObjectById(_.get(creep.memory, ["demolishStructure", "id"], undefined));
-                if (demoTarget == undefined) {
-                    let demolishStructurePos = _.get(creep.memory, ["demolishStructure", "pos"], undefined);
-                    if (_.isString(_.get(demolishStructurePos, ["roomName"], undefined)) && (demolishStructurePos.roomName != creep.room.name)) {
+                let demolishStructurePos = _.get(creep.memory, ["demolishStructure", "pos"], undefined);
+                if (demoTarget == undefined 
+                    || creep.room.name != sentTo) {
+                    if (_.isString(_.get(demolishStructurePos, ["roomName"], undefined)) 
+                        && (demolishStructurePos.roomName != creep.room.name)) {
                         creep.travelTo(_.create(RoomPosition.prototype, demolishStructurePos));
                         creep.say(travelToIcons(creep) + demolishStructurePos.roomName, true);
                         return;
                     }
                     
-                    creep.room.checkForDrops = (creep.room.dangerZones.length > 0) ? true : false;
-                    creep.memory.demolishStructure = undefined;
-                    
                     if (creep.room.name != sentTo) {
-                        if (sentTo == "") { // NOTE: Any rooms that require waypoints to get to should be added here
+                        if (sentTo == "W48N42") { // NOTE: Any rooms that require waypoints to get to should be added here
                             ROLES["scout"].run(creep);
                         }
                         else {
@@ -52,12 +54,18 @@ let roleDemolisher = {
                         return;
                     }
                     
-                    demoTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: (cs) => (
-                        _.get(cs, "my", false) == false 
-                        && _.some(Memory.nonAgressivePlayers, _.get(cs, ["owner", "username"], "")) == false 
-                        && cs.structureType != STRUCTURE_ROAD 
-                        && cs.structureType != STRUCTURE_CONTAINER
-                    )});
+                    creep.room.checkForDrops = (creep.room.dangerZones.length > 0) ? true : false;
+                    
+                    if (demoTarget == undefined) {
+                        creep.memory.demolishStructure = undefined;
+                    
+                        demoTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: (cs) => (
+                            _.get(cs, "my", false) == false 
+                            && _.some(Memory.nonAgressivePlayers, _.get(cs, ["owner", "username"], "")) == false 
+                            && cs.structureType != STRUCTURE_ROAD 
+                            && cs.structureType != STRUCTURE_CONTAINER
+                        )});
+                    }
                     
                     if (demoTarget == undefined) {
                         demoTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, { filter: (s) => (
@@ -83,6 +91,12 @@ let roleDemolisher = {
                             , pos: demoTarget.pos
                         };
                     }
+                } else if (demolishStructurePos == undefined 
+                    && creep.room.name == sentTo) {
+                    creep.memory.demolishStructure = { 
+                        id: demoTarget.id
+                        , pos: demoTarget.pos
+                    };
                 }
                 
                 if (demoTarget != undefined) {
@@ -128,10 +142,9 @@ let roleDemolisher = {
             }
         }
         else {
-            if (sentTo == "W52N47" && creep.memory.roomID == "W53N39" && creep.memory.waypoint > 0) {
-                if (creep.room.name == "W52N47") {
-                    creep.memory.waypoint = 2;
-                }
+            if (creep.room.name != creep.memory.roomID 
+                && creep.memory.roomSentTo == "W48N42" 
+                && creep.memory.roomID == "W53N39") {
                 ROLES["scout"].run(creep);
             }
             else {

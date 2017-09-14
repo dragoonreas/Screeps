@@ -22,8 +22,7 @@ let roleExporter = {
                 case "W86N29": sentTo = "W85N23"; break;
                 case "W85N23": sentTo = "W86N29"; break;
                 case "W86N39": sentTo = "W85N38"; break;
-                case "W85N38": sentTo = "W86N43"; break;
-                case "W86N43": sentTo = "W86N39"; break;
+                case "W85N38": sentTo = "W86N39"; break;
                 case "W81N29": sentTo = "W86N29"; break;
                 case "W72N28": sentTo = "W86N29"; break;
                 case "W64N31": sentTo = "W86N29"; break;
@@ -31,7 +30,6 @@ let roleExporter = {
                 case "W53N39": sentTo = "W64N31"; break;
                 case "W53N42": sentTo = "W53N39"; break;
                 case "W52N47": sentTo = "W53N39"; break;
-                case "W48N52": sentTo = "W52N47"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {
@@ -50,10 +48,22 @@ let roleExporter = {
             return;
         }
         
+        let shuttingDown = [
+        ];
+        
+        let safeRooms = [
+            "W91N42"
+            , "W53N38"
+        ];
+        
         if (creep.memory.working == false) {
             if (creep.room.name != sentFrom 
-                && creep.memory.withdrawStucture == undefined) {
-                if (sentFrom == "W94N49") { // NOTE: Any rooms that require waypoints to get to should be added here
+                && creep.memory.withdrawStructure == undefined) {
+                if (sentFrom == "W94N49" 
+                    || sentFrom == "W91N42" 
+                    || sentFrom == "W67N25" 
+                    || sentFrom == "W48N42" 
+                    || sentFrom == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
@@ -67,13 +77,15 @@ let roleExporter = {
                 if (creep.memory.startExporting == undefined) {
                     creep.memory.startExporting = Game.time;
                 }
-                let theStorage = Game.rooms[sentFrom].storage;
-                let theTerminal = Game.rooms[sentFrom].terminal;
-                if (_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
-                    && _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") {
+                let theStorage = _.get(Game.rooms, [sentFrom, "storage"], undefined);
+                let theTerminal = _.get(Game.rooms, [sentFrom, "terminal"], undefined);
+                if ((_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
+                        && _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") 
+                    || _.any(safeRooms, (r) => (creep.room.name)) == true) {
                     if (theStorage != undefined 
                         && _.sum(theStorage.store) > 0 
-                        && ((theStorage.my == false 
+                        && (((theStorage.my == false 
+                                    || _.any(shuttingDown, (r) => (sentFrom)) == true) 
                                 && _.filter(theStorage.pos.lookFor(LOOK_STRUCTURES), (s) => (
                                     s.structureType == STRUCTURE_RAMPART 
                                     && s.my == false 
@@ -89,6 +101,10 @@ let roleExporter = {
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(theStorage);
                             creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
+                            creep.memory.withdrawStructure = { 
+                                id: theStorage.id
+                                , pos: theStorage.pos
+                            };
                         }
                         else if (err == OK) {
                             creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
@@ -96,8 +112,9 @@ let roleExporter = {
                     }
                     else if (theTerminal != undefined 
                         && _.sum(theTerminal.store) > 0 
-                        && theTerminal.my == false
-                        && _.filter(theStorage.pos.lookFor(LOOK_STRUCTURES), (s) => (
+                        && (theTerminal.my == false
+                            || _.any(shuttingDown, (r) => (sentFrom)) == true) 
+                        && _.filter(theTerminal.pos.lookFor(LOOK_STRUCTURES), (s) => (
                             s.structureType == STRUCTURE_RAMPART 
                             && s.my == false 
                             && s.isPublic == false)) < 1) {
@@ -106,6 +123,10 @@ let roleExporter = {
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(theTerminal);
                             creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                            creep.memory.withdrawStructure = { 
+                                id: theTerminal.id
+                                , pos: theTerminal.pos
+                            };
                         }
                         else if (err == OK) {
                             creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
@@ -125,7 +146,9 @@ let roleExporter = {
                             return;
                         }
                         
-                        if (structure == undefined
+                        if (structure == undefined 
+                            || structure.structureType == STRUCTURE_STORAGE 
+                            || structure.structureType == STRUCTURE_TERMINAL
                             || (structure.structureType == STRUCTURE_CONTAINER 
                                     && _.sum(structure.store) == 0)
                                 || (structure.structureType == STRUCTURE_POWER_SPAWN 
@@ -139,7 +162,7 @@ let roleExporter = {
                                         || structure.structureType == STRUCTURE_EXTENSION 
                                         || structure.structureType == STRUCTURE_LINK) 
                                     && structure.energy == 0)) {
-                            structure = _.find(creep.room.find(FIND_HOSTILE_STRUCTURES), (s) => (
+                            structure = _.find(creep.room.find(((_.any(shuttingDown, (r) => (sentFrom)) == true) ? FIND_STRUCTURES : FIND_HOSTILE_STRUCTURES)), (s) => (
                                 (((s.structureType == STRUCTURE_CONTAINER 
                                         && _.sum(s.store) > 0)
                                     || (s.structureType == STRUCTURE_POWER_SPAWN 
@@ -239,14 +262,21 @@ let roleExporter = {
         }
         else {
             if (creep.room.name != sentTo) {
-                if (creep.memory.roomID == sentFrom) {
-                    creep.memory.roomID = sentTo;
-                    _.set(Memory.rooms, [sentFrom, "creepCounts", "exporter"], _.get(Memory.rooms, [sentFrom, "creepCounts", "exporter"], 1) - 1);
+                if (creep.memory.roomID != sentTo) {
+                    _.set(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], _.get(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
+                    creep.memory.roomID = sentTo;
                 }
-                if (sentTo == "W9N45"
-                    || sentTo == "W53N39"
-                    || sentFrom == "W94N49") { // NOTE: Any rooms that require waypoints to get to should be added here
+                if (sentTo == "W94N49" 
+                    || sentFrom == "W94N49" 
+                    || sentFrom == "W91N42" 
+                    || sentFrom == "W9N45" 
+                    || sentFrom == "W67N25" 
+                    || (sentTo == "W53N39" 
+                        && sentFrom != "W53N38") 
+                    || sentTo == "W52N47" 
+                    || sentFrom == "W48N42" 
+                    || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
@@ -268,12 +298,16 @@ let roleExporter = {
                     }
                     else {
                         let theTerminal = _.get(Game.rooms, [sentTo, "terminal"], undefined);
+                        let terminalEnergy = _.get(theTerminal, ["store", RESOURCE_ENERGY], 0);
+                        terminalEnergy = _.isFinite(terminalEnergy) ? terminalEnergy : 0;
                         let theStorage = _.get(Game.rooms, [sentTo, "storage"], undefined);
+                        let storageEnergy = _.get(theStorage, ["store", RESOURCE_ENERGY], 0);
+                        storageEnergy = _.isFinite(storageEnergy) ? storageEnergy : 0;
                         if (theTerminal != undefined 
-                            && _.sum(theTerminal.store) < theTerminal.storeCapacity 
+                            && terminalEnergy < Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) 
                             && theTerminal.my == true) {
                             for (let resourceType in creep.carry) {
-                                let err = creep.transfer(theTerminal, resourceType, creep.carry[resourceType]);
+                                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) - terminalEnergy));
                                 if (err == ERR_NOT_IN_RANGE) {
                                     creep.travelTo(theTerminal);
                                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
@@ -283,13 +317,18 @@ let roleExporter = {
                                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
                                     break;
                                 }
+                                else {
+                                    console.log(creep.name + " (exporter) is confused transfering " + resourceType + " to " + STRUCTURE_TERMINAL + ": " + err);
+                                    incrementConfusedCreepCount(creep);
+                                    creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
+                                }
                             }
                         }
                         else if (theStorage != undefined 
                             && _.sum(theStorage.store) < theStorage.storeCapacity 
                             && theStorage.my == true) {
                             for (let resourceType in creep.carry) {
-                                let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
+                                let err = creep.transfer(theStorage, resourceType, Math.min(creep.carry[resourceType], theStorage.storeCapacity - _.sum(theStorage.store)));
                                 if (err == ERR_NOT_IN_RANGE) {
                                     creep.travelTo(theStorage);
                                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
@@ -298,6 +337,32 @@ let roleExporter = {
                                 else if (err == OK) {
                                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
                                     break;
+                                }
+                                else {
+                                    console.log(creep.name + " (exporter) is confused transfering " + resourceType + " to " + STRUCTURE_STORAGE + ": " + err);
+                                    incrementConfusedCreepCount(creep);
+                                    creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
+                                }
+                            }
+                        }
+                        else if (theTerminal != undefined 
+                            && _.sum(theTerminal.store) < theTerminal.storeCapacity 
+                            && theTerminal.my == true) {
+                            for (let resourceType in creep.carry) {
+                                let err = creep.transfer(theTerminal, resourceType, Math.min(creep.carry[resourceType], theTerminal.storeCapacity - _.sum(theTerminal.store)));
+                                if (err == ERR_NOT_IN_RANGE) {
+                                    creep.travelTo(theTerminal);
+                                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                                    break;
+                                }
+                                else if (err == OK) {
+                                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
+                                    break;
+                                }
+                                else {
+                                    console.log(creep.name + " (exporter) is confused transfering " + resourceType + " to " + STRUCTURE_TERMINAL + ": " + err);
+                                    incrementConfusedCreepCount(creep);
+                                    creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
                                 }
                             }
                         }

@@ -1,8 +1,8 @@
 {
   "__inputs": [
     {
-      "name": "DS_SCREEPSPL.US",
-      "label": "screepspl.us",
+      "name": "DS_SCREEPSPLUS-GRAPHITE",
+      "label": "ScreepsPlus-Graphite",
       "description": "",
       "type": "datasource",
       "pluginId": "graphite",
@@ -20,7 +20,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "4.4.2"
+      "version": "4.4.3"
     },
     {
       "type": "panel",
@@ -68,7 +68,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -114,23 +114,23 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.num_creeps, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Total')",
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.num_creeps, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Total')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.creep_counts.$AssignedRole, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+))\\.(?:.*)\\.(.*)$', '\\1 \\2')"
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+))\\.(?:.*)\\.(.*)$', '\\1 \\2')"
             },
             {
               "hide": true,
               "refId": "C",
-              "target": "groupByNode(screeps.roomSummary.$Room.creep_counts.$AssignedRole, 5, 'sum')"
+              "target": "groupByNode(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole, 5, 'sum')"
             },
             {
               "hide": false,
               "refId": "D",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.num_creeps, 3), 'Creeps Total')",
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.num_creeps, 3), 'Creeps Total')",
               "textEditor": false
             }
           ],
@@ -178,7 +178,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -209,7 +209,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.source_energy, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.source_energy, 3)"
             }
           ],
           "thresholds": [],
@@ -254,7 +254,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": null,
           "editable": true,
           "error": false,
@@ -288,7 +288,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.num_enemies, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.num_enemies, 3)"
             }
           ],
           "thresholds": [],
@@ -333,7 +333,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -372,13 +372,13 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.spawns_spawning, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Spawning')",
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.spawns_spawning, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Spawning')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.num_spawns, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Spawns')"
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.num_spawns, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Spawns')"
             }
           ],
           "thresholds": [],
@@ -423,7 +423,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 4,
@@ -456,7 +456,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.ground_resources.energy, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.ground_resources.energy, 3)"
             }
           ],
           "thresholds": [],
@@ -501,7 +501,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -534,7 +534,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.container_energy, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.container_energy, 3)"
             }
           ],
           "thresholds": [],
@@ -579,7 +579,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -617,12 +617,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.energy_avail, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Avaliable')"
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.energy_avail, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Avaliable')"
             },
             {
               "hide": true,
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.energy_cap, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Cap')"
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.energy_cap, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Cap')"
             }
           ],
           "thresholds": [],
@@ -667,7 +667,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -698,7 +698,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.creep_energy, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.creep_energy, 3)"
             }
           ],
           "thresholds": [],
@@ -743,7 +743,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -776,7 +776,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.tower_energy, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.tower_energy, 3)"
             }
           ],
           "thresholds": [],
@@ -821,7 +821,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -859,12 +859,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.storage_energy, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1')"
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.storage_energy, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1')"
             },
             {
               "hide": true,
               "refId": "B",
-              "target": "aliasSub(movingAverage(screeps.roomSummary.$Room.storage_energy, '1hour'), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 MA')",
+              "target": "aliasSub(movingAverage(screeps.dragoonreas.roomSummary.$Room.storage_energy, '1hour'), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 MA')",
               "textEditor": false
             }
           ],
@@ -910,7 +910,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -943,7 +943,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.link_energy, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.link_energy, 3)"
             }
           ],
           "thresholds": [],
@@ -988,7 +988,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1021,12 +1021,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.num_construction_sites, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'All \\1 Sites')"
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.num_construction_sites, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'All \\1 Sites')"
             },
             {
               "hide": true,
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.num_my_construction_sites, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'My \\1 Sites')"
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.num_my_construction_sites, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'My \\1 Sites')"
             }
           ],
           "thresholds": [],
@@ -1083,7 +1083,7 @@
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": 0,
           "fill": 0,
           "id": 101,
@@ -1181,6 +1181,30 @@
               "points": true,
               "stack": false,
               "zindex": 2
+            },
+            {
+              "alias": "moveTo Fallback",
+              "bars": false,
+              "color": "#FCE2DE",
+              "nullPointMode": "null",
+              "pointradius": 4,
+              "points": true,
+              "stack": false,
+              "zindex": 0
+            },
+            {
+              "alias": "Forced Repath",
+              "color": "#E5AC0E"
+            },
+            {
+              "alias": "No Path",
+              "bars": false,
+              "color": "#E24D42",
+              "nullPointMode": "null",
+              "pointradius": 3,
+              "points": true,
+              "stack": false,
+              "zindex": 0
             }
           ],
           "spaceLength": 10,
@@ -1191,53 +1215,63 @@
             {
               "hide": true,
               "refId": "A",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.count, 3, 5), 'Travelling')"
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.count, 3, 5), 'Travelling')"
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), 'Total CPU')"
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), 'Total CPU')"
             },
             {
               "hide": true,
               "refId": "C",
-              "target": "alias(transformNull(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.incompletePath, 3, 5), 0), 'Incomplete Path')"
+              "target": "alias(transformNull(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.incompletePath, 3, 5), 0), 'Incomplete Path')"
             },
             {
               "hide": true,
               "refId": "D",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.newDestination, 3, 5), 'New Destination')"
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.newDestination, 3, 5), 'New Destination')"
             },
             {
               "hide": true,
               "refId": "E",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.offCourse, 3, 5), 'Off Course')"
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.offCourse, 3, 5), 'Off Course')"
             },
             {
               "hide": true,
               "refId": "F",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')"
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')"
             },
             {
               "hide": true,
               "refId": "G",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.portalCheck, 3, 5), 'Portal Check')"
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.portalCheck, 3, 5), 'Portal Check')"
             },
             {
               "hide": true,
               "refId": "H",
-              "target": "alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.stuck, 3, 5), 'Stuck')"
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.stuck, 3, 5), 'Stuck')"
             },
             {
               "hide": false,
               "refId": "I",
-              "target": "alias(divideSeries(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), #F), 'Avg/Creep CPU')",
-              "targetFull": "alias(divideSeries(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), alias(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')), 'Avg/Creep CPU')"
+              "target": "alias(divideSeries(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), #F), 'Avg/Creep CPU')",
+              "targetFull": "alias(divideSeries(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')), 'Avg/Creep CPU')"
             },
             {
               "hide": true,
               "refId": "J",
-              "target": "alias(transformNull(sumSeriesWithWildcards(screeps.roomSummary.$Room.traveler.$TravelerRole.collision, 3, 5), 0), 'Collision')"
+              "target": "alias(transformNull(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.collision, 3, 5), 0), 'Collision')"
+            },
+            {
+              "hide": true,
+              "refId": "L",
+              "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.forceRepath, 3, 5), 'Forced Repath')"
+            },
+            {
+              "hide": true,
+              "refId": "M",
+              "target": "alias(transformNull(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.noPath, 3, 5), 0), 'No Path')"
             }
           ],
           "thresholds": [],
@@ -1334,7 +1368,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": null,
           "editable": true,
           "error": false,
@@ -1436,40 +1470,40 @@
             {
               "hide": false,
               "refId": "D",
-              "target": "alias(screeps.cpu.bucket, 'Bucket')"
+              "target": "alias(screeps.dragoonreas.cpu.bucket, 'Bucket')"
             },
             {
               "refId": "A",
-              "target": "alias(screeps.cpu.used, 'Used')"
+              "target": "alias(screeps.dragoonreas.cpu.used, 'Used')"
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "alias(screeps.cpu.limit, 'Limit')"
+              "target": "alias(screeps.dragoonreas.cpu.limit, 'Limit')"
             },
             {
               "hide": false,
               "refId": "C",
-              "target": "alias(removeAboveValue(screeps.cpu.tickLimit, 499), 'Tick Limit')"
+              "target": "alias(removeAboveValue(screeps.dragoonreas.cpu.tickLimit, 499), 'Tick Limit')"
             },
             {
               "hide": false,
               "refId": "E",
-              "target": "alias(movingAverage(screeps.cpu.used, '1hour'), 'Used MA')"
+              "target": "alias(movingAverage(screeps.dragoonreas.cpu.used, '1hour'), 'Used MA')"
             },
             {
               "refId": "F",
-              "target": "alias(movingAverage(screeps.cpu.bucket, '1hour'), 'Bucket MA')"
+              "target": "alias(movingAverage(screeps.dragoonreas.cpu.bucket, '1hour'), 'Bucket MA')"
             },
             {
               "hide": true,
               "refId": "G",
-              "target": "alias(scale(screeps.node.hasReset, 100), 'Node Reset')"
+              "target": "alias(scale(screeps.dragoonreas.node.hasReset, 100), 'Node Reset')"
             },
             {
               "hide": true,
               "refId": "H",
-              "target": "alias(scale(transformNull(removeBelowValue(screeps.ticksSkipped, 0), 0), 100), 'Ticks Skipped')"
+              "target": "alias(scale(transformNull(removeBelowValue(screeps.dragoonreas.ticksSkipped, 0), 0), 100), 'Ticks Skipped')"
             }
           ],
           "thresholds": [
@@ -1524,7 +1558,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -1555,7 +1589,7 @@
           "targets": [
             {
               "refId": "B",
-              "target": "alias(screeps.memory.used, 'Memory')"
+              "target": "alias(screeps.dragoonreas.memory.used, 'Memory')"
             }
           ],
           "thresholds": [],
@@ -1622,7 +1656,7 @@
                   "datasourceId": 123,
                   "model": {
                     "refId": "A",
-                    "target": "alias(derivative(screeps.currentTick), 'Tick Duration')",
+                    "target": "alias(derivative(screeps.dragoonreas.currentTick), 'Tick Duration')",
                     "textEditor": false
                   },
                   "params": [
@@ -1673,7 +1707,7 @@
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "fill": 1,
           "hideTimeOverride": false,
           "id": 63,
@@ -1795,70 +1829,70 @@
             {
               "hide": true,
               "refId": "A",
-              "target": "alias(screeps.currentTick, 'Tick Number')",
+              "target": "alias(screeps.dragoonreas.currentTick, 'Tick Number')",
               "textEditor": false
             },
             {
               "hide": false,
               "refId": "D",
-              "target": "alias(absolute(screeps.timeSinceLastTick), 'Tick Duration')"
+              "target": "alias(absolute(screeps.dragoonreas.timeSinceLastTick), 'Tick Duration')"
             },
             {
               "hide": false,
               "refId": "E",
-              "target": "alias(absolute(movingAverage(screeps.timeSinceLastTick, '1hour')), 'Tick Duration MA')"
+              "target": "alias(absolute(movingAverage(screeps.dragoonreas.timeSinceLastTick, '1hour')), 'Tick Duration MA')"
             },
             {
               "hide": false,
               "refId": "F",
-              "target": "alias(screeps.node.totalTicksUsed, 'Node Usage')"
+              "target": "alias(screeps.dragoonreas.node.totalTicksUsed, 'Node Usage')"
             },
             {
               "hide": false,
               "refId": "G",
-              "target": "alias(screeps.node.hasSwapped, 'Node Swapping')"
+              "target": "alias(screeps.dragoonreas.node.hasSwapped, 'Node Swapping')"
             },
             {
               "hide": false,
               "refId": "H",
-              "target": "alias(screeps.node.hasReset, 'Node Resetting')"
+              "target": "alias(screeps.dragoonreas.node.hasReset, 'Node Resetting')"
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "alias(screeps.newCommit, 'Code Committed')"
+              "target": "alias(screeps.dragoonreas.newCommit, 'Code Committed')"
             },
             {
               "hide": false,
               "refId": "C",
-              "target": "alias(screeps.codeUptime, 'Code Uptime')"
+              "target": "alias(screeps.dragoonreas.codeUptime, 'Code Uptime')"
             },
             {
               "hide": false,
               "refId": "I",
-              "target": "alias(transformNull(removeBelowValue(screeps.ticksSkipped, 0), 0), 'Ticks Skipped')"
+              "target": "alias(transformNull(removeBelowValue(screeps.dragoonreas.ticksSkipped, 0), 0), 'Ticks Skipped')"
             },
             {
               "hide": false,
               "refId": "J",
-              "target": "alias(absolute(transformNull(removeAboveValue(screeps.ticksSkipped, 0), 0)), 'Ticks Repeated')"
+              "target": "alias(absolute(transformNull(removeAboveValue(screeps.dragoonreas.ticksSkipped, 0), 0)), 'Ticks Repeated')"
             },
             {
               "hide": true,
               "refId": "K",
-              "target": "alias(derivative(screeps.currentTick), 'Ticks/Graph Update')",
+              "target": "alias(derivative(screeps.dragoonreas.currentTick), 'Ticks/Graph Update')",
               "textEditor": false
             },
             {
               "hide": false,
               "refId": "L",
-              "target": "alias(transformNull(screeps.tickSlept, 0), 'Tick Slept')",
+              "target": "alias(transformNull(screeps.dragoonreas.tickSlept, 0), 'Tick Slept')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "M",
-              "target": "alias(scale(invert(perSecond(screeps.currentTick)), 1000),\"Tick Duration (alt)\")",
+              "target": "alias(scale(invert(perSecond(screeps.dragoonreas.currentTick)), 1000),\"Tick Duration (alt)\")",
               "textEditor": true
             }
           ],
@@ -1915,7 +1949,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -1951,7 +1985,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.controller_downgrade, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.controller_downgrade, 3)"
             }
           ],
           "thresholds": [],
@@ -1996,7 +2030,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -2107,24 +2141,24 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.controller_progress, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Progress')",
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.controller_progress, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Progress')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.controller_needed, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Next Level')"
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.controller_needed, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Next Level')"
             },
             {
               "hide": false,
               "refId": "C",
-              "target": "aliasSub(perSecond(screeps.roomSummary.$Room.controller_progress), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 p/s')",
+              "target": "aliasSub(perSecond(screeps.dragoonreas.roomSummary.$Room.controller_progress), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 p/s')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "D",
-              "target": "aliasSub(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 p/s MA')",
+              "target": "aliasSub(movingAverage(perSecond(screeps.dragoonreas.roomSummary.$Room.controller_progress), '1hour'), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 p/s MA')",
               "textEditor": false
             }
           ],
@@ -2183,7 +2217,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -2250,27 +2284,27 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(screeps.gcl.progress, 'Progress')"
+              "target": "alias(screeps.dragoonreas.gcl.progress, 'Progress')"
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "alias(screeps.gcl.progressTotal, 'Required')"
+              "target": "alias(screeps.dragoonreas.gcl.progressTotal, 'Required')"
             },
             {
               "hide": true,
               "refId": "C",
-              "target": "alias(screeps.gcl.level, 'Level')"
+              "target": "alias(screeps.dragoonreas.gcl.level, 'Level')"
             },
             {
               "hide": false,
               "refId": "D",
-              "target": "alias(perSecond(screeps.gcl.progress), 'GLC/s')"
+              "target": "alias(perSecond(screeps.dragoonreas.gcl.progress), 'GLC/s')"
             },
             {
               "hide": false,
               "refId": "E",
-              "target": "alias(movingAverage(perSecond(screeps.gcl.progress), '1hour'), 'GLC/s MA')",
+              "target": "alias(movingAverage(perSecond(screeps.dragoonreas.gcl.progress), '1hour'), 'GLC/s MA')",
               "textEditor": false
             }
           ],
@@ -2322,7 +2356,7 @@
             "rgba(237, 129, 40, 0.89)",
             "rgba(50, 172, 45, 0.97)"
           ],
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "format": "percent",
           "gauge": {
             "maxValue": 100,
@@ -2371,13 +2405,13 @@
             {
               "hide": true,
               "refId": "A",
-              "target": "screeps.gcl.progressTotal"
+              "target": "screeps.dragoonreas.gcl.progressTotal"
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "asPercent(screeps.gcl.progress, #A)",
-              "targetFull": "asPercent(screeps.gcl.progress, screeps.gcl.progressTotal)"
+              "target": "asPercent(screeps.dragoonreas.gcl.progress, #A)",
+              "targetFull": "asPercent(screeps.dragoonreas.gcl.progress, screeps.dragoonreas.gcl.progressTotal)"
             }
           ],
           "thresholds": "",
@@ -2402,7 +2436,7 @@
             "rgba(237, 129, 40, 0.89)",
             "rgba(245, 54, 54, 0.9)"
           ],
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": null,
           "format": "s",
           "gauge": {
@@ -2452,26 +2486,26 @@
             {
               "hide": true,
               "refId": "A",
-              "target": "alias(movingAverage(perSecond(screeps.gcl.progress), '1hour'), 'GLC/s MA')",
+              "target": "alias(movingAverage(perSecond(screeps.dragoonreas.gcl.progress), '1hour'), 'GLC/s MA')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "B",
-              "target": "alias(diffSeries(screeps.gcl.progressTotal, #C), 'Remaining')",
-              "targetFull": "alias(diffSeries(screeps.gcl.progressTotal, alias(screeps.gcl.progress, 'Progress')), 'Remaining')",
+              "target": "alias(diffSeries(screeps.dragoonreas.gcl.progressTotal, #C), 'Remaining')",
+              "targetFull": "alias(diffSeries(screeps.dragoonreas.gcl.progressTotal, alias(screeps.dragoonreas.gcl.progress, 'Progress')), 'Remaining')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "C",
-              "target": "alias(screeps.gcl.progress, 'Progress')",
+              "target": "alias(screeps.dragoonreas.gcl.progress, 'Progress')",
               "textEditor": false
             },
             {
               "refId": "D",
               "target": "alias(holtWintersForecast(divideSeries(#B, #A)), 'Next GCL')",
-              "targetFull": "alias(holtWintersForecast(divideSeries(alias(diffSeries(screeps.gcl.progressTotal, #D), 'Remaining'), alias(movingAverage(perSecond(screeps.gcl.progress), '1hour'), 'GLC/s MA'))), 'Next GCL')",
+              "targetFull": "alias(holtWintersForecast(divideSeries(alias(diffSeries(screeps.dragoonreas.gcl.progressTotal, #D), 'Remaining'), alias(movingAverage(perSecond(screeps.dragoonreas.gcl.progress), '1hour'), 'GLC/s MA'))), 'Next GCL')",
               "textEditor": false
             }
           ],
@@ -2505,7 +2539,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": null,
           "fill": 1,
           "id": 137,
@@ -2553,27 +2587,27 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(offset(screeps.leaderboard.rank, 1), 'Rank')"
+              "target": "alias(offset(screeps.dragoonreas.leaderboard.rank, 1), 'Rank')"
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "alias(screeps.leaderboard.score, 'Score')"
+              "target": "alias(screeps.dragoonreas.leaderboard.score, 'Score')"
             },
             {
               "hide": true,
               "refId": "C",
-              "target": "alias(screeps.gcl.progress, 'Progress')"
+              "target": "alias(screeps.dragoonreas.gcl.progress, 'Progress')"
             },
             {
               "hide": true,
               "refId": "D",
-              "target": "alias(perSecond(screeps.gcl.progress), 'Progress/s')"
+              "target": "alias(perSecond(screeps.dragoonreas.gcl.progress), 'Progress/s')"
             },
             {
               "hide": true,
               "refId": "E",
-              "target": "alias(perSecond(screeps.leaderboard.score), 'Score/s')"
+              "target": "alias(perSecond(screeps.dragoonreas.leaderboard.score), 'Score/s')"
             }
           ],
           "thresholds": [],
@@ -2629,7 +2663,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -2660,7 +2694,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.terminal_energy, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.terminal_energy, 3)"
             }
           ],
           "thresholds": [],
@@ -2705,7 +2739,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": null,
           "editable": true,
           "error": false,
@@ -2739,7 +2773,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.terminal_minerals, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.terminal_minerals, 3)"
             }
           ],
           "thresholds": [],
@@ -2784,7 +2818,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": 2,
           "editable": true,
           "error": false,
@@ -2816,7 +2850,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(screeps.market.credits, 'Credits')"
+              "target": "alias(screeps.dragoonreas.market.credits, 'Credits')"
             }
           ],
           "thresholds": [],
@@ -2875,7 +2909,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -2906,7 +2940,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.storage_minerals, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.storage_minerals, 3)"
             }
           ],
           "thresholds": [],
@@ -2933,7 +2967,7 @@
               "label": null,
               "logBase": 1,
               "max": null,
-              "min": null,
+              "min": "0",
               "show": true
             },
             {
@@ -2951,7 +2985,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -2982,7 +3016,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.mineral_amount, 3)"
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.mineral_amount, 3)"
             }
           ],
           "thresholds": [],
@@ -3009,7 +3043,7 @@
               "label": null,
               "logBase": 1,
               "max": null,
-              "min": null,
+              "min": "0",
               "show": true
             },
             {
@@ -3027,7 +3061,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 4,
@@ -3063,7 +3097,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(screeps.roomSummary.$Room.ground_resources.$Mineral, 3, 5)",
+              "target": "aliasByNode(screeps.dragoonreas.roomSummary.$Room.ground_resources.$Mineral, 3, 5)",
               "textEditor": false
             }
           ],
@@ -3121,7 +3155,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "fill": 0,
           "id": 139,
           "legend": {
@@ -3174,16 +3208,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(screeps.power, 'Processed')"
+              "target": "alias(screeps.dragoonreas.power, 'Processed')"
             },
             {
               "refId": "B",
-              "target": "alias(perSecond(screeps.power), 'Processed/s')",
+              "target": "alias(perSecond(screeps.dragoonreas.power), 'Processed/s')",
               "textEditor": false
             },
             {
               "refId": "C",
-              "target": "alias(movingAverage(perSecond(screeps.power), '1hour'), 'Processed/s MA')",
+              "target": "alias(movingAverage(perSecond(screeps.dragoonreas.power), '1hour'), 'Processed/s MA')",
               "textEditor": false
             }
           ],
@@ -3240,7 +3274,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -3279,12 +3313,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.road.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Road')",
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.structure_info.road.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Road')",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.container.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Container')",
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.structure_info.container.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Container')",
               "textEditor": false
             }
           ],
@@ -3330,7 +3364,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -3370,13 +3404,13 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.rampart.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Rampart')",
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.structure_info.rampart.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Rampart')",
               "textEditor": false
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "aliasSub(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Wall')",
+              "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.structure_info.constructedWall.min_hits, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', '\\1 Wall')",
               "textEditor": false
             }
           ],
@@ -3484,7 +3518,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": 0,
           "fill": 7,
           "id": 35,
@@ -3585,7 +3619,7 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+              "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
             }
           ],
           "thresholds": [],
@@ -3625,7 +3659,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map3/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 188,
           "links": [],
@@ -3639,7 +3673,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": 0,
           "fill": 7,
           "id": 138,
@@ -3769,6 +3803,10 @@
               "alias": "/.*hoarder/",
               "color": "#F9E2D2",
               "zindex": -1
+            },
+            {
+              "alias": "Idle rockhound",
+              "points": false
             }
           ],
           "spaceLength": 10,
@@ -3779,16 +3817,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.roomSummary.$Room.creep_exe_counts.$ExecutedRole)), 5)",
+              "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_exe_counts.$ExecutedRole)), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
+              "target": "sortByMinima(aliasSub(screeps.dragoonreas.roomSummary.$Room.creep_confusion_counts.$ConfusedRole, '.*\\.(.*)$', 'Confused \\1'))"
             },
             {
               "refId": "C",
-              "target": "sortByMinima(aliasSub(screeps.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
+              "target": "sortByMinima(aliasSub(screeps.dragoonreas.roomSummary.$Room.creep_idle_counts.$IdleRole, '.*\\.(.*)$', 'Idle \\1'))"
             }
           ],
           "thresholds": [],
@@ -3832,7 +3870,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "fill": 0,
           "id": 99,
           "legend": {
@@ -3892,24 +3930,24 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(screeps.roomSummary.$Room.controller_needed, 'Required')"
+              "target": "alias(screeps.dragoonreas.roomSummary.$Room.controller_needed, 'Required')"
             },
             {
               "refId": "B",
-              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')"
+              "target": "alias(screeps.dragoonreas.roomSummary.$Room.controller_progress, 'Progress')"
             },
             {
               "hide": true,
               "refId": "C",
-              "target": "alias(screeps.roomSummary.$Room.controller_level, 'Level')"
+              "target": "alias(screeps.dragoonreas.roomSummary.$Room.controller_level, 'Level')"
             },
             {
               "refId": "D",
-              "target": "alias(perSecond(screeps.roomSummary.$Room.controller_progress), 'RCL/s')"
+              "target": "alias(perSecond(screeps.dragoonreas.roomSummary.$Room.controller_progress), 'RCL/s')"
             },
             {
               "refId": "E",
-              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')"
+              "target": "alias(movingAverage(perSecond(screeps.dragoonreas.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')"
             }
           ],
           "thresholds": [],
@@ -3957,7 +3995,7 @@
             "rgba(237, 129, 40, 0.89)",
             "rgba(50, 172, 45, 0.97)"
           ],
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "format": "percent",
           "gauge": {
             "maxValue": 100,
@@ -4006,12 +4044,12 @@
             {
               "hide": true,
               "refId": "A",
-              "target": "screeps.roomSummary.$Room.controller_needed"
+              "target": "screeps.dragoonreas.roomSummary.$Room.controller_needed"
             },
             {
               "refId": "B",
-              "target": "asPercent(screeps.roomSummary.$Room.controller_progress, #A)",
-              "targetFull": "asPercent(screeps.roomSummary.$Room.controller_progress, screeps.roomSummary.$Room.controller_needed)"
+              "target": "asPercent(screeps.dragoonreas.roomSummary.$Room.controller_progress, #A)",
+              "targetFull": "asPercent(screeps.dragoonreas.roomSummary.$Room.controller_progress, screeps.dragoonreas.roomSummary.$Room.controller_needed)"
             }
           ],
           "thresholds": "",
@@ -4036,7 +4074,7 @@
             "rgba(237, 129, 40, 0.89)",
             "rgba(245, 54, 54, 0.9)"
           ],
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "format": "s",
           "gauge": {
             "maxValue": 100,
@@ -4085,19 +4123,19 @@
             {
               "hide": true,
               "refId": "A",
-              "target": "alias(movingAverage(perSecond(screeps.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
+              "target": "alias(movingAverage(perSecond(screeps.dragoonreas.roomSummary.$Room.controller_progress), '1hour'), 'RCL/s MA')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "B",
-              "target": "alias(diffSeries(screeps.roomSummary.$Room.controller_needed, #C), 'Remaining')",
+              "target": "alias(diffSeries(screeps.dragoonreas.roomSummary.$Room.controller_needed, #C), 'Remaining')",
               "textEditor": false
             },
             {
               "hide": true,
               "refId": "C",
-              "target": "alias(screeps.roomSummary.$Room.controller_progress, 'Progress')",
+              "target": "alias(screeps.dragoonreas.roomSummary.$Room.controller_progress, 'Progress')",
               "textEditor": false
             },
             {
@@ -4124,7 +4162,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_SCREEPSPL.US}",
+          "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
           "decimals": 3,
           "fill": 0,
           "id": 100,
@@ -4187,20 +4225,20 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.max_hits, 'Max Wall')"
+              "target": "alias(screeps.dragoonreas.roomSummary.$Room.structure_info.constructedWall.max_hits, 'Max Wall')"
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.max_hits, 'Max Rampart')"
+              "target": "alias(screeps.dragoonreas.roomSummary.$Room.structure_info.rampart.max_hits, 'Max Rampart')"
             },
             {
               "refId": "C",
-              "target": "alias(screeps.roomSummary.$Room.structure_info.constructedWall.min_hits, 'Min Wall')"
+              "target": "alias(screeps.dragoonreas.roomSummary.$Room.structure_info.constructedWall.min_hits, 'Min Wall')"
             },
             {
               "refId": "D",
-              "target": "alias(screeps.roomSummary.$Room.structure_info.rampart.min_hits, 'Min Rampart')"
+              "target": "alias(screeps.dragoonreas.roomSummary.$Room.structure_info.rampart.min_hits, 'Min Rampart')"
             }
           ],
           "thresholds": [],
@@ -4258,16 +4296,16 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_SCREEPSPL.US}",
+        "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "Room",
         "options": [],
-        "query": "screeps.roomSummary.*",
+        "query": "screeps.dragoonreas.roomSummary.*",
         "refresh": 1,
-        "regex": "W(?!17|19|24|48|55|65|72|81|84|87)\\d+N(?!32|42)\\d+",
+        "regex": "W(?!17|19|24|42|48|55|65|72|81|84|87|91|94)\\d+N(?!32|42|43)\\d+",
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -4278,14 +4316,14 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_SCREEPSPL.US}",
+        "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
         "hide": 2,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "Mineral",
         "options": [],
-        "query": "screeps.roomSummary.*.ground_resources.*",
+        "query": "screeps.dragoonreas.roomSummary.*.ground_resources.*",
         "refresh": 1,
         "regex": "(?!energy|power)\\w+",
         "sort": 0,
@@ -4298,14 +4336,14 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_SCREEPSPL.US}",
+        "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
         "hide": 2,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "AssignedRole",
         "options": [],
-        "query": "screeps.roomSummary.*.creep_counts.*",
+        "query": "screeps.dragoonreas.roomSummary.*.creep_counts.*",
         "refresh": 1,
         "regex": "(?!collector|hoarder)\\w+",
         "sort": 0,
@@ -4318,14 +4356,14 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_SCREEPSPL.US}",
+        "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
         "hide": 2,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "ExecutedRole",
         "options": [],
-        "query": "screeps.roomSummary.*.creep_exe_counts.*",
+        "query": "screeps.dragoonreas.roomSummary.*.creep_exe_counts.*",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -4338,14 +4376,14 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_SCREEPSPL.US}",
+        "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
         "hide": 2,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "ConfusedRole",
         "options": [],
-        "query": "screeps.roomSummary.*.creep_confusion_counts.*",
+        "query": "screeps.dragoonreas.roomSummary.*.creep_confusion_counts.*",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -4358,14 +4396,14 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_SCREEPSPL.US}",
+        "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
         "hide": 2,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "IdleRole",
         "options": [],
-        "query": "screeps.roomSummary.*.creep_idle_counts.*",
+        "query": "screeps.dragoonreas.roomSummary.*.creep_idle_counts.*",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -4378,14 +4416,14 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_SCREEPSPL.US}",
+        "datasource": "${DS_SCREEPSPLUS-GRAPHITE}",
         "hide": 2,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "TravelerRole",
         "options": [],
-        "query": "screeps.roomSummary.*.traveler.*",
+        "query": "screeps.dragoonreas.roomSummary.*.traveler.*",
         "refresh": 2,
         "regex": "",
         "sort": 0,
@@ -4428,6 +4466,6 @@
     ]
   },
   "timezone": "browser",
-  "title": "Screeps",
-  "version": 219
+  "title": "Screeps (Upgraded)",
+  "version": 229
 }
