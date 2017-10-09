@@ -42,7 +42,9 @@ let roleDemolisher = {
                     }
                     
                     if (creep.room.name != sentTo) {
-                        if (sentTo == "W48N42") { // NOTE: Any rooms that require waypoints to get to should be added here
+                        if (sentTo == "W48N42" 
+                            || sentTo == "W47N44" 
+                            || sentTo == "W43N42") { // NOTE: Any rooms that require waypoints to get to should be added here
                             ROLES["scout"].run(creep);
                         }
                         else {
@@ -143,8 +145,10 @@ let roleDemolisher = {
         }
         else {
             if (creep.room.name != creep.memory.roomID 
-                && creep.memory.roomSentTo == "W48N42" 
-                && creep.memory.roomID == "W53N39") {
+                && ((creep.memory.roomID == "W53N39" 
+                        && sentTo == "W48N42")
+                    || sentTo == "W47N44" 
+                    || sentTo == "W43N42")) {
                 ROLES["scout"].run(creep);
             }
             else {

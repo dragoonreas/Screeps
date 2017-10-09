@@ -32,7 +32,7 @@ module.exports = function(globalOpts = {}){
         exportTraveler:    true,
         installTraveler:   false,
         installPrototype:  true,
-        maxOps:            20000,
+        maxOps:            40000, // 50 * 50 * 16 (tiles in room * max rooms)
         defaultStuckValue: 3,
         reportThreshold:   2000,
         visualisePathStyle:undefined,

@@ -63,6 +63,7 @@ let roleExporter = {
                     || sentFrom == "W91N42" 
                     || sentFrom == "W67N25" 
                     || sentFrom == "W48N42" 
+                    || sentFrom == "W47N44" 
                     || sentFrom == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
@@ -150,18 +151,18 @@ let roleExporter = {
                             || structure.structureType == STRUCTURE_STORAGE 
                             || structure.structureType == STRUCTURE_TERMINAL
                             || (structure.structureType == STRUCTURE_CONTAINER 
-                                    && _.sum(structure.store) == 0)
-                                || (structure.structureType == STRUCTURE_POWER_SPAWN 
-                                    && (structure.energy == 0 
-                                        && structure.power == 0)) 
-                                || (structure.structureType == STRUCTURE_LAB 
-                                    && (structure.energy == 0 
-                                        && structure.mineralAmount == 0)) 
-                                || ((structure.structureType == STRUCTURE_TOWER 
-                                        || structure.structureType == STRUCTURE_SPAWN 
-                                        || structure.structureType == STRUCTURE_EXTENSION 
-                                        || structure.structureType == STRUCTURE_LINK) 
-                                    && structure.energy == 0)) {
+                                && _.sum(structure.store) == 0)
+                            || (structure.structureType == STRUCTURE_POWER_SPAWN 
+                                && (structure.energy == 0 
+                                    && structure.power == 0)) 
+                            || (structure.structureType == STRUCTURE_LAB 
+                                && (structure.energy == 0 
+                                    && structure.mineralAmount == 0)) 
+                            || ((structure.structureType == STRUCTURE_TOWER 
+                                    || structure.structureType == STRUCTURE_SPAWN 
+                                    || structure.structureType == STRUCTURE_EXTENSION 
+                                    || structure.structureType == STRUCTURE_LINK) 
+                                && structure.energy == 0)) {
                             structure = _.find(creep.room.find(((_.any(shuttingDown, (r) => (sentFrom)) == true) ? FIND_STRUCTURES : FIND_HOSTILE_STRUCTURES)), (s) => (
                                 (((s.structureType == STRUCTURE_CONTAINER 
                                         && _.sum(s.store) > 0)
@@ -199,11 +200,11 @@ let roleExporter = {
                             }
                             else if (structure.structureType == STRUCTURE_POWER_SPAWN 
                                 && structure.power > 0) {
-                                resourceType == RESOURCE_POWER;
+                                resourceType = RESOURCE_POWER;
                             }
                             else if (structure.structureType == STRUCTURE_LAB 
                                 && structure.mineralAmount > 0) {
-                                resourceType == structure.mineralType;
+                                resourceType = structure.mineralType;
                             }
                             
                             let err = creep.withdraw(structure, resourceType);
@@ -276,6 +277,7 @@ let roleExporter = {
                         && sentFrom != "W53N38") 
                     || sentTo == "W52N47" 
                     || sentFrom == "W48N42" 
+                    || sentFrom == "W47N44" 
                     || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }

@@ -455,12 +455,12 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W9N45", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 1
+    , demolisher: 0
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: 1
+    , exporter: 0
     , rockhound: (_.get(Game.rooms, ["W9N45", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W81N29", "creepMins"], {
@@ -535,7 +535,7 @@ _.set(Memory.rooms, ["W53N39", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W53N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: 2
+    , exporter: 0
     , rockhound: (_.get(Game.rooms, ["W53N39", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W53N42", "creepMins"], {
@@ -565,7 +565,7 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["W52N47", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: 1
+    , exporter: 0
     , rockhound: (_.get(Game.rooms, ["W52N47", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W48N52", "creepMins"], {
@@ -824,15 +824,17 @@ module.exports.loop = function () {
             });
             */
             let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
+            let unblockedAt = ((theController.upgradeBlocked && (Game.time + theController.upgradeBlocked)) || undefined);
             _.set(this.memory, ["controller"], { 
-                id: theController.id 
-                , pos: theController.pos 
-                , owner: theController.owner 
+                id: theController.id
+                , pos: theController.pos
+                , owner: theController.owner
                 , reservation: ((theController.reservation && { username: _.get(theController.reservation, ["username"], ""), endsAt: Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1) }) || undefined)
-                , level: theController.level 
-                , downgradeAt: downgradeAt 
+                , level: theController.level
+                , downgradeAt: downgradeAt
                 , neutralAt: ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 1], 0))) || undefined) // TODO: Fix this line
-                , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined) 
+                , unblockedAt: unblockedAt
+                , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined)
                 , sign: theController.sign
             });
         }
@@ -1102,7 +1104,9 @@ module.exports.loop = function () {
                 && theController.my == true 
                 && theController.safeMode == undefined 
                 && theController.safeModeCooldown == undefined 
-                && theController.safeModeAvaliable > 0
+                && theController.safeModeAvaliable > 0 
+                && theController.upgradeBlocked == undefined 
+                && theController.ticksToDowngrade > CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD 
                 && (theController.level < 3 
                 || _.some(Game.spawns, (s) => (
                     s.room.name == roomID 
@@ -1198,7 +1202,7 @@ module.exports.loop = function () {
                 let collectorCreeps = theRoom.find(FIND_MY_CREEPS, {
                     filter: (c) => (
                         c.spawning == false 
-                        && c.memory.droppedResourceID == undefined 
+                        && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                         && c.hits == c.hitsMax 
                         && c.memory.speeds["2"] <= 2 
                         && c.memory.role != "miner" 
@@ -1212,30 +1216,33 @@ module.exports.loop = function () {
                 )});
                 for (let droppedResource of droppedResources) {
 					let hasAssignedCreep = _.some(Game.creeps, (c) => (
-					    c.memory.droppedResourceID == droppedResource.id
+					    _.get(c.memory, ["droppedResource", "id"], undefined) == droppedResource.id
                     ));
 					if (hasAssignedCreep == false) {
                         let creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                c.memory.droppedResourceID == undefined 
+                                _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                 && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
                                 && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                         )});
                         if (creep == undefined) {
                             creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                    c.memory.droppedResourceID == undefined 
+                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && _.sum(c.carry) == 0 
                                     && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                             )});
                             if (creep == undefined) {
                                 creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                        c.memory.droppedResourceID == undefined 
+                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && _.sum(c.carry) < c.carryCapacity 
                                         && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                 )});
                             }
                         }
                         if (creep != undefined) {
-                            creep.memory.droppedResourceID = droppedResource.id;
+                            creep.memory.droppedResource = {
+                                id: droppedResource.id
+                                , pos: droppedResource.pos
+                            };
                             console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(droppedResource.amount, creep.carryCapacity - _.sum(creep.carry)) + " of " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
                         }
                         else {
@@ -1352,7 +1359,7 @@ module.exports.loop = function () {
             if (Game.cpu.bucket > 7500) {
                 for (let resourceName in theTerminal.store) {
                     let resourceCount = theTerminal.store[resourceName];
-                    if (resourceCount >= 10 
+                    if (resourceCount > 0 
                         && resourceName != RESOURCE_ENERGY 
                         && resourceName != RESOURCE_POWER) {
                         let buyOrders = Game.market.orderCache(ORDER_BUY, resourceName);
@@ -1368,7 +1375,7 @@ module.exports.loop = function () {
                                 let err = Game.market.deal(buyOrder.id, amountToSend, roomID);
                                 if (err == OK) {
                                     madeDeal = true;
-                                    console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend) + " (" + buyOrder.price + " each) credits");
+                                    console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
                                     break; // Each terminal can only do one deal per tick
                                 }
                             }
@@ -1379,8 +1386,8 @@ module.exports.loop = function () {
             
             let freeSpace = theTerminal.storeCapacity - _.sum(theTerminal.store);
             if (madeDeal == false 
-                && requiredPower >= 10 
-                && freeSpace >= 10) {
+                && requiredPower > 0 
+                && freeSpace > 0) {
                 let sellOrders = _.filter(Game.market.orderCache(ORDER_SELL, RESOURCE_POWER), (o) => (
                     o.price <= 2
                 ));
@@ -1396,7 +1403,7 @@ module.exports.loop = function () {
                         let err = Game.market.deal(sellOrder.id, amountToBuy, roomID);
                         if (err == OK) {
                             madeDeal = true;
-                            console.log("Buying " + amountToBuy + " " + RESOURCE_POWER + " from " + sellOrder.roomName + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (sellOrder.price * amountToBuy) + " (" + sellOrder.price + " each) credits");
+                            console.log("Buying " + amountToBuy + " " + RESOURCE_POWER + " from " + sellOrder.roomName + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (sellOrder.price * amountToBuy).toFixed(3) + " (" + sellOrder.price + " each) credits");
                         }
                     }
                 }
@@ -1405,8 +1412,8 @@ module.exports.loop = function () {
             let terminalEnergy = _.get(theTerminal.store, [RESOURCE_ENERGY], 0);
             let energyTarget = Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - ((_.sum(theTerminal.store) || 0) - terminalEnergy)));
             let requiredEnergy = Math.max((energyTarget - terminalEnergy), 0);
-            if (freeSpace >= 1000 
-                && requiredEnergy >= 1000 
+            if (freeSpace > 0 
+                && requiredEnergy > 0 
                 && terminalEnergy < (energyTarget * 0.9)) {
                 let buyOrder = _.find(Game.market.orders, (o) => (
                     o.roomName == roomID 
@@ -1426,7 +1433,7 @@ module.exports.loop = function () {
                         if (deposit <= Game.market.credits) {
                             let err = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, buyPrice, amountToBuy, roomID);
                             if (err == OK) {
-                                console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy) + " (" + buyPrice + " each) credits");
+                                console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
                             }
                             else {
                                 console.log(roomID, "createOrder", err);
@@ -1440,7 +1447,7 @@ module.exports.loop = function () {
                             if (deposit <= Game.market.credits) {
                                 let err = Game.market.changeOrderPrice(buyOrder.id, buyPrice);
                                 if (err == OK) {
-                                    console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits from " + (buyOrder.price * buyOrder.remainingAmount) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount) + " (" + buyPrice + " each) credits");
+                                    console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
                                 }
                                 else {
                                     console.log(roomID, "changeOrderPrice", err);
@@ -1454,7 +1461,7 @@ module.exports.loop = function () {
                             if (deposit <= Game.market.credits) {
                                 let err = Game.market.extendOrder(buyOrder.id, amountToAdd);
                                 if (err == OK) {
-                                    console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy) + " (" + buyPrice + " each) credits");
+                                    console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
                                 }
                                 else {
                                     console.log(roomID, "extendOrder", err);
@@ -1501,11 +1508,11 @@ module.exports.loop = function () {
             if (creep.hits < creep.hitsMax 
                 && creep.memory.role != "adaptable" 
                 && creep.memory.role != "healer") { // TODO: Check if creep has active heal parts instead
-                creep.memory.droppedResourceID = undefined;
+                creep.memory.droppedResource = undefined;
                 ROLES["recyclable"].run(creep);
                 runningRole = true;
             }
-            else if (creep.memory.droppedResourceID != undefined) {
+            else if (_.get(creep.memory, ["droppedResource", "id"], undefined) != undefined) {
                 ROLES["collector"].run(creep);
                 runningRole = true;
             }
@@ -1581,7 +1588,7 @@ module.exports.loop = function () {
                                 continue;
                             //}
                         }
-                        creepName = spawn.createCustomCreep(creepType);
+                        creepName = spawn.spawnCustomCreep(creepType);
                         if (_.isString(creepName) == true) {
                             console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
                         }

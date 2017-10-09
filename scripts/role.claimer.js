@@ -27,11 +27,12 @@ let roleClaimer = {
             return;
         }
         let theController = Game.getObjectById(creep.memory.controllerID);
-        let canAttack = (_.countBy(creep.body, "type")[CLAIM] || 0) >= 5;
         if (theController == undefined || creep.room.name != theController.room.name) {
             let controllerMem = Memory.controllers[creep.memory.controllerID];
             if (controllerMem != undefined) {
-                if ((_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") && canAttack == false) { // TODO: Add additional checks to make sure we're not accidently attacking an ally
+                if ((_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" 
+                        || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") 
+                    && _.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time) > Game.time) { // TODO: Add additional checks to make sure we're not accidently attacking an ally
                     creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
                 }
                 else if (creep.memory.controllerID == "577b935b0f9d51615fa48076" 
@@ -175,6 +176,10 @@ let roleClaimer = {
                 creep.travelTo(new RoomPosition(38, 7, "W48N52"));
                 creep.say(travelToIcons(creep) + "W48N52", true);
             }
+            else if (creep.memory.controllerID == "577b92a40f9d51615fa46dbd") {
+                creep.memory.roomSentTo = "W47N44";
+                ROLES["scout"].run(creep);
+            }
             else if (creep.memory.controllerID == "579fa8f80700be0674d2e928") {
                 creep.travelTo(new RoomPosition(26, 28, "W42N51"));
                 creep.say(travelToIcons(creep) + "W42N51", true);
@@ -187,22 +192,20 @@ let roleClaimer = {
         }
         else {
             let err = ERR_GCL_NOT_ENOUGH;
-            if (_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") { // TODO: Add additional checks to make sure we're not accidently attacking an ally
-                if (canAttack == false) {
-                    err == ERR_NO_BODYPART;
+            if (_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" 
+                || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") { // TODO: Add additional checks to make sure we're not accidently attacking an ally
+                if (_.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time) > Game.time) {
+                    creep.memory.role = "recyclable"; // recycle this creep since it can't attack the controller
                 }
                 else {
                     err = creep.attackController(theController);
-                }
-                if (err == ERR_NOT_IN_RANGE) {
-                    creep.travelTo(theController);
-                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTROLLER], true);
-                }
-                else if (err == ERR_NO_BODYPART) {
-                    creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
-                }
-                else if (err == OK) {
-                    creep.say(ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.travelTo(theController);
+                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTROLLER], true);
+                    }
+                    else if (err == OK) {
+                        creep.say(ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true);
+                    }
                 }
             }
             else if (_.some(reservedControllerIDs, (cID) => (cID == creep.memory.controllerID)) == false) { // NOTE: Using _.some in this way breaks earlier than _.each when false
