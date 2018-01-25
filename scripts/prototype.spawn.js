@@ -74,10 +74,10 @@ let prototypeSpawn = function() {
                 }
             }
             else*/ if (this.room.name == "E1S13") {
-                /*if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
+                if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "E1S13";
                 }
-                else */if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
+                else if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "E2S11";
                 }
                 /*else if (Memory.rooms.E3S15.creepCounts.builder == 0 && Memory.rooms.E3S15.creepCounts.adaptable == 0) {
@@ -88,7 +88,10 @@ let prototypeSpawn = function() {
                 }*/
             }
             else if (this.room.name == "E2S11") {
-                if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
+                if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
+                    creepMemory.roomSentTo = "E2S11";
+                }
+                else if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
                     creepMemory.roomSentTo = "E1S13";
                 }
                 /*else if (Memory.rooms.E3S15.creepCounts.builder == 0 && Memory.rooms.E3S15.creepCounts.adaptable == 0) {

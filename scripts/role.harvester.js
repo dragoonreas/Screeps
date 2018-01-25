@@ -83,16 +83,16 @@ let roleHarvester = {
                         ]
                         , "E1S13": [
                             "59790a4b833ada000b96f431" // E2S13
-                            //, "59790a4b833ada000b96f462" // E1S12
-                            //, "59790a4b833ada000b96f464" // E1S12
+                            , "59790a4b833ada000b96f462" // E1S12
+                            , "59790a4b833ada000b96f464" // E1S12
                             , "59790a4b833ada000b96f434" // E1S13
                         ]
                         , "E2S11": [
                             "59790a4b833ada000b96f341" // E3S11
                             , "59790a4b833ada000b96f33f" // E3S11
-                            //, "59790a4b833ada000b96f45c" // E2S12
-                            //, "598869041a4816000a1a2dd2" // E1S11
-                            //, "598869041a4816000a1a2dd3" // E1S11
+                            , "59790a4b833ada000b96f45c" // E2S12
+                            , "598869041a4816000a1a2dd2" // E1S11
+                            , "598869041a4816000a1a2dd3" // E1S11
                             , "59790a4b833ada000b96f399" // E2S11
                         ]
                         , "E3S15": [
@@ -434,6 +434,12 @@ let roleHarvester = {
                         range: 23
                     });
                     creep.say(travelToIcons(creep) + creep.memory.roomID, true);
+                    return;
+                }
+                
+                if (_.get(creep.room, ["controller", "my"], false) == true 
+                    && creep.room.controller.ticksToDowngrade <= (CREEP_LIFE_TIME * 3)) {
+                    ROLES["upgrader"].run(creep);
                     return;
                 }
                 

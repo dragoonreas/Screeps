@@ -128,12 +128,12 @@ _.set(Memory.rooms, ["E18S17", "harvestRooms"], [
 ]);*/
 _.set(Memory.rooms, ["E1S13", "harvestRooms"], [
     "E2S13"
-    //, "E1S12"
+    , "E1S12"
 ]);
 _.set(Memory.rooms, ["E2S11", "harvestRooms"], [
     "E3S11"
-    //, "E2S12"
-    //, "E1S11"
+    , "E2S12"
+    , "E1S11"
 ]);
 /*_.set(Memory.rooms, ["E3S15", "harvestRooms"], [
     "E5S15"
@@ -206,15 +206,15 @@ _.set(Memory.rooms, ["E18S17", "repairerTypeMins"], {
     , all: 0
 });*/
 _.set(Memory.rooms, ["E1S13", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
+    [STRUCTURE_CONTAINER]: 1
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["E2S11", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
+    [STRUCTURE_CONTAINER]: 1
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
@@ -356,7 +356,7 @@ _.set(Memory.rooms, ["E18S17", "creepMins"], {
 });*/
 _.set(Memory.rooms, ["E1S13", "creepMins"], {
     attacker: 0
-    , harvester: 2
+    , harvester: 6
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E1S13", "minerSources"], {}))
@@ -650,7 +650,6 @@ module.exports.loop = function () {
             _.defaults(Memory.sources[source.id], {
                 pos: source.pos
             });
-            
             if (source.regenAt == undefined) {
                 console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
             }
@@ -1073,7 +1072,6 @@ module.exports.loop = function () {
         let numRoadRepairers = _.get(Memory.rooms, [roomID, "repairerTypeCounts", STRUCTURE_ROAD], 0);
 		for (let towerID in towers) {
             let tower = towers[towerID];
-            
             let target = priorityTarget;
             /*
             // TODO: Maybe group PC and NPC targets seperatly so the same weightings can be applied to each, rather than the NPCs having no weighting
@@ -1377,13 +1375,14 @@ module.exports.loop = function () {
         //|| (_.get(Memory.rooms, ["E18S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E18S17", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));*/ // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["E1S13", "creepMins", "adaptable"], ((
-        /*(_.get(Memory.rooms, ["E1S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E1S13", "creepCounts", "adaptable"], -1) == 0) 
-        || */(_.get(Memory.rooms, ["E2S11", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E2S11", "creepCounts", "adaptable"], -1) == 0) 
+        (_.get(Memory.rooms, ["E1S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E1S13", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["E2S11", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E2S11", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["E3S15", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E3S15", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["E7S12", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E7S12", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["E2S11", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["E1S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E1S13", "creepCounts", "adaptable"], -1) == 0) 
+        (_.get(Memory.rooms, ["E2S11", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E2S11", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["E1S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E1S13", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["E3S15", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E3S15", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["E7S12", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E7S12", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
