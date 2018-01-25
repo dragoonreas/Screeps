@@ -106,6 +106,10 @@ let roleRockhound = {
                         else if (err == OK) {
                             creep.say(ICONS["harvest"], true);
                         }
+                        else {
+                            incrementConfusedCreepCount(creep);
+                            creep.say("?", true);
+                        }
                     }
                     else {
                         incrementIdleCreepCount(creep);
@@ -140,7 +144,7 @@ let roleRockhound = {
                 else if (creep.memory.role == "rockhound") {
                     creep.say(ICONS["harvest"] + "?", true);
                     _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "rockhound"],  0);
-                    creep.memory.role = "harvester";
+                    creep.memory.role = "recyclable";
                 }
                 else {
                     ROLES["harvester"].run(creep);
@@ -153,20 +157,16 @@ let roleRockhound = {
             }
         }
         else {
-            /*if (sentTo == "W52N47" && creep.memory.roomID == "W53N39" && creep.memory.waypoint > 0) {
-                if (creep.room.name == "W52N47") {
-                    creep.memory.waypoint = 2;
-                }
-                ROLES["scout"].run(creep);
+            if (creep.carry[RESOURCE_ENERGY] != _.sum(creep.carry)) {
+                ROLES["hoarder"].run(creep);
             }
-            else {*/
-                if (creep.carry[RESOURCE_ENERGY] != _.sum(creep.carry)) {
-                    ROLES["hoarder"].run(creep);
-                }
-                else if (creep.carry[RESOURCE_ENERGY] > 0) {
-                    ROLES["harvester"].run(creep);
-                }
-            //}
+            else if (creep.carry[RESOURCE_ENERGY] > 0) {
+                ROLES["harvester"].run(creep);
+            }
+            else {
+                incrementConfusedCreepCount(creep);
+                creep.say("?", true);
+            }
         }
     }
 };

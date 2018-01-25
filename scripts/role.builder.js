@@ -194,8 +194,8 @@ let roleBuilder = {
                     && (((theStorage == undefined 
                                 || theStorage.store[RESOURCE_ENERGY] == 0) 
                             && (theTerminal == undefined 
-                                || (theTerminal.store[RESOURCE_ENERGY] <= (theTerminal.storeCapacity / 2)
-                                    || (theTerminal.my == false
+                                || (theTerminal.energyCapacityFree >= 0 
+                                    || (theTerminal.my == false 
                                         && theTerminal.store[RESOURCE_ENERGY] > 0))))
                         || (((_.size(Game.constructionSites) == 0) 
                                 || (Game.rooms[creep.memory.roomID] == undefined 
@@ -273,6 +273,12 @@ let roleBuilder = {
                 
                 return;
             }
+            else if ((_.get(theStorage, ["my"], true) == false 
+                    && theStorage.store[RESOURCE_ENERGY] > 0) 
+                || (_.get(theTerminal, ["my"], true) == false 
+                    && theTerminal.store[RESOURCE_ENERGY] > 0)) {
+                source = undefined;
+            }
             
             let err = ERR_INVALID_TARGET;
             if (source != undefined) {
@@ -316,9 +322,9 @@ let roleBuilder = {
                     creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
                 }
             }
-            else if (theTerminal != undefined
-                && (theTerminal.store[RESOURCE_ENERGY] > (theTerminal.storeCapacity / 2)
-                    || (theTerminal.my == false
+            else if (theTerminal != undefined 
+                && (theTerminal.energyCapacityFree < 0 
+                    || (theTerminal.my == false 
                         && theTerminal.store[RESOURCE_ENERGY] > 0))) {
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                 if (err == ERR_NOT_IN_RANGE) {

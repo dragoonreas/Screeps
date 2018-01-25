@@ -5,9 +5,12 @@ global.NODE_USAGE = {
     first: Game.time
     , last: Game.time
     , total: 0
+    , codeVersion: require.timestamp
 }; // NOTE: Can't put this in the global file since the require caches can be reset outside of a global reset
+//require("data." + Game.shard.name)();
 require("globals")(); // NOTE: All globals not from an external resource should be declared here
 require("prototype.creep")(); // NOTE: Must be required after globals.js
+require("prototype.terminal")(); // NOTE: Must be required after globals.js
 require("prototype.room")(); // NOTE: Must be required after globals.js
 require("prototype.memory")(); // NOTE: Must be required after prototype.room.js
 require("prototype.controller")(); // NOTE: Must be required after prototype.room.js
@@ -206,15 +209,15 @@ _.set(Memory.rooms, ["E18S17", "repairerTypeMins"], {
     , all: 0
 });*/
 _.set(Memory.rooms, ["E1S13", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 0
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["E2S11", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 0
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
@@ -367,7 +370,7 @@ _.set(Memory.rooms, ["E1S13", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["E1S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
-    , rockhound: 0 //(_.get(Game.rooms, ["E1S13", "canHarvestMineral"], false) ? 1 : 0)
+    , rockhound: (_.get(Game.rooms, ["E1S13", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E2S11", "creepMins"], {
     attacker: 0
@@ -382,7 +385,7 @@ _.set(Memory.rooms, ["E2S11", "creepMins"], {
     , repairer: _.reduce(_.get(Memory.rooms, ["E2S11", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
     , exporter: 0
-    , rockhound: 0 //(_.get(Game.rooms, ["E2S11", "canHarvestMineral"], false) ? 1 : 0)
+    , rockhound: (_.get(Game.rooms, ["E2S11", "canHarvestMineral"], false) ? 1 : 0)
 });
 //console.log(toStr(Memory.rooms.E2S11.creepMins));
 /*_.set(Memory.rooms, ["E3S15", "creepMins"], {
@@ -423,7 +426,8 @@ module.exports.loop = function () {
     let loopStartCPUUsed = Game.cpu.getUsed();
     
     if (global.LastMemory 
-        && NODE_USAGE.last == (Game.time - 1)) {
+        && NODE_USAGE.last == (Game.time - 1) 
+        && NODE_USAGE.codeVersion == require.timestamp) {
         delete global.Memory;
         global.Memory = global.LastMemory;
         RawMemory._parsed = global.LastMemory;
@@ -569,9 +573,14 @@ module.exports.loop = function () {
     for (let roomID in Memory.rooms) {
         if (Game.rooms[roomID] == undefined 
             && (Memory.rooms[roomID].memoryExpiration || 0) < Game.time) {
-            console.log("Running garbage collection on room memory: " + roomID);
-            delete Memory.rooms[roomID];
-            continue;
+            if ((Memory.rooms[roomID].lastViewed || 0) > (Game.time - ROOM_VISUAL_TIMEOUT)) {
+                Memory.rooms[roomID].memoryExpiration = (Memory.rooms[roomID].lastViewed + ROOM_VISUAL_TIMEOUT);
+            }
+            else {
+                console.log("Running garbage collection on room memory: " + roomID);
+                delete Memory.rooms[roomID];
+                continue;
+            }
         }
         
         if (_.size(_.get(Memory.rooms[roomID], "invaderWeightings", {})) > 0) {
@@ -630,15 +639,17 @@ module.exports.loop = function () {
             });
             */
             let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
+            let unblockedAt = ((theController.upgradeBlocked && (Game.time + theController.upgradeBlocked)) || undefined);
             _.set(this.memory, ["controller"], { 
-                id: theController.id 
-                , pos: theController.pos 
-                , owner: theController.owner 
+                id: theController.id
+                , pos: theController.pos
+                , owner: theController.owner
                 , reservation: ((theController.reservation && { username: _.get(theController.reservation, ["username"], ""), endsAt: Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1) }) || undefined)
-                , level: theController.level 
-                , downgradeAt: downgradeAt 
+                , level: theController.level
+                , downgradeAt: downgradeAt
                 , neutralAt: ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 1], 0))) || undefined) // TODO: Fix this line
-                , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined) 
+                , unblockedAt: unblockedAt
+                , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined)
                 , sign: theController.sign
             });
         }
@@ -650,6 +661,7 @@ module.exports.loop = function () {
             _.defaults(Memory.sources[source.id], {
                 pos: source.pos
             });
+            
             if (source.regenAt == undefined) {
                 console.log("Couldn't initialise Source.regenAt for source at " + JSON.stringify(source.pos));
             }
@@ -661,21 +673,7 @@ module.exports.loop = function () {
         
         // TODO: Check for nukes and make sure only 1 notification is sent (for the lifetime of that nuke) when the nuke is found
         
-		let towers = theRoom.find(FIND_MY_STRUCTURES, {
-            filter: (s) => (
-                s.structureType == STRUCTURE_TOWER 
-        )});
-        if (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (v) => (v >= towers.length))) { // Don't filter by isActive if we can avoid it
-            towers = _.filter(towers, (s) => (
-				s.energy >= TOWER_ENERGY_COST 
-                && s.isActive() == true
-            ));
-        }
-        else {
-            towers = _.filter(towers, (s) => (
-				s.energy >= TOWER_ENERGY_COST 
-            ));
-        }
+		let towers = theRoom.myActiveTowers;
 		
         let mayHaveRamparts = (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], (v) => (v > 0)) == false);
         
@@ -921,7 +919,9 @@ module.exports.loop = function () {
                 && theController.my == true 
                 && theController.safeMode == undefined 
                 && theController.safeModeCooldown == undefined 
-                && theController.safeModeAvaliable > 0
+                && theController.safeModeAvaliable > 0 
+                && theController.upgradeBlocked == undefined 
+                && theController.ticksToDowngrade > CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD 
                 && (theController.level < 3 
                 || _.some(Game.spawns, (s) => (
                     s.room.name == roomID 
@@ -1017,7 +1017,7 @@ module.exports.loop = function () {
                 let collectorCreeps = theRoom.find(FIND_MY_CREEPS, {
                     filter: (c) => (
                         c.spawning == false 
-                        && c.memory.droppedResourceID == undefined 
+                        && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                         && c.hits == c.hitsMax 
                         && c.memory.speeds["2"] <= 2 
                         && c.memory.role != "miner" 
@@ -1031,30 +1031,33 @@ module.exports.loop = function () {
                 )});
                 for (let droppedResource of droppedResources) {
 					let hasAssignedCreep = _.some(Game.creeps, (c) => (
-					    c.memory.droppedResourceID == droppedResource.id
+					    _.get(c.memory, ["droppedResource", "id"], undefined) == droppedResource.id
                     ));
 					if (hasAssignedCreep == false) {
                         let creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                c.memory.droppedResourceID == undefined 
+                                _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                 && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
                                 && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                         )});
                         if (creep == undefined) {
                             creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                    c.memory.droppedResourceID == undefined 
+                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && _.sum(c.carry) == 0 
                                     && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                             )});
                             if (creep == undefined) {
                                 creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                        c.memory.droppedResourceID == undefined 
+                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && _.sum(c.carry) < c.carryCapacity 
                                         && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                 )});
                             }
                         }
                         if (creep != undefined) {
-                            creep.memory.droppedResourceID = droppedResource.id;
+                            creep.memory.droppedResource = {
+                                id: droppedResource.id
+                                , pos: droppedResource.pos
+                            };
                             console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(droppedResource.amount, creep.carryCapacity - _.sum(creep.carry)) + " of " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
                         }
                         else {
@@ -1069,9 +1072,9 @@ module.exports.loop = function () {
         
         // Run towers in the room
         let towerTargets = [];
-        let numRoadRepairers = _.get(Memory.rooms, [roomID, "repairerTypeCounts", STRUCTURE_ROAD], 0);
 		for (let towerID in towers) {
             let tower = towers[towerID];
+            
             let target = priorityTarget;
             /*
             // TODO: Maybe group PC and NPC targets seperatly so the same weightings can be applied to each, rather than the NPCs having no weighting
@@ -1095,17 +1098,7 @@ module.exports.loop = function () {
                     tower.heal(target);
                 }
                 else { // Else repair a non-decaying structure if needed
-                    target = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                        filter: (s) => (s.hits < s.hitsMax 
-                            && s.structureType != STRUCTURE_WALL
-                            && (s.structureType != STRUCTURE_RAMPART
-                                || s.hits <= RAMPART_DECAY_AMOUNT)
-                            && (s.structureType != STRUCTURE_CONTAINER
-                                || s.hits <= CONTAINER_DECAY)
-                            && (s.structureType != STRUCTURE_ROAD
-                                || numRoadRepairers == 0
-                                || s.hits <= (ROAD_DECAY_AMOUNT * ((s.hitsMax == ROAD_HITS) ? 1 : CONSTRUCTION_COST_ROAD_SWAMP_RATIO)))
-                    )});
+                    target = tower.pos.findClosestByRange(theRoom.towerRepairStructures);
                     if(target != undefined) {
                         tower.repair(target);
                     }
@@ -1168,16 +1161,21 @@ module.exports.loop = function () {
             }
         }
         
+        // TODO: Make this a prototype for terminals
+        //let amount = Math.floor(totalEnergy/(2-Math.exp(-distance/30))); // Get max amount of energy to send
+        // Get max amount of non-energy to send
+        
         if (_.get(theRoom, ["controller", "my"], false) == true 
             && _.get(theRoom, ["controller", "level"], 0) >= 6 
             && _.get(theRoom, ["terminal", "my"], false) == true
             && theRoom.terminal.cooldown == 0) {
             let theTerminal = theRoom.terminal;
+            let terminalEnergy = _.get(theTerminal.store, [RESOURCE_ENERGY], 0);
             let madeDeal = false;
             if (Game.cpu.bucket > 7500) {
                 for (let resourceName in theTerminal.store) {
                     let resourceCount = theTerminal.store[resourceName];
-                    if (resourceCount >= 10 
+                    if (resourceCount > 0 
                         && resourceName != RESOURCE_ENERGY 
                         && resourceName != RESOURCE_POWER) {
                         let buyOrders = Game.market.orderCache(ORDER_BUY, resourceName);
@@ -1189,11 +1187,11 @@ module.exports.loop = function () {
                             ));
                             let amountToSend = Math.min(resourceCount, buyOrder.amount);
                             let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
-                            if (energyCost <= theTerminal.store[RESOURCE_ENERGY]) {
-                                let result = Game.market.deal(buyOrder.id, amountToSend, roomID);
-                                if (result == OK) {
+                            if (energyCost <= terminalEnergy) {
+                                let err = Game.market.deal(buyOrder.id, amountToSend, roomID);
+                                if (err == OK) {
                                     madeDeal = true;
-                                    console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend) + " (" + buyOrder.price + " each) credits");
+                                    console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
                                     break; // Each terminal can only do one deal per tick
                                 }
                             }
@@ -1202,12 +1200,11 @@ module.exports.loop = function () {
                 }
             }
             
-            let freeSpace = theTerminal.storeCapacity - _.sum(theTerminal.store);
             if (madeDeal == false 
-                && requiredPower >= 10 
-                && freeSpace >= 10) {
+                && requiredPower > 0 
+                && theTerminal.storeCapacityFree > 0) {
                 let sellOrders = _.filter(Game.market.orderCache(ORDER_SELL, RESOURCE_POWER), (o) => (
-                    o.price < 2
+                    o.price <= 2
                 ));
                 if (sellOrders.length > 0) {
                     sellOrders = _.groupBy(sellOrders, (o) => (o.price));
@@ -1215,17 +1212,77 @@ module.exports.loop = function () {
                     let sellOrder = _.min(sellOrders, (o) => (
                         Game.market.calcTransactionCost(requiredPower, roomID, o.roomName)
                     ));
-                    let amountToBuy = _.min([requiredPower, freeSpace, sellOrder.amount]);
+                    let amountToBuy = _.min([requiredPower, theTerminal.storeCapacityFree, sellOrder.amount]);
                     let energyCost = Game.market.calcTransactionCost(amountToBuy, roomID, sellOrder.roomName);
-                    if (energyCost <= theTerminal.store[RESOURCE_ENERGY]) {
-                        let result = Game.market.deal(sellOrder.id, amountToBuy, roomID);
-                        if (result == OK) {
-                            console.log("Buying " + amountToBuy + " " + RESOURCE_POWER + " from " + sellOrder.roomName + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (sellOrder.price * amountToBuy) + " (" + sellOrder.price + " each) credits");
-                        }
-                        else {
-                            console.log(roomID, result);
+                    if (energyCost <= terminalEnergy) {
+                        let err = Game.market.deal(sellOrder.id, amountToBuy, roomID);
+                        if (err == OK) {
+                            madeDeal = true;
+                            console.log("Buying " + amountToBuy + " " + RESOURCE_POWER + " from " + sellOrder.roomName + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (sellOrder.price * amountToBuy).toFixed(3) + " (" + sellOrder.price + " each) credits");
                         }
                     }
+                }
+            }
+            
+            if (theTerminal.needsEnergy == true 
+                && theTerminal.energyCapacityFree > 0) {
+                let buyOrder = _.find(Game.market.orders, (o) => (
+                    o.roomName == roomID 
+                    && o.type == ORDER_BUY 
+                    && o.resourceType == RESOURCE_ENERGY 
+                ));
+                let buyOrders = _.filter(Game.market.orderCache(ORDER_BUY, RESOURCE_ENERGY), (o) => (
+                    o.price <= 0.05 
+                    && o.amount >= 1000 
+                    && o.roomName != roomID
+                ));
+                if (buyOrders.length > 0) {
+                    let buyPrice = _.get(_.max(buyOrders, (o) => (o.price)), ["price"], 0.02);
+                    let amountToBuy = theTerminal.energyCapacityFree;
+                    if (buyOrder == undefined) {
+                        let deposit = buyPrice * amountToBuy * 0.05;
+                        if (deposit <= Game.market.credits) {
+                            let err = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, buyPrice, amountToBuy, roomID);
+                            if (err == OK) {
+                                console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
+                            }
+                            else {
+                                console.log(roomID, "createOrder", err);
+                            }
+                        }
+                    }
+                    else {
+                        if (buyOrder.price < buyPrice 
+                            || buyOrder.remainingAmount == 0) {
+                            let deposit = Math.max((buyPrice - buyOrder.price), 0) * buyOrder.remainingAmount * 0.05;
+                            if (deposit <= Game.market.credits) {
+                                let err = Game.market.changeOrderPrice(buyOrder.id, buyPrice);
+                                if (err == OK) {
+                                    console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
+                                }
+                                else {
+                                    console.log(roomID, "changeOrderPrice", err);
+                                }
+                            }
+                        }
+                        buyPrice = Math.max(buyOrder.price, buyPrice);
+                        if (buyOrder.remainingAmount < amountToBuy) {
+                            let amountToAdd = amountToBuy - buyOrder.remainingAmount;
+                            let deposit = amountToAdd * buyPrice * 0.05;
+                            if (deposit <= Game.market.credits) {
+                                let err = Game.market.extendOrder(buyOrder.id, amountToAdd);
+                                if (err == OK) {
+                                    console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
+                                }
+                                else {
+                                    console.log(roomID, "extendOrder", err);
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    console.log("No Energy Orders: " + roomID);
                 }
             }
         }
@@ -1262,11 +1319,11 @@ module.exports.loop = function () {
             if (creep.hits < creep.hitsMax 
                 && creep.memory.role != "adaptable" 
                 && creep.memory.role != "healer") { // TODO: Check if creep has active heal parts instead
-                creep.memory.droppedResourceID = undefined;
+                creep.memory.droppedResource = undefined;
                 ROLES["recyclable"].run(creep);
                 runningRole = true;
             }
-            else if (creep.memory.droppedResourceID != undefined) {
+            else if (_.get(creep.memory, ["droppedResource", "id"], undefined) != undefined) {
                 ROLES["collector"].run(creep);
                 runningRole = true;
             }
@@ -1280,7 +1337,7 @@ module.exports.loop = function () {
                     && _.sum(theStorage.store) < theStorage.storeCapacity) 
                 || (theTerminal != undefined 
                     && theTerminal.my == true 
-                    && _.sum(theTerminal.store) < theTerminal.storeCapacity))) {
+                    && theTerminal.storeCapacityFree > 0))) {
                 ROLES["hoarder"].run(creep);
                 runningRole = true;
             }
@@ -1329,18 +1386,27 @@ module.exports.loop = function () {
             if (spawn.isActive() == true) {
                 let creepName = undefined;
                 if (_.includes(nothingToSpawn, roomID) == false) {
-                    let creepMins = Memory.rooms[roomID].creepMins; // TODO: Check if this needs existance validation
+                    let creepMins = _.get(Memory.rooms, [roomID, "creepMins"], {});
                     for (let creepType in creepMins) {
-                        if (Memory.rooms[roomID].creepCounts[creepType] < creepMins[creepType]) {
-                            creepName = spawn.createCustomCreep(creepType);
-                            if (_.isString(creepName) == true) {
-                                console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
-                            }
-                            else if (creepName == -6.5 || creepName == -10.5) { // TODO: Just check for -#.5
+                        if (Memory.rooms[roomID].creepCounts[creepType] >= creepMins[creepType]) {
+                            /*let creepCount = _.sum(Game.creeps, (c) => (
+                                c.memory.roomID == roomID 
+                                && c.memory.role == creepType 
+                                && (c.ticksToLive > (c.body.length * CREEP_SPAWN_TIME) 
+                                    || c.spawning == true)
+                            ));
+                            if (creepCount >= creepMins[creepType]) {*/
                                 continue;
-                            }
-                            break; // NOTE: Need to either wait till the creep can start spawning or be spawned, so no need to check the rest
+                            //}
                         }
+                        creepName = spawn.spawnCustomCreep(creepType);
+                        if (_.isString(creepName) == true) {
+                            console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
+                        }
+                        else if (creepName == -6.5 || creepName == -10.5) { // TODO: Just check for -#.5
+                            continue;
+                        }
+                        break; // NOTE: Need to either wait till the creep can start spawning or be spawned, so no need to check the rest
                     }
                     
                     // Keep track of rooms that don't have anything to spawn so we don't check them again if they have another spawn

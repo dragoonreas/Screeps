@@ -27,14 +27,32 @@ let roleAdaptable = {
         }
         
         if (_.isString(sentTo) == true) {
-            let theStorage = Game.rooms[sentFrom].storage;
-            let theTerminal = Game.rooms[sentFrom].terminal;
+            let theStorage = _.get(Game.rooms, [sentFrom, "storage"], undefined);
+            let theStorageEnergy = _.get(theStorage, ["store", RESOURCE_ENERGY], 0);
+            let theTerminal = _.get(Game.rooms, [sentFrom, "terminal"], undefined);
+            let theTerminalEnergy = _.get(theTerminal, ["store", RESOURCE_ENERGY], 0);
+            let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
+            let theRecycleContainerEnergy = _.get(theRecycleContainer, ["store", RESOURCE_ENERGY], 0);
             if (creep.room.name == sentFrom 
                 && _.sum(creep.carry) < creep.carryCapacity 
-                && ((theStorage != undefined && theStorage.store[RESOURCE_ENERGY] > 0) 
-                    || (theTerminal != undefined && theTerminal.store[RESOURCE_ENERGY] > 0))) {
-                if (theStorage != undefined 
-                    && theStorage.store[RESOURCE_ENERGY] > 0) {
+                && (theStorageEnergy > 0 
+                    || theTerminalEnergy > 0 
+                    || theRecycleContainerEnergy > 0)) {
+                if (theRecycleContainerEnergy > 0) {
+                    err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.travelTo(theRecycleContainer);
+                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                    }
+                    else if (err == OK) {
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
+                    }
+                    else {
+                        incrementConfusedCreepCount(creep);
+                        creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
+                    }
+                }
+                else if (theStorageEnergy > 0) {
                     let err = creep.withdraw(theStorage, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.travelTo(theStorage);
@@ -43,9 +61,12 @@ let roleAdaptable = {
                     else if (err == OK) {
                         creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
                     }
+                    else {
+                        incrementConfusedCreepCount(creep);
+                        creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
+                    }
                 }
-                else if (theTerminal != undefined 
-                    && theTerminal.store[RESOURCE_ENERGY] > 0) {
+                else if (theTerminalEnergy > 0) {
                     let err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.travelTo(theTerminal);
@@ -54,11 +75,16 @@ let roleAdaptable = {
                     else if (err == OK) {
                         creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
                     }
+                    else {
+                        incrementConfusedCreepCount(creep);
+                        creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
+                    }
                 }
             }
             else if (creep.room.name != sentTo) {
                 if (creep.memory.roomID == sentFrom) {
                     creep.memory.roomID = sentTo;
+                    _.set(Memory.rooms, [sentFrom, "creepMins", "adaptables"], _.get(Memory.rooms, [sentFrom, "creepMins", "adaptables"], 1) - 1);
                     _.set(Memory.rooms, [sentFrom, "creepCounts", "adaptables"], _.get(Memory.rooms, [sentFrom, "creepCounts", "adaptables"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "adaptables"], _.get(Memory.rooms, [sentTo, "creepCounts", "adaptables"], 0) + 1);
                 }

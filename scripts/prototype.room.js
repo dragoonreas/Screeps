@@ -1,3 +1,5 @@
+const TICKS_TO_VIEW = 5;
+
 let prototypeRoom = function() {
     Room.prototype.dangerZones = []; // TODO: Define this property properly
     
@@ -141,6 +143,41 @@ let prototypeRoom = function() {
             return _.first(powerSpawns);
         });
     }
+    
+    if (Room.prototype.myActiveTowers == undefined) { // NOTE: Must be defined after global.defineCachedGetter
+        defineCachedGetter(Room.prototype, "myActiveTowers", (r) => {
+            if (r.controller == undefined) { return []; }
+            let towers = r.find(FIND_STRUCTURES, { filter: (s) => (
+                s.structureType == STRUCTURE_TOWER
+            )});
+            let someTowersInactive = (_.get(r, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (v) => (v >= towers.length)));
+            return _.filter(towers, (t) => (
+                t.my == true 
+                && t.energy >= TOWER_ENERGY_COST 
+                && (someTowersInactive == false 
+                    || t.isActive() == true)
+            ));
+        });
+    }
+    
+    if (Room.prototype.towerRepairStructures == undefined) { // NOTE: Must be defined after global.defineCachedGetter
+        defineCachedGetter(Room.prototype, "towerRepairStructures", (r) => {
+            let numRoadRepairers = _.get(Memory.rooms, [r.name, "repairerTypeCounts", STRUCTURE_ROAD], 0);
+            return r.find(FIND_STRUCTURES, {
+                filter: (s) => (s.hits < s.hitsMax 
+                    && s.structureType != STRUCTURE_WALL
+                    && (s.structureType != STRUCTURE_RAMPART
+                        || s.hits <= RAMPART_DECAY_AMOUNT)
+                    && (s.structureType != STRUCTURE_CONTAINER
+                        || s.hits <= CONTAINER_DECAY)
+                    && (s.structureType != STRUCTURE_ROAD
+                        || numRoadRepairers == 0
+                        || s.hits <= (ROAD_DECAY_AMOUNT * ((s.hitsMax == ROAD_HITS) ? 1 : CONSTRUCTION_COST_ROAD_SWAMP_RATIO)))
+            )});
+        });
+    }
+    
+    // TODO: Distance from controller to closest source
     
     if (Room.prototype.canHarvestMineral == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, "canHarvestMineral", (r) => {
@@ -315,6 +352,31 @@ let prototypeRoom = function() {
                 if (harvestRooms == undefined) { return false; }
                 return (_.includes(harvestRooms, r.name) == true);
             }) == true);
+        });
+    }
+    
+    if (Room.prototype.beingViewed == undefined) {
+        Object.defineProperty(Room.prototype, "beingViewed", {
+            get: function() {
+                if (this === Room.prototype || this == undefined) { return; }
+                if (_.get(this.memory, ["lastViewed"], undefined) == undefined) {
+                    _.set(this.memory, ["lastViewed"], 0);
+                }
+                if (_.isNumber(this.memory.lastViewed) == false) {
+                    return false;
+                }
+                return (this.memory.lastViewed > (Game.time - ROOM_VISUAL_TIMEOUT));
+            }/*,
+            
+            set: function(value) {
+                if (_.get(this.memory, ["lastViewed"], undefined) == undefined) {
+                    _.set(this.memory, ["lastViewed"], 0);
+                }
+                if (_.isNumber(this.memory.lastViewed) == false) {
+                    throw new Error("Could not set Room.beingViewed property");
+                }
+                this.memory.lastViewed = ((value == true) ? Game.time : 0);
+            }*/
         });
     }
     

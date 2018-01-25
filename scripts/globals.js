@@ -17,7 +17,7 @@ let globals = function() {
         , exporter: require("role.exporter")
         , rockhound: require("role.rockhound")
         , recyclable: require("role.recyclable")
-    }
+    };
     
     global.ICONS = {
         [STRUCTURE_CONTROLLER]: "\uD83C\uDFF0"
@@ -88,7 +88,7 @@ let globals = function() {
         , sleep: "\uD83D\uDCA4" // for when script is terminated early to refill bucket
         , testPassed: "\uD83C\uDF89" // for when scout reaches its goal location
         , testFinished: "\uD83C\uDFC1" // for when scout has finished its test run
-    }
+    };
     
     global.travelToIcons = function(creep) {
         let travelStatusIcon = "";
@@ -101,7 +101,7 @@ let globals = function() {
             }
         }
         return (travelStatusIcon + ICONS["moveTo"]);
-    }
+    };
 
     global.incrementConfusedCreepCount = function(creep) {
         if (creep instanceof Creep) {
@@ -114,7 +114,7 @@ let globals = function() {
                 ++global.summarized_rooms[creepRoomID].creep_confusion_counts[creepRole];
             }
         }
-    }
+    };
     
     global.incrementIdleCreepCount = function(creep) {
         if (creep instanceof Creep) {
@@ -127,44 +127,13 @@ let globals = function() {
                 ++global.summarized_rooms[creepRoomID].creep_idle_counts[creepRole];
             }
         }
-    }
+    };
     
     global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
     
     global.resourceWorth = function(resourceType) {
         switch (resourceType) {
-            case RESOURCE_ENERGY:
-            default: return 1; // 10^0
-            case RESOURCE_HYDROGEN:
-            case RESOURCE_OXYGEN:
-            case RESOURCE_UTRIUM:
-            case RESOURCE_LEMERGIUM:
-            case RESOURCE_KEANIUM:
-            case RESOURCE_ZYNTHIUM:
-            case RESOURCE_CATALYST: return 10; // 10^1
-            case RESOURCE_HYDROXIDE:
-            case RESOURCE_ZYNTHIUM_KEANITE:
-            case RESOURCE_UTRIUM_LEMERGITE: return 100; // 10^2
-            case RESOURCE_UTRIUM_HYDRIDE:
-            case RESOURCE_UTRIUM_OXIDE:
-            case RESOURCE_KEANIUM_HYDRIDE:
-            case RESOURCE_KEANIUM_OXIDE:
-            case RESOURCE_LEMERGIUM_HYDRIDE:
-            case RESOURCE_LEMERGIUM_OXIDE:
-            case RESOURCE_ZYNTHIUM_HYDRIDE:
-            case RESOURCE_ZYNTHIUM_OXIDE:
-            case RESOURCE_GHODIUM_HYDRIDE:
-            case RESOURCE_GHODIUM_OXIDE: return 1000; // 10^3
-            case RESOURCE_UTRIUM_ACID:
-            case RESOURCE_UTRIUM_ALKALIDE:
-            case RESOURCE_KEANIUM_ACID:
-            case RESOURCE_KEANIUM_ALKALIDE:
-            case RESOURCE_LEMERGIUM_ACID:
-            case RESOURCE_LEMERGIUM_ALKALIDE:
-            case RESOURCE_ZYNTHIUM_ACID:
-            case RESOURCE_ZYNTHIUM_ALKALIDE:
-            case RESOURCE_GHODIUM_ACID:
-            case RESOURCE_GHODIUM_ALKALIDE: return 10000; // 10^4
+            case RESOURCE_POWER: return 10000000; // 10^7
             case RESOURCE_CATALYZED_UTRIUM_ACID:
             case RESOURCE_CATALYZED_UTRIUM_ALKALIDE:
             case RESOURCE_CATALYZED_KEANIUM_ACID:
@@ -174,12 +143,44 @@ let globals = function() {
             case RESOURCE_CATALYZED_ZYNTHIUM_ACID:
             case RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE:
             case RESOURCE_CATALYZED_GHODIUM_ACID:
-            case RESOURCE_CATALYZED_GHODIUM_ALKALIDE: return 100000; // 10^5
-            case RESOURCE_POWER: return 1000000; // 10^6
+            case RESOURCE_CATALYZED_GHODIUM_ALKALIDE: return 1000000; // 10^6
+            case RESOURCE_UTRIUM_ACID:
+            case RESOURCE_UTRIUM_ALKALIDE:
+            case RESOURCE_KEANIUM_ACID:
+            case RESOURCE_KEANIUM_ALKALIDE:
+            case RESOURCE_LEMERGIUM_ACID:
+            case RESOURCE_LEMERGIUM_ALKALIDE:
+            case RESOURCE_ZYNTHIUM_ACID:
+            case RESOURCE_ZYNTHIUM_ALKALIDE:
+            case RESOURCE_GHODIUM_ACID:
+            case RESOURCE_GHODIUM_ALKALIDE: return 100000; // 10^5
+            case RESOURCE_UTRIUM_HYDRIDE:
+            case RESOURCE_UTRIUM_OXIDE:
+            case RESOURCE_KEANIUM_HYDRIDE:
+            case RESOURCE_KEANIUM_OXIDE:
+            case RESOURCE_LEMERGIUM_HYDRIDE:
+            case RESOURCE_LEMERGIUM_OXIDE:
+            case RESOURCE_ZYNTHIUM_HYDRIDE:
+            case RESOURCE_ZYNTHIUM_OXIDE:
+            case RESOURCE_GHODIUM_HYDRIDE:
+            case RESOURCE_GHODIUM_OXIDE: return 10000; // 10^4
+            case RESOURCE_GHODIUM: return 1000; // 10^3
+            case RESOURCE_HYDROXIDE:
+            case RESOURCE_ZYNTHIUM_KEANITE:
+            case RESOURCE_UTRIUM_LEMERGITE: return 100; // 10^2
+            case RESOURCE_HYDROGEN:
+            case RESOURCE_OXYGEN:
+            case RESOURCE_UTRIUM:
+            case RESOURCE_LEMERGIUM:
+            case RESOURCE_KEANIUM:
+            case RESOURCE_ZYNTHIUM:
+            case RESOURCE_CATALYST: return 10; // 10^1
+            case RESOURCE_ENERGY:
+            default: return 1; // 10^0
         }
     };
     
-    global.EST_SEC_PER_TICK = 1; // time between ticks is currently averaging ~1 seconds (as of 2017/07/19)
+    global.EST_SEC_PER_TICK = 1; // time between ticks is currently averaging ~1 seconds (as of 2018/01/26)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     
@@ -204,7 +205,7 @@ let globals = function() {
                 console.log(c.name + " home room set from " + fromRoomName + " to " + toRoomName);
             }
         });
-    }
+    };
     
     /*
         Cached dynamic properties: Declaration
@@ -229,7 +230,7 @@ let globals = function() {
     		configurable: true,
     		enumerable: false
     	});
-    }
+    };
     
     /*
         The following is copied from the path finder in the screeps driver at:
@@ -248,14 +249,14 @@ let globals = function() {
             return; //throw new Error("Invalid room name " + roomName);
         }
         return { xx: rx, yy: ry };
-    }
+    };
     // Converts return value of 'parseRoomName' back into a normal room name
     global.generateRoomName = function(xx, yy) {
         return (
             ((xx <= (WORLD_WIDTH >> 1)) ? ("W" + ((WORLD_WIDTH >> 1) - xx)) : ("E" + (xx - (WORLD_WIDTH >> 1) - 1))) 
             + ((yy <= (WORLD_HEIGHT >> 1)) ? ("N" + ((WORLD_HEIGHT >> 1) - yy)) : ("S" + (yy - (WORLD_HEIGHT >> 1) - 1)))
         );
-    }
+    };
     // Helper function to convert RoomPosition objects into global coordinate objects
     global.toWorldPosition = function(rp) {
         let xx = (rp.x | 0), yy = (rp.y | 0);
@@ -267,7 +268,7 @@ let globals = function() {
             xx: (xx + offset.xx * 50)
             , yy: (yy + offset.yy * 50)
         };
-    }
+    };
     // Converts back to a RoomPosition
     global.fromWorldPosition = function(wp) {
         return new RoomPosition(
@@ -275,7 +276,48 @@ let globals = function() {
             , wp[1] % 50
             , generateRoomName(Math.floor(wp[0] / 50), Math.floor(wp[1] / 50))
         );
+    };
+    
+    /*
+        For tracking viewed rooms to display room visuals in: https://github.com/Esryok/screeps-browser-ext
+        NOTE: Run "loadVisableRoomTracker();" from the command line to see visuals in viewed rooms when opening a new tab / steam client window.
+    */
+    global.setRoomVisualTimeout = function(timeout) {
+        Memory.roomVisualTimeout = timeout || 5;
+        global.ROOM_VISUAL_TIMEOUT = Memory.roomVisualTimeout
     }
+    setRoomVisualTimeout(Memory.roomVisualTimeout);
+    global.getClientVisibleRooms = function (age) {
+        let since = Game.time - ((age !== undefined)
+            ? age
+            : ROOM_VISUAL_TIMEOUT);
+        let visibleRooms = [];
+        
+        for (let roomName in Memory.rooms) {
+            let roomData = Memory.rooms[roomName];
+            if (roomData && roomData.lastViewed > since) {
+                visibleRooms.push(roomName);
+            }
+        }
+        
+        return visibleRooms;
+    }
+    global.loadVisableRoomTracker = function() {
+        return console.log('<script>' + 
+            'if(!window.jqueryLoaded){' + 
+            '  $.getScript("http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js");' + 
+            '  window.jqueryLoaded = true;' + 
+            '}' + 
+            'if(!window.screepsBrowserCoreLoaded){' + 
+            '  $.getScript("https://github.com/Esryok/screeps-browser-ext/raw/master/screeps-browser-core.js");' + 
+            '  window.screepsBrowserCoreLoaded = true;' + 
+            '}' + 
+            'if(!window.visibleRoomTrackerLoaded){' + 
+            '  $.getScript("https://github.com/Esryok/screeps-browser-ext/raw/master/visible-room-tracker.user.js");' + 
+            '  window.visibleRoomTrackerLoaded = true;' + 
+            '}' + 
+        '</script>');
+    };
     
     /*
         For Screeps Visual: https://github.com/screepers/screeps-visual

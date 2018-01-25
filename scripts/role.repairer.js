@@ -83,9 +83,14 @@ let roleRepairer = {
                                 )});
                             }
                             else {
+                                let numRoadRepairers = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "repairerTypeCounts", STRUCTURE_ROAD], 0);
+                        		let numTowers = _.get(creep.room, ["myActiveTowers", "length"], 0);
                                 theStructures = creep.room.find(FIND_STRUCTURES, {
                                     filter: (s) => (s.hits < s.hitsMax 
-                                        && s.structureType != STRUCTURE_ROAD 
+                                        && (s.structureType != STRUCTURE_ROAD
+                                            || (numRoadRepairers == 0 
+                                                && numTowers == 0)
+                                            || s.hits <= (ROAD_DECAY_AMOUNT * ((s.hitsMax == ROAD_HITS) ? 1 : CONSTRUCTION_COST_ROAD_SWAMP_RATIO)))
                                 )});
                             }
                             
@@ -162,7 +167,7 @@ let roleRepairer = {
                 && (theStorage == undefined
                     || theStorage.store[RESOURCE_ENERGY] == 0)
                 && (theTerminal == undefined
-                    || (theTerminal.store[RESOURCE_ENERGY] <= (theTerminal.storeCapacity / 2)
+                    || (theTerminal.energyCapacityFree >= 0 
                         || (theTerminal.my == false
                             && theTerminal.store[RESOURCE_ENERGY] == 0)))) {
                 if (_.get(Memory, ["rooms", creep.memory.roomID, "creepCounts", "upgrader"], 0) == 0) {
@@ -178,6 +183,12 @@ let roleRepairer = {
                     ROLES["harvester"].run(creep);
                 }
                 return;
+            }
+            else if ((_.get(theStorage, ["my"], true) == false 
+                    && theStorage.store[RESOURCE_ENERGY] > 0) 
+                || (_.get(theTerminal, ["my"], true) == false 
+                    && theTerminal.store[RESOURCE_ENERGY] > 0)) {
+                source = undefined;
             }
             
             let err = ERR_INVALID_TARGET;
@@ -223,7 +234,7 @@ let roleRepairer = {
                 }
             }
             else if (theTerminal != undefined
-                && (theTerminal.store[RESOURCE_ENERGY] > (theTerminal.storeCapacity / 2)
+                && (theTerminal.energyCapacityFree < 0 
                     || (theTerminal.my == false
                         && theTerminal.store[RESOURCE_ENERGY] > 0))) {
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);

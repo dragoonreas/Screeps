@@ -26,7 +26,7 @@ let prototypeGameMarket = function() {
                 theOrders = Game.market.getAllOrders((o) => (
                     o.type == orderType 
                     && o.resourceType == resourceType
-                    && o.amount >= 10 
+                    && o.amount > 0 
                     && o.price >= 0.001
                 ));
                 _.set(Game.market._orderCache, [orderType, resourceType], theOrders);

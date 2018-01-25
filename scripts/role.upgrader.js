@@ -57,13 +57,21 @@ let roleUpgrader = {
                 case "E7S12": source = Game.getObjectById("59790d46833ada000b96f4d5"); break;
             }
             
+            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
+            let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
+            if (creep.memory.speeds["1"] <= 1 
+                && ((_.get(theStorage, ["my"], true) == false 
+                        && theStorage.store[RESOURCE_ENERGY] > 0) 
+                    || (_.get(theTerminal, ["my"], true) == false 
+                        && theTerminal.store[RESOURCE_ENERGY] > 0))) {
+                source = undefined;
+            }
+            
             let err = ERR_INVALID_TARGET;
             if (source != undefined) {
                 err = creep.harvest(source);
             }
             
-            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
-            let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
             let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
             if (err == ERR_NOT_IN_RANGE) {
                 creep.travelTo(source);
@@ -112,7 +120,7 @@ let roleUpgrader = {
                 }
             }
             else if (theTerminal != undefined
-                && (theTerminal.store[RESOURCE_ENERGY] > (theTerminal.storeCapacity / 2)
+                && (theTerminal.energyCapacityFree < 0 
                     || (theTerminal.my == false
                         && theTerminal.store[RESOURCE_ENERGY] > 0))
                 && creep.memory.speeds["1"] <= 1) {

@@ -64,7 +64,7 @@ function collect_stats() {
         Memory.stats.newCommit = 1;
         Memory.stats.codeUptime = 0;
         Memory.stats.lastCommitTime = require.timestamp;
-        console.log("New code commited at: " + Date(Memory.stats.lastCommitTime).toString());
+        console.log("New code committed at: " + Date(Memory.stats.lastCommitTime).toString());
     }
     else {
         Memory.stats.newCommit = 0;

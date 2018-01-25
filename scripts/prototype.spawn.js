@@ -1,4 +1,4 @@
-const DEFAULT_HARVEST_COUNT = 6;
+const DEFAULT_HARVEST_COUNT = 6; // NOTE: Arbitary 'magic number'
 
 /*
     Production seemed to peak with the body size used during controller lvl 3 and subsequently fell off at the new couple of higher levels in E69N44.
@@ -25,13 +25,17 @@ const UPGRADER_ENERGY_CAP = CONTROLLER_STRUCTURES[STRUCTURE_SPAWN][UPGRADER_RCL_
 
 const DEMOLISHER_WORK_TO_CARRY_RATIO = _.ceil(1 / (DISMANTLE_POWER * DISMANTLE_COST));
 
-const RESERVE_CLAIM_PART_CAP = 2;
-const ATTACK_CLAIM_PART_MULTIPLIER = 5;
+const RESERVE_CLAIM_PART_CAP = 2; // TODO: Look into scaling this with RCL
+
+// Taken from: https://github.com/screeps/engine/blob/master/src/game/names.js
+const MALE_NAMES = [ 'Jackson', 'Aiden', 'Liam', 'Lucas', 'Noah', 'Mason', 'Jayden', 'Ethan', 'Jacob', 'Jack', 'Caden', 'Logan', 'Benjamin', 'Michael', 'Caleb', 'Ryan', 'Alexander', 'Elijah', 'James', 'William', 'Oliver', 'Connor', 'Matthew', 'Daniel', 'Luke', 'Brayden', 'Jayce', 'Henry', 'Carter', 'Dylan', 'Gabriel', 'Joshua', 'Nicholas', 'Isaac', 'Owen', 'Nathan', 'Grayson', 'Eli', 'Landon', 'Andrew', 'Max', 'Samuel', 'Gavin', 'Wyatt', 'Christian', 'Hunter', 'Cameron', 'Evan', 'Charlie', 'David', 'Sebastian', 'Joseph', 'Dominic', 'Anthony', 'Colton', 'John', 'Tyler', 'Zachary', 'Thomas', 'Julian', 'Levi', 'Adam', 'Isaiah', 'Alex', 'Aaron', 'Parker', 'Cooper', 'Miles', 'Chase', 'Muhammad', 'Christopher', 'Blake', 'Austin', 'Jordan', 'Leo', 'Jonathan', 'Adrian', 'Colin', 'Hudson', 'Ian', 'Xavier', 'Camden', 'Tristan', 'Carson', 'Jason', 'Nolan', 'Riley', 'Lincoln', 'Brody', 'Bentley', 'Nathaniel', 'Josiah', 'Declan', 'Jake', 'Asher', 'Jeremiah', 'Cole', 'Mateo', 'Micah', 'Elliot' ];
+const FEMALE_NAMES = [ 'Sophia', 'Emma', 'Olivia', 'Isabella', 'Mia', 'Ava', 'Lily', 'Zoe', 'Emily', 'Chloe', 'Layla', 'Madison', 'Madelyn', 'Abigail', 'Aubrey', 'Charlotte', 'Amelia', 'Ella', 'Kaylee', 'Avery', 'Aaliyah', 'Hailey', 'Hannah', 'Addison', 'Riley', 'Harper', 'Aria', 'Arianna', 'Mackenzie', 'Lila', 'Evelyn', 'Adalyn', 'Grace', 'Brooklyn', 'Ellie', 'Anna', 'Kaitlyn', 'Isabelle', 'Sophie', 'Scarlett', 'Natalie', 'Leah', 'Sarah', 'Nora', 'Mila', 'Elizabeth', 'Lillian', 'Kylie', 'Audrey', 'Lucy', 'Maya', 'Annabelle', 'Makayla', 'Gabriella', 'Elena', 'Victoria', 'Claire', 'Savannah', 'Peyton', 'Maria', 'Alaina', 'Kennedy', 'Stella', 'Liliana', 'Allison', 'Samantha', 'Keira', 'Alyssa', 'Reagan', 'Molly', 'Alexandra', 'Violet', 'Charlie', 'Julia', 'Sadie', 'Ruby', 'Eva', 'Alice', 'Eliana', 'Taylor', 'Callie', 'Penelope', 'Camilla', 'Bailey', 'Kaelyn', 'Alexis', 'Kayla', 'Katherine', 'Sydney', 'Lauren', 'Jasmine', 'London', 'Bella', 'Adeline', 'Caroline', 'Vivian', 'Juliana', 'Gianna', 'Skyler', 'Jordyn' ];
 
 let prototypeSpawn = function() {
-    StructureSpawn.prototype.createCustomCreep = function(roleName) {
+    StructureSpawn.prototype.spawnCustomCreep = function(roleName) {
         
-        let creepMemory = {
+        let options = {};
+        options.memory = {
             spawnID: this.name
             , roomID: this.room.name
             , role: roleName
@@ -40,157 +44,166 @@ let prototypeSpawn = function() {
         };
         
         if (roleName == "miner") {
-            creepMemory.mining = false;
+            options.memory.mining = false;
         }
         else if (roleName == "repairer") {
             for (let repairerType in Memory.rooms[this.room.name].repairerTypeMins) {
                 if (Memory.rooms[this.room.name].repairerTypeCounts[repairerType] < Memory.rooms[this.room.name].repairerTypeMins[repairerType] 
                     || repairerType == "all") {
-                    creepMemory.repairerType = repairerType;
+                    options.memory.repairerType = repairerType;
                     break;
                 }
             }
         }
         else if (roleName == "adaptable") {
-            creepMemory.roomSentFrom = this.room.name;
+            options.memory.roomSentFrom = this.room.name;
             // TODO: Update when bootstrapping network is reconfigured
             /*if (this.room.name == "E8S2") {
                 if (Memory.rooms.E17S1.creepCounts.builder == 0 && Memory.rooms.E17S1.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E17S1";
+                    options.memory.roomSentTo = "E17S1";
                 }
                 else if (Memory.rooms.E18S3.creepCounts.builder == 0 && Memory.rooms.E18S3.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E18S3";
+                    options.memory.roomSentTo = "E18S3";
                 }
             }
             else if (this.room.name == "E18S3") {
                 if (Memory.rooms.E18S9.creepCounts.builder == 0 && Memory.rooms.E18S9.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E18S9";
+                    options.memory.roomSentTo = "E18S9";
                 }
                 else if (Memory.rooms.E19S13.creepCounts.builder == 0 && Memory.rooms.E19S13.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E19S13";
+                    options.memory.roomSentTo = "E19S13";
                 }
                 else if (Memory.rooms.E18S17.creepCounts.builder == 0 && Memory.rooms.E18S17.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E18S17";
+                    options.memory.roomSentTo = "E18S17";
                 }
             }
             else*/ if (this.room.name == "E1S13") {
                 if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E1S13";
+                    options.memory.roomSentTo = "E1S13";
                 }
                 else if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E2S11";
+                    options.memory.roomSentTo = "E2S11";
                 }
                 /*else if (Memory.rooms.E3S15.creepCounts.builder == 0 && Memory.rooms.E3S15.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E3S15";
+                    options.memory.roomSentTo = "E3S15";
                 }
                 else if (Memory.rooms.E18S17.creepCounts.builder == 0 && Memory.rooms.E18S17.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E18S17";
+                    options.memory.roomSentTo = "E18S17";
                 }*/
             }
             else if (this.room.name == "E2S11") {
                 if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E2S11";
+                    options.memory.roomSentTo = "E2S11";
                 }
                 else if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E1S13";
+                    options.memory.roomSentTo = "E1S13";
                 }
                 /*else if (Memory.rooms.E3S15.creepCounts.builder == 0 && Memory.rooms.E3S15.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E3S15";
+                    options.memory.roomSentTo = "E3S15";
                 }
                 else if (Memory.rooms.E18S17.creepCounts.builder == 0 && Memory.rooms.E18S17.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E18S17";
+                    options.memory.roomSentTo = "E18S17";
                 }*/
             }
             else if (this.room.name == "E7S12") {
                 if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E1S13";
+                    options.memory.roomSentTo = "E1S13";
                 }
                 else if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
-                    creepMemory.roomSentTo = "E2S11";
+                    options.memory.roomSentTo = "E2S11";
                 }
             }
         }
         else if (roleName == "exporter") {
-            switch (this.room.name) {
-                default:
-                    creepMemory.roomSentFrom = this.room.name;
-                    creepMemory.roomSentTo = this.room.name;
+            /*switch (this.room.name) {
+                case "E1S13":
+                    options.memory.roomSentFrom = "E1S13";
+                    options.memory.roomSentTo = "E2S11";
                     break;
-            }
+            }*/
+            _.defaults(options.memory, {
+                roomSentFrom: this.room.name
+                , roomSentTo: this.room.name
+            });
         }
         else if (roleName == "demolisher") {
             switch (this.room.name) {
-                //case "E1S13": creepMemory.roomSentTo = "E2S13"; break;
-                default: creepMemory.roomSentTo = this.room.name; break;
+                case "E1S13":
+                    options.memory.roomSentTo = "E2S13";
+                    break;
+                default:
+                    options.memory.roomSentTo = _.get(Memory.rooms, [this.room.name, "harvestRooms", 0], undefined);
+                    if (_.isString(options.memory.roomSentTo) == false) { options.memory.roomSentTo = undefined; }
+                    break;
             }
         }
         else if (roleName == "claimer") {
             if (this.room.name == "E8S2") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "596e563e638d01000b4ed6dc"; // harvest room
+                    options.memory.controllerID = "596e563e638d01000b4ed6dc"; // harvest room
                 }
                 else {
-                    creepMemory.controllerID = "596ce23b3c1b99000a4d32ae";
+                    options.memory.controllerID = "596ce23b3c1b99000a4d32ae";
                 }
             }
             else if (this.room.name == "E17S1") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = ""; // harvest room
+                    options.memory.controllerID = ""; // harvest room
                 }
                 else {
-                    creepMemory.controllerID = "596ce23b3c1b99000a4d3292";
+                    options.memory.controllerID = "596ce23b3c1b99000a4d3292";
                 }
             }
             else if (this.room.name == "E18S3") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "596ce23b3c1b99000a4d32d5"; // harvest room
+                    options.memory.controllerID = "596ce23b3c1b99000a4d32d5"; // harvest room
                 }
                 else {
-                    creepMemory.controllerID = "596ce23b3c1b99000a4d3364";
+                    options.memory.controllerID = "596ce23b3c1b99000a4d3364";
                 }
             }
             else if (this.room.name == "E18S9") {
-                //creepMemory.controllerID = "59791d3c55e51c000b0bcc26";
-                creepMemory.controllerID = "59791d3c55e51c000b0bcb47";
+                //options.memory.controllerID = "59791d3c55e51c000b0bcc26";
+                options.memory.controllerID = "59791d3c55e51c000b0bcb47";
             }
             else if (this.room.name == "E19S13") {
-                creepMemory.controllerID = "59791d3c55e51c000b0bcc18";
+                options.memory.controllerID = "59791d3c55e51c000b0bcc18";
             }
             else if (this.room.name == "E18S17") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "59791d3c55e51c000b0bcc0c"; // harvest room
+                    options.memory.controllerID = "59791d3c55e51c000b0bcc0c"; // harvest room
                 }
             }
             else if (this.room.name == "E1S13") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "59790a4b833ada000b96f432"; // harvest room
+                    options.memory.controllerID = "59790a4b833ada000b96f432"; // harvest room
                 }
                 else {
-                    //creepMemory.controllerID = "59790a4b833ada000b96f39a";
-                    creepMemory.controllerID = "59790a4b833ada000b96f397";
+                    //options.memory.controllerID = "59790a4b833ada000b96f39a";
+                    options.memory.controllerID = "59790a4b833ada000b96f397";
                 }
             }
             else if (this.room.name == "E2S11") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    //creepMemory.controllerID = "59790a4b833ada000b96f45b"; // harvest room
-                    creepMemory.controllerID = "59790a4b833ada000b96f340"; // harvest room
+                    //options.memory.controllerID = "59790a4b833ada000b96f45b"; // harvest room
+                    options.memory.controllerID = "59790a4b833ada000b96f340"; // harvest room
                 }
             }
             else if (this.room.name == "E3S15") {
-                creepMemory.controllerID = "59790d46833ada000b96f4d6";
+                options.memory.controllerID = "59790d46833ada000b96f4d6";
             }
             else if (this.room.name == "E7S12") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    creepMemory.controllerID = "59790d46833ada000b96f4da"; // harvest room
+                    options.memory.controllerID = "59790d46833ada000b96f4da"; // harvest room
                 }
             }
-            let controllerRoom = _.get(Memory.controllers, [creepMemory.controllerID, "pos", "roomName"], "");
+            let controllerRoom = _.get(Memory.controllers, [options.memory.controllerID, "pos", "roomName"], "");
             if (_.includes(_.get(Memory.rooms, [this.room.name, "harvestRooms"], []), controllerRoom) == true && Game.time < _.get(Memory.rooms, [controllerRoom, "avoidTravelUntil"], 0)) {
                 return -10.5; // NOTE: Fake error for when a claimer would just die to an invader in the room they're going to reserve
             }
         }
         else if (roleName == "powerHarvester") {
-            creepMemory.harvestRoom = { id: this.room.name, x: 25, y: 25 }; // TODO: Populate this automatically
+            options.memory.harvestRoom = { id: this.room.name, x: 25, y: 25 }; // TODO: Populate this automatically
         }
         
         let energyAvaliable = this.room.energyCapacityAvailable;
@@ -198,7 +211,7 @@ let prototypeSpawn = function() {
             energyAvaliable = _.max([this.room.energyAvailable, SPAWN_ENERGY_CAPACITY]); // start small if forced to build up from scratch
         }
         
-        creepMemory.energyAvaliableOnSpawn = energyAvaliable;
+        options.memory.energyAvaliableOnSpawn = energyAvaliable;
         
         /*
             The move ratio is the ratio of move parts to the total of all the other types of parts in the body of the creep.
@@ -252,7 +265,8 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "demolisher") {
             let minHarvestingDemolisherCost = (DEMOLISHER_WORK_TO_CARRY_RATIO * BODYPART_COST[WORK]) + BODYPART_COST[CARRY] + (Math.ceil((DEMOLISHER_WORK_TO_CARRY_RATIO + 1) * moveRatio) * BODYPART_COST[MOVE]);
-            if (minHarvestingDemolisherCost <= energyAvaliable) {
+            if (minHarvestingDemolisherCost > energyAvaliable 
+                && options.memory.roomSentTo == "") { // these rooms use demolishers that harvest from what they demolish
                 bodyTemplate = _.fill(Array(DEMOLISHER_WORK_TO_CARRY_RATIO), WORK);
                 bodyTemplate.push(CARRY);
             }
@@ -263,6 +277,7 @@ let prototypeSpawn = function() {
         else if (roleName == "claimer") {
             bodyTemplate = [CLAIM];
         }
+        // TODO: SK Miner (10W 2C 14M 10RA 8H, eg: E64N36 - o4kapuk)
         
         if (bodyTemplate.length == 0) {
             moveRatio = 5; // since only using move parts will allow movement each tick no matter the terrain the moveRatio is automatically set to 5, mainly to ensure that the moveRatio == 0 sections aren't run accidently
@@ -350,12 +365,12 @@ let prototypeSpawn = function() {
         else if (roleName == "claimer" 
             && _.get(Memory.rooms[this.room.name], "harvestRooms", undefined) != undefined 
             && _.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) {
-            let claimPartMulitplier = RESERVE_CLAIM_PART_CAP;
-            if (_.get(Memory.controllers, [creepMemory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" || _.get(Memory.controllers, [creepMemory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") {
-                if (energyAvaliable < bodyCost * ATTACK_CLAIM_PART_MULTIPLIER) {
-                    return -6.5; // NOTE: Fake error for if spawn can't scale this creep to the rooms energy capacity
-                }
-                partMultiplier = Math.floor((bodyCost * ATTACK_CLAIM_PART_MULTIPLIER) / bodyCost); // rooms using other rooms to harvest send out claimers to take back those harvest rooms and need five claim parts to attack an enemy controller before it can start reserving it again
+            if ((_.get(Memory.controllers, [options.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" 
+                    || _.get(Memory.controllers, [options.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") 
+                && _.get(Memory.controllers, [options.memory.controllerID, "unblockedAt"], Game.time) <= Game.time) {
+                let downgradesAt = _.get(Memory.controllers, [options.memory.controllerID, "downgradesAt"], (Game.time + CONTROLLER_CLAIM_DOWNGRADE));
+                let theTicksToDowngrade = ((downgradesAt - Game.time) > 0) ? (downgradesAt - Game.time) : CONTROLLER_CLAIM_DOWNGRADE;
+                partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * (theTicksToDowngrade / CONTROLLER_CLAIM_DOWNGRADE)) / bodyCost); // rooms using other rooms to harvest send out claimers to take back those harvest rooms and need more claim parts to attack an enemy controller before it can start reserving it again
             }
             else {
                 partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * RESERVE_CLAIM_PART_CAP) / bodyCost); // rooms using other rooms to harvest send out claimers to reserve those harvest rooms and need up to two claim parts to keep the room reservation up
@@ -424,23 +439,36 @@ let prototypeSpawn = function() {
         
         bodyPartCounts = _.countBy(body);
         
-        creepMemory.spawnTick = Game.time + (body.length * CREEP_SPAWN_TIME) - 1 // -1 because it uses the last tick to leave the spawn
+        options.memory.spawnTick = Game.time + (body.length * CREEP_SPAWN_TIME) - 1 // -1 because it uses the last tick to leave the spawn
         
 		// Worst case (full carry parts) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
-        creepMemory.speeds = {
+        options.memory.speeds = {
             ["1"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
             , ["2"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)
             , ["10"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1)
         };
         
-        let result = this.createCreep(body, undefined, creepMemory); // TODO: Work out a custom naming scheme
+        let nameList = MALE_NAMES;
+        let creepName = "";
+        let nameExists = true;
+        let numGivenNames = 0;
+        do {
+            nameList = ((Math.random() > 0.5) ? MALE_NAMES : FEMALE_NAMES);
+            numGivenNames++;
+            creepName = _.sample(nameList, numGivenNames).toString().replace(",", "");
+            nameExists = _.any(Memory.creeps, (cm, cn) => (cn == creepName));
+        } while (nameExists == true);
         
-        if (_.isString(result) == true) {
-            ++Memory.rooms[creepMemory.roomID].creepCounts[creepMemory.role];
+        let result = this.spawnCreep(body, creepName, options);
+        
+        if (result == OK) {
+            ++Memory.rooms[options.memory.roomID].creepCounts[options.memory.role];
             
             if (roleName == "repairer") {
-                ++Memory.rooms[creepMemory.roomID].repairerTypeCounts[creepMemory.repairerType];
+                ++Memory.rooms[options.memory.roomID].repairerTypeCounts[options.memory.repairerType];
             }
+            
+            result = creepName;
         }
         
         return result;
