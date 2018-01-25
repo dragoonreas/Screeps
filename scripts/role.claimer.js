@@ -106,10 +106,10 @@ let roleClaimer = {
             }
         }
         else {
+            let err = ERR_GCL_NOT_ENOUGH;
             if (_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" 
                 || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") { // TODO: Add additional checks to make sure we're not accidently attacking an ally
                 if (_.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time) > Game.time) {
-                    creep.memory.role = "recyclable"; // recycle this creep since it can't attack the controller
                     creep.memory.role = "recyclable"; // recycle this creep since it can't attack the controller
                 }
                 else {
