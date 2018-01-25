@@ -46,134 +46,71 @@ let roleHauler = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     let sourceIDs = {
-                        /*"W87N29": [
-                            "5873bb7f11e3e4361b4d5f14"
-                            , "5873bb6711e3e4361b4d5cc5"
-                            , "5873bb9511e3e4361b4d6159"
-                        ] 
-                        , */"W86N29": [
-                            "5873bbc811e3e4361b4d675b"
-                            , "5873bbc811e3e4361b4d675c"
-                            , "5873bbab11e3e4361b4d6400"
-                            , "5873bbab11e3e4361b4d63f9"
-                            , "5873bbab11e3e4361b4d63fc"
-                        ] 
-                        , "W85N23": [
-                            "5873bbe111e3e4361b4d6ac4"
-                            , "5873bbac11e3e4361b4d6423"
-                            , "5873bbc911e3e4361b4d676e"
-                            , "5873bbc911e3e4361b4d676f"
-                            , "5873bbc911e3e4361b4d6770"
-                            , "5873bbac11e3e4361b4d6424"
-                            , "5873bbc911e3e4361b4d677e"
+                        "E8S2": [
+                            "596cea9da4b0a6000a635bb8" // E8S2
+                            , "596e563e638d01000b4ed6de" // E8S3
+                            , "596e563e638d01000b4ed6dd" // E8S3
                         ]
-                        , "W86N39": [
-                            "5873bb9411e3e4361b4d6137" // W87N39
-                            , "5873bb9411e3e4361b4d6138" // W87N39
-                            , "5873bb7e11e3e4361b4d5ef2" // W88N39
-                            , "5873bbdf11e3e4361b4d6a6f" // W84N39
-                            , "5873bbaa11e3e4361b4d63cf" // W86N39
+                        , "E17S1": [
+                            "596ce23b3c1b99000a4d32b0" // E17S1
                         ]
-                        , "W85N38": [
-                            "5873bbaa11e3e4361b4d63d2"
-                            , "5873bbc711e3e4361b4d672e"
-                            , "5873bbc711e3e4361b4d6731"
+                        , "E18S3": [
+                            "596ce23b3c1b99000a4d32d6" // E17S3
+                            , "596ce23b3c1b99000a4d32d7" // E17S3
+                            , "596ce23b3c1b99000a4d32dd" // E19S3
+                            , "596ce23b3c1b99000a4d32de" // E19S3
+                            , "596ce23b3c1b99000a4d3299" // E18S2
+                            , "596ce23b3c1b99000a4d3291" // E18S3
                         ]
-                        , "W86N43": [
-                            /*"5873bb9311e3e4361b4d612d"
-                            , "5873bb9311e3e4361b4d612b"
-                            , "5873bbc611e3e4361b4d6715"
-                            , "5873bbc611e3e4361b4d6713"
-                            , "5873bbc611e3e4361b4d6714"
-                            , */"5873bbaa11e3e4361b4d63c4"
+                        , "E18S9": [
+                            "596ce23b3c1b99000a4d3365" // E18S9
                         ]
-                        , "W91N45": [
-                            "58dbc30d8283ff5308a3cf8b" // W92N45
-                            , "58dbc3298283ff5308a3d213" // W91N44
-                            , "58dbc3288283ff5308a3d20d" // W91N46
-                            , "58dbc3288283ff5308a3d20f" // W91N45
+                        , "E21S9": [
+                            "59791d3c55e51c000b0bcb8b" // E19S11
+                            , "59791d3c55e51c000b0bcb46" // E21S9
                         ]
-                        , "W94N49": [
-                            /*"58dbc2b78283ff5308a3c5c6" // W95N49
-                            , "58dbc2b78283ff5308a3c5c5" // W95N49
-                            , "58dbc2d48283ff5308a3c967" // W94N48
-                            , "58dbc2f08283ff5308a3cce8" // W93N49
-                            , */"58dbc2d48283ff5308a3c95e" // W94N51
-                            , "58dbc2f08283ff5308a3cce5" // W93N51
-                            , "58dbc2d48283ff5308a3c962" // W94N49
+                        , "E19S13": [
+                            "59791d3c55e51c000b0bcb79" // E18S13
+                            , "59791d3c55e51c000b0bcbe3" // E19S14
+                            , "59791d3c55e51c000b0bcbab" // E19S12
+                            , "59791d3c55e51c000b0bcc24" // E19S13
                         ]
-                        , "W9N45": [
-                            "577b935b0f9d51615fa48078"
-                            , "577b935b0f9d51615fa48079"
-                            , "577b935d0f9d51615fa480ba"
-                            , "577b935b0f9d51615fa48071"
-                            , "577b935b0f9d51615fa48074"
+                        , "E18S17": [
+                            "59791d3c55e51c000b0bcc0e" // E18S18
+                            , "59791d3c55e51c000b0bcc0d" // E18S18
+                            , "59791d3c55e51c000b0bcb7c" // E18S16
+                            , "59791d3c55e51c000b0bcb67" // E17S17
+                            , "59791d3c55e51c000b0bcc1a" // E18S17
                         ]
-                        , "W81N29": [
-                            "5873bc2811e3e4361b4d7259" // W81N28
-                            , "5873bc1011e3e4361b4d7004" // W82N29
-                            , "5873bc2711e3e4361b4d7252" // W81N31
-                            , "5873bc1011e3e4361b4d6fff" // W82N31
-                            , "5873bc1011e3e4361b4d6ffe" // W82N31
-                            , "5873bc2711e3e4361b4d7255" // W81N29
+                        , "E1S13": [
+                            "59790a4b833ada000b96f431" // E2S13
+                            , "59790a4b833ada000b96f462" // E1S12
+                            , "59790a4b833ada000b96f464" // E1S12
+                            , "59790a4b833ada000b96f434" // E1S13
                         ]
-                        , "W72N28": [
-                            "5836b6eb8b8b9619519ef90a" // W72N29
-                            , "5836b6eb8b8b9619519ef90c" // W72N29
-                            , "5836b6d58b8b9619519ef709" // W73N28
-                            , "5836b6eb8b8b9619519ef913" // W72N27
-                            , "5836b6eb8b8b9619519ef90e" // W72N28
+                        , "E2S11": [
+                            "59790a4b833ada000b96f341" // E3S11
+                            , "59790a4b833ada000b96f33f" // E3S11
+                            , "59790a4b833ada000b96f45c" // E2S12
+                            , "598869041a4816000a1a2dd2" // E1S11
+                            , "598869041a4816000a1a2dd3" // E1S11
+                            , "59790a4b833ada000b96f399" // E2S11
                         ]
-                        , "W64N31": [
-                            "57ef9cad86f108ae6e60ca52" // W64N32
-                            //, "57ef9cad86f108ae6e60ca50" // W64N32 (may cause blockages)
-                            , "57ef9cc386f108ae6e60ccb7" // W63N31
-                            , "57ef9c9886f108ae6e60c7d9" // W65N31
-                            , "57ef9cad86f108ae6e60ca54" // W64N31
+                        , "E3S15": [
+                            "59790a4b833ada000b96f3f8" // E5S15
+                            , "59790a4b833ada000b96f3f7" // E5S15
+                            , "59790a4b833ada000b96f3f9" // E5S15
+                            , "59790a4b833ada000b96f438" // E3S16
+                            , "59790a4b833ada000b96f395" // E3S15
                         ]
-                        , "W55N31": [
-                            "579fa8850700be0674d2dc0f" // W56N31
-                            , "579fa8a60700be0674d2e07b" // W54N31
-                            , "579fa8950700be0674d2de50" // W55N32
-                            , "579fa8950700be0674d2de51" // W55N32
-                            , "579fa8a60700be0674d2e07c" // W54N31
-                            , "579fa8950700be0674d2de53" // W55N31
-                        ]
-                        , "W53N39": [
-                            "579fa8a50700be0674d2e04c" // W54N39
-                            , "579fa8a50700be0674d2e04d" // W54N39
-                            //, "579fa8b40700be0674d2e283" // W53N38 (now in an occupied room)
-                            //, "579fa8b40700be0674d2e281" // W53N38 (now in an occupied room)
-                            , "579fa8c50700be0674d2e400" // W52N39
-                            , "579fa8c50700be0674d2e402" // W52N39
-                            , "579fa8b40700be0674d2e27d" // W53N39
-                        ]
-                        , "W53N42": [
-                            "579fa8b40700be0674d2e279" // W53N41
-                            , "579fa8c50700be0674d2e3f9" // W52N42
-                            , "579fa8b30700be0674d2e273" // W53N43
-                            , "579fa8b30700be0674d2e277" // W53N42
-                        ]
-                        , "W52N47": [
-                            "579fa8d40700be0674d2e574" // W51N47
-                            , "579fa8d40700be0674d2e576" // W51N47
-                            , "579fa8b30700be0674d2e265" // W53N47
-                            , "579fa8c40700be0674d2e3e6" // W52N48
-                            , "579fa8c40700be0674d2e3e8" // W52N47
-                        ]
-                        , "W48N52": [
-                            "579fa8e60700be0674d2e701" // W49N52
-                            , "579fa8e60700be0674d2e6ff" // W49N52
-                            , "579fa8e90700be0674d2e73f" // W48N53
-                            , "579fa8e90700be0674d2e746" // W48N51
-                            , "579fa8e90700be0674d2e743" // W48N52
-                        ]
-                        , "W42N51": [
-                            "579fa8fa0700be0674d2e966" // W41N51
-                            , "579fa8fa0700be0674d2e964" // W41N51
-                            , "577b92f70f9d51615fa476fe" // W41N49
-                            , "579fa8fe0700be0674d2e9bb" // W39N51
-                            , "579fa8f80700be0674d2e929" // W42N51
+                        , "E7S12": [
+                            "59790d46833ada000b96f4d8" // E7S13
+                            , "59790d46833ada000b96f4d9" // E7S13
+                            , "59790d46833ada000b96f4d0" // E8S12
+                            , "59790d46833ada000b96f4d2" // E8S12
+                            , "59790a4b833ada000b96f363" // E6S12
+                            , "59790d46833ada000b96f4cb" // E7S11
+                            , "59790d46833ada000b96f4d4" // E7S12
                         ]
                     };
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
@@ -211,406 +148,208 @@ let roleHauler = {
                                     // TODO: Set Source.regenAt to Source.room.controller.reservation.ticksToEnd or Source.room.contoller.ticksToDowngrade
                                 }
                             }
-                            else if (sourceID == "5873bb7f11e3e4361b4d5f14") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "596e563e638d01000b4ed6de") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(3, 34, "W88N29"));
-                                creep.say(travelToIcons(creep) + "W88N29", true);
+                                creep.travelTo(new RoomPosition(15, 44, "E8S3"));
+                                creep.say(travelToIcons(creep) + "E8S3", true);
                                 return;
                             }
-                            else if (sourceID == "5873bb6711e3e4361b4d5cc5") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "596cea9da4b0a6000a635bb8") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(7, 39, "W89N29"));
-                                creep.say(travelToIcons(creep) + "W89N29", true);
+                                creep.travelTo(new RoomPosition(7, 39, "E8S2"));
+                                creep.say(travelToIcons(creep) + "E8S2", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbc811e3e4361b4d675b") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "596ce23b3c1b99000a4d32b0") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(23, 9, "W85N29"));
-                                creep.say(travelToIcons(creep) + "W85N29", true);
+                                creep.travelTo(new RoomPosition(39, 31, "E17S1"));
+                                creep.say(travelToIcons(creep) + "E17S1", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbab11e3e4361b4d6400") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "596ce23b3c1b99000a4d32d6") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(18, 8, "W86N28"));
-                                creep.say(travelToIcons(creep) + "W86N28", true);
+                                creep.travelTo(new RoomPosition(15, 26, "E17S3"));
+                                creep.say(travelToIcons(creep) + "E17S3", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbab11e3e4361b4d63f9") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "596ce23b3c1b99000a4d32dd") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(39, 41, "W86N31"));
-                                creep.say(travelToIcons(creep) + "W86N31", true);
+                                creep.travelTo(new RoomPosition(19, 13, "E19S3"));
+                                creep.say(travelToIcons(creep) + "E19S3", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbe111e3e4361b4d6ac4") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "596ce23b3c1b99000a4d3299") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(3, 3, "W84N23"));
-                                creep.say(travelToIcons(creep) + "W84N23", true);
+                                creep.travelTo(new RoomPosition(46, 39, "E18S2"));
+                                creep.say(travelToIcons(creep) + "E18S2", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbac11e3e4361b4d6423") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "596ce23b3c1b99000a4d3291") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(32, 10, "W86N23"));
-                                creep.say(travelToIcons(creep) + "W86N23", true);
+                                creep.travelTo(new RoomPosition(23, 21, "E18S3"));
+                                creep.say(travelToIcons(creep) + "E18S3", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbc911e3e4361b4d676e") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "596ce23b3c1b99000a4d3363") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(4, 8, "W85N25"));
-                                creep.say(travelToIcons(creep) + "W85N25", true);
+                                creep.travelTo(new RoomPosition(43, 10, "E18S9"));
+                                creep.say(travelToIcons(creep) + "E18S9", true);
                                 return;
                             }
-                            else if (sourceID == "5873bb9411e3e4361b4d6137") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcb8b") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(34, 19, "W87N39"));
-                                creep.say(travelToIcons(creep) + "W87N39", true);
+                                creep.travelTo(new RoomPosition(15, 15, "E19S11"));
+                                creep.say(travelToIcons(creep) + "E19S11", true);
                                 return;
                             }
-                            else if (sourceID == "5873bb7e11e3e4361b4d5ef2") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcb46") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(35, 4, "W88N39"));
-                                creep.say(travelToIcons(creep) + "W88N39", true);
+                                creep.travelTo(new RoomPosition(44, 26, "E21S9"));
+                                creep.say(travelToIcons(creep) + "E21S9", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbdf11e3e4361b4d6a6f") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcb79") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(43, 38, "W84N39"));
-                                creep.say(travelToIcons(creep) + "W84N39", true);
+                                creep.travelTo(new RoomPosition(23, 33, "E18S13"));
+                                creep.say(travelToIcons(creep) + "E18S13", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbc711e3e4361b4d672b") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcbe3") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(23, 43, "W85N41"));
-                                creep.say(travelToIcons(creep) + "W85N41", true);
+                                creep.travelTo(new RoomPosition(25, 42, "E19S14"));
+                                creep.say(travelToIcons(creep) + "E19S14", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbaa11e3e4361b4d63d2") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcbab") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(8, 12, "W86N38"));
-                                creep.say(travelToIcons(creep) + "W86N38", true);
+                                creep.travelTo(new RoomPosition(31, 18, "E19S12"));
+                                creep.say(travelToIcons(creep) + "E19S12", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbc711e3e4361b4d672e") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcc24") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(21, 12, "W85N39"));
-                                creep.say(travelToIcons(creep) + "W85N39", true);
+                                creep.travelTo(new RoomPosition(35, 29, "E19S13"));
+                                creep.say(travelToIcons(creep) + "E19S13", true);
                                 return;
                             }
-                            else if (sourceID == "5873bb9311e3e4361b4d612d") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcc0e") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(18, 36, "W87N43"));
-                                creep.say(travelToIcons(creep) + "W87N43", true);
+                                creep.travelTo(new RoomPosition(37, 44, "E18S18"));
+                                creep.say(travelToIcons(creep) + "E18S18", true);
                                 return;
                             }
-                            else if (sourceID == "5873bb9311e3e4361b4d612b") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcb7c") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(4, 35, "W87N44"));
-                                creep.say(travelToIcons(creep) + "W87N44", true);
+                                creep.travelTo(new RoomPosition(22, 33, "E18S16"));
+                                creep.say(travelToIcons(creep) + "E18S16", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbc611e3e4361b4d6715") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcb67") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(17, 41, "W85N45"));
-                                creep.say(travelToIcons(creep) + "W85N45", true);
+                                creep.travelTo(new RoomPosition(4, 15, "E17S17"));
+                                creep.say(travelToIcons(creep) + "E17S17", true);
                                 return;
                             }
-                            else if (sourceID == "5873bb9311e3e4361b4d6128") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59791d3c55e51c000b0bcc1a") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(14, 39, "W87N45"));
-                                creep.say(travelToIcons(creep) + "W87N45", true);
+                                creep.travelTo(new RoomPosition(31, 28, "E18S17"));
+                                creep.say(travelToIcons(creep) + "E18S17", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc30d8283ff5308a3cf8b") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f431") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(16, 21, "W92N45"));
-                                creep.say(travelToIcons(creep) + "W92N45", true);
+                                creep.travelTo(new RoomPosition(26, 19, "E2S13"));
+                                creep.say(travelToIcons(creep) + "E2S13", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc3298283ff5308a3d213") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f462") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(46, 11, "W91N44"));
-                                creep.say(travelToIcons(creep) + "W91N44", true);
+                                creep.travelTo(new RoomPosition(7, 3, "E1S12"));
+                                creep.say(travelToIcons(creep) + "E1S12", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc3288283ff5308a3d20d") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f434") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(45, 39, "W91N46"));
-                                creep.say(travelToIcons(creep) + "W91N46", true);
+                                creep.travelTo(new RoomPosition(4, 21, "E1S13"));
+                                creep.say(travelToIcons(creep) + "E1S13", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc3288283ff5308a3d20f") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f341") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(18, 4, "W91N45"));
-                                creep.say(travelToIcons(creep) + "W91N45", true);
+                                creep.travelTo(new RoomPosition(28, 30, "E3S11"));
+                                creep.say(travelToIcons(creep) + "E3S11", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc2b78283ff5308a3c5c6") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f45c") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(31, 32, "W95N49"));
-                                creep.say(travelToIcons(creep) + "W95N49", true);
+                                creep.travelTo(new RoomPosition(7, 26, "E2S12"));
+                                creep.say(travelToIcons(creep) + "E2S12", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc2b78283ff5308a3c5c5") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "598869041a4816000a1a2dd2") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(28, 11, "W95N49"));
-                                creep.say(travelToIcons(creep) + "W95N49", true);
+                                creep.travelTo(new RoomPosition(45, 4, "E1S11"));
+                                creep.say(travelToIcons(creep) + "E1S11", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc2d48283ff5308a3c967") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "598869041a4816000a1a2dd3") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(15, 38, "W94N48"));
-                                creep.say(travelToIcons(creep) + "W94N48", true);
+                                creep.travelTo(new RoomPosition(45, 22, "E1S11"));
+                                creep.say(travelToIcons(creep) + "E1S11", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc2f08283ff5308a3cce8") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f399") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(33, 10, "W93N49"));
-                                creep.say(travelToIcons(creep) + "W93N49", true);
+                                creep.travelTo(new RoomPosition(16, 28, "E2S11"));
+                                creep.say(travelToIcons(creep) + "E2S11", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc2d48283ff5308a3c95e") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f3f8") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(17, 7, "W94N51"));
-                                creep.say(travelToIcons(creep) + "W94N51", true);
+                                creep.travelTo(new RoomPosition(33, 21, "E5S15"));
+                                creep.say(travelToIcons(creep) + "E5S15", true);
                                 return;
                             }
-                            else if (sourceID == "58dbc2f08283ff5308a3cce5") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f438") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(15, 17, "W93N51"));
-                                creep.say(travelToIcons(creep) + "W93N51", true);
+                                creep.travelTo(new RoomPosition(4, 35, "E3S16"));
+                                creep.say(travelToIcons(creep) + "E3S16", true);
                                 return;
                             }
-                            else if (sourceID == "577b935b0f9d51615fa48078") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f395") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(42, 11, "W9N44"));
-                                creep.say(travelToIcons(creep) + "W9N44", true);
+                                creep.travelTo(new RoomPosition(19, 5, "E3S15"));
+                                creep.say(travelToIcons(creep) + "E3S15", true);
                                 return;
                             }
-                            else if (sourceID == "577b935d0f9d51615fa480ba") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790d46833ada000b96f4d8") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(30, 22, "W8N45"));
-                                creep.say(travelToIcons(creep) + "W8N45", true);
+                                creep.travelTo(new RoomPosition(31, 7, "E7S13"));
+                                creep.say(travelToIcons(creep) + "E7S13", true);
                                 return;
                             }
-                            else if (sourceID == "577b935b0f9d51615fa48071") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790d46833ada000b96f4d0") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(8, 14, "W9N46"));
-                                creep.say(travelToIcons(creep) + "W9N46", true);
+                                creep.travelTo(new RoomPosition(37, 10, "E8S12"));
+                                creep.say(travelToIcons(creep) + "E8S12", true);
                                 return;
                             }
-                            else if (sourceID == "5873bc2811e3e4361b4d7259") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790a4b833ada000b96f363") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(22, 30, "W81N28"));
-                                creep.say(travelToIcons(creep) + "W81N28", true);
+                                creep.travelTo(new RoomPosition(37, 38, "E6S12"));
+                                creep.say(travelToIcons(creep) + "E6S12", true);
                                 return;
                             }
-                            else if (sourceID == "5873bc1011e3e4361b4d7004") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790d46833ada000b96f4cb") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(17, 17, "W82N29"));
-                                creep.say(travelToIcons(creep) + "W82N29", true);
+                                creep.travelTo(new RoomPosition(5, 18, "E7S11"));
+                                creep.say(travelToIcons(creep) + "E7S11", true);
                                 return;
                             }
-                            else if (sourceID == "5873bc2711e3e4361b4d7252") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "59790d46833ada000b96f4d4") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(18, 22, "W81N31"));
-                                creep.say(travelToIcons(creep) + "W81N31", true);
-                                return;
-                            }
-                            else if (sourceID == "5873bc1011e3e4361b4d6fff") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(38, 27, "W82N31"));
-                                creep.say(travelToIcons(creep) + "W82N31", true);
-                                return;
-                            }
-                            else if (sourceID == "5836b6eb8b8b9619519ef90a") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(21, 7, "W72N29"));
-                                creep.say(travelToIcons(creep) + "W72N29", true);
-                                return;
-                            }
-                            else if (sourceID == "5836b6d58b8b9619519ef709") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(33, 24, "W73N28"));
-                                creep.say(travelToIcons(creep) + "W73N28", true);
-                                return;
-                            }
-                            else if (sourceID == "5836b6eb8b8b9619519ef913") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(21, 46, "W72N27"));
-                                creep.say(travelToIcons(creep) + "W72N27", true);
-                                return;
-                            }
-                            else if (sourceID == "5836b6eb8b8b9619519ef90e") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(20, 32, "W72N28"));
-                                creep.say(travelToIcons(creep) + "W72N28", true);
-                                return;
-                            }
-                            else if (sourceID == "57ef9cad86f108ae6e60ca52") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(19, 38, "W64N32"));
-                                creep.say(travelToIcons(creep) + "W64N32", true);
-                                return;
-                            }
-                            else if (sourceID == "57ef9cc386f108ae6e60ccb7") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(4, 8, "W63N31"));
-                                creep.say(travelToIcons(creep) + "W63N31", true);
-                                return;
-                            }
-                            else if (sourceID == "57ef9c9886f108ae6e60c7d9") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(26, 42, "W65N31"));
-                                creep.say(travelToIcons(creep) + "W65N31", true);
-                                return;
-                            }
-                            else if (sourceID == "57ef9cad86f108ae6e60ca54") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(40, 8, "W64N31"));
-                                creep.say(travelToIcons(creep) + "W64N31", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8850700be0674d2dc0f") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(46, 24, "W56N31"));
-                                creep.say(travelToIcons(creep) + "W56N31", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8a60700be0674d2e07b") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(5, 27, "W54N31"));
-                                creep.say(travelToIcons(creep) + "W54N31", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8950700be0674d2de50") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(27, 40, "W55N32"));
-                                creep.say(travelToIcons(creep) + "W55N32", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8950700be0674d2de53") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(33, 6, "W55N31"));
-                                creep.say(travelToIcons(creep) + "W55N31", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8a50700be0674d2e04c") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(17, 38, "W54N39"));
-                                creep.say(travelToIcons(creep) + "W54N39", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8b40700be0674d2e283") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(31, 29, "W53N38"));
-                                creep.say(travelToIcons(creep) + "W53N38", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8c50700be0674d2e400") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(24, 15, "W52N39"));
-                                creep.say(travelToIcons(creep) + "W52N39", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8b40700be0674d2e27d") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(18, 15, "W53N39"));
-                                creep.say(travelToIcons(creep) + "W53N39", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8b40700be0674d2e279") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(27, 9, "W53N41"));
-                                creep.say(travelToIcons(creep) + "W53N41", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8c50700be0674d2e3f9") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(31, 20, "W52N42"));
-                                creep.say(travelToIcons(creep) + "W52N42", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8b30700be0674d2e273") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(32, 35, "W53N43"));
-                                creep.say(travelToIcons(creep) + "W53N43", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8b30700be0674d2e275") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(23, 4, "W53N42"));
-                                creep.say(travelToIcons(creep) + "W53N42", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8d40700be0674d2e574") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(10, 25, "W51N47"));
-                                creep.say(travelToIcons(creep) + "W51N47", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8d40700be0674d2e576") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(39, 43, "W51N47"));
-                                creep.say(travelToIcons(creep) + "W51N47", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8b30700be0674d2e265") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(40, 34, "W53N47"));
-                                creep.say(travelToIcons(creep) + "W53N47", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8c40700be0674d2e3e6") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(4, 32, "W52N48"));
-                                creep.say(travelToIcons(creep) + "W52N48", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8e60700be0674d2e701") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(20, 43, "W49N52"));
-                                creep.say(travelToIcons(creep) + "W49N52", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8e90700be0674d2e73f") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(17, 46, "W48N53"));
-                                creep.say(travelToIcons(creep) + "W48N53", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8e90700be0674d2e746") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(6, 33, "W48N51"));
-                                creep.say(travelToIcons(creep) + "W48N51", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8e90700be0674d2e743") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(28, 19, "W48N52"));
-                                creep.say(travelToIcons(creep) + "W48N52", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8fa0700be0674d2e966") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(10, 45, "W41N51"));
-                                creep.say(travelToIcons(creep) + "W41N51", true);
-                                return;
-                            }
-                            else if (sourceID == "577b92f70f9d51615fa476fe") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(14, 5, "W41N49"));
-                                creep.say(travelToIcons(creep) + "W41N49", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8fe0700be0674d2e9bb") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(22, 11, "W39N51"));
-                                creep.say(travelToIcons(creep) + "W39N51", true);
-                                return;
-                            }
-                            else if (sourceID == "579fa8f80700be0674d2e929") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(4, 35, "W42N51"));
-                                creep.say(travelToIcons(creep) + "W42N51", true);
+                                creep.travelTo(new RoomPosition(7, 19, "E7S12"));
+                                creep.say(travelToIcons(creep) + "E7S12", true);
                                 return;
                             }
                         }
@@ -776,7 +515,7 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
-            else if (creep.memory.roomID == "W86N29" 
+            else if (creep.memory.roomID == "E1S15" 
                     && theTerminal != undefined 
                     && Memory.TooAngelDealings.isFriendly == false 
                     && terminalEnergy < Memory.TooAngelDealings.totalCost 
