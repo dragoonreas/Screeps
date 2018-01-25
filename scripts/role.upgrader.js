@@ -127,7 +127,7 @@ let roleUpgrader = {
                 }
             }
             else if (theTerminal != undefined
-                && (theTerminal.store[RESOURCE_ENERGY] > (theTerminal.storeCapacity / 2)
+                && (theTerminal.energyCapacityFree < 0 
                     || (theTerminal.my == false
                         && theTerminal.store[RESOURCE_ENERGY] > 0))
                 && creep.memory.speeds["1"] <= 1) {

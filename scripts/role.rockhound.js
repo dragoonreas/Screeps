@@ -144,7 +144,7 @@ let roleRockhound = {
                 else if (creep.memory.role == "rockhound") {
                     creep.say(ICONS["harvest"] + "?", true);
                     _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "rockhound"],  0);
-                    creep.memory.role = "harvester";
+                    creep.memory.role = "recyclable";
                 }
                 else {
                     ROLES["harvester"].run(creep);

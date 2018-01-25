@@ -6,11 +6,11 @@ let roleHoarder = {
         let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
         let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
         if (theTerminal != undefined 
-            && _.sum(theTerminal.store) < theTerminal.storeCapacity
+            && theTerminal.storeCapacityFree > 0 
             && theTerminal.my == true) {
             for (let resourceType in creep.carry) {
                 if (resourceType != RESOURCE_ENERGY) {
-                    let err = creep.transfer(theTerminal, resourceType, creep.carry[resourceType]);
+                    let err = creep.transfer(theTerminal, resourceType, Math.min(creep.carry[resourceType], theTerminal.storeCapacityFree));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.travelTo(theTerminal);
                         creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
@@ -27,7 +27,7 @@ let roleHoarder = {
             && theStorage.my == true) {
             for (let resourceType in creep.carry) {
                 if (resourceType != RESOURCE_ENERGY) {
-                    let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
+                    let err = creep.transfer(theStorage, resourceType, Math.min(creep.carry[resourceType], (theStorage.storeCapacity - _.sum(theStorage.store))));
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.travelTo(theStorage);
                         creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);

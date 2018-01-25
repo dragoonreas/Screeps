@@ -71,7 +71,7 @@ let roleHauler = {
                             "5873bb9411e3e4361b4d6137" // W87N39
                             , "5873bb9411e3e4361b4d6138" // W87N39
                             , "5873bb7e11e3e4361b4d5ef2" // W88N39
-                            , "5873bbaa11e3e4361b4d63c9" // W86N41
+                            , "5873bbdf11e3e4361b4d6a6f" // W84N39
                             , "5873bbaa11e3e4361b4d63cf" // W86N39
                         ]
                         , "W85N38": [
@@ -271,10 +271,10 @@ let roleHauler = {
                                 creep.say(travelToIcons(creep) + "W88N39", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbaa11e3e4361b4d63c9") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bbdf11e3e4361b4d6a6f") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(15, 4, "W86N41"));
-                                creep.say(travelToIcons(creep) + "W86N41", true);
+                                creep.travelTo(new RoomPosition(43, 38, "W84N39"));
+                                creep.say(travelToIcons(creep) + "W84N39", true);
                                 return;
                             }
                             else if (sourceID == "5873bbc711e3e4361b4d672b") { // TODO: Remove this after the source has been added to memory
@@ -761,16 +761,15 @@ let roleHauler = {
                 }
             }
             else if (theTerminal != undefined 
-                    && terminalEnergy < Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) 
+                    && theTerminal.energyCapacityFree > 0 
                     && theTerminal.my == true) {
-                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) - terminalEnergy));
+                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], theTerminal.energyCapacityFree));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theTerminal);
                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
                 }
                 else if (err == OK) {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
-                    //console.log(theTerminal.room.name + " terminal reserve at: " + (theTerminal.store[RESOURCE_ENERGY] + Math.min(creep.carry[RESOURCE_ENERGY], (theTerminal.storeCapacity / 2) - theTerminal.store[RESOURCE_ENERGY])).toLocaleString() + "/" + (theTerminal.storeCapacity / 2).toLocaleString());
                 }
                 else {
                     incrementConfusedCreepCount(creep);
@@ -789,7 +788,6 @@ let roleHauler = {
                 }
                 else if (err == OK) {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
-                    //console.log("TooAngel dealing terminal at: " + (theTerminal.store[RESOURCE_ENERGY] + Math.min(creep.carry[RESOURCE_ENERGY], Memory.TooAngelDealings.totalCost - theTerminal.store[RESOURCE_ENERGY])).toLocaleString() + "/" + Memory.TooAngelDealings.totalCost.toLocaleString());
                 }
                 else {
                     incrementConfusedCreepCount(creep);
@@ -806,7 +804,6 @@ let roleHauler = {
                 }
                 else if (err == OK) {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
-                    //console.log(theStorage.room.name + " storage reserve at: " + (theStorage.store[RESOURCE_ENERGY] + Math.min(creep.carry[RESOURCE_ENERGY], (theStorage.storeCapacity / 2) - theStorage.store[RESOURCE_ENERGY])).toLocaleString() + "/" + (theStorage.storeCapacity / 2).toLocaleString());
                 }
                 else {
                     incrementConfusedCreepCount(creep);

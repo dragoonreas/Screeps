@@ -1,11 +1,21 @@
 {
   "annotations": {
-    "list": []
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
   },
   "description": "",
   "editable": true,
   "gnetId": null,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "hideControls": false,
   "id": 1180,
   "links": [],
@@ -113,6 +123,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -121,6 +132,7 @@
               "show": true
             },
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -358,6 +370,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -1006,6 +1019,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -1280,47 +1294,6 @@
       "height": "175",
       "panels": [
         {
-          "alert": {
-            "conditions": [
-              {
-                "evaluator": {
-                  "params": [
-                    500
-                  ],
-                  "type": "lt"
-                },
-                "operator": {
-                  "type": "and"
-                },
-                "query": {
-                  "params": [
-                    "D",
-                    "5m",
-                    "now"
-                  ]
-                },
-                "reducer": {
-                  "params": [],
-                  "type": "avg"
-                },
-                "type": "query"
-              }
-            ],
-            "executionErrorState": "keep_state",
-            "frequency": "60s",
-            "handler": 1,
-            "message": "Average bucket below 500 CPU for the past 5 minutes.",
-            "name": "Low Bucket",
-            "noDataState": "keep_state",
-            "notifications": [
-              {
-                "id": 9
-              },
-              {
-                "id": 9
-              }
-            ]
-          },
           "aliasColors": {},
           "bars": false,
           "dashLength": 10,
@@ -1466,10 +1439,24 @@
           "thresholds": [
             {
               "colorMode": "critical",
-              "fill": true,
-              "line": true,
+              "fill": false,
+              "line": false,
               "op": "lt",
               "value": 500
+            },
+            {
+              "colorMode": "warning",
+              "fill": false,
+              "line": false,
+              "op": "lt",
+              "value": 7500
+            },
+            {
+              "colorMode": "ok",
+              "fill": false,
+              "line": false,
+              "op": "gt",
+              "value": 7500
             }
           ],
           "timeFrom": null,
@@ -1599,67 +1586,6 @@
       "height": "150",
       "panels": [
         {
-          "alert": {
-            "conditions": [
-              {
-                "evaluator": {
-                  "params": [],
-                  "type": "no_value"
-                },
-                "operator": {
-                  "type": "and"
-                },
-                "query": {
-                  "datasourceId": 123,
-                  "model": {
-                    "refId": "A",
-                    "target": "alias(derivative(screeps.dragoonreas.currentTick), 'Tick Duration')",
-                    "textEditor": false
-                  },
-                  "params": [
-                    "A",
-                    "5m",
-                    "now"
-                  ]
-                },
-                "reducer": {
-                  "params": [],
-                  "type": "last"
-                },
-                "type": "query"
-              },
-              {
-                "evaluator": {
-                  "params": [
-                    1
-                  ],
-                  "type": "lt"
-                },
-                "operator": {
-                  "type": "or"
-                },
-                "query": {
-                  "params": [
-                    "K",
-                    "5m",
-                    "now"
-                  ]
-                },
-                "reducer": {
-                  "params": [],
-                  "type": "max"
-                },
-                "type": "query"
-              }
-            ],
-            "executionErrorState": "keep_state",
-            "frequency": "60s",
-            "handler": 1,
-            "message": "No new data received for the past 5 minutes.",
-            "name": "No Data",
-            "noDataState": "no_data",
-            "notifications": []
-          },
           "aliasColors": {},
           "bars": true,
           "dashLength": 10,
@@ -2594,6 +2520,7 @@
               "show": true
             },
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -3605,6 +3532,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -3623,7 +3551,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 188,
           "links": [],
@@ -3826,6 +3754,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -3834,6 +3763,7 @@
               "show": true
             },
             {
+              "decimals": 1,
               "format": "short",
               "label": null,
               "logBase": 2,
@@ -4430,6 +4360,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -4448,7 +4379,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 190,
           "links": [],
@@ -4651,6 +4582,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -4659,6 +4591,7 @@
               "show": true
             },
             {
+              "decimals": 1,
               "format": "short",
               "label": null,
               "logBase": 2,
@@ -5110,7 +5043,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1507120762064,
+      "repeatIteration": 1516841523184,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -5255,6 +5188,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -5273,7 +5207,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 197,
           "links": [],
@@ -5476,6 +5410,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -5484,6 +5419,7 @@
               "show": true
             },
             {
+              "decimals": 1,
               "format": "short",
               "label": null,
               "logBase": 2,
@@ -5935,7 +5871,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1507120762064,
+      "repeatIteration": 1516841523184,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -6080,6 +6016,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -6098,7 +6035,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 204,
           "links": [],
@@ -6301,6 +6238,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -6309,6 +6247,7 @@
               "show": true
             },
             {
+              "decimals": 1,
               "format": "short",
               "label": null,
               "logBase": 2,
@@ -6760,7 +6699,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1507120762064,
+      "repeatIteration": 1516841523184,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -6905,6 +6844,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -6923,7 +6863,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 211,
           "links": [],
@@ -7126,6 +7066,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -7134,6 +7075,7 @@
               "show": true
             },
             {
+              "decimals": 1,
               "format": "short",
               "label": null,
               "logBase": 2,
@@ -7585,7 +7527,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1507120762064,
+      "repeatIteration": 1516841523184,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -7730,6 +7672,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -7748,7 +7691,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 218,
           "links": [],
@@ -7951,6 +7894,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -7959,6 +7903,7 @@
               "show": true
             },
             {
+              "decimals": 1,
               "format": "short",
               "label": null,
               "logBase": 2,
@@ -8410,7 +8355,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1507120762064,
+      "repeatIteration": 1516841523184,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -8555,6 +8500,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -8573,7 +8519,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 225,
           "links": [],
@@ -8776,6 +8722,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -8784,6 +8731,7 @@
               "show": true
             },
             {
+              "decimals": 1,
               "format": "short",
               "label": null,
               "logBase": 2,
@@ -9235,7 +9183,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1507120762064,
+      "repeatIteration": 1516841523184,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -9380,6 +9328,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -9398,7 +9347,7 @@
           ]
         },
         {
-          "content": "<center>\n<p>\n<a href=\"https://screeps.dragoonreas.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
+          "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
           "description": "",
           "id": 232,
           "links": [],
@@ -9601,6 +9550,7 @@
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -9609,6 +9559,7 @@
               "show": true
             },
             {
+              "decimals": 1,
               "format": "short",
               "label": null,
               "logBase": 2,
@@ -10060,7 +10011,7 @@
         }
       ],
       "repeat": null,
-      "repeatIteration": 1507120762064,
+      "repeatIteration": 1516841523184,
       "repeatRowId": 13,
       "showTitle": true,
       "title": "$Room",
@@ -10273,5 +10224,5 @@
   },
   "timezone": "browser",
   "title": "Screeps (Upgraded)",
-  "version": 235
+  "version": 241
 }

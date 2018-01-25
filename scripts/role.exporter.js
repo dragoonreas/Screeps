@@ -95,7 +95,7 @@ let roleExporter = {
                                 && _.sum(theStorage.store) > theStorage.store[RESOURCE_ENERGY] 
                                 && theTerminal != undefined 
                                 && theTerminal.my == true 
-                                && _.sum(theTerminal.store) < theTerminal.storeCapacity
+                                && theTerminal.storeCapacityFree > 0 
                                 && (_.sum(theTerminal.store) - theTerminal.store[RESOURCE_ENERGY]) < Math.min((theTerminal.storeCapacity - theTerminal.store[RESOURCE_ENERGY]), (theTerminal.storeCapacity / 2))))) {
                         let resourceType = _.max(_.keys(theStorage.store), (r) => (resourceWorth(r)));
                         let err = creep.withdraw(theStorage, resourceType);
@@ -306,10 +306,10 @@ let roleExporter = {
                         let storageEnergy = _.get(theStorage, ["store", RESOURCE_ENERGY], 0);
                         storageEnergy = _.isFinite(storageEnergy) ? storageEnergy : 0;
                         if (theTerminal != undefined 
-                            && terminalEnergy < Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) 
+                            && theTerminal.energyCapacityFree > 0 
                             && theTerminal.my == true) {
                             for (let resourceType in creep.carry) {
-                                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - _.sum(theTerminal.store) + terminalEnergy)) - terminalEnergy));
+                                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], theTerminal.energyCapacityFree));
                                 if (err == ERR_NOT_IN_RANGE) {
                                     creep.travelTo(theTerminal);
                                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
@@ -348,10 +348,10 @@ let roleExporter = {
                             }
                         }
                         else if (theTerminal != undefined 
-                            && _.sum(theTerminal.store) < theTerminal.storeCapacity 
+                            && theTerminal.storeCapacityFree > 0 
                             && theTerminal.my == true) {
                             for (let resourceType in creep.carry) {
-                                let err = creep.transfer(theTerminal, resourceType, Math.min(creep.carry[resourceType], theTerminal.storeCapacity - _.sum(theTerminal.store)));
+                                let err = creep.transfer(theTerminal, resourceType, Math.min(creep.carry[resourceType], theTerminal.storeCapacityFree));
                                 if (err == ERR_NOT_IN_RANGE) {
                                     creep.travelTo(theTerminal);
                                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);

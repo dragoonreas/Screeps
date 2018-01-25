@@ -10,6 +10,7 @@ global.NODE_USAGE = {
 //require("data." + Game.shard.name)();
 require("globals")(); // NOTE: All globals not from an external resource should be declared here
 require("prototype.creep")(); // NOTE: Must be required after globals.js
+require("prototype.terminal")(); // NOTE: Must be required after globals.js
 require("prototype.room")(); // NOTE: Must be required after globals.js
 require("prototype.memory")(); // NOTE: Must be required after prototype.room.js
 require("prototype.controller")(); // NOTE: Must be required after prototype.room.js
@@ -116,7 +117,7 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
 _.set(Memory.rooms, ["W86N39", "harvestRooms"], [
     "W87N39"
     , "W88N39"
-    , "W86N41"
+    , "W84N39"
 ]);
 _.set(Memory.rooms, ["W85N38", "harvestRooms"], [
     "W86N38"
@@ -555,7 +556,7 @@ _.set(Memory.rooms, ["W53N39", "creepMins"], {
 });*/
 _.set(Memory.rooms, ["W52N47", "creepMins"], {
     attacker: 0
-    , harvester: 6
+    , harvester: 5
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W52N47", "minerSources"], {}))
@@ -1355,6 +1356,7 @@ module.exports.loop = function () {
             && _.get(theRoom, ["terminal", "my"], false) == true
             && theRoom.terminal.cooldown == 0) {
             let theTerminal = theRoom.terminal;
+            let terminalEnergy = _.get(theTerminal.store, [RESOURCE_ENERGY], 0);
             let madeDeal = false;
             if (Game.cpu.bucket > 7500) {
                 for (let resourceName in theTerminal.store) {
@@ -1371,7 +1373,7 @@ module.exports.loop = function () {
                             ));
                             let amountToSend = Math.min(resourceCount, buyOrder.amount);
                             let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
-                            if (energyCost <= theTerminal.store[RESOURCE_ENERGY]) {
+                            if (energyCost <= terminalEnergy) {
                                 let err = Game.market.deal(buyOrder.id, amountToSend, roomID);
                                 if (err == OK) {
                                     madeDeal = true;
@@ -1384,10 +1386,9 @@ module.exports.loop = function () {
                 }
             }
             
-            let freeSpace = theTerminal.storeCapacity - _.sum(theTerminal.store);
             if (madeDeal == false 
                 && requiredPower > 0 
-                && freeSpace > 0) {
+                && theTerminal.storeCapacityFree > 0) {
                 let sellOrders = _.filter(Game.market.orderCache(ORDER_SELL, RESOURCE_POWER), (o) => (
                     o.price <= 2
                 ));
@@ -1397,9 +1398,9 @@ module.exports.loop = function () {
                     let sellOrder = _.min(sellOrders, (o) => (
                         Game.market.calcTransactionCost(requiredPower, roomID, o.roomName)
                     ));
-                    let amountToBuy = _.min([requiredPower, freeSpace, sellOrder.amount]);
+                    let amountToBuy = _.min([requiredPower, theTerminal.storeCapacityFree, sellOrder.amount]);
                     let energyCost = Game.market.calcTransactionCost(amountToBuy, roomID, sellOrder.roomName);
-                    if (energyCost <= theTerminal.store[RESOURCE_ENERGY]) {
+                    if (energyCost <= terminalEnergy) {
                         let err = Game.market.deal(sellOrder.id, amountToBuy, roomID);
                         if (err == OK) {
                             madeDeal = true;
@@ -1409,12 +1410,8 @@ module.exports.loop = function () {
                 }
             }
             
-            let terminalEnergy = _.get(theTerminal.store, [RESOURCE_ENERGY], 0);
-            let energyTarget = Math.min((theTerminal.storeCapacity / 2), (theTerminal.storeCapacity - ((_.sum(theTerminal.store) || 0) - terminalEnergy)));
-            let requiredEnergy = Math.max((energyTarget - terminalEnergy), 0);
-            if (freeSpace > 0 
-                && requiredEnergy > 0 
-                && terminalEnergy < (energyTarget * 0.9)) {
+            if (theTerminal.needsEnergy == true 
+                && theTerminal.energyCapacityFree > 0) {
                 let buyOrder = _.find(Game.market.orders, (o) => (
                     o.roomName == roomID 
                     && o.type == ORDER_BUY 
@@ -1427,7 +1424,7 @@ module.exports.loop = function () {
                 ));
                 if (buyOrders.length > 0) {
                     let buyPrice = _.get(_.max(buyOrders, (o) => (o.price)), ["price"], 0.02);
-                    let amountToBuy = Math.min(requiredEnergy, freeSpace);
+                    let amountToBuy = theTerminal.energyCapacityFree;
                     if (buyOrder == undefined) {
                         let deposit = buyPrice * amountToBuy * 0.05;
                         if (deposit <= Game.market.credits) {
@@ -1526,7 +1523,7 @@ module.exports.loop = function () {
                     && _.sum(theStorage.store) < theStorage.storeCapacity) 
                 || (theTerminal != undefined 
                     && theTerminal.my == true 
-                    && _.sum(theTerminal.store) < theTerminal.storeCapacity))) {
+                    && theTerminal.storeCapacityFree > 0))) {
                 ROLES["hoarder"].run(creep);
                 runningRole = true;
             }

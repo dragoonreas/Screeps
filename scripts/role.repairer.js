@@ -174,7 +174,7 @@ let roleRepairer = {
                 && (theStorage == undefined
                     || theStorage.store[RESOURCE_ENERGY] == 0)
                 && (theTerminal == undefined
-                    || (theTerminal.store[RESOURCE_ENERGY] <= (theTerminal.storeCapacity / 2)
+                    || (theTerminal.energyCapacityFree >= 0 
                         || (theTerminal.my == false
                             && theTerminal.store[RESOURCE_ENERGY] == 0)))) {
                 if (_.get(Memory, ["rooms", creep.memory.roomID, "creepCounts", "upgrader"], 0) == 0) {
@@ -245,7 +245,7 @@ let roleRepairer = {
                 }
             }
             else if (theTerminal != undefined
-                && (theTerminal.store[RESOURCE_ENERGY] > (theTerminal.storeCapacity / 2)
+                && (theTerminal.energyCapacityFree < 0 
                     || (theTerminal.my == false
                         && theTerminal.store[RESOURCE_ENERGY] > 0))) {
                 err = creep.withdraw(theTerminal, RESOURCE_ENERGY);

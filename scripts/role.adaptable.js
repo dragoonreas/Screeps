@@ -104,6 +104,7 @@ let roleAdaptable = {
                     || sentFrom == "W94N49" 
                     || sentTo == "W9N45" 
                     || sentTo == "W53N39" 
+                    || sentTo == "W52N47" 
                     || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
