@@ -295,6 +295,31 @@ let prototypeRoom = function() {
         });
     }
     
+    if (Room.prototype.priorityTargetID == undefined) {
+        Object.defineProperty(Room.prototype, "priorityTargetID", {
+            get: function() {
+                if (this === Room.prototype || this == undefined) { return; }
+                if (_.get(this.memory, ["priorityTargetID"], undefined) == undefined) {
+                    _.set(this.memory, ["priorityTargetID"], "");
+                }
+                if (_.isString(this.memory.priorityTargetID) == false) {
+                    return undefined;
+                }
+                return this.memory.priorityTargetID;
+            },
+            
+            set: function(value) {
+                if (_.get(this.memory, ["priorityTargetID"], undefined) == undefined) {
+                    _.set(this.memory, ["priorityTargetID"], "");
+                }
+                if (_.isString(this.memory.priorityTargetID) == false) {
+                    throw new Error("Could not set Room.priorityTargetID property");
+                }
+                this.memory.priorityTargetID = value;
+            }
+        });
+    }
+    
     if (Room.prototype.clearPathCaches == undefined) {
         Object.defineProperty(Room.prototype, "clearPathCaches", {
             get: function() {

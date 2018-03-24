@@ -20,47 +20,62 @@ let globals = function() {
     };
     
     global.ICONS = {
-        [STRUCTURE_CONTROLLER]: "\uD83C\uDFF0"
-        , [STRUCTURE_SPAWN]: "\uD83C\uDFE5"
-        , [STRUCTURE_EXTENSION]: "\uD83C\uDFEA"
-        , [STRUCTURE_CONTAINER]: "\uD83D\uDCE4"
-        , [STRUCTURE_STORAGE]: "\uD83C\uDFE6"
-        , [STRUCTURE_RAMPART]: "\uD83D\uDEA7"
-        , [STRUCTURE_WALL]: "\u26F0"
-        , [STRUCTURE_TOWER]: "\uD83D\uDD2B"
-        , [STRUCTURE_ROAD]: "\uD83D\uDEE3"
-        , [STRUCTURE_LINK]: "\uD83D\uDCEE"
-        , [STRUCTURE_EXTRACTOR]: "\uD83C\uDFED"
-        , [STRUCTURE_LAB]: "\u2697"
-        , [STRUCTURE_TERMINAL]: "\uD83C\uDFEC"
-        , [STRUCTURE_OBSERVER]: "\uD83D\uDCE1"
-        , [STRUCTURE_POWER_SPAWN]: "\uD83C\uDFDB"
-        , [STRUCTURE_NUKER]: "\u2622"
-        , [STRUCTURE_KEEPER_LAIR]: "" // TODO: Add icon for keeper lair
-        , [STRUCTURE_PORTAL]: "" // TODO: Add icon for portal
-        , [STRUCTURE_POWER_BANK]: "" // TODO: Add icon for power bank
-        , source: "" // TODO: Add icon for source
-        , constructionSite: "\uD83C\uDFD7"
-        , resource: "\uD83D\uDEE2"
-        , creep: "" // TODO: Add icon for creep
-        , moveTo: "\u27A1"
-        , attack: "\uD83D\uDDE1" // NOTE: Same as attackController
-        , build: "\uD83D\uDD28"
-        , repair: "\uD83D\uDD27"
-        , dismantle: "\u2692"
-        , harvest: "\u26CF"
-        , pickup: "\u2B07" // NOTE: Same as withdraw
-        , withdraw: "\u2B07" // NOTE: Same as pickup
-        , transfer: "\u2B06" // NOTE: Same as upgradeController
-        , upgradeController: "\u2B06" // NOTE: Same as transfer
-        , claimController: "\uD83D\uDDDD"
-        , reserveController: "\uD83D\uDD12"
-        , attackController: "\uD83D\uDDE1" // NOTE: Same as attack
-        , recycle: "\u267B"
-        , tired: "\uD83D\uDCA6"
-        , stuck0: "\uD83D\uDCA5"
-        , stuck1: "\uD83D\uDCAB"
-        , stuck2: "\uD83D\uDCA2"
+        [STRUCTURE_CONTROLLER]: "\uD83C\uDFF0" // castle
+        , [STRUCTURE_SPAWN]: "\uD83C\uDFE5" // hospital
+        , [STRUCTURE_EXTENSION]: "\uD83C\uDFEA" // convenience store
+        , [STRUCTURE_CONTAINER]: "\uD83D\uDCE4" // outbox tray
+        , [STRUCTURE_STORAGE]: "\uD83C\uDFE6" // bank
+        , [STRUCTURE_RAMPART]: "\uD83D\uDEA7" // construction
+        , [STRUCTURE_WALL]: "\u26F0" // moutain
+        , [STRUCTURE_TOWER]: "\uD83D\uDD2B" // pistol
+        , [STRUCTURE_ROAD]: "\uD83D\uDEE3" // motorway
+        , [STRUCTURE_LINK]: "\uD83D\uDCEE" // postbox
+        , [STRUCTURE_EXTRACTOR]: "\uD83C\uDFED" // factory
+        , [STRUCTURE_LAB]: "\u2697" // alembic
+        , [STRUCTURE_TERMINAL]: "\uD83C\uDFEC" // department store
+        , [STRUCTURE_OBSERVER]: "\uD83D\uDCE1" // satellite antenna
+        , [STRUCTURE_POWER_SPAWN]: "\u2668" // hot springs
+        , [STRUCTURE_NUKER]: "\u2622" // radioactive
+        , [STRUCTURE_KEEPER_LAIR]: "\uD83C\uDFDB" // classical building
+        , [STRUCTURE_PORTAL]: "\uD83C\uDF00" // cyclone
+        , [STRUCTURE_POWER_BANK]: "\uD83C\uDF0B" // volcano
+        , tombstone: "\u26b1" // funeral urn
+        , source: "\uD83C\uDFD4" // snow-capped mountain
+        , constructionSite: "\uD83C\uDFD7" // building construction
+        , resource: "\uD83D\uDEE2" // oil drum
+        , creep: "\uD83E\uDD16" // robot face
+        , moveTo: "\u27A1" // right arrow
+        , ["move" + TOP]: "\u2B06" // up arrow
+        , ["move" + TOP_RIGHT]: "\u2197" // up-right arrow
+        , ["move" + RIGHT]: "\u27A1" // right arrow
+        , ["move" + BOTTOM_RIGHT]: "\u2198" // down-right arrow
+        , ["move" + BOTTOM]: "\u2B07" // down arrow
+        , ["move" + BOTTOM_LEFT]: "\u2199" // down-left arrow
+        , ["move" + LEFT]: "\u2B05" // left arrow
+        , ["move" + TOP_LEFT]: "\u2196" // up-left arrow
+        , attack: "\uD83D\uDDE1" // dagger NOTE: Same as attackController
+        , heal: "\uD83D\uDD27" // wrench
+        , rangeHeal: "\uD83C\uDFF9\uD83D\uDD27" // bow and arrow + rench
+        , rangedAttack: "\uD83C\uDFF9\uD83D\uDDE1" // bow and arrow + dagger
+        , rangedMassAttack: "\uD83C\uDFF9\u2694" // bow and arrow + crossed swords
+        , build: "\uD83D\uDD28" // hammer
+        , repair: "\uD83D\uDEE0" // hammer and wrench
+        , dismantle: "\u2692" // hammer and pick
+        , harvest: "\u26CF" // pick
+        , pickup: "\uD83D\uDD3B" // red triangle pointed down NOTE: Same as withdraw
+        , withdraw: "\uD83D\uDD3B" // red triangle pointed down NOTE: Same as pickup
+        , drop: "\uD83D\uDD3A" // red triangle pointed up NOTE: Same as transfer & upgradeController
+        , transfer: "\uD83D\uDD3A" // red triangle pointed up NOTE: Same as drop & upgradeController
+        , upgradeController: "\uD83D\uDD3A" // red triangle pointed up NOTE: Same as drop & transfer
+        , claimController: "\uD83D\uDDDD" // old key
+        , reserveController: "\uD83D\uDD12" // locked
+        , attackController: "\uD83D\uDDE1" // dagger NOTE: Same as attack
+        , signController: "\uD83D\uDCDD" // meno
+        , recycle: "\u267B" // recycling symbol
+        , tired: "\uD83D\uDCA6" // sweat droplets
+        , stuck0: "\uD83D\uDCA5" // collision
+        , stuck1: "\uD83D\uDCAB" // dizzy
+        , stuck2: "\uD83D\uDCA2" // anger symbol
         , wait0: "\uD83D\uDD5B" // 12:00
         , wait1: "\uD83D\uDD67" // 12:30
         , wait2: "\uD83D\uDD50" // 01:00
@@ -85,9 +100,9 @@ let globals = function() {
         , wait21: "\uD83D\uDD65" // 10:30
         , wait22: "\uD83D\uDD5A" // 11:00
         , wait23: "\uD83D\uDD66" // 11:30
-        , sleep: "\uD83D\uDCA4" // for when script is terminated early to refill bucket
-        , testPassed: "\uD83C\uDF89" // for when scout reaches its goal location
-        , testFinished: "\uD83C\uDFC1" // for when scout has finished its test run
+        , sleep: "\uD83D\uDCA4" // zzz NOTE: Used for when script is terminated early to refill bucket
+        , testPassed: "\uD83C\uDF89" // party popper NOTE: Used for when scout reaches its goal location
+        , testFinished: "\uD83C\uDFC1" // chequered flag NOTE: Used for when scout has finished its test run
     };
     
     global.travelToIcons = function(creep) {
@@ -183,6 +198,8 @@ let globals = function() {
     global.EST_SEC_PER_TICK = 4.76; // time between ticks is currently averaging ~4.76 seconds (as of 2017/07/18)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
+    
+    global.MAX_SEGMENT_LENGTH = 100 * 1024;
     
     global.toStr = (obj) => JSON.stringify(obj, null, 2); // shortcut to stringify an object (idea credit: warinternal, from the Screeps Slack)
     

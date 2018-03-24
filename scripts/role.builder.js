@@ -4,7 +4,7 @@ let roleBuilder = {
         creep.memory.executingRole = "builder";
         
         if (creep.memory.working == false
-            && _.sum(creep.carry) == creep.carryCapacity) {
+            && creep.carryCapacityAvailable == 0) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
             creep.memory.demolishStructure = undefined; // can be a demolisher
@@ -220,7 +220,7 @@ let roleBuilder = {
                                 && (theTerminal.store[RESOURCE_POWER] || 0) > 0)) {
                         if (theStorage != undefined 
                             && (theStorage.store[RESOURCE_POWER] || 0) > 0) {
-                            let err = creep.withdraw(theStorage, RESOURCE_POWER, _.min([requiredPower, theStorage.store[RESOURCE_POWER], (creep.carryCapacity - _.sum(creep.carry))]));
+                            let err = creep.withdraw(theStorage, RESOURCE_POWER, _.min([requiredPower, theStorage.store[RESOURCE_POWER], creep.carryCapacityAvailable]));
                             if (err == ERR_NOT_IN_RANGE) {
                                 creep.travelTo(theStorage);
                                 creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
@@ -234,7 +234,7 @@ let roleBuilder = {
                             }
                         } else if (theTerminal != undefined 
                             && (theTerminal.store[RESOURCE_POWER] || 0) > 0) {
-                            let err = creep.withdraw(theTerminal, RESOURCE_POWER, _.min([requiredPower, theTerminal.store[RESOURCE_POWER], (creep.carryCapacity - _.sum(creep.carry))]));
+                            let err = creep.withdraw(theTerminal, RESOURCE_POWER, _.min([requiredPower, theTerminal.store[RESOURCE_POWER], creep.carryCapacityAvailable]));
                             if (err == ERR_NOT_IN_RANGE) {
                                 creep.travelTo(theTerminal);
                                 creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);

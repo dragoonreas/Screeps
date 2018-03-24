@@ -3,7 +3,8 @@ let rolePowerHarvester = {
     run: function(creep) {
         creep.memory.executingRole = "powerHarvester";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false 
+            && creep.carryCapacityAvailable == 0) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined;
         }
@@ -55,7 +56,7 @@ let rolePowerHarvester = {
                 }
             }
             else {
-                if (creep.carry[RESOURCE_ENERGY] != _.sum(creep.carry)) {
+                if (creep.carry[RESOURCE_ENERGY] != creep.carryTotal) {
                     ROLES["hoarder"].run(creep);
                 }
                 else if (creep.carry[RESOURCE_ENERGY] > 0) {

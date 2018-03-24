@@ -2,11 +2,12 @@ let roleRockhound = {
     run: function(creep) {
         creep.memory.executingRole = "rockhound";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false 
+            && creep.carryCapacityAvailable == 0) {
             creep.memory.working = true;
             creep.memory.waypoint = 0; // TODO: Ensure waypoints reset when at destination in called roles
         }
-        else if (creep.memory.working == true && _.sum(creep.carry) == 0) {
+        else if (creep.memory.working == true && creep.carryTotal == 0) {
             creep.memory.working = false;
             creep.memory.depositStructureID = undefined; // can be a harvester when working
             creep.memory.waypoint = 0; // TODO: Ensure waypoints reset when at destination in called roles
@@ -157,7 +158,7 @@ let roleRockhound = {
             }
         }
         else {
-            if (creep.carry[RESOURCE_ENERGY] != _.sum(creep.carry)) {
+            if (creep.carry[RESOURCE_ENERGY] != creep.carryTotal) {
                 ROLES["hoarder"].run(creep);
             }
             else if (creep.carry[RESOURCE_ENERGY] > 0) {

@@ -37,10 +37,11 @@ let roleAttacker = {
         if (invader == undefined) {
             
             // TODO: Change this to only consider invaders in melee range
-            let invaders = _.get(Memory.rooms[creep.room.name], ["invaderWeightings"], {});
+            /*let invaders = _.get(Memory.rooms[creep.room.name], ["invaderWeightings"], {});
             if (_.size(invaders) > 0) {
                 //invader = _.findKey(invaders, _.max(invaders, "weighting")); // TODO: Check that this works
-            }
+            }*/
+            invader = Game.getObjectById(creep.room.priorityTargetID);
             
             if (invader == undefined) {
                 invader = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
@@ -68,6 +69,9 @@ let roleAttacker = {
             else if (err == OK) {
                 creep.say(ICONS["attack"] + ICONS["creep"], true);
             }
+            else if (err == ERR_NO_BODYPART) {
+                ROLES["recyclable"].run(creep);
+            }
         }
         else {
             let structure = Game.getObjectById(creep.memory.structureID);
@@ -92,6 +96,9 @@ let roleAttacker = {
                 }
                 else if (err == OK) {
                     creep.say(ICONS["attack"] + _.get(ICONS, structure.structureType, "?"), true);
+                }
+                else if (err == ERR_NO_BODYPART) {
+                    ROLES["recyclable"].run(creep);
                 }
             }/*
             else if (creep.room.name == "W86N29") { // TODO: Automate based on ramparts with no building under them near attackers

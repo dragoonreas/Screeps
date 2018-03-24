@@ -3,7 +3,7 @@ let roleAdaptable = {
     run: function(creep) {
         creep.memory.executingRole = "adaptable";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false && creep.carryCapacityAvailable == 0) {
             creep.memory.working = true;
         }
         else if (creep.memory.working == true && creep.carry[RESOURCE_ENERGY] == 0) {
@@ -44,7 +44,7 @@ let roleAdaptable = {
             let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
             let theRecycleContainerEnergy = _.get(theRecycleContainer, ["store", RESOURCE_ENERGY], 0);
             if (creep.room.name == sentFrom 
-                && _.sum(creep.carry) < creep.carryCapacity 
+                && creep.carryCapacityAvailable > 0 
                 && (theStorageEnergy > 0 
                     || theTerminalEnergy > 0 
                     || theRecycleContainerEnergy > 0)) {
