@@ -40,7 +40,7 @@ let globals = function() {
         , [STRUCTURE_PORTAL]: "\uD83C\uDF00" // cyclone
         , [STRUCTURE_POWER_BANK]: "\uD83C\uDF0B" // volcano
         , tombstone: "\u26b1" // funeral urn
-        , source: "\uD83C\uDFD4" // snow-capped mountain
+        , source: "\uD83C\uDF04" // sunrise over mountains
         , constructionSite: "\uD83C\uDFD7" // building construction
         , resource: "\uD83D\uDEE2" // oil drum
         , creep: "\uD83E\uDD16" // robot face
