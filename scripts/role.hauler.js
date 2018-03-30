@@ -191,13 +191,13 @@ let roleHauler = {
                                 }
                             }
                             else {
-                                source = undefined;
                                 if (_.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas") {
-                                    source.regenAt = Math.max(_get(source.room, ["controllerMem", "neutralAt"], Game.time), source.regenAt);
+                                    source.regenAt = Math.max(_.get(source.room, ["controllerMem", "neutralAt"], Game.time), source.regenAt);
                                 }
                                 else {
-                                    source.regenAt = Math.max(_get(source.room, ["controllerMem", "reservation", "endsAt"], Game.time), source.regenAt);
+                                    source.regenAt = Math.max(_.get(source.room, ["controllerMem", "reservation", "endsAt"], Game.time), source.regenAt);
                                 }
+                                source = undefined;
                             }
                         }
                         else {
