@@ -192,7 +192,12 @@ let roleHauler = {
                             }
                             else {
                                 source = undefined;
-                                // TODO: Set Source.regenAt to Source.room.controller.reservation.ticksToEnd or Source.room.contoller.ticksToDowngrade
+                                if (_.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas") {
+                                    source.regenAt = Math.max(_get(source.room, ["controllerMem", "neutralAt"], Game.time), source.regenAt);
+                                }
+                                else {
+                                    source.regenAt = Math.max(_get(source.room, ["controllerMem", "reservation", "endsAt"], Game.time), source.regenAt);
+                                }
                             }
                         }
                         else {
@@ -208,7 +213,12 @@ let roleHauler = {
                                     }
                                 }
                                 else {
-                                    // TODO: Set Source.regenAt to Source.room.controller.reservation.ticksToEnd or Source.room.contoller.ticksToDowngrade
+                                    if (_.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "owner", "username"], "dragoonreas") == "dragoonreas") {
+                                        sourceMem.regenAt = Math.max(_.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "neutralAt"], Game.time), sourceMem.regenAt);
+                                    }
+                                    else {
+                                        sourceMem.regenAt = Math.max(_.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "reservation", "endsAt"], Game.time), sourceMem.regenAt);
+                                    }
                                 }
                             }
                             else if (sourceID == "5873bb7f11e3e4361b4d5f14") { // TODO: Remove this after the source has been added to memory

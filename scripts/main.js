@@ -840,7 +840,7 @@ module.exports.loop = function () {
             });
             */
             let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
-            let unblockedAt = ((theController.upgradeBlocked && (Game.time + theController.upgradeBlocked)) || undefined);
+            let neutralAt = ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || undefined);
             _.set(theRoom.memory, ["controller"], { 
                 id: theController.id
                 , pos: theController.pos
@@ -848,11 +848,16 @@ module.exports.loop = function () {
                 , reservation: ((theController.reservation && { username: _.get(theController.reservation, ["username"], ""), endsAt: Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1) }) || undefined)
                 , level: theController.level
                 , downgradeAt: downgradeAt
-                , neutralAt: ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 1], 0))) || undefined) // TODO: Fix this line
-                , unblockedAt: unblockedAt
+                , neutralAt: neutralAt
+                , unblockedAt: ((theController.upgradeBlocked && (Game.time + theController.upgradeBlocked)) || undefined)
                 , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined)
                 , sign: theController.sign
             });
+            
+            if (theController.my == false 
+                && neutralAt > theRoom.memory.memoryExpiration) {
+                theRoom.memory.memoryExpiration = neutralAt;
+            }
         }
         
         // Make sure source memory exists and is up-to-date
