@@ -841,7 +841,7 @@ module.exports.loop = function () {
             */
             let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
             let unblockedAt = ((theController.upgradeBlocked && (Game.time + theController.upgradeBlocked)) || undefined);
-            _.set(this.memory, ["controller"], { 
+            _.set(theRoom.memory, ["controller"], { 
                 id: theController.id
                 , pos: theController.pos
                 , owner: theController.owner
