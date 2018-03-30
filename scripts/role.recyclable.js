@@ -20,7 +20,7 @@ let roleRecyclable = {
             }
         }
         
-		if (_.sum(creep.carry) > 0 
+		if (creep.carryTotal > 0 
             && theStorage != undefined 
             && _.sum(theStorage.store) < theStorage.storeCapacity 
             && theStorage.my == true) {

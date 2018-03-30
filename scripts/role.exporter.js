@@ -2,12 +2,12 @@ let roleExporter = {
     run: function(creep) {
         creep.memory.executingRole = "exporter";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false && creep.carryCapacityAvailable == 0) {
             creep.memory.working = true;
             creep.memory.withdrawStructure = undefined;
             creep.memory.waypoint = 0;
         }
-        else if (creep.memory.working == true && _.sum(creep.carry) == 0) {
+        else if (creep.memory.working == true && creep.carryTotal == 0) {
             creep.memory.working = false;
             if (creep.memory.stopExporting == undefined) {
                 creep.memory.stopExporting = Game.time;
@@ -209,7 +209,7 @@ let roleExporter = {
                         }
                         else {
                             _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "exporter"], 0);
-                            if (_.sum(creep.carry) == 0) {
+                            if (creep.carryTotal == 0) {
                                 creep.memory.role = "recyclable";
                                 ROLES["recyclable"].run(creep);
                             }
@@ -230,7 +230,7 @@ let roleExporter = {
                     if (_.get(creep.room, ["controller", "my"], false) == true))*/
                     // NOTE: Stop-gap till above is finished
                     _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "exporter"], 0);
-                    if (_.sum(creep.carry) == 0) {
+                    if (creep.carryTotal == 0) {
                         creep.memory.role = "recyclable";
                         ROLES["recyclable"].run(creep);
                     }
@@ -266,7 +266,7 @@ let roleExporter = {
                 let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
                 if (sentFrom == sentTo 
                     || tripsLeft > 0) {
-                    if (_.sum(creep.carry) > creep.carry[RESOURCE_ENERGY]) {
+                    if (creep.carryTotal > creep.carry[RESOURCE_ENERGY]) {
                         ROLES["hoarder"].run(creep);
                     }
                     else {
@@ -341,7 +341,7 @@ let roleExporter = {
                         }
                         else {
                             //_.set(Memory.rooms, [sentFrom, "creepMins", "exporter"], 0); // TODO: Need a new memory key to keep where the creep originally spawned from since roomID can be changed and they don't have to be spawned from the sentFrom room
-                            if (_.sum(creep.carry) == 0) {
+                            if (creep.carryTotal == 0) {
                                 creep.memory.role = "recyclable";
                                 ROLES["recyclable"].run(creep);
                             }

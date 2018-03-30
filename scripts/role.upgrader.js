@@ -3,10 +3,10 @@ let roleUpgrader = {
         creep.memory.executingRole = "upgrader";
         
         if (creep.memory.working == false
-            && (_.sum(creep.carry) == creep.carryCapacity 
+            && (creep.carryCapacityAvailable == 0 
                 || (creep.memory.role == "upgrader" 
                     && creep.memory.speeds["1"] > 1 
-                    && (_.sum(creep.carry) + (creep.getActiveBodyparts(WORK) * HARVEST_POWER)) > creep.carryCapacity))) {
+                    && (creep.carryTotal + (creep.getActiveBodyparts(WORK) * HARVEST_POWER)) > creep.carryCapacity))) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined; // can be a harvester when not working
         }
@@ -29,7 +29,7 @@ let roleUpgrader = {
                 creep.say(ICONS["upgradeController"] + ICONS[STRUCTURE_CONTROLLER], true);
                 if (creep.memory.role == "upgrader" 
                     && creep.memory.speeds["1"] > 1 
-                    && (_.sum(creep.carry) + (creep.getActiveBodyparts(WORK) * HARVEST_POWER)) <= creep.carryCapacity) {
+                    && (creep.carryTotal + (creep.getActiveBodyparts(WORK) * HARVEST_POWER)) <= creep.carryCapacity) {
                     creep.memory.topUp = true;
                     ROLES["upgrader"].run(creep);
                 }

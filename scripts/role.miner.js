@@ -148,7 +148,7 @@ let roleMiner = {
         }
         
         // Set if (when not mining) the miner should be building/repairing or collecting energy
-        if (creep.memory.working == false && _.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.memory.working == false && creep.carryCapacityAvailable == 0) {
             creep.memory.working = true;
         }
         else if (creep.memory.working == true && creep.carry[RESOURCE_ENERGY] == 0) {

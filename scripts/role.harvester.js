@@ -5,7 +5,7 @@ let roleHarvester = {
         creep.memory.executingRole = "harvester";
         
         if (creep.memory.working == false
-            && _.sum(creep.carry) == creep.carryCapacity) {
+            && creep.carryCapacityAvailable == 0) {
             creep.memory.working = true;
             creep.memory.sourceID = undefined;
         }
@@ -456,7 +456,7 @@ let roleHarvester = {
                 
                 if (structure == undefined) {
                     let repairerCount = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "creepCounts", "repairer"], 0);
-                    structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                    structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { // TODO: Find closest tower to Game.getObjectByID(Game.rooms[creep.memory.roomID].priorityTargetID) instead
                         filter: (s) => {
                             return (s.structureType == STRUCTURE_TOWER 
                                 && s.energy < s.energyCapacity 

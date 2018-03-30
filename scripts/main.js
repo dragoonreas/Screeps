@@ -7,6 +7,21 @@ global.NODE_USAGE = {
     , total: 0
     , codeVersion: require.timestamp
 }; // NOTE: Can't put this in the global file since the require caches can be reset outside of a global reset
+function globalStats() { "use strict";
+    const meta_key = "__globalStats__";
+    const stats = _.reduce(global, (acc,obj,key) => {
+        if(key !== meta_key) {
+            try {
+                acc[key] = JSON.stringify(obj).length;
+            } catch(e) {
+                acc[key] = 0;
+            }
+        }
+        return acc;
+    }, {});
+    
+    return { meta_key, stats };
+}
 //require("data." + Game.shard.name)();
 require("globals")(); // NOTE: All globals not from an external resource should be declared here
 require("prototype.creep")(); // NOTE: Must be required after globals.js
@@ -488,7 +503,7 @@ module.exports.loop = function () {
     
     // Get current creep counts
     for (let roomID of managedRooms) {
-        Memory.rooms[roomID].creepCounts = {};
+        _.set(Memory, ["rooms", roomID, "creepCounts"], {});
         for (let creepType in Memory.rooms[roomID].creepMins) {
             Memory.rooms[roomID].creepCounts[creepType] = _.sum(Game.creeps, (c) => (
                 c.memory.roomID == roomID 
@@ -496,7 +511,7 @@ module.exports.loop = function () {
             ));
         }
         
-        Memory.rooms[roomID].repairerTypeCounts = {};
+        _.set(Memory, ["rooms", roomID, "repairerTypeCounts"], {});
         for (let repairerType in Memory.rooms[roomID].repairerTypeMins) {
             Memory.rooms[roomID].repairerTypeCounts[repairerType] = _.sum(Game.creeps, (c) => (
                 c.memory.roomID == roomID 
@@ -615,7 +630,7 @@ module.exports.loop = function () {
         , "E18S17"
     ];
     
-    // Manage rooms and run towers
+    // Manage rooms and run structures (except spawns)
     for (let roomID in Game.rooms) {
         if (_.includes(ignoredRooms, roomID) == true) { continue; }
         
@@ -714,7 +729,7 @@ module.exports.loop = function () {
             let clearPathCaches = false;
             
             // Deal with priority targets
-            let priorityTargetID = undefined;
+            theRoom.priorityTargetID = "";
             let highestTargetWeighting = -1;
             for (let aPriorityTarget of priorityTargets) {
                 
@@ -744,7 +759,7 @@ module.exports.loop = function () {
                 // Save ID of new highest target if applicable
                 if (targetWeighting > highestTargetWeighting) {
                     highestTargetWeighting = targetWeighting;
-                    priorityTargetID = aPriorityTarget.id;
+                    theRoom.priorityTargetID = aPriorityTarget.id;
                 }
                 
                 // Record positions targets can attack within the next tick (TODO: but not during safemode)
@@ -902,7 +917,7 @@ module.exports.loop = function () {
             
             theRoom.clearPathCaches = clearPathCaches;
             
-            priorityTarget = Game.getObjectById(priorityTargetID); // This target will be focused on by towers and attacker creeps
+            priorityTarget = Game.getObjectById(theRoom.priorityTargetID); // This target will be focused on by towers and attacker creeps
             
             // Spawn one melee attacker per rampart in melee range of a priority target, if the towers may not be able to handle it
             if (theRoom.memory.creepMins != undefined) {
@@ -993,7 +1008,7 @@ module.exports.loop = function () {
                 }
             }
             
-            // TODO: Stop claimers being spawned to reserve this harvest room properly from this point, rather than in the in the spawn and claimer logic
+            // TODO: Stop claimers being spawned to reserve this harvest room properly from this point, rather than in the spawn and claimer logic
 		}
 		
         if (theRoom.hasHostileTower == true) { // TODO: Add a check to see if the towers are still there if a creep is in the room, instead of just waiting for it to be reset after a day due to the room memory garbage collection being run on it
@@ -1009,11 +1024,19 @@ module.exports.loop = function () {
         
         // TODO: Set theRoom.memory.avoidTravel based on the check for if it's safe to assign dropped energy for creeps to pickup
         
+        // Make sure rockhound count is kept up-to-date
+        if (_.get(Memory, ["rooms", roomID, "creepMins", "rockhound"], -1) == 0) {
+            _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));
+        }
+        
         if (theRoom.checkForDrops == true || (checkingForDrops == true && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
             theRoom.checkForDrops = false;
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
-            if (droppedResources.length > 0) {
-                droppedResources = _.sortByOrder(droppedResources, (dr) => (resourceWorth(dr.resourceType) * dr.amount), "desc");
+            let tombstones = theRoom.find(FIND_TOMBSTONES, { 
+                filter: (t) => (
+                    _.sum(t.store) > 0
+            )});
+            if (droppedResources.length > 0 || tombstones.length > 0) {
                 let collectorCreeps = theRoom.find(FIND_MY_CREEPS, {
                     filter: (c) => (
                         c.spawning == false 
@@ -1027,48 +1050,95 @@ module.exports.loop = function () {
                         && c.memory.role != "scout"
                         && c.memory.role != "claimer" 
                         && c.memory.role != "recyclable" 
-                        && c.carryCapacity > 0
+                        && c.carryCapacityAvailable > 0
                 )});
-                for (let droppedResource of droppedResources) {
-					let hasAssignedCreep = _.some(Game.creeps, (c) => (
-					    _.get(c.memory, ["droppedResource", "id"], undefined) == droppedResource.id
-                    ));
-					if (hasAssignedCreep == false) {
-                        let creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
-                                && c.carryCapacity - _.sum(c.carry) >= droppedResource.amount 
-                                && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
-                        )});
-                        if (creep == undefined) {
-                            creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                
+                if (droppedResources.length > 0) {
+                    droppedResources = _.sortByOrder(droppedResources, (dr) => (resourceWorth(dr.resourceType) * dr.amount), "desc");
+                    for (let droppedResource of droppedResources) {
+                        let hasAssignedCreep = _.some(Game.creeps, (c) => (
+                            _.get(c.memory, ["droppedResource", "id"], undefined) == droppedResource.id
+                        ));
+                        if (hasAssignedCreep == false) {
+                            let creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
                                     _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
-                                    && _.sum(c.carry) == 0 
+                                    && c.carryCapacityAvailable >= droppedResource.amount
                                     && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                             )});
                             if (creep == undefined) {
                                 creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
                                         _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
-                                        && _.sum(c.carry) < c.carryCapacity 
+                                        && c.carryTotal == 0
                                         && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                 )});
+                                if (creep == undefined) {
+                                    creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                            && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
+                                    )});
+                                }
+                            }
+                            if (creep != undefined) {
+                                creep.memory.droppedResource = {
+                                    id: droppedResource.id
+                                    , pos: droppedResource.pos
+                                };
+                                console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(droppedResource.amount, creep.carryCapacityAvailable) + " of " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
+                            }
+                            else {
+                                //console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                theRoom.checkForDrops = true;
                             }
                         }
-                        if (creep != undefined) {
-                            creep.memory.droppedResource = {
-                                id: droppedResource.id
-                                , pos: droppedResource.pos
-                            };
-                            console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(droppedResource.amount, creep.carryCapacity - _.sum(creep.carry)) + " of " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
+                    }
+                }
+                
+                if (tombstones.length > 0) {
+                    tombstones = _.sortByOrder(tombstones, (t) => (_.sum(t.store, (a, r) => (resourceWorth(r) * a))), "desc");
+                    toStr(tombstones);
+                    for (let tombstone of tombstones) {
+                        let hasAssignedCreep = _.some(Game.creeps, (c) => (
+                            _.get(c.memory, ["tombstone", "id"], undefined) == tombstone.id
+                        ));
+                        if (hasAssignedCreep == false) {
+                            let creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                    && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                    && c.carryCapacityAvailable >= _.sum(tombstone.store)
+                                    && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
+                            )});
+                            if (creep == undefined) {
+                                creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                        && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                        && c.carryTotal == 0
+                                        && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
+                                )});
+                                if (creep == undefined) {
+                                    creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                            && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                            && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
+                                    )});
+                                }
+                            }
+                            if (creep != undefined) {
+                                creep.memory.tombstone = {
+                                    id: tombstone.id
+                                    , pos: tombstone.pos
+                                };
+                                console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(_.sum(tombstone.store), creep.carryCapacityAvailable) + " resources from tombstone of " + tombstone.creep.name + " in " + roomID);
+                            }
+                            else {
+                                //console.log("No creeps avaliable to pickup " + _.sum(tombstone.store) + " resources from tombstone of " + tombstone.creep.name + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                theRoom.checkForDrops = true;
+                            }
                         }
-                        else {
-                            //console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
-                            theRoom.checkForDrops = true;
-                    	}
-					}
+                    }
                 }
             }
         }
-        // TODO: Else case for unassigning dropped resources from creeps in a room when it's unsafe to try and collect them
+        // TODO: Else case for unassigning dropped resources and tombstones from creeps in a room when it's unsafe to try and collect them
         
         // Run towers in the room
         let towerTargets = [];
@@ -1320,18 +1390,21 @@ module.exports.loop = function () {
                 && creep.memory.role != "adaptable" 
                 && creep.memory.role != "healer") { // TODO: Check if creep has active heal parts instead
                 creep.memory.droppedResource = undefined;
+                creep.memory.tombstone = undefined;
                 ROLES["recyclable"].run(creep);
                 runningRole = true;
             }
-            else if (_.get(creep.memory, ["droppedResource", "id"], undefined) != undefined) {
+            else if (creep.carryCapacityAvailable > 0
+                && (_.get(creep.memory, ["droppedResource", "id"], undefined) != undefined 
+                    || _.get(creep.memory, ["tombstone", "id"], undefined) != undefined)) {
                 ROLES["collector"].run(creep);
                 runningRole = true;
             }
-            else if (_.sum(creep.carry) > creep.carry[RESOURCE_ENERGY] 
+            else if (creep.carryTotal > creep.carry[RESOURCE_ENERGY] 
                 && creep.memory.role != "exporter" 
                 && creep.memory.role != "rockhound" 
                 && (creep.memory.role != "builder" 
-                    || ((_.sum(creep.carry) - (creep.carry[RESOURCE_POWER] || 0)) > creep.carry[RESOURCE_ENERGY]))
+                    || ((creep.carryTotal - (creep.carry[RESOURCE_POWER] || 0)) > creep.carry[RESOURCE_ENERGY]))
                 && ((theStorage != undefined 
                     && theStorage.my == true 
                     && _.sum(theStorage.store) < theStorage.storeCapacity) 
@@ -1485,7 +1558,40 @@ module.exports.loop = function () {
     if (Memory.MonCPU == true) { console.log("ramparts>screepsPlus:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
+    if (Memory.MonGlobal == true) {
+    	const new_stats = globalStats();
+    	const old_stats = global[new_stats.meta_key];
+    	if (!old_stats) {
+    		console.log("<<< GLOBAL RESET >>>");
+    	} else {
+    		const diff = _.reduce(new_stats.stats, (acc,size,key) => {
+    			const old_val = old_stats[key] || 0;
+    			if (old_val) {
+    				const delta = size - old_val;
+    				if (delta !== 0)
+    					acc[key] = delta;
+    			}
+    			return acc;
+    		}, {});
+    		console.log(JSON.stringify(diff));
+    	}
+    	global[new_stats.meta_key] = new_stats.stats;
+    }
+    if (typeof Game.cpu.getHeapStatistics === "function") {
+        Memory.stats.heap = Game.cpu.getHeapStatistics();
+    }
+    else {
+        Memory.stats.heap = undefined;
+    }
     Memory.stats.cpu.used = Game.cpu.getUsed();
+    /*let statsStr = JSON.stringify(Memory.stats);
+    let statsSize = statsStr.length;
+    if (statsSize <= MAX_SEGMENT_LENGTH) {
+        RawMemory.segments[70] = statsStr;
+    }
+    else {
+        console.log("Stats " + (statsSize - MAX_SEGMENT_LENGTH) + " characters too long to save in segment.")
+    }*/
     
     if (Memory.MonCPU == true) { console.log("screepsPlus>end:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
 }

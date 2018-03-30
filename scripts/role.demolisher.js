@@ -2,7 +2,7 @@ let roleDemolisher = {
     run: function(creep) {
         creep.memory.executingRole = "demolisher";
         
-        if (creep.memory.working == false && _.sum(creep.carry) == (creep.carryCapacity || -1)) {
+        if (creep.memory.working == false && creep.carryTotal == (creep.carryCapacity || -1)) {
             creep.memory.working = true;
             creep.memory.demolishStructure = undefined;
             creep.memory.waypoint = 0; // TODO: Ensure waypoints reset when at destination in called roles
