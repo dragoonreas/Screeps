@@ -97,15 +97,16 @@ let roleRockhound = {
                     }
                 }
                 
-                if (theExtractor != undefined) {
+                if (theExtractor != undefined 
+                    && theMineral != undefined) {
                     if (theExtractor.cooldown == 0) {
                         let err = creep.harvest(theMineral);
                         if(err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(theMineral);
-                            creep.say(travelToIcons(creep) + ICONS["harvest"], true);
+                            creep.say(travelToIcons(creep) + ICONS["harvest"] + theMineral.mineralType, true);
                         }
                         else if (err == OK) {
-                            creep.say(ICONS["harvest"], true);
+                            creep.say(ICONS["harvest"] + theMineral.mineralType, true);
                         }
                         else {
                             incrementConfusedCreepCount(creep);

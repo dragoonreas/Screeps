@@ -816,7 +816,7 @@ module.exports.loop = function () {
         , "W42N51"
     ];
     
-    // Manage rooms and run towers
+    // Manage rooms and run structures (except spawns)
     for (let roomID in Game.rooms) {
         if (_.includes(ignoredRooms, roomID) == true) { continue; }
         
@@ -1194,7 +1194,7 @@ module.exports.loop = function () {
                 }
             }
             
-            // TODO: Stop claimers being spawned to reserve this harvest room properly from this point, rather than in the in the spawn and claimer logic
+            // TODO: Stop claimers being spawned to reserve this harvest room properly from this point, rather than in the spawn and claimer logic
 		}
 		
         if (theRoom.hasHostileTower == true) { // TODO: Add a check to see if the towers are still there if a creep is in the room, instead of just waiting for it to be reset after a day due to the room memory garbage collection being run on it
@@ -1209,6 +1209,11 @@ module.exports.loop = function () {
         } // TODO: Don't check for drops in rooms owned/reserved by allies
         
         // TODO: Set theRoom.memory.avoidTravel based on the check for if it's safe to assign dropped energy for creeps to pickup
+        
+        // Make sure rockhound count is kept up-to-date
+        if (_.get(Memory, ["rooms", roomID, "creepMins", "rockhound"], -1) == 0) {
+            _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));
+        }
         
         if (theRoom.checkForDrops == true || (checkingForDrops == true && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
             theRoom.checkForDrops = false;

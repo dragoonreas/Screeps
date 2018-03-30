@@ -122,7 +122,7 @@ let globals = function() {
         if (creep instanceof Creep) {
             let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);
             let creepRole = _.get(creep.memory, ["role"], "noRole");
-            if (_.get(global, ["summarized_rooms", creepRoomID, "creep_confusion_counts", creepRole], 0) == 0) {
+            if (_.get(global, ["summarized_rooms", creepRoomID, "creep_confusion_counts", creepRole], 0) <= 0) {
                 _.set(global, ["summarized_rooms", creepRoomID, "creep_confusion_counts", creepRole], 1); // NOTE: global.summarized_rooms is reset each tick near the beginning of the game loop
             }
             else {
@@ -135,7 +135,7 @@ let globals = function() {
         if (creep instanceof Creep) {
             let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);
             let creepRole = _.get(creep.memory, ["role"], "noRole");
-            if (_.get(global, ["summarized_rooms", creepRoomID, "creep_idle_counts", creepRole], 0) == 0) {
+            if (_.get(global, ["summarized_rooms", creepRoomID, "creep_idle_counts", creepRole], 0) <= 0) {
                 _.set(global, ["summarized_rooms", creepRoomID, "creep_idle_counts", creepRole], 1); // NOTE: global.summarized_rooms is reset each tick near the beginning of the game loop
             }
             else {
@@ -195,7 +195,7 @@ let globals = function() {
         }
     };
     
-    global.EST_SEC_PER_TICK = 4.76; // time between ticks is currently averaging ~4.76 seconds (as of 2017/07/18)
+    global.EST_SEC_PER_TICK = 4.56; // time between ticks is currently averaging ~4.56 seconds (as of 2018/03/30)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     
