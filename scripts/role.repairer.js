@@ -175,7 +175,8 @@ let roleRepairer = {
                         return;
                     }
                 }
-                if ((creep.memory.roomID == "") // Add rooms creeps can demolish in here
+                if ((creep.memory.roomID == "E1S13" 
+                    || creep.memory.roomID == "E2S11") // Add rooms creeps can demolish in here
                     && (_.countBy(creep.body, "type")[WORK] || 0) >= 4) { // for new rooms that have old structures
                     ROLES["demolisher"].run(creep);
                 }
