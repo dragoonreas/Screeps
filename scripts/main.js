@@ -145,13 +145,13 @@ _.set(Memory.rooms, ["E18S17", "harvestRooms"], [
     , "E17S17"
 ]);*/
 _.set(Memory.rooms, ["E1S13", "harvestRooms"], [
-    "E2S13"
-    , "E1S12"
+    "E1S12"
+    , "E2S13"
 ]);
 _.set(Memory.rooms, ["E2S11", "harvestRooms"], [
-    "E3S11"
+    "E1S11"
     , "E2S12"
-    , "E1S11"
+    , "E3S11"
 ]);
 /*_.set(Memory.rooms, ["E3S15", "harvestRooms"], [
     "E5S15"

@@ -176,7 +176,7 @@ let prototypeSpawn = function() {
             }
             else if (this.room.name == "E1S13") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    options.memory.controllerID = "59790a4b833ada000b96f432"; // harvest room
+                    options.memory.controllerID = "59790a4b833ada000b96f463"; // harvest room
                 }
                 else {
                     //options.memory.controllerID = "59790a4b833ada000b96f39a";
@@ -186,7 +186,7 @@ let prototypeSpawn = function() {
             else if (this.room.name == "E2S11") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     //options.memory.controllerID = "59790a4b833ada000b96f45b"; // harvest room
-                    options.memory.controllerID = "59790a4b833ada000b96f340"; // harvest room
+                    options.memory.controllerID = "598869041a4816000a1a2dd4"; // harvest room
                 }
             }
             else if (this.room.name == "E3S15") {
