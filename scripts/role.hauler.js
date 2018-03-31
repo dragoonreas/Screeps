@@ -710,7 +710,7 @@ let roleHauler = {
                 }
                 
                 if (_.get(creep.room, ["controller", "my"], false) == true 
-                    && creep.room.controller.ticksToDowngrade <= (CREEP_LIFE_TIME * 3)) {
+                    && (creep.room.controller.ticksToDowngrade <= (CONTROLLER_DOWNGRADE[creep.room.controller.level] - Math.max(CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD - creep.ticksToLive, 0)))) {
                     ROLES["upgrader"].run(creep);
                     return;
                 }
