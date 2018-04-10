@@ -23,7 +23,7 @@ let roleHauler = {
             if (source == undefined
                 || source.energy == 0
                 || _.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas"
-                || _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") != "dragoonreas") {
+                || _.get(source.room, ["controller", "reservation", "username"], "dragoonreas") != "dragoonreas") {
                 if (source != undefined) {
                     source = undefined;
                     creep.memory.sourceID = undefined;
@@ -118,7 +118,7 @@ let roleHauler = {
                         source = Game.getObjectById(sourceID);
                         if (source != undefined) {
                             if (_.get(source.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas"
-                                && _.get(source.room, ["controller", "reservation", "owner"], "dragoonreas") == "dragoonreas") {
+                                && _.get(source.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") {
                                 if (source.regenAt <= Game.time) { // TODO: Also check if there's space around the source (and also determine if this check may be better done elsewhere)
                                     creep.memory.sourceID = sourceID;
                                     break;
@@ -141,7 +141,7 @@ let roleHauler = {
                             sourceMem = Memory.sources[sourceID];
                             if (sourceMem != undefined) {
                                 if (_.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "owner", "username"], "dragoonreas") == "dragoonreas"
-                                    && _.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "reservation", "owner"], "dragoonreas") == "dragoonreas") {
+                                    && _.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "reservation", "username"], "dragoonreas") == "dragoonreas") {
                                     if (sourceMem.regenAt <= Game.time) {
                                         creep.memory.sourceID = sourceID;
                                         creep.travelTo(_.create(RoomPosition.prototype, sourceMem.pos));

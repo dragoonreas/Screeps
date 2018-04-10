@@ -366,7 +366,7 @@ let prototypeSpawn = function() {
             && _.get(Memory.rooms[this.room.name], "harvestRooms", undefined) != undefined 
             && _.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) {
             if ((_.get(Memory.controllers, [options.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" 
-                    || _.get(Memory.controllers, [options.memory.controllerID, "reservation", "owner"], "dragoonreas") != "dragoonreas") 
+                    || _.get(Memory.controllers, [options.memory.controllerID, "reservation", "username"], "dragoonreas") != "dragoonreas") 
                 && _.get(Memory.controllers, [options.memory.controllerID, "unblockedAt"], Game.time) <= Game.time) {
                 let downgradesAt = _.get(Memory.controllers, [options.memory.controllerID, "downgradesAt"], (Game.time + CONTROLLER_CLAIM_DOWNGRADE));
                 let theTicksToDowngrade = ((downgradesAt - Game.time) > 0) ? (downgradesAt - Game.time) : CONTROLLER_CLAIM_DOWNGRADE;
