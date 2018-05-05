@@ -71,17 +71,18 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
         , "Vultured"
         , "vrs" // open to negotiations
         , "a2coder" // indiscriminately agressive towards PINK alliance members
-        , "GiantDwarf" // uses nukes
+        , "GiantDwarf" // uses nukes, open to negotiations
     ]
     , "nonAgressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
-        "Bovius" // allows passage through their remote mining rooms
+        SYSTEM_USERNAME
+        , "Bovius" // allows passage through their remote mining rooms
         , "Cade" // PINK alliance (not yet added to their whitelist)
         , "Palle" // PINK alliance
         , "Kendalor" // PINK alliance
         , "InfiniteJoe" // PINK alliance (not yet added to their whitelist)
         , "KermitFrog" // PINK alliance (not yat added to their whitelist)
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
-}); // TODO: Get alliance data from user "LeagueOfAutomatedNations" public segment every 20min
+}); // TODO: Get alliance data from user "LeagueOfAutomatedNations" public segment every 6hrs
 
 // Make sure all required room memory objects exist
 for (let roomID in Game.rooms) {
@@ -149,9 +150,9 @@ _.set(Memory.rooms, ["E1S13", "harvestRooms"], [
     , "E2S13"
 ]);
 _.set(Memory.rooms, ["E2S11", "harvestRooms"], [
-    "E1S11"
+    "E3S11"
     , "E2S12"
-    , "E3S11"
+    , "E1S11"
 ]);
 /*_.set(Memory.rooms, ["E3S15", "harvestRooms"], [
     "E5S15"
@@ -399,7 +400,7 @@ _.set(Memory.rooms, ["E2S11", "creepMins"], {
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["E2S11", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
     , builder: 1
-    , exporter: 0
+    , exporter: 1
     , rockhound: (_.get(Game.rooms, ["E2S11", "canHarvestMineral"], false) ? 1 : 0)
 });
 //console.log(toStr(Memory.rooms.E2S11.creepMins));
@@ -705,7 +706,7 @@ module.exports.loop = function () {
         
         // Get invader info
         let invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
-            filter: (i) => (_.includes(Memory.nonAgressivePlayers, i.owner.username) == false
+            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false
         )});
         if (invaders.length > 0) {
             theRoom.hasHostileCreep = true;

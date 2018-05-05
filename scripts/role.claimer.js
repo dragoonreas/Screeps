@@ -9,6 +9,7 @@ let roleClaimer = {
             , "59790a4b833ada000b96f463" // E1S12
             , "59790a4b833ada000b96f45b" // E2S12
             , "598869041a4816000a1a2dd4" // E1S11
+            , "59790a4b833ada000b96f340" // E3S11
             , "59790d46833ada000b96f4da" // E7S13
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
