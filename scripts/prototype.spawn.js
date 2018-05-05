@@ -174,6 +174,9 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "exporter") {
             switch (this.room.name) {
+                case "W85N23":
+                    options.memory.roomSentFrom = "W88N22";
+                    break;
                 case "W86N39":
                     options.memory.roomSentFrom = "W91N42";
                     options.memory.roomSentTo = "W85N38";

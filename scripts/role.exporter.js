@@ -12,6 +12,7 @@ let roleExporter = {
             if (creep.memory.stopExporting == undefined) {
                 creep.memory.stopExporting = Game.time;
             }
+            creep.memory.transferStructure = undefined;
             creep.memory.waypoint = 0;
         }
         
@@ -262,7 +263,8 @@ let roleExporter = {
             }
         }
         else {
-            if (creep.room.name != sentTo) {
+            if (creep.room.name != sentTo 
+                && creep.memory.transferStructure == undefined) {
                 if (creep.memory.roomID != sentTo) {
                     _.set(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], _.get(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
@@ -297,8 +299,26 @@ let roleExporter = {
                     || tripsLeft > 0) {
                     if (creep.carryTotal > creep.carry[RESOURCE_ENERGY]) {
                         ROLES["hoarder"].run(creep);
+                        creep.memory.transferStructure = true;
                     }
                     else {
+                        if (creep.memory.transferStructure === true) {
+                            creep.memory.transferStructure = undefined;
+                        }
+                        
+                        let structureID = _.get(creep.memory, ["transferStructure", "id"], undefined);
+                        let structure = Game.getObjectById(structureID);
+                        let structureMemPos = _.get(creep.memory, ["transferStructure", "pos"], undefined);
+                        let structureMemRoomName = _.get(creep.memory, ["transferStructure", "pos", "roomName"], undefined);
+                        if (structure == undefined 
+                            && structureMemPos != undefined 
+                            && Game.rooms[structureMemRoomName] == undefined) {
+                            let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                            creep.travelTo(structurePos);
+                            creep.say(travelToIcons(creep) + structurePos.roomName, true);
+                            return;
+                        }
+                        
                         let theTerminal = _.get(Game.rooms, [sentTo, "terminal"], undefined);
                         let terminalEnergy = _.get(theTerminal, ["store", RESOURCE_ENERGY], 0);
                         terminalEnergy = _.isFinite(terminalEnergy) ? terminalEnergy : 0;
@@ -313,6 +333,10 @@ let roleExporter = {
                                 if (err == ERR_NOT_IN_RANGE) {
                                     creep.travelTo(theTerminal);
                                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                                    creep.memory.transferStructure = { 
+                                        id: theTerminal.id
+                                        , pos: theTerminal.pos
+                                    };
                                     break;
                                 }
                                 else if (err == OK) {
@@ -334,6 +358,10 @@ let roleExporter = {
                                 if (err == ERR_NOT_IN_RANGE) {
                                     creep.travelTo(theStorage);
                                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
+                                    creep.memory.transferStructure = { 
+                                        id: theStorage.id
+                                        , pos: theStorage.pos
+                                    };
                                     break;
                                 }
                                 else if (err == OK) {
@@ -355,6 +383,10 @@ let roleExporter = {
                                 if (err == ERR_NOT_IN_RANGE) {
                                     creep.travelTo(theTerminal);
                                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                                    creep.memory.transferStructure = { 
+                                        id: theTerminal.id
+                                        , pos: theTerminal.pos
+                                    };
                                     break;
                                 }
                                 else if (err == OK) {
