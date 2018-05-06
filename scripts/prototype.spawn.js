@@ -115,15 +115,8 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "exporter") {
-            switch (this.room.name) {
-                case "E2S11":
-                    options.memory.roomSentFrom = "E1S9";
-                    break;
-            }
-            _.defaults(options.memory, {
-                roomSentFrom: this.room.name
-                , roomSentTo: this.room.name
-            });
+            options.memory.roomSentFrom = _.get(this.room.nextExporter, "from", this.room.name);
+            options.memory.roomSentTo = _.get(this.room.nextExporter, "to", this.room.name);
         }
         else if (roleName == "demolisher") {
             switch (this.room.name) {

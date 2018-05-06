@@ -392,6 +392,51 @@ let prototypeRoom = function() {
         });
     }
     
+    if (Room.prototype.exporterInfo == undefined) { // NOTE: Must be defined after global.defineCachedGetter
+        defineCachedGetter(Room.prototype, 'exporterInfo', (r) => {
+            return _.chain(Game.flags)
+                .filter((f) => (
+                    f.color == COLOR_ORANGE 
+                    && _.startsWith(f.name, r.name)))
+                .map((f) => { 
+                    let nameInfo = f.name.split('_'); 
+                    return { 
+                        priority: _.get(nameInfo, 1, 0)
+                        , count: _.get(nameInfo, 2, 1)
+                        , from: _.get(nameInfo, 3, f.pos.roomName)
+                        , to: _.get(nameInfo, 4, _.get(nameInfo, 0, r.name)) 
+                    }; })
+                .value();
+        });
+    }
+    
+    if (Room.prototype.exportersToSpawn == undefined) { // NOTE: Must be defined after Room.exporterInfo
+        defineCachedGetter(Room.prototype, 'exportersToSpawn', (r) => {
+            if (r.exporterInfo.length == 0) { return []; }
+            return _.chain(r.exporterInfo)
+                .groupBy("priority")
+                .min((eI, p) => (p))
+                .value();
+        });
+    }
+    
+    if (Room.prototype.nextExporter == undefined) { // NOTE: Must be defined after Room.exportersToSpawn
+        defineCachedGetter(Room.prototype, 'nextExporter', (r) => {
+            if (r.exportersToSpawn.length == 0) { return []; }
+            let exporterCounts = _.chain(Memory.creeps)
+                .filter((c) => (
+                    c.roomID == r.name 
+                    && c.role == "exporter"))
+                .countBy((c) => (
+                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", "")))
+                .value();
+            return _.chain(r.exportersToSpawn)
+                .filter((eTS) => (_.get(exporterCounts, (eTS.from + eTS.to), 0) < eTS.count))
+                .first()
+                .value();
+        });
+    }
+    
     if (Room.prototype.beingViewed == undefined) {
         Object.defineProperty(Room.prototype, "beingViewed", {
             get: function() {

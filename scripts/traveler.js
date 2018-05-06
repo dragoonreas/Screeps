@@ -458,7 +458,7 @@ module.exports = function(globalOpts = {}){
                 if (site.my == false && (site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) && matrix.get(site.pos.x, site.pos.y) < 0xfe) { // try not to step on possible ally construction site
                     matrix.set(site.pos.x, site.pos.y, 0xfe);
                 }
-                else if ((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == true) || _.includes(_difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), site.owner.username)) { // ensure we don't step on an ally construction site and don't block our own construction site
+                else if ((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == true) || _.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), site.owner.username)) { // ensure we don't step on an ally construction site and don't block our own construction site
                     matrix.set(site.pos.x, site.pos.y, 0xff);
                 }
             }
