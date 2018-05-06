@@ -228,7 +228,14 @@ let roleExporter = {
                             }
                         }
                         else {
-                            _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "exporter"], 0);
+                            _.invoke(Game.rooms[sentFrom].find(FIND_FLAGS, { filter: (f) => (
+                                f.color == COLOR_ORANGE
+                            ) }), (f) => {
+                                _.set(Memory.rooms, [_.first(f.name.split("_")), "creepMins", "exporter"], 0);
+                                return f.remove();
+                            });
+                            console.log("Finished exporting from " + sentFrom);
+                            Game.notify("Finished exporting from " + sentFrom, 60);
                             if (creep.carryTotal == 0) {
                                 creep.memory.role = "recyclable";
                                 ROLES["recyclable"].run(creep);
@@ -249,7 +256,14 @@ let roleExporter = {
                     ));
                     if (_.get(creep.room, ["controller", "my"], false) == true))*/
                     // NOTE: Stop-gap till above is finished
-                    _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "exporter"], 0);
+                    _.invoke(Game.rooms[sentFrom].find(FIND_FLAGS, { filter: (f) => (
+                        f.color == COLOR_ORANGE
+                    ) }), (f) => {
+                        _.set(Memory.rooms, [_.first(f.name.split("_")), "creepMins", "exporter"], 0);
+                        return f.remove();
+                    });
+                    console.log("Finished exporting from " + sentFrom);
+                    Game.notify("Finished exporting from " + sentFrom, 60);
                     if (creep.carryTotal == 0) {
                         creep.memory.role = "recyclable";
                         ROLES["recyclable"].run(creep);
@@ -401,7 +415,16 @@ let roleExporter = {
                             }
                         }
                         else {
-                            //_.set(Memory.rooms, [sentFrom, "creepMins", "exporter"], 0); // TODO: Need a new memory key to keep where the creep originally spawned from since roomID can be changed and they don't have to be spawned from the sentFrom room
+                            _.invoke(Game.rooms[sentFrom].find(FIND_FLAGS, { filter: (f) => (
+                                f.color == COLOR_ORANGE
+                            ) }), (f) => {
+                                let flagInfo = f.name.split("_");
+                                if (_.get(nameInfo, 4, _.get(nameInfo, 0, "")) != sentTo) { return false; }
+                                _.set(Memory.rooms, [_.first(flagInfo), "creepMins", "exporter"], 0);
+                                return f.remove(); // NOTE: May not update immidiatly when room not visible
+                            });
+                            console.log("Stopped exporting from " + sentFrom + " to " + sentTo);
+                            Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo, 60);
                             if (creep.carryTotal == 0) {
                                 creep.memory.role = "recyclable";
                                 ROLES["recyclable"].run(creep);

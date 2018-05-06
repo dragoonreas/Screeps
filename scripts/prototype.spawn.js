@@ -173,32 +173,8 @@ let prototypeSpawn = function() {
             }*/
         }
         else if (roleName == "exporter") {
-            switch (this.room.name) {
-                case "W85N23":
-                    options.memory.roomSentFrom = "W88N22";
-                    break;
-                case "W86N39":
-                    options.memory.roomSentFrom = "W91N42";
-                    options.memory.roomSentTo = "W85N38";
-                    break;
-                case "W9N45":
-                    options.memory.roomSentFrom = "W8N47";
-                    break;
-                case "W64N31":
-                    options.memory.roomSentFrom = "W67N25";
-                    break;
-                case "W53N39":
-                    options.memory.roomSentFrom = "W47N44";
-                    options.memory.roomSentTo = "W52N47";
-                    break;
-                case "W52N47":
-                    options.memory.roomSentFrom = "W47N44";
-                    break;
-            }
-            _.defaults(options.memory, {
-                roomSentFrom: this.room.name
-                , roomSentTo: this.room.name
-            });
+            options.memory.roomSentFrom = _.get(this.room.nextExporter, "from", this.room.name);
+            options.memory.roomSentTo = _.get(this.room.nextExporter, "to", this.room.name);
         }
         else if (roleName == "demolisher") {
             switch (this.room.name) {
