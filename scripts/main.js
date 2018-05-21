@@ -275,7 +275,7 @@ for (let roomID in Memory.rooms) {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E8S2", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E8S2", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["E8S2", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -290,7 +290,7 @@ _.set(Memory.rooms, ["E17S1", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E17S1", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E17S1", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["E17S1", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -305,7 +305,7 @@ _.set(Memory.rooms, ["E18S3", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E18S3", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E18S3", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["E18S3", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -320,7 +320,7 @@ _.set(Memory.rooms, ["E18S9", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E18S9", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E18S9", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["E18S9", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -335,7 +335,7 @@ _.set(Memory.rooms, ["E21S9", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E18S9", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E18S9", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["E18S9", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -350,7 +350,7 @@ _.set(Memory.rooms, ["E19S13", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E19S13", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E19S13", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["E19S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -365,7 +365,7 @@ _.set(Memory.rooms, ["E18S17", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E18S17", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E18S17", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["E18S17", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -380,7 +380,7 @@ _.set(Memory.rooms, ["E1S13", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E1S13", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E1S13", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["E1S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -395,7 +395,7 @@ _.set(Memory.rooms, ["E2S11", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E2S11", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E2S11", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 1
     , repairer: _.reduce(_.get(Memory.rooms, ["E2S11", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -411,7 +411,7 @@ _.set(Memory.rooms, ["E2S11", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E3S15", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E3S15", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["E3S15", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -426,7 +426,7 @@ _.set(Memory.rooms, ["E7S12", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E7S12", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: 0
+    , demolisher: _.reduce(_.get(Game.rooms, ["E7S12", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
     , scout: 0
     , claimer: 0
     , repairer: _.reduce(_.get(Memory.rooms, ["E7S12", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
@@ -1009,8 +1009,10 @@ module.exports.loop = function () {
                     // TODO: Do something with assigned creeps
                 });
                 console.log("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + (youngestInvader.ticksToLive || 0) + " ticks.");
+                let PCInvaders = _.filter(invaders, (i) => (_.includes(NPCOwnerNames, _.get(i, ["owner", "username"], "Invader(?)")) == false));
+                let youngestPCInvader = _.max(PCInvaders, "ticksToLive");
                 if (justNPCs == false) {
-                    Game.notify("Enemy creep owned by " + _.get(youngestInvader, ["owner", "username"], "Invader(?)") + " shutting down harvesting from " + roomID + " for " + (youngestInvader.ticksToLive || 0) + " ticks.", youngestInvader.ticksToLive / EST_TICKS_PER_MIN);
+                    Game.notify("Enemy creep owned by " + _.get(youngestPCInvader, ["owner", "username"], "PCInvader(?)") + " shutting down harvesting from " + roomID + " for " + _.get(youngestPCInvader, "ticksToLive", 0) + " ticks.", _.get(youngestPCInvader, "ticksToLive", 0) / EST_TICKS_PER_MIN);
                 }
             }
             
@@ -1031,11 +1033,14 @@ module.exports.loop = function () {
         // TODO: Set theRoom.memory.avoidTravel based on the check for if it's safe to assign dropped energy for creeps to pickup
         
         // Make sure dynamic creep minimums are kept up-to-date
-        if (_.get(Memory, ["rooms", roomID, "creepMins", "rockhound"], -1) == 0) {
-            _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));
+        if (_.get(Memory, ["rooms", roomID, "creepMins", "demolisher"], -1) >= 0) {
+            _.set(Memory, ["rooms", roomID, "creepMins", "demolisher"], _.reduce(_.get(Game.rooms, [roomID, "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0));
         }
         if (_.get(Memory, ["rooms", roomID, "creepMins", "exporter"], -1) >= 0) {
             _.set(Memory, ["rooms", roomID, "creepMins", "exporter"], _.reduce(_.get(Game.rooms, [roomID, "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0));
+        }
+        if (_.get(Memory, ["rooms", roomID, "creepMins", "rockhound"], -1) == 0) {
+            _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));
         }
         
         if (theRoom.checkForDrops == true || (checkingForDrops == true && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room

@@ -119,15 +119,8 @@ let prototypeSpawn = function() {
             options.memory.roomSentTo = _.get(this.room.nextExporter, "to", this.room.name);
         }
         else if (roleName == "demolisher") {
-            switch (this.room.name) {
-                case "E1S13":
-                    options.memory.roomSentTo = "E2S13";
-                    break;
-                default:
-                    options.memory.roomSentTo = _.get(Memory.rooms, [this.room.name, "harvestRooms", 0], undefined);
-                    if (_.isString(options.memory.roomSentTo) == false) { options.memory.roomSentTo = undefined; }
-                    break;
-            }
+            options.memory.roomSentTo = _.get(this.room.nextDemolisher, "to", _.get(Memory.rooms, [this.room.name, "harvestRooms", 0], undefined));
+            options.memory.demolishStructure = _.get(this.room.nextDemolisher, "target", undefined);
         }
         else if (roleName == "claimer") {
             if (this.room.name == "E8S2") {
@@ -258,8 +251,8 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "demolisher") {
             let minHarvestingDemolisherCost = (DEMOLISHER_WORK_TO_CARRY_RATIO * BODYPART_COST[WORK]) + BODYPART_COST[CARRY] + (Math.ceil((DEMOLISHER_WORK_TO_CARRY_RATIO + 1) * moveRatio) * BODYPART_COST[MOVE]);
-            if (minHarvestingDemolisherCost > energyAvaliable 
-                && options.memory.roomSentTo == "") { // these rooms use demolishers that harvest from what they demolish
+            if (minHarvestingDemolisherCost <= energyAvaliable 
+                && _.get(this.room.nextDemolisher, "type", "D") == "H") {
                 bodyTemplate = _.fill(Array(DEMOLISHER_WORK_TO_CARRY_RATIO), WORK);
                 bodyTemplate.push(CARRY);
             }

@@ -57,8 +57,23 @@ let roleDemolisher = {
                     creep.room.checkForDrops = (creep.room.dangerZones.length > 0) ? true : false;
                     
                     if (demoTarget == undefined) {
+                        if (_.isString(_.get(creep.memory.demolishStructure, "id", undefined)) == true) {
+                            let err = _.invoke(Game.rooms[sentTo].find(FIND_FLAGS, { filter: (f) => (
+                                f.color == COLOR_BLUE 
+                                && (f.secondaryColor == COLOR_RED 
+                                    || f.secondaryColor == COLOR_YELLOW) 
+                                && _.get(f.name.split("_"), 2, undefined) === creep.memory.demolishStructure.id
+                            ) }), function() {
+                                _.set(Memory.rooms, [_.first(this.name.split("_")), "creepMins", "demolisher"], 0);
+                                return this.remove();
+                            });
+                            if (_.any(err, (e) => (e === 0)) == true) {
+                                console.log("Finished demolishing " + creep.memory.demolishStructure.id + " in " + sentTo);
+                                Game.notify("Finished demolishing " + creep.memory.demolishStructure.id + " in " + sentTo, 60);
+                            }
+                        }
                         creep.memory.demolishStructure = undefined;
-                    
+                        
                         demoTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: (cs) => (
                             _.get(cs, "my", false) == false 
                             && _.some(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), _.get(cs, ["owner", "username"], "")) == false 
@@ -117,7 +132,16 @@ let roleDemolisher = {
                 }
                 else if (creep.memory.role == "demolisher") {
                     creep.say(ICONS["dismantle"] + "?", true);
-                    _.set(Memory.rooms, [creep.memory.roomID, "creepMins", "demolisher"],  0);
+                    _.invoke(Game.rooms[sentTo].find(FIND_FLAGS, { filter: (f) => (
+                        f.color == COLOR_BLUE 
+                        && (f.secondaryColor == COLOR_RED 
+                            || f.secondaryColor == COLOR_YELLOW)
+                    ) }), function() {
+                        _.set(Memory.rooms, [_.first(this.name.split("_")), "creepMins", "demolisher"], 0);
+                        return this.remove();
+                    });
+                    console.log("Finished demolishing " + sentTo);
+                    Game.notify("Finished demolishing " + sentTo, 60);
                     if (creep.carryCapacity > 0) {
                         creep.memory.role = "harvester";
                     }
