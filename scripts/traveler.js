@@ -50,7 +50,7 @@ module.exports = function(globalOpts = {}){
             let ret = Game.map.findRoute(origin, destination, {
                 routeCallback: (roomName) => {
                     if (Game.map.isRoomAvailable(roomName) == false) {
-                        return false;
+                        return Infinity;
                     }
                     if (options.routeCallback) {
                         let outcome = options.routeCallback(roomName);
@@ -59,7 +59,7 @@ module.exports = function(globalOpts = {}){
                         }
                     }
                     if (Game.map.getRoomLinearDistance(origin, roomName) > options.restrictDistance) {
-                        return false;
+                        return Infinity;
                     }
                     let parsed;
                     if (options.preferHighway) {
@@ -442,7 +442,7 @@ module.exports = function(globalOpts = {}){
         static addStructuresToMatrix(room, matrix, roadCost) {
             for (let structure of room.find(FIND_STRUCTURES)) {
                 if (structure instanceof StructureRampart) {
-                    if (structure.my == false && (_.includes(Memory.nonAgressivePlayers, structure.owner.username) && structure.isPublic == true) == false) {
+                    if (structure.my == false && (structure.isPublic == false || _.includes(Memory.nonAgressivePlayers, structure.owner.username) == true)) {
                         matrix.set(structure.pos.x, structure.pos.y, 0xff);
                     }
                 }

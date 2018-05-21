@@ -177,30 +177,8 @@ let prototypeSpawn = function() {
             options.memory.roomSentTo = _.get(this.room.nextExporter, "to", this.room.name);
         }
         else if (roleName == "demolisher") {
-            switch (this.room.name) {
-                case "W86N29": 
-                    options.memory.roomSentTo = "W81N29";
-                    break;
-                case "W86N39": 
-                    options.memory.roomSentTo = "W87N39";
-                    break;
-                case "W9N45": 
-                    options.memory.roomSentTo = "W7N49";
-                    options.memory.demolishStructure = { id: "58fd1f7c536298363b7ed421" };
-                    break;
-                case "W53N39": 
-                    options.memory.roomSentTo = "W43N42";
-                    options.memory.demolishStructure = { id: "5866fe7ab2ddf24b2fcd0878" };
-                    break;
-                case "W52N47": 
-                    options.memory.roomSentTo = "W47N44";
-                    options.memory.demolishStructure = { id: "5870a0b9aecd4fba3b3a11c0" };
-                    break;
-                default: 
-                    options.memory.roomSentTo = _.get(Memory.rooms, [this.room.name, "harvestRooms", 0], undefined);
-                    if (_.isString(options.memory.roomSentTo) == false) { options.memory.roomSentTo = undefined; }
-                    break;
-            }
+            options.memory.roomSentTo = _.get(this.room.nextDemolisher, "to", _.get(Memory.rooms, [this.room.name, "harvestRooms", 0], undefined));
+            options.memory.demolishStructure = _.get(this.room.nextDemolisher, "target", undefined);
         }
         else if (roleName == "claimer") {
             /*if (this.room.name == "W87N29") {
@@ -395,8 +373,8 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "demolisher") {
             let minHarvestingDemolisherCost = (DEMOLISHER_WORK_TO_CARRY_RATIO * BODYPART_COST[WORK]) + BODYPART_COST[CARRY] + (Math.ceil((DEMOLISHER_WORK_TO_CARRY_RATIO + 1) * moveRatio) * BODYPART_COST[MOVE]);
-            if (minHarvestingDemolisherCost > energyAvaliable 
-                && options.memory.roomSentTo == "") { // these rooms use demolishers that harvest from what they demolish
+            if (minHarvestingDemolisherCost <= energyAvaliable 
+                && _.get(this.room.nextDemolisher, "type", "D") == "H") {
                 bodyTemplate = _.fill(Array(DEMOLISHER_WORK_TO_CARRY_RATIO), WORK);
                 bodyTemplate.push(CARRY);
             }

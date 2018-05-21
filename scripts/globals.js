@@ -195,6 +195,13 @@ let globals = function() {
         }
     };
     
+    global.NPCOwnerNames = [
+        "Invader"
+        , "Source Keeper"
+        , SYSTEM_USERNAME
+        , "Invader(?)"
+    ];
+    
     global.EST_SEC_PER_TICK = 4.56; // time between ticks is currently averaging ~4.56 seconds (as of 2018/03/30)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
@@ -202,6 +209,14 @@ let globals = function() {
     global.MAX_SEGMENT_LENGTH = 100 * 1024;
     
     global.toStr = (obj) => JSON.stringify(obj, null, 2); // shortcut to stringify an object (idea credit: warinternal, from the Screeps Slack)
+    
+    global.safeModeAvailability = function() {
+        console.log("Safe Mode Availability:");
+        _.chain(Game.rooms)
+            .filter((r) => (_.get(r, ["controller", "my"], false) == true))
+            .forEach((r) => { console.log(r.name + ": " + _.get(r, ["controller", "safeModeAvailable"], 0) + "/" + Math.max(0, _.get(r, ["controller", "level"], 0) - 1)); })
+            .run();
+    }
     
     global.relocateRoom = function (fromRoomName, toRoomName) {
         // TODO: Add room name validation

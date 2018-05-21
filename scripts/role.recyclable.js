@@ -25,7 +25,7 @@ let roleRecyclable = {
             && _.sum(theStorage.store) < theStorage.storeCapacity 
             && theStorage.my == true) {
             for (let resourceType in creep.carry) {
-                let err = creep.transfer(theStorage, resourceType, creep.carry[resourceType]);
+                let err = creep.transfer(theStorage, resourceType, Math.min(creep.carry[resourceType], (theStorage.storeCapacity - _.sum(theStorage.store))));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);
                     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);

@@ -230,9 +230,9 @@ let roleExporter = {
                         else {
                             _.invoke(Game.rooms[sentFrom].find(FIND_FLAGS, { filter: (f) => (
                                 f.color == COLOR_ORANGE
-                            ) }), (f) => {
-                                _.set(Memory.rooms, [_.first(f.name.split("_")), "creepMins", "exporter"], 0);
-                                return f.remove();
+                            ) }), function() {
+                                _.set(Memory.rooms, [_.first(this.name.split("_")), "creepMins", "exporter"], 0);
+                                return this.remove();
                             });
                             console.log("Finished exporting from " + sentFrom);
                             Game.notify("Finished exporting from " + sentFrom, 60);
@@ -258,9 +258,9 @@ let roleExporter = {
                     // NOTE: Stop-gap till above is finished
                     _.invoke(Game.rooms[sentFrom].find(FIND_FLAGS, { filter: (f) => (
                         f.color == COLOR_ORANGE
-                    ) }), (f) => {
-                        _.set(Memory.rooms, [_.first(f.name.split("_")), "creepMins", "exporter"], 0);
-                        return f.remove();
+                    ) }), function() {
+                        _.set(Memory.rooms, [_.first(this.name.split("_")), "creepMins", "exporter"], 0);
+                        return this.remove();
                     });
                     console.log("Finished exporting from " + sentFrom);
                     Game.notify("Finished exporting from " + sentFrom, 60);
@@ -290,8 +290,8 @@ let roleExporter = {
                     || sentFrom == "W9N45" 
                     || sentFrom == "W67N25" 
                     || (sentTo == "W53N39" 
-                        && sentFrom != "W53N38") 
-                    || sentTo == "W52N47" 
+                        && (sentFrom != "W53N38" 
+                            && sentFrom != "W53N42")) 
                     || sentFrom == "W48N42" 
                     || sentFrom == "W47N44" 
                     || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
@@ -417,12 +417,12 @@ let roleExporter = {
                         else {
                             _.invoke(Game.rooms[sentFrom].find(FIND_FLAGS, { filter: (f) => (
                                 f.color == COLOR_ORANGE
-                            ) }), (f) => {
-                                let flagInfo = f.name.split("_");
-                                if (_.get(nameInfo, 4, _.get(nameInfo, 0, "")) != sentTo) { return false; }
+                            ) }), function(sentTo) {
+                                let flagInfo = this.name.split("_");
+                                if (_.get(flagInfo, 4, _.get(flagInfo, 0, "")) != sentTo) { return false; }
                                 _.set(Memory.rooms, [_.first(flagInfo), "creepMins", "exporter"], 0);
-                                return f.remove(); // NOTE: May not update immidiatly when room not visible
-                            });
+                                return this.remove(); // NOTE: May not update immidiatly when room not visible
+                            }, sentTo);
                             console.log("Stopped exporting from " + sentFrom + " to " + sentTo);
                             Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo, 60);
                             if (creep.carryTotal == 0) {

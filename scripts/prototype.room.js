@@ -55,8 +55,8 @@ let prototypeRoom = function() {
                         , sign: theController.sign
                     });
                     if (theController.my == false 
-                        && neutralAt > theRoom.memory.memoryExpiration) {
-                        theRoom.memory.memoryExpiration = neutralAt;
+                        && neutralAt > this.memory.memoryExpiration) {
+                        this.memory.memoryExpiration = neutralAt;
                     }
                 }
                 if (_.isObject(this.memory.controller) == false) {
@@ -83,8 +83,8 @@ let prototypeRoom = function() {
                         , sign: theController.sign
                     });
                     if (theController.my == false 
-                        && neutralAt > theRoom.memory.memoryExpiration) {
-                        theRoom.memory.memoryExpiration = neutralAt;
+                        && neutralAt > this.memory.memoryExpiration) {
+                        this.memory.memoryExpiration = neutralAt;
                     }
                 }
                 if (_.isObject(this.memory.controller) == false && this.controller != undefined) {
@@ -432,6 +432,56 @@ let prototypeRoom = function() {
                 .value();
             return _.chain(r.exportersToSpawn)
                 .filter((eTS) => (_.get(exporterCounts, (eTS.from + eTS.to), 0) < eTS.count))
+                .first()
+                .value();
+        });
+    }
+    
+    if (Room.prototype.demolisherInfo == undefined) { // NOTE: Must be defined after global.defineCachedGetter
+        defineCachedGetter(Room.prototype, 'demolisherInfo', (r) => {
+            return _.chain(Game.flags)
+                .filter((f) => (
+                    f.color == COLOR_BLUE 
+                    && (f.secondaryColor == COLOR_RED 
+                        || f.secondaryColor == COLOR_YELLOW)
+                    && _.startsWith(f.name, r.name)))
+                .map((f) => { 
+                    let nameInfo = f.name.split('_');
+                    let demoTarget = _.get(nameInfo, 2, "") != "" ? { id: _.get(nameInfo, 2, ""), pos: f.pos } : undefined; // NOTE: Assumes flag was placed on target structure
+                    return { 
+                        priority: _.get(nameInfo, 1, 0)
+                        , type: f.secondaryColor == COLOR_YELLOW ? "H" : "D" // NOTE: COLOR_YELLOW = Harvest (H), COLOR_RED = Demolish (D)
+                        , target: demoTarget
+                        , count: _.get(nameInfo, 3, 1)
+                        , to: _.get(nameInfo, 4, f.pos.roomName)
+                        , from: _.get(nameInfo, 5, _.get(nameInfo, 0, r.name))
+                    }; })
+                .value();
+        });
+    }
+    
+    if (Room.prototype.demolishersToSpawn == undefined) { // NOTE: Must be defined after Room.demolisherInfo
+        defineCachedGetter(Room.prototype, 'demolishersToSpawn', (r) => {
+            if (r.demolisherInfo.length == 0) { return []; }
+            return _.chain(r.demolisherInfo)
+                .groupBy("priority")
+                .min((dI, p) => (p))
+                .value();
+        });
+    }
+    
+    if (Room.prototype.nextDemolisher == undefined) { // NOTE: Must be defined after Room.demolishersToSpawn
+        defineCachedGetter(Room.prototype, 'nextDemolisher', (r) => {
+            if (r.demolishersToSpawn.length == 0) { return []; }
+            let demolisherCounts = _.chain(Memory.creeps)
+                .filter((c) => (
+                    c.roomID == r.name 
+                    && c.role == "demolisher"))
+                .countBy((c) => (
+                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", "") + _.get(c, ["target", "id"], "")))
+                .value();
+            return _.chain(r.demolishersToSpawn)
+                .filter((dTS) => (_.get(demolisherCounts, _.get(dTS, "from", "") + _.get(dTS, "to", "") + _.get(dTS, ["target", "id"], ""), 0) < dTS.count))
                 .first()
                 .value();
         });
