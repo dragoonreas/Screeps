@@ -88,7 +88,7 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
 for (let roomID in Game.rooms) {
     let theRoom = Game.rooms[roomID];
     _.defaults(theRoom, {
-         "memoryExpiration": Game.time + EST_TICKS_PER_DAY // TODO: Don't let harvest rooms expire
+         "memoryExpiration": getRoomMemoryExpiration(roomID) // TODO: Don't let harvest rooms expire
         , "checkForDrops": true
         , "hasHostileCreep": false
         , "clearPathCaches": true
@@ -355,7 +355,7 @@ let managedRooms = [];
 for (let roomID in Memory.rooms) {
     if (Memory.rooms[roomID].repairerTypeMins != undefined) {
         managedRooms.push(roomID);
-        Memory.rooms[roomID].memoryExpiration = Game.time + EST_TICKS_PER_DAY;
+        Memory.rooms[roomID].memoryExpiration = getRoomMemoryExpiration(roomID);
     }
 }
 
@@ -828,7 +828,7 @@ module.exports.loop = function () {
         let theRoom = Game.rooms[roomID];
         
         // Make sure all required room memory objects exist
-        theRoom.memory.memoryExpiration = Game.time + EST_TICKS_PER_DAY; // Update scheduled time for room memory garbage collection
+        theRoom.memory.memoryExpiration = getRoomMemoryExpiration(roomID); // Update scheduled time for room memory garbage collection
         _.defaults(theRoom.memory, {
             "checkForDrops": true
             , "hasHostileCreep": false
@@ -858,11 +858,6 @@ module.exports.loop = function () {
                 , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined)
                 , sign: theController.sign
             });
-            
-            if (theController.my == false 
-                && neutralAt > theRoom.memory.memoryExpiration) {
-                theRoom.memory.memoryExpiration = neutralAt;
-            }
         }
         
         // Make sure source memory exists and is up-to-date

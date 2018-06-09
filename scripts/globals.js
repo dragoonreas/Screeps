@@ -55,7 +55,7 @@ let globals = function() {
         , ["move" + TOP_LEFT]: "\u2196" // up-left arrow
         , attack: "\uD83D\uDDE1" // dagger NOTE: Same as attackController
         , heal: "\uD83D\uDD27" // wrench
-        , rangeHeal: "\uD83C\uDFF9\uD83D\uDD27" // bow and arrow + rench
+        , rangeHeal: "\uD83C\uDFF9\uD83D\uDD27" // bow and arrow + wrench
         , rangedAttack: "\uD83C\uDFF9\uD83D\uDDE1" // bow and arrow + dagger
         , rangedMassAttack: "\uD83C\uDFF9\u2694" // bow and arrow + crossed swords
         , build: "\uD83D\uDD28" // hammer
@@ -144,8 +144,6 @@ let globals = function() {
         }
     };
     
-    global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
-    
     global.resourceWorth = function(resourceType) {
         switch (resourceType) {
             case RESOURCE_POWER: return 10000000; // 10^7
@@ -202,6 +200,8 @@ let globals = function() {
         , "Invader(?)"
     ];
     
+    global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
+    
     global.EST_SEC_PER_TICK = 5.37; // time between ticks is currently averaging ~5.37 seconds (as of 2018/05/30)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
@@ -210,7 +210,7 @@ let globals = function() {
     
     global.toStr = (obj) => JSON.stringify(obj, null, 2); // shortcut to stringify an object (idea credit: warinternal, from the Screeps Slack)
     
-    global.safeModeAvailability = function() {
+    global.listSafeModeAvailability = function() {
         console.log("Safe Mode Availability:");
         _.chain(Game.rooms)
             .filter((r) => (_.get(r, ["controller", "my"], false) == true))
@@ -218,7 +218,7 @@ let globals = function() {
             .run();
     }
     
-    global.relocateRoom = function (fromRoomName, toRoomName) {
+    global.relocateRoom = function(fromRoomName, toRoomName) {
         // TODO: Add room name validation
         let theController = _.get(Game.rooms, [fromRoomName, "controller"], undefined);
         if (theController != undefined && theController.my == true) {
@@ -239,6 +239,22 @@ let globals = function() {
         });
     };
     
+    global.getRoomMemoryExpiration = function(roomName) {
+        let currentExpiration = _.get(Memory.rooms, [roomName, "memoryExpiration"], 0);
+        let defaultExpiration = Game.time + EST_TICKS_PER_DAY;
+        let roomVisualExpiration = Game.time + (ROOM_VISUAL_TIMEOUT || Memory.roomVisualTimeout || 5);
+        let controllerNeutralAt = Game.time - 1;
+        let theController = _.get(Game.rooms, [roomName, "controller"], undefined);
+        let theControllerMem = _.get(Memory.rooms, [roomName, "controller"], undefined);
+        if (_.get(theController, "my", true) != true) {
+            let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
+            controllerNeutralAt = ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || controllerNeutralAt);
+        } else if (_.get(theControllerMem, "neutralAt", controllerNeutralAt) > Game.time) {
+            controllerNeutralAt = theControllerMem.neutralAt;
+        }
+        return Math.max(currentExpiration, defaultExpiration, roomVisualExpiration, controllerNeutralAt);
+    }
+    
     /*
         Cached dynamic properties: Declaration
         By warinternal, from the Screeps Slack
@@ -246,7 +262,7 @@ let globals = function() {
             - This function is easiest to use when declared as a global
             - See prototype.creep for usage examples
     */
-    global.defineCachedGetter = function (proto, propertyName, fn) {
+    global.defineCachedGetter = function(proto, propertyName, fn) {
     	Object.defineProperty(proto, propertyName, {
     		get: function() { 
     			if(this === proto || this == undefined)
