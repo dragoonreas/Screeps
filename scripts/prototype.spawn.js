@@ -186,7 +186,7 @@ let prototypeSpawn = function() {
             }
             else */if (this.room.name == "W86N29") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    options.memory.controllerID = "5873bbab11e3e4361b4d6401"; // harvest room
+                    options.memory.controllerID = "5873bbc811e3e4361b4d675d"; // harvest room
                 }
                 else {
                     options.memory.controllerID = "5873bc2711e3e4361b4d7257";

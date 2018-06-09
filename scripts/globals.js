@@ -202,7 +202,7 @@ let globals = function() {
         , "Invader(?)"
     ];
     
-    global.EST_SEC_PER_TICK = 4.56; // time between ticks is currently averaging ~4.56 seconds (as of 2018/03/30)
+    global.EST_SEC_PER_TICK = 5.37; // time between ticks is currently averaging ~5.37 seconds (as of 2018/05/30)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     

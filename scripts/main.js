@@ -175,7 +175,7 @@ _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
 _.set(Memory.rooms, ["W64N31", "harvestRooms"], [
     "W64N32"
     , "W63N31"
-    //, "W65N31" // now used by Pimaco
+    //, "W65N31" // remote mined by Pimaco
 ]);
 /*_.set(Memory.rooms, ["W55N31", "harvestRooms"], [
     "W56N31"
@@ -184,8 +184,12 @@ _.set(Memory.rooms, ["W64N31", "harvestRooms"], [
 ]);*/
 _.set(Memory.rooms, ["W53N39", "harvestRooms"], [
     "W54N39"
-    //, "W53N38" // now an occupied room
-    , "W52N39"
+    //, "W53N38" // owned by Donatzor
+    //, "W52N39" // remote mined by Donatzor
+    , "W52N41"
+    , "W53N41"
+    , "W55N41"
+    , "W54N41"
 ]);
 /*_.set(Memory.rooms, ["W53N42", "harvestRooms"], [
     "W53N41"
@@ -367,12 +371,12 @@ _.set(Memory.rooms, ["W86N29", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W86N29", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N29", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W86N29", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N29", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W86N29", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["W85N23", "creepMins"], {
@@ -382,12 +386,12 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W85N23", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W85N23", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N23", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W85N23", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N23", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W85N23", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["W86N39", "creepMins"], {
@@ -397,12 +401,12 @@ _.set(Memory.rooms, ["W86N39", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N39", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W86N39", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N39", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W86N39", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N39", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W86N39", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["W85N38", "creepMins"], {
@@ -412,12 +416,12 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W85N38", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W85N38", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N38", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W85N38", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N38", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W85N38", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W86N43", "creepMins"], {
@@ -427,12 +431,12 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W86N43", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W86N43", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N43", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W86N43", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W86N43", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N43", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W86N43", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 /*_.set(Memory.rooms, ["W91N45", "creepMins"], {
@@ -442,12 +446,12 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W91N45", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W91N45", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W91N45", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["W91N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W91N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W91N45", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W91N45", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W91N45", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 /*_.set(Memory.rooms, ["W94N49", "creepMins"], {
@@ -457,12 +461,12 @@ _.set(Memory.rooms, ["W85N38", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W94N49", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W94N49", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W94N49", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["W94N49", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W94N49", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W94N49", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W94N49", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: 0//(_.get(Game.rooms, ["W94N49", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["W9N45", "creepMins"], {
@@ -472,12 +476,12 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W9N45", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W9N45", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W9N45", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W9N45", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W9N45", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W9N45", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W81N29", "creepMins"], {
@@ -487,12 +491,12 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , upgrader: 4
     , miner: 0//_.size(_.get(Game.rooms, ["W81N29", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W81N29", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W81N29", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W81N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W81N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W81N29", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W81N29", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W81N29", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 /*_.set(Memory.rooms, ["W72N28", "creepMins"], {
@@ -502,12 +506,12 @@ _.set(Memory.rooms, ["W9N45", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W72N28", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W72N28", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W72N28", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W72N28", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W72N28", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W72N28", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W72N28", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W72N28", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["W64N31", "creepMins"], {
@@ -517,12 +521,12 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W64N31", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W64N31", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W64N31", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W64N31", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W64N31", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W64N31", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W55N31", "creepMins"], {
@@ -532,12 +536,12 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W55N31", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W55N31", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W55N31", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["W55N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W55N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W55N31", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W55N31", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W55N31", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["W53N39", "creepMins"], {
@@ -547,12 +551,12 @@ _.set(Memory.rooms, ["W53N39", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W53N39", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W53N39", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W53N39", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W53N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W53N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W53N39", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W53N39", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W53N39", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W53N42", "creepMins"], {
@@ -562,12 +566,12 @@ _.set(Memory.rooms, ["W53N39", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W53N42", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W53N42", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W53N42", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["W53N42", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W53N42", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W53N42", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W53N42", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W53N42", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["W52N47", "creepMins"], {
@@ -577,12 +581,12 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W52N47", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W52N47", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W52N47", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W52N47", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W52N47", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W52N47", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W52N47", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W52N47", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W48N52", "creepMins"], {
@@ -592,12 +596,12 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W48N52", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W48N52", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W48N52", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["W48N52", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W48N52", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W48N52", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W48N52", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W48N52", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 /*_.set(Memory.rooms, ["W42N51", "creepMins"], {
@@ -607,12 +611,12 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W42N51", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["W42N51", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W42N51", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["W42N51", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W42N51", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["W42N51", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W42N51", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: 0//(_.get(Game.rooms, ["W42N51", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 
@@ -1220,10 +1224,10 @@ module.exports.loop = function () {
         
         // Make sure dynamic creep minimums are kept up-to-date
         if (_.get(Memory, ["rooms", roomID, "creepMins", "demolisher"], -1) >= 0) {
-            _.set(Memory, ["rooms", roomID, "creepMins", "demolisher"], _.reduce(_.get(Game.rooms, [roomID, "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0));
+            _.set(Memory, ["rooms", roomID, "creepMins", "demolisher"], _.parseInt(_.reduce(_.get(Game.rooms, [roomID, "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)));
         }
         if (_.get(Memory, ["rooms", roomID, "creepMins", "exporter"], -1) >= 0) {
-            _.set(Memory, ["rooms", roomID, "creepMins", "exporter"], _.reduce(_.get(Game.rooms, [roomID, "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0));
+            _.set(Memory, ["rooms", roomID, "creepMins", "exporter"], _.parseInt(_.reduce(_.get(Game.rooms, [roomID, "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)));
         }
         if (_.get(Memory, ["rooms", roomID, "creepMins", "rockhound"], -1) == 0) {
             _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));

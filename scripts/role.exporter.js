@@ -58,8 +58,9 @@ let roleExporter = {
         ];
         
         if (creep.memory.working == false) {
-            if (creep.room.name != sentFrom 
-                && creep.memory.withdrawStructure == undefined) {
+            if ((creep.room.name != sentFrom 
+                    && creep.memory.withdrawStructure == undefined) 
+                || Game.rooms[sentFrom] == undefined) {
                 if (sentFrom == "W94N49" 
                     || sentFrom == "W91N42" 
                     || sentFrom == "W67N25" 
@@ -290,8 +291,10 @@ let roleExporter = {
                     || sentFrom == "W9N45" 
                     || sentFrom == "W67N25" 
                     || (sentTo == "W53N39" 
-                        && (sentFrom != "W53N38" 
-                            && sentFrom != "W53N42")) 
+                        && (sentFrom == "W64N31" 
+                            || sentFrom == "W52N47" 
+                            || sentFrom == "W48N42" 
+                            || sentFrom == "W47N44")) 
                     || sentFrom == "W48N42" 
                     || sentFrom == "W47N44" 
                     || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
