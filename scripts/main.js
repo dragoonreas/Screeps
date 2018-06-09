@@ -275,12 +275,12 @@ for (let roomID in Memory.rooms) {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E8S2", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E8S2", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E8S2", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["E8S2", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E8S2", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E8S2", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E8S2", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E8S2", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E17S1", "creepMins"], {
@@ -290,12 +290,12 @@ _.set(Memory.rooms, ["E17S1", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E17S1", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E17S1", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E17S1", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["E17S1", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E17S1", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E17S1", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E17S1", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E17S1", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E18S3", "creepMins"], {
@@ -305,12 +305,12 @@ _.set(Memory.rooms, ["E18S3", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E18S3", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E18S3", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E18S3", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["E18S3", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E18S3", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E18S3", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E18S3", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E18S3", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E18S9", "creepMins"], {
@@ -320,12 +320,12 @@ _.set(Memory.rooms, ["E18S9", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E18S9", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E18S9", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E18S9", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["E18S9", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E18S9", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E18S9", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E18S9", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E18S9", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E21S9", "creepMins"], {
@@ -335,12 +335,12 @@ _.set(Memory.rooms, ["E21S9", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E18S9", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E18S9", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E18S9", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["E18S9", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E18S9", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E18S9", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E18S9", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E18S9", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E19S13", "creepMins"], {
@@ -350,12 +350,12 @@ _.set(Memory.rooms, ["E19S13", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E19S13", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E19S13", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E19S13", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["E19S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E19S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E19S13", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E19S13", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E19S13", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E18S17", "creepMins"], {
@@ -365,12 +365,12 @@ _.set(Memory.rooms, ["E18S17", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E18S17", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E18S17", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E18S17", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["E18S17", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E18S17", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E18S17", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E18S17", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E18S17", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 _.set(Memory.rooms, ["E1S13", "creepMins"], {
@@ -380,12 +380,12 @@ _.set(Memory.rooms, ["E1S13", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E1S13", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E1S13", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E1S13", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["E1S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E1S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E1S13", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E1S13", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E1S13", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E2S11", "creepMins"], {
@@ -395,12 +395,12 @@ _.set(Memory.rooms, ["E2S11", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E2S11", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E2S11", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E2S11", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.reduce(_.get(Memory.rooms, ["E2S11", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E2S11", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E2S11", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E2S11", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E2S11", "canHarvestMineral"], false) ? 1 : 0)
 });
 //console.log(toStr(Memory.rooms.E2S11.creepMins));
@@ -411,12 +411,12 @@ _.set(Memory.rooms, ["E2S11", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E3S15", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E3S15", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E3S15", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["E3S15", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E3S15", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E3S15", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E3S15", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E3S15", "canHarvestMineral"], false) ? 1 : 0)
 });
 _.set(Memory.rooms, ["E7S12", "creepMins"], {
@@ -426,12 +426,12 @@ _.set(Memory.rooms, ["E7S12", "creepMins"], {
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E7S12", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.reduce(_.get(Game.rooms, ["E7S12", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E7S12", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 0
-    , repairer: _.reduce(_.get(Memory.rooms, ["E7S12", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0)
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E7S12", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.reduce(_.get(Game.rooms, ["E7S12", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E7S12", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E7S12", "canHarvestMineral"], false) ? 1 : 0)
 });*/
 
@@ -1034,10 +1034,10 @@ module.exports.loop = function () {
         
         // Make sure dynamic creep minimums are kept up-to-date
         if (_.get(Memory, ["rooms", roomID, "creepMins", "demolisher"], -1) >= 0) {
-            _.set(Memory, ["rooms", roomID, "creepMins", "demolisher"], _.reduce(_.get(Game.rooms, [roomID, "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0));
+            _.set(Memory, ["rooms", roomID, "creepMins", "demolisher"], _.parseInt(_.reduce(_.get(Game.rooms, [roomID, "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0)));
         }
         if (_.get(Memory, ["rooms", roomID, "creepMins", "exporter"], -1) >= 0) {
-            _.set(Memory, ["rooms", roomID, "creepMins", "exporter"], _.reduce(_.get(Game.rooms, [roomID, "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0));
+            _.set(Memory, ["rooms", roomID, "creepMins", "exporter"], _.parseInt(_.reduce(_.get(Game.rooms, [roomID, "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0)));
         }
         if (_.get(Memory, ["rooms", roomID, "creepMins", "rockhound"], -1) == 0) {
             _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));

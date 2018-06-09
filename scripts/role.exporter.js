@@ -44,8 +44,9 @@ let roleExporter = {
         ];
         
         if (creep.memory.working == false) {
-            if (creep.room.name != sentFrom 
-                && creep.memory.withdrawStructure == undefined) {
+            if ((creep.room.name != sentFrom 
+                    && creep.memory.withdrawStructure == undefined) 
+                || Game.rooms[sentFrom] == undefined) {
                 if (sentFrom == "") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
