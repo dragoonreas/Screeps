@@ -47,8 +47,17 @@ let roleExporter = {
             if ((creep.room.name != sentFrom 
                     && creep.memory.withdrawStructure == undefined) 
                 || Game.rooms[sentFrom] == undefined) {
+                let structureMemPos = _.get(creep.memory, ["withdrawStructure", "pos"], undefined);
+                let structureMemRoomName = _.get(creep.memory, ["withdrawStructure", "pos", "roomName"], undefined);
                 if (sentFrom == "") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
+                }
+                else if (structureMemPos != undefined 
+                    && Game.rooms[structureMemRoomName] == undefined) {
+                    let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                    creep.travelTo(structurePos);
+                    creep.say(travelToIcons(creep) + structurePos.roomName, true);
+                    return;
                 }
                 else {
                     creep.say(travelToIcons(creep) + sentFrom, true);
@@ -387,19 +396,23 @@ let roleExporter = {
                             }
                         }
                         else {
-                            _.invoke(Game.rooms[sentFrom].find(FIND_FLAGS, { filter: (f) => (
-                                f.color == COLOR_ORANGE
-                            ) }), function(sentTo) {
-                                let flagInfo = this.name.split("_");
-                                if (_.get(flagInfo, 4, _.get(flagInfo, 0, "")) != sentTo) { return false; }
-                                _.set(Memory.rooms, [_.first(flagInfo), "creepMins", "exporter"], 0);
-                                return this.remove(); // NOTE: May not update immidiatly when room not visible
-                            }, sentTo);
-                            console.log("Stopped exporting from " + sentFrom + " to " + sentTo);
-                            Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo, 60);
                             if (creep.carryTotal == 0) {
+                                _.invoke(_.filter(Game.flags, (f) => (
+                                    f.pos.roomName = sentFrom 
+                                    && f.color == COLOR_ORANGE
+                                )), function(sentTo) {
+                                    let flagInfo = this.name.split("_");
+                                    if (_.get(flagInfo, 4, _.get(flagInfo, 0, "")) != sentTo) { return false; }
+                                    _.set(Memory.rooms, [_.first(flagInfo), "creepMins", "exporter"], 0);
+                                    return this.remove(); // NOTE: May not update immidiatly when room not visible
+                                }, sentTo);
+                                console.log("Stopped exporting from " + sentFrom + " to " + sentTo);
+                                Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo, 60);
                                 creep.memory.role = "recyclable";
                                 ROLES["recyclable"].run(creep);
+                            }
+                            else {
+                                ROLES["harvester"].run(creep);
                             }
                         }
                     }

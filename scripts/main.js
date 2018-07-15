@@ -80,7 +80,7 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
         , "Palle" // PINK alliance
         , "Kendalor" // PINK alliance
         , "InfiniteJoe" // PINK alliance (not yet added to their whitelist)
-        , "KermitFrog" // PINK alliance (not yat added to their whitelist)
+        , "KermitFrog" // PINK alliance (not yet added to their whitelist)
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
 }); // TODO: Get alliance data from user "LeagueOfAutomatedNations" public segment every 6hrs
 
@@ -146,13 +146,13 @@ _.set(Memory.rooms, ["E18S17", "harvestRooms"], [
     , "E17S17"
 ]);*/
 _.set(Memory.rooms, ["E1S13", "harvestRooms"], [
-    "E1S12"
-    , "E2S13"
+    /*"E1S12"
+    , */"E2S13"
 ]);
 _.set(Memory.rooms, ["E2S11", "harvestRooms"], [
     "E3S11"
-    , "E2S12"
-    , "E1S11"
+    //, "E2S12"
+    //, "E1S11"
 ]);
 /*_.set(Memory.rooms, ["E3S15", "harvestRooms"], [
     "E5S15"
@@ -226,14 +226,14 @@ _.set(Memory.rooms, ["E18S17", "repairerTypeMins"], {
 });*/
 _.set(Memory.rooms, ["E1S13", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
 _.set(Memory.rooms, ["E2S11", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
@@ -375,7 +375,7 @@ _.set(Memory.rooms, ["E18S17", "creepMins"], {
 });*/
 _.set(Memory.rooms, ["E1S13", "creepMins"], {
     attacker: 0
-    , harvester: 6
+    , harvester: 3
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E1S13", "minerSources"], {}))
@@ -390,7 +390,7 @@ _.set(Memory.rooms, ["E1S13", "creepMins"], {
 });
 _.set(Memory.rooms, ["E2S11", "creepMins"], {
     attacker: 0
-    , harvester: 6
+    , harvester: 4
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["E2S11", "minerSources"], {}))
@@ -476,6 +476,14 @@ module.exports.loop = function () {
         _.set(Memory.stats.node, ["hasSwapped"], 0);
     }
     NODE_USAGE.last = Game.time;
+    
+    if (_.size(Game.spawns) == 0 && _.size(Game.constructionSites) == 0 && _.size(Game.structures) == 0) {
+        _.invoke(Game.creeps, "suicide");
+        if (NODE_USAGE.total == 1) {
+            console.log(_.get(Game, ["shard", "name"], "shard?") + " discovered.")
+        }
+        return;
+    }
     
     resourcesInfo.summarize_rooms(); // Generate stats for screepsplus to retrieve at end of loop
     
@@ -617,6 +625,25 @@ module.exports.loop = function () {
         
         Memory.rooms[roomID].clearPathCaches = false;
     }
+    
+    // Garbage collection for sell orders
+    let roomResourceOrders = _.groupBy(Game.market.orders, (o) => (o.roomName + o.resourceType));
+    _.forEach(roomResourceOrders, (rROs) => {
+        if (_.get(Game.rooms, [_.first(rROs).roomName, "terminal", "store", _.first(rROs).resourceType], 0) == 0) {
+            _.forEach(rROs, (rRO) => { Game.market.cancelOrder(rRO.id); });
+            console.log("Running garbage collection on sell order of " + _.first(rROs).resourceType + " from " + _.first(rROs).roomName);
+        }
+        else if (rROs.length > 1) {
+            rROs = _.sortBy(rROs, "created");
+            let firstID = _.first(rROs).id;
+            _.forEach(rROs, function(rRO) {
+                if (rRO.id != firstID) {
+                    Game.market.cancelOrder(rRO.id);
+                }
+            });
+            console.log("Running garbage collection on " + (rROs.length - 1) + " extra sell order(s) of " + _.first(rROs).resourceType + " from " + _.first(rROs).roomName);
+        }
+    });
     
     if (Memory.MonCPU == true) { console.log("gc>room:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
@@ -1236,6 +1263,7 @@ module.exports.loop = function () {
                 let terminalPower = _.get(theRoom, ["terminal", "store", RESOURCE_POWER], 0);
                 let storagePower = _.get(theRoom, ["storage", "store", RESOURCE_POWER], 0);
                 let creepPower = _.sum(Game.creeps, (c) => (c.memory.roomID == roomID ? _.get(c, ["carry", RESOURCE_POWER], 0) : 0));
+                // TODO: Check for power in containers
                 requiredPower = Math.floor(thePowerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - (thePowerSpawn.power + terminalPower + storagePower + creepPower);
             }
         }
@@ -1250,7 +1278,7 @@ module.exports.loop = function () {
             && theRoom.terminal.cooldown == 0) {
             let theTerminal = theRoom.terminal;
             let terminalEnergy = _.get(theTerminal.store, [RESOURCE_ENERGY], 0);
-            let madeDeal = false;
+            let madeTransaction = false;
             if (Game.cpu.bucket > 7500) {
                 for (let resourceName in theTerminal.store) {
                     let resourceCount = theTerminal.store[resourceName];
@@ -1269,9 +1297,90 @@ module.exports.loop = function () {
                             if (energyCost <= terminalEnergy) {
                                 let err = Game.market.deal(buyOrder.id, amountToSend, roomID);
                                 if (err == OK) {
-                                    madeDeal = true;
+                                    madeTransaction = true;
                                     console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
-                                    break; // Each terminal can only do one deal per tick
+                                    break; // NOTE: Each terminal can only do one deal per tick
+                                }
+                            }
+                        }
+                        else {
+                            let sellOrders = _.filter(Game.market.orders, (o) => (
+                                o.type == ORDER_SELL 
+                                && o.resourceType == resourceName 
+                            ));
+                            let sellOrder = (sellOrders.length > 0) ? _.max(sellOrders, (o) => (_.get(Game.rooms, [o.roomName, "terminal", "store", o.resourceType], 0))) : undefined;
+                            // TODO: Handle multiple sell order rooms
+                            let sellOrderRoom = _.get(sellOrder, ["roomName"], roomID);
+                            if (sellOrderRoom != roomID 
+                                && (_.get(Game.rooms, [sellOrderRoom, "controller", "my"], false) == false 
+                                    || _.get(Game.rooms, [sellOrderRoom, "controller", "level"], 0) < 6 
+                                    || _.get(Game.rooms, [sellOrderRoom, "terminal", "my"], false) == false)) {
+                                Game.market.cancelOrder(sellOrder.id);
+                                sellOrder = undefined;
+                                sellOrderRoom = roomID;
+                            }
+                            if (sellOrderRoom == roomID) {
+                                let sellPrice = 5; // NOTE: Maximum reasonable sell price capped at 5 Credits
+                                sellOrders = Game.market.orderCache(ORDER_SELL, resourceName);
+                                if (sellOrders.length > 0) {
+                                    sellOrders = _.groupBy(sellOrders, (o) => (o.price));
+                                    sellOrders = _.min(sellOrders, (v, k) => (k));
+                                    sellPrice = Math.min(_.first(sellOrders).price, sellPrice);
+                                }
+                                let amountToSell = resourceCount;
+                                if (sellOrder == undefined) {
+                                    let deposit = sellPrice * amountToSell * 0.05;
+                                    if (deposit <= Game.market.credits) {
+                                        let err = Game.market.createOrder(ORDER_SELL, resourceName, sellPrice, resourceCount, roomID);
+                                        if (err == OK) {
+                                            console.log("Created " + ORDER_SELL + " for " + resourceCount + " " + resourceName + " from " + roomID + " using " + deposit + " credits for " + (sellPrice * resourceCount).toFixed(3) + " (" + sellPrice + " each) credits");
+                                        }
+                                        else {
+                                            console.log(roomID, "createOrder", err);
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (sellOrder.price > sellPrice 
+                                        || sellOrder.remainingAmount < resourceCount) {
+                                        let deposit = Math.max((sellPrice - sellOrder.price), 0) * sellOrder.remainingAmount * 0.05;
+                                        if (deposit <= Game.market.credits) {
+                                            let err = Game.market.changeOrderPrice(sellOrder.id, sellPrice);
+                                            if (err == OK) {
+                                                console.log("Changed " + ORDER_SELL + " price for " + sellOrder.remainingAmount + " " + resourceName + " from " + roomID + " using " + deposit + " credits from " + (sellOrder.price * sellOrder.remainingAmount).toFixed(3) + " (" + sellOrder.price + " each) to " + (sellPrice * sellOrder.remainingAmount).toFixed(3) + " (" + sellPrice + " each) credits");
+                                            }
+                                            else {
+                                                console.log(roomID, "changeOrderPrice", err);
+                                            }
+                                        }
+                                    }
+                                    sellPrice = Math.min(sellOrder.price, sellPrice);
+                                    if (sellOrder.remainingAmount < resourceCount) {
+                                        let amountToAdd = resourceCount - sellOrder.remainingAmount;
+                                        let deposit = amountToAdd * sellPrice * 0.05;
+                                        if (deposit <= Game.market.credits) {
+                                            let err = Game.market.extendOrder(sellOrder.id, amountToAdd);
+                                            if (err == OK) {
+                                                console.log("Changed " + ORDER_SELL + " amount from " + sellOrder.remainingAmount + " to " + resourceCount + " " + resourceName + " from " + roomID + " using " + deposit + " credits for " + (sellPrice * resourceCount).toFixed(3) + " (" + sellPrice + " each) credits");
+                                            }
+                                            else {
+                                                console.log(roomID, "extendOrder", err);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (resourceCount >= 100 
+                                && _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0) < (TERMINAL_CAPACITY / 3) 
+                                && ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)) >= 100 
+                                && _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0) > 0) { // NOTE: Terminals can't send less than 100 resources in a single transaction
+                                let sendAmount = Math.min(resourceCount, ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)), _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0));
+                                let energyCost = Game.market.calcTransactionCost(resourceCount, roomID, sellOrderRoom);
+                                if (energyCost <= terminalEnergy) {
+                                    let err = theTerminal.send(resourceName, resourceCount, sellOrderRoom, "To extend order " + sellOrder.id);
+                                    if (err == OK) {
+                                        madeTransaction = true;
+                                    }
                                 }
                             }
                         }
@@ -1279,11 +1388,13 @@ module.exports.loop = function () {
                 }
             }
             
-            if (madeDeal == false 
+            if (madeTransaction == false 
                 && requiredPower > 0 
                 && theTerminal.storeCapacityFree > 0) {
+                // TODO: Check for power in terminals of rooms that have >=100 spare before checking sell orders
+                
                 let sellOrders = _.filter(Game.market.orderCache(ORDER_SELL, RESOURCE_POWER), (o) => (
-                    o.price <= 2
+                    o.price <= 2.5 // NOTE: Don't pay over 2.5 Credits per Power
                 ));
                 if (sellOrders.length > 0) {
                     sellOrders = _.groupBy(sellOrders, (o) => (o.price));
@@ -1291,12 +1402,12 @@ module.exports.loop = function () {
                     let sellOrder = _.min(sellOrders, (o) => (
                         Game.market.calcTransactionCost(requiredPower, roomID, o.roomName)
                     ));
-                    let amountToBuy = _.min([requiredPower, theTerminal.storeCapacityFree, sellOrder.amount]);
+                    let amountToBuy = _.min([requiredPower, theTerminal.storeCapacityFree, sellOrder.amount]); // TODO: Also take avaliable Credits into consideration when setting the ammount to buy
                     let energyCost = Game.market.calcTransactionCost(amountToBuy, roomID, sellOrder.roomName);
                     if (energyCost <= terminalEnergy) {
                         let err = Game.market.deal(sellOrder.id, amountToBuy, roomID);
                         if (err == OK) {
-                            madeDeal = true;
+                            madeTransaction = true;
                             console.log("Buying " + amountToBuy + " " + RESOURCE_POWER + " from " + sellOrder.roomName + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (sellOrder.price * amountToBuy).toFixed(3) + " (" + sellOrder.price + " each) credits");
                         }
                     }
@@ -1311,8 +1422,8 @@ module.exports.loop = function () {
                     && o.resourceType == RESOURCE_ENERGY 
                 ));
                 let buyOrders = _.filter(Game.market.orderCache(ORDER_BUY, RESOURCE_ENERGY), (o) => (
-                    o.price <= 0.05 
-                    && o.amount >= 1000 
+                    o.price <= 0.05 // NOTE: Don't pay over 0.05 Credits per Energy
+                    && o.amount >= 100 // NOTE: Don't consider any buy order for less than 100 Energy serious competition
                     && o.roomName != roomID
                 ));
                 if (buyOrders.length > 0) {
@@ -1524,13 +1635,13 @@ module.exports.loop = function () {
     ) ? 1 : 0));*/ // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["E1S13", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["E1S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E1S13", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["E2S11", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E2S11", "creepCounts", "adaptable"], -1) == 0) 
+        //|| (_.get(Memory.rooms, ["E2S11", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E2S11", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["E3S15", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E3S15", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["E7S12", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E7S12", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     _.set(Memory.rooms, ["E2S11", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["E2S11", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E2S11", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["E1S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E1S13", "creepCounts", "adaptable"], -1) == 0) 
+        //|| (_.get(Memory.rooms, ["E1S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E1S13", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["E3S15", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E3S15", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["E7S12", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E7S12", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code

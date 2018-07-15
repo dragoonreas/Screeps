@@ -81,7 +81,7 @@ let prototypeSpawn = function() {
                 if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "E1S13";
                 }
-                else if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
+                /*else if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "E2S11";
                 }
                 /*else if (Memory.rooms.E3S15.creepCounts.builder == 0 && Memory.rooms.E3S15.creepCounts.adaptable == 0) {
@@ -95,7 +95,7 @@ let prototypeSpawn = function() {
                 if (Memory.rooms.E2S11.creepCounts.builder == 0 && Memory.rooms.E2S11.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "E2S11";
                 }
-                else if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
+                /*else if (Memory.rooms.E1S13.creepCounts.builder == 0 && Memory.rooms.E1S13.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "E1S13";
                 }
                 /*else if (Memory.rooms.E3S15.creepCounts.builder == 0 && Memory.rooms.E3S15.creepCounts.adaptable == 0) {
@@ -161,7 +161,8 @@ let prototypeSpawn = function() {
             }
             else if (this.room.name == "E1S13") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    options.memory.controllerID = "59790a4b833ada000b96f463"; // harvest room
+                    //options.memory.controllerID = "59790a4b833ada000b96f463"; // harvest room
+                    options.memory.controllerID = "59790a4b833ada000b96f432"; // harvest room
                 }
                 else {
                     //options.memory.controllerID = "59790a4b833ada000b96f39a";
