@@ -401,8 +401,8 @@ let prototypeRoom = function() {
                 .map((f) => { 
                     let nameInfo = f.name.split('_'); 
                     return { 
-                        priority: _.get(nameInfo, 1, 0)
-                        , count: _.get(nameInfo, 2, 1)
+                        priority: _.parseInt(_.get(nameInfo, 1, 0))
+                        , count: _.parseInt(_.get(nameInfo, 2, 1))
                         , from: _.get(nameInfo, 3, f.pos.roomName)
                         , to: _.get(nameInfo, 4, _.get(nameInfo, 0, r.name)) 
                     }; })
@@ -449,10 +449,10 @@ let prototypeRoom = function() {
                     let nameInfo = f.name.split('_');
                     let demoTarget = _.get(nameInfo, 2, "") != "" ? { id: _.get(nameInfo, 2, ""), pos: f.pos } : undefined; // NOTE: Assumes flag was placed on target structure
                     return { 
-                        priority: _.get(nameInfo, 1, 0)
+                        priority: _.parseInt(_.get(nameInfo, 1, 0))
                         , type: f.secondaryColor == COLOR_YELLOW ? "H" : "D" // NOTE: COLOR_YELLOW = Harvest (H), COLOR_RED = Demolish (D)
                         , target: demoTarget
-                        , count: _.get(nameInfo, 3, 1)
+                        , count: _.parseInt(_.get(nameInfo, 3, 1))
                         , to: _.get(nameInfo, 4, f.pos.roomName)
                         , from: _.get(nameInfo, 5, _.get(nameInfo, 0, r.name))
                     }; })

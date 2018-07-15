@@ -55,7 +55,8 @@ let roleHauler = {
                             "5873bbc811e3e4361b4d675b"
                             , "5873bbc811e3e4361b4d675c"
                             , "5873bbab11e3e4361b4d6400"
-                            , "5873bbab11e3e4361b4d63f9"
+                            , "5873bb9511e3e4361b4d6159"
+                            , "5873bb9511e3e4361b4d6157"
                             , "5873bbab11e3e4361b4d63fc"
                         ] 
                         , "W85N23": [
@@ -70,14 +71,14 @@ let roleHauler = {
                         , "W86N39": [
                             "5873bb9411e3e4361b4d6137" // W87N39
                             , "5873bb9411e3e4361b4d6138" // W87N39
-                            , "5873bb7e11e3e4361b4d5ef2" // W88N39
-                            , "5873bbdf11e3e4361b4d6a6f" // W84N39
+                            //, "5873bb7e11e3e4361b4d5ef2" // W88N39, no longer avaliable
+                            //, "5873bbdf11e3e4361b4d6a6f" // W84N39, no longer avaliable
                             , "5873bbaa11e3e4361b4d63cf" // W86N39
                         ]
                         , "W85N38": [
-                            "5873bbaa11e3e4361b4d63d2"
-                            , "5873bbc711e3e4361b4d672e"
-                            , "5873bbc711e3e4361b4d6731"
+                            "5873bbaa11e3e4361b4d63d2" // W86N38
+                            //, "5873bbc711e3e4361b4d672e" // W85N39, no longer avaliable
+                            , "5873bbc711e3e4361b4d6731" // W85N38
                         ]
                         , "W86N43": [
                             /*"5873bb9311e3e4361b4d612d"
@@ -128,7 +129,7 @@ let roleHauler = {
                             "57ef9cad86f108ae6e60ca52" // W64N32
                             //, "57ef9cad86f108ae6e60ca50" // W64N32 (may cause blockages)
                             , "57ef9cc386f108ae6e60ccb7" // W63N31
-                            , "57ef9c9886f108ae6e60c7d9" // W65N31
+                            //, "57ef9c9886f108ae6e60c7d9" // W65N31 Remote mined by Pimaco
                             , "57ef9cad86f108ae6e60ca54" // W64N31
                         ]
                         , "W55N31": [
@@ -249,10 +250,10 @@ let roleHauler = {
                                 creep.say(travelToIcons(creep) + "W86N28", true);
                                 return;
                             }
-                            else if (sourceID == "5873bbab11e3e4361b4d63f9") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "5873bb9511e3e4361b4d6159") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(39, 41, "W86N31"));
-                                creep.say(travelToIcons(creep) + "W86N31", true);
+                                creep.travelTo(new RoomPosition(13, 25, "W87N29"));
+                                creep.say(travelToIcons(creep) + "W87N29", true);
                                 return;
                             }
                             else if (sourceID == "5873bbe111e3e4361b4d6ac4") { // TODO: Remove this after the source has been added to memory
@@ -732,7 +733,8 @@ let roleHauler = {
                 }
                 
                 if (_.get(creep.room, ["controller", "my"], false) == true 
-                    && (creep.room.controller.ticksToDowngrade <= (CONTROLLER_DOWNGRADE[creep.room.controller.level] - Math.max(CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD - creep.ticksToLive, 0)))) {
+                    && (creep.room.controller.ticksToDowngrade <= (CONTROLLER_DOWNGRADE[creep.room.controller.level] - Math.max(CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD - creep.ticksToLive, 0))) 
+                    && _.get(creep.memory, ["role"], "exporter") != "exporter") {
                     ROLES["upgrader"].run(creep);
                     return;
                 }
@@ -857,7 +859,7 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_POWER_SPAWN] + "?", true);
                 }
             }
-            else {
+            else if (_.get(creep.memory, ["role"], "exporter") != "exporter") {
                 if (_.size(Game.constructionSites) > 0 && creep.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
                     ROLES["builder"].run(creep);
                 }

@@ -222,6 +222,8 @@ let globals = function() {
         // TODO: Add room name validation
         let theController = _.get(Game.rooms, [fromRoomName, "controller"], undefined);
         if (theController != undefined && theController.my == true) {
+            let theMarketOrders = _.find(Game.market.orders, (o) => (o.roomName == fromRoomName));
+            _.forEach(theMarketOrders, (o) => (Game.market.cancelOrder(o.id)));
             let theConstructionSites = theController.room.find(FIND_CONSTRUCTION_SITES);
             _.invoke(theConstructionSites, "remove");
             let theStructures = theController.room.find(FIND_STRUCTURES);
