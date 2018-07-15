@@ -83,18 +83,18 @@ let roleHauler = {
                             , "59791d3c55e51c000b0bcc1a" // E18S17
                         ]
                         , "E1S13": [
-                            "59790a4b833ada000b96f462" // E1S12
+                            /*"59790a4b833ada000b96f462" // E1S12
                             , "59790a4b833ada000b96f464" // E1S12
-                            , "59790a4b833ada000b96f431" // E2S13
+                            , */"59790a4b833ada000b96f431" // E2S13
                             , "59790a4b833ada000b96f434" // E1S13
                         ]
                         , "E2S11": [
                             "59790a4b833ada000b96f341" // E3S11
                             , "59790a4b833ada000b96f33f" // E3S11
-                            , "598869041a4816000a1a2dd2" // E1S11
+                            /*, "598869041a4816000a1a2dd2" // E1S11
                             , "598869041a4816000a1a2dd3" // E1S11
                             , "59790a4b833ada000b96f45c" // E2S12
-                            , "59790a4b833ada000b96f399" // E2S11
+                            */, "59790a4b833ada000b96f399" // E2S11
                         ]
                         , "E3S15": [
                             "59790a4b833ada000b96f3f8" // E5S15
@@ -449,7 +449,8 @@ let roleHauler = {
                 }
                 
                 if (_.get(creep.room, ["controller", "my"], false) == true 
-                    && (creep.room.controller.ticksToDowngrade <= (CONTROLLER_DOWNGRADE[creep.room.controller.level] - Math.max(CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD - creep.ticksToLive, 0)))) {
+                    && (creep.room.controller.ticksToDowngrade <= (CONTROLLER_DOWNGRADE[creep.room.controller.level] - Math.max(CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD - creep.ticksToLive, 0))) 
+                    && _.get(creep.memory, ["role"], "exporter") != "exporter") {
                     ROLES["upgrader"].run(creep);
                     return;
                 }
@@ -574,7 +575,7 @@ let roleHauler = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_POWER_SPAWN] + "?", true);
                 }
             }
-            else {
+            else if (_.get(creep.memory, ["role"], "exporter") != "exporter") {
                 if (_.size(Game.constructionSites) > 0 && creep.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
                     ROLES["builder"].run(creep);
                 }
