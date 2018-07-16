@@ -309,7 +309,7 @@ let prototypeSpawn = function() {
         }
         
         let energyAvaliable = this.room.energyCapacityAvailable;
-        if ((Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) { // TODO: Allow harvesters to scale gradually instead of jump between lowest to maximum scale
+        if ((Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) {
             energyAvaliable = _.max([this.room.energyAvailable, SPAWN_ENERGY_CAPACITY]); // start small if forced to build up from scratch
         }
         

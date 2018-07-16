@@ -19,11 +19,23 @@ let roleHauler = {
         }
         
         if (creep.memory.working == false) {
+            let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
+            let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
+            let theRecycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
+            let quickFill = (((_.get(Memory.rooms, [creep.memory.roomID, "creepCounts", "harvester"], 0) < _.get(Memory.rooms, [creep.memory.roomID, "creepMins", "harvester"], 1))
+                || (creep.energyAvaliableOnSpawn < _.get(Game.rooms, [creep.memory.roomID, "energyCapacityAvailable"], (creep.room.energyCapacityAvailable || SPAWN_ENERGY_CAPACITY))))
+                && ((theRecycleContainer != undefined 
+                        && theRecycleContainer.store[RESOURCE_ENERGY] > 0) 
+                    || (theStorage != undefined 
+                        && theStorage.store[RESOURCE_ENERGY] > 0) 
+                    || (theTerminal != undefined 
+                        & theTerminal.store[RESOURCE_ENERGY] > 0)));
             let source = Game.getObjectById(creep.memory.sourceID);
-            if (source == undefined
-                || source.energy == 0
-                || _.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas"
-                || _.get(source.room, ["controller", "reservation", "username"], "dragoonreas") != "dragoonreas") {
+            if (quickFill == false 
+                && (source == undefined
+                    || source.energy == 0
+                    || _.get(source.room, ["controller", "owner", "username"], "dragoonreas") != "dragoonreas"
+                    || _.get(source.room, ["controller", "reservation", "username"], "dragoonreas") != "dragoonreas")) {
                 if (source != undefined) {
                     source = undefined;
                     creep.memory.sourceID = undefined;
@@ -651,7 +663,54 @@ let roleHauler = {
                 }
             }
             
-            if (source != undefined) {
+            if (quickFill == true) {
+                if (theRecycleContainer != undefined
+                    && theRecycleContainer.store[RESOURCE_ENERGY] > 0) {
+                    err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.travelTo(theRecycleContainer);
+                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                    }
+                    else if (err == OK) {
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
+                    }
+                    else {
+                        incrementConfusedCreepCount(creep);
+                        creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
+                    }
+                }
+                else if (theStorage != undefined
+                    && theStorage.store[RESOURCE_ENERGY] > 0) {
+                    err = creep.withdraw(theStorage, RESOURCE_ENERGY);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.travelTo(theStorage);
+                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
+                    }
+                    else if (err == OK) {
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
+                    }
+                    else {
+                        incrementConfusedCreepCount(creep);
+                        creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
+                    }
+                }
+                else if (theTerminal != undefined 
+                    && theTerminal.store[RESOURCE_ENERGY] > 0) {
+                    err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.travelTo(theTerminal);
+                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                    }
+                    else if (err == OK) {
+                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
+                    }
+                    else {
+                        incrementConfusedCreepCount(creep);
+                        creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
+                    }
+                }
+            }
+            else if (source != undefined) {
                 let err = creep.harvest(source);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(source);
