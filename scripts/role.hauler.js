@@ -379,54 +379,8 @@ let roleHauler = {
                 }
             }
             
-            if (quickFill == true) {
-                if (theRecycleContainer != undefined
-                    && theRecycleContainer.store[RESOURCE_ENERGY] > 0) {
-                    err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
-                    if (err == ERR_NOT_IN_RANGE) {
-                        creep.travelTo(theRecycleContainer);
-                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
-                    }
-                    else if (err == OK) {
-                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
-                    }
-                    else {
-                        incrementConfusedCreepCount(creep);
-                        creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
-                    }
-                }
-                else if (theStorage != undefined
-                    && theStorage.store[RESOURCE_ENERGY] > 0) {
-                    err = creep.withdraw(theStorage, RESOURCE_ENERGY);
-                    if (err == ERR_NOT_IN_RANGE) {
-                        creep.travelTo(theStorage);
-                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
-                    }
-                    else if (err == OK) {
-                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
-                    }
-                    else {
-                        incrementConfusedCreepCount(creep);
-                        creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
-                    }
-                }
-                else if (theTerminal != undefined 
-                    && theTerminal.store[RESOURCE_ENERGY] > 0) {
-                    err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
-                    if (err == ERR_NOT_IN_RANGE) {
-                        creep.travelTo(theTerminal);
-                        creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
-                    }
-                    else if (err == OK) {
-                        creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
-                    }
-                    else {
-                        incrementConfusedCreepCount(creep);
-                        creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
-                    }
-                }
-            }
-            else if (source != undefined) {
+            if (source != undefined 
+                && quickFill == false) {
                 let err = creep.harvest(source);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(source);
@@ -438,6 +392,51 @@ let roleHauler = {
                 else {
                     incrementConfusedCreepCount(creep);
                     creep.say(ICONS["harvest"] + ICONS["source"] + "?", true);
+                }
+            }
+            else if (theRecycleContainer != undefined
+                && theRecycleContainer.store[RESOURCE_ENERGY] > 0) {
+                err = creep.withdraw(theRecycleContainer, RESOURCE_ENERGY);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.travelTo(theRecycleContainer);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                }
+                else if (err == OK) {
+                    creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_CONTAINER], true);
+                }
+                else {
+                    incrementConfusedCreepCount(creep);
+                    creep.say(ICONS[STRUCTURE_CONTAINER] + "?", true);
+                }
+            }
+            else if (theStorage != undefined
+                && theStorage.store[RESOURCE_ENERGY] > 0) {
+                err = creep.withdraw(theStorage, RESOURCE_ENERGY);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.travelTo(theStorage);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
+                }
+                else if (err == OK) {
+                    creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
+                }
+                else {
+                    incrementConfusedCreepCount(creep);
+                    creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
+                }
+            }
+            else if (theTerminal != undefined 
+                && theTerminal.store[RESOURCE_ENERGY] > 0) {
+                err = creep.withdraw(theTerminal, RESOURCE_ENERGY);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.travelTo(theTerminal);
+                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                }
+                else if (err == OK) {
+                    creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
+                }
+                else {
+                    incrementConfusedCreepCount(creep);
+                    creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
             else if (creep.carry[RESOURCE_ENERGY] > 0) {
