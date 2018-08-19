@@ -626,10 +626,13 @@ module.exports.loop = function () {
         Memory.rooms[roomID].clearPathCaches = false;
     }
     
-    // Garbage collection for sell orders
-    let roomResourceOrders = _.groupBy(Game.market.orders, (o) => (o.roomName + o.resourceType));
+    // Garbage collection for orders
+    let roomResourceOrders = _.groupBy(Game.market.orders, (o) => (o.roomName + o.type + o.resourceType));
     _.forEach(roomResourceOrders, (rROs) => {
-        if (_.get(Game.rooms, [_.first(rROs).roomName, "terminal", "store", _.first(rROs).resourceType], 0) == 0) {
+        if ((_.get(_.first(rROs), "type", "") == ORDER_SELL 
+                && _.get(Game.rooms, [_.first(rROs).roomName, "terminal", "store", _.first(rROs).resourceType], 0) == 0) 
+            || (_.get(_.first(rROs), "type", "") == ORDER_BUY 
+                && _.get(_.first(rROs), "remainingAmount", 0) == 0)) {
             _.forEach(rROs, (rRO) => { Game.market.cancelOrder(rRO.id); });
             console.log("Running garbage collection on sell order of " + _.first(rROs).resourceType + " from " + _.first(rROs).roomName);
         }
@@ -1412,6 +1415,66 @@ module.exports.loop = function () {
                         }
                     }
                 }
+                else {
+                    let buyOrder = _.find(Game.market.orders, (o) => (
+                        o.roomName == roomID 
+                        && o.type == ORDER_BUY 
+                        && o.resourceType == RESOURCE_POWER 
+                    ));
+                    let buyOrders = _.filter(Game.market.orderCache(ORDER_BUY, RESOURCE_POWER), (o) => (
+                        o.price <= 2.5 // NOTE: Don't pay over 2.5 Credits per Power
+                        && o.amount >= 100 // NOTE: Don't consider any buy order for less than 100 Power serious competition
+                        && o.roomName != roomID
+                    ));
+                    if (buyOrders.length > 0) {
+                        let buyPrice = _.get(_.max(buyOrders, (o) => (o.price)), ["price"], 2.5);
+                        let amountToBuy = requiredPower;
+                        if (buyOrder == undefined) {
+                            let deposit = buyPrice * amountToBuy * 0.05;
+                            if (deposit <= Game.market.credits) {
+                                let err = Game.market.createOrder(ORDER_BUY, RESOURCE_POWER, buyPrice, amountToBuy, roomID);
+                                if (err == OK) {
+                                    console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
+                                }
+                                else {
+                                    console.log(roomID, "createOrder", err);
+                                }
+                            }
+                        }
+                        else {
+                            if (buyOrder.price < buyPrice 
+                                || buyOrder.remainingAmount == 0) {
+                                let deposit = Math.max((buyPrice - buyOrder.price), 0) * buyOrder.remainingAmount * 0.05;
+                                if (deposit <= Game.market.credits) {
+                                    let err = Game.market.changeOrderPrice(buyOrder.id, buyPrice);
+                                    if (err == OK) {
+                                        console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
+                                    }
+                                    else {
+                                        console.log(roomID, "changeOrderPrice", err);
+                                    }
+                                }
+                            }
+                            buyPrice = Math.max(buyOrder.price, buyPrice);
+                            if (buyOrder.remainingAmount < amountToBuy) {
+                                let amountToAdd = amountToBuy - buyOrder.remainingAmount;
+                                let deposit = amountToAdd * buyPrice * 0.05;
+                                if (deposit <= Game.market.credits) {
+                                    let err = Game.market.extendOrder(buyOrder.id, amountToAdd);
+                                    if (err == OK) {
+                                        console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
+                                    }
+                                    else {
+                                        console.log(roomID, "extendOrder", err);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        console.log("No Power Orders: " + roomID);
+                    }
+                }
             }
             
             if (theTerminal.needsEnergy == true 
@@ -1427,7 +1490,7 @@ module.exports.loop = function () {
                     && o.roomName != roomID
                 ));
                 if (buyOrders.length > 0) {
-                    let buyPrice = _.get(_.max(buyOrders, (o) => (o.price)), ["price"], 0.02);
+                    let buyPrice = _.get(_.max(buyOrders, (o) => (o.price)), ["price"], 0.05);
                     let amountToBuy = theTerminal.energyCapacityFree;
                     if (buyOrder == undefined) {
                         let deposit = buyPrice * amountToBuy * 0.05;
