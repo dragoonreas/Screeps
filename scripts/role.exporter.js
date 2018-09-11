@@ -174,8 +174,8 @@ let roleExporter = {
                                     || structure.structureType == STRUCTURE_EXTENSION 
                                     || structure.structureType == STRUCTURE_LINK) 
                                 && structure.energy == 0)) {
-                            structure = _.find(creep.room.find(((_.any(shuttingDown, (r) => (sentFrom)) == true) ? FIND_STRUCTURES : FIND_HOSTILE_STRUCTURES)), (s) => (
-                                (((s.structureType == STRUCTURE_CONTAINER 
+                            structure = creep.pos.findClosestByPath(((_.any(shuttingDown, (r) => (sentFrom)) == true) ? FIND_STRUCTURES : FIND_HOSTILE_STRUCTURES), { filter: (s) => (
+                                ((s.structureType == STRUCTURE_CONTAINER 
                                         && _.sum(s.store) > 0)
                                     || (s.structureType == STRUCTURE_POWER_SPAWN 
                                         && (s.energy > 0 
@@ -188,10 +188,10 @@ let roleExporter = {
                                             || s.structureType == STRUCTURE_EXTENSION 
                                             || s.structureType == STRUCTURE_LINK) 
                                         && s.energy > 0))
-                                && _.filter(s.pos.lookFor(LOOK_STRUCTURES), (r) => (
+                                && (_.filter(s.pos.lookFor(LOOK_STRUCTURES), (r) => (
                                     r.structureType == STRUCTURE_RAMPART 
                                     && r.my == false 
-                                    && r.isPublic == false)) < 1)));
+                                    && r.isPublic == false)) < 1))});
                             
                             if (structure != undefined) {
                                 creep.memory.withdrawStructure = { 
