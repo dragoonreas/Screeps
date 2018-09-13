@@ -1,3 +1,5 @@
+const ONE_MOVE_RATIO = 1 / MAX_CREEP_SIZE;
+
 const DEFAULT_HARVEST_COUNT = 6; // NOTE: Arbitary 'magic number'
 
 /*
@@ -42,6 +44,8 @@ let prototypeSpawn = function() {
             , executingRole: "spawn"
             , working: false // TODO: Only apply the working property to creeps with carry parts
         };
+        
+        let needsHeal = false; // Flag that the creep needs a single heal part added (mainly used where it's not viable for the creep to return home for repairs from towers)
         
         if (roleName == "miner") {
             options.memory.mining = false;
@@ -171,14 +175,24 @@ let prototypeSpawn = function() {
                     options.memory.roomSentTo = "W42N51";
                 }
             }*/
+            if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
+                needsHeal = true;
+            }
         }
         else if (roleName == "exporter") {
             options.memory.roomSentFrom = _.get(this.room.nextExporter, "from", this.room.name);
             options.memory.roomSentTo = _.get(this.room.nextExporter, "to", this.room.name);
+            if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentFrom", this.room.name)) > 1
+                || Game.map.getRoomLinearDistance(_.get(options.memory, "roomSentFrom", this.room.name), _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
+                needsHeal = true;
+            }
         }
         else if (roleName == "demolisher") {
             options.memory.roomSentTo = _.get(this.room.nextDemolisher, "to", _.get(Memory.rooms, [this.room.name, "harvestRooms", 0], undefined));
             options.memory.demolishStructure = _.get(this.room.nextDemolisher, "target", undefined);
+            if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
+                needsHeal = true;
+            }
         }
         else if (roleName == "claimer") {
             /*if (this.room.name == "W87N29") {
@@ -321,14 +335,16 @@ let prototypeSpawn = function() {
             5.0: To maintain a speed of 1 per tick over swamp terrain
             1.0: To maintain a speed of 1 per tick over plain terrain
             0.5: To maintain a speed of 1 per tick over roads
-            0.0: To maintain the slowest speed, using only a single move part
+            ONE_MOVE_RATIO: To maintain the slowest speed, using only a single move part
+            0.0: To never move from where it was spawned
         */
         let moveRatio = 1;
         
         /*
             The body template describes the smallest version of the body the creep will have, minus move & non-scaling parts
-            Move parts are placed at set intervals behind all other parts to maintain a constant speed based on the speedRatio
-            Tough parts are always placed infront non-move parts
+            Tough parts are always placed infront of all other parts
+            Heal parts are always placed behind all other parts
+            Move parts are placed behind all non-heal parts in a number based on the moveRatio
             All other parts are placed in the order of the first occurance of that part
             All parts are added in ratios relative to the rest of the parts that appear in the body template
         */
@@ -360,7 +376,7 @@ let prototypeSpawn = function() {
                 || this.room.name == "W52N47" 
                 || this.room.name == "W48N52"
                 || this.room.name == "W42N51") { // these rooms have a source in range of the controller
-                moveRatio = 0;
+                moveRatio = ONE_MOVE_RATIO;
                 bodyTemplate = [WORK]; // these upgraders also have at least one carry part that gets multiplied dynamically with avaliable energy later
             }
             else if (this.room.controller.level > 3 && _.size(this.room.sources) > 1) { // NOTE: Assumes roads built between the dedicated upgrader source (2 source rooms only) and the controller at RCL 4 onwards
@@ -388,28 +404,37 @@ let prototypeSpawn = function() {
         // TODO: SK Miner (10W 2C 14M 10RA 8H, eg: E64N36 - o4kapuk)
         
         if (bodyTemplate.length == 0) {
-            moveRatio = 5; // since only using move parts will allow movement each tick no matter the terrain the moveRatio is automatically set to 5, mainly to ensure that the moveRatio == 0 sections aren't run accidently
+            moveRatio = 5; // since only using move parts will allow movement each tick no matter the terrain the moveRatio is automatically set to 5, mainly to ensure that the moveRatio == ONE_MOVE_RATIO sections aren't run accidently
             bodyTemplate = [MOVE];
         }
-        else if (moveRatio > 0) {
+        else if (moveRatio > ONE_MOVE_RATIO) {
             let bodyTemplatePartCount = bodyTemplate.length;
-            if (roleName == "hauler") {
-                bodyTemplatePartCount += 1; // accounts for the single work part haulers have that doesn't get multiplied dynamically with avaliable energy
-            } // don't need to account for the extra carry on the miner since it'll be empty the only time it moves
             bodyTemplate.push(_.fill(Array(Math.ceil((bodyTemplatePartCount * moveRatio))), MOVE));
             bodyTemplate = _.flattenDeep(bodyTemplate);
         }
         
         let bodyCost = _.sum(bodyTemplate, (bp) => (BODYPART_COST[bp]));
         
-        if (moveRatio == 0) {
-            energyAvaliable -= BODYPART_COST[MOVE]; // when move ratio is 0, remove energy from the total avaliable to account for the 1 mandatory move part that will be added that's not included in the body cost
+        if (moveRatio == ONE_MOVE_RATIO) {
+            energyAvaliable -= BODYPART_COST[MOVE]; // when move ratio is ONE_MOVE_RATIO, remove energy from the total avaliable to account for the 1 move part that will be added that's not included in the body cost
         }
-        if (roleName == "hauler") {
-            energyAvaliable -= BODYPART_COST[WORK]; // accounts for the single work part haulers have that doesn't get multiplied dynamically with avaliable energy
+        if (roleName == "hauler") { // accounts for the single work part haulers have that doesn't get multiplied dynamically with avaliable energy
+            energyAvaliable -= BODYPART_COST[WORK];
+            if (moveRatio > ONE_MOVE_RATIO) { // TODO: Make a proper check for if an extra move part is needed or not
+                energyAvaliable -= BODYPART_COST[MOVE];
+            }
         }
-        else if (roleName == "miner") {
-            energyAvaliable -= BODYPART_COST[CARRY]; // accounts for the single carry part miners have that doesn't get multiplied dynamically with avaliable energy
+        else if (roleName == "miner") { // accounts for the single carry part miners have that doesn't get multiplied dynamically with avaliable energy
+            energyAvaliable -= BODYPART_COST[CARRY];
+            if (moveRatio > ONE_MOVE_RATIO) { // TODO: Make a proper check for if an extra move part is needed or not
+                energyAvaliable -= BODYPART_COST[MOVE];
+            }
+        }
+        else if (needsHeal == true) { // accounts for the single heal part some creeps need that doesn't get multiplied dynamically with avaliable energy
+            energyAvaliable -= BODYPART_COST[HEAL];
+            if (moveRatio > ONE_MOVE_RATIO) { // TODO: Make a proper check for if an extra move part is needed or not
+                energyAvaliable -= BODYPART_COST[MOVE];
+            }
         }
         
         let bodyPartCounts = _.countBy(bodyTemplate);
@@ -438,7 +463,7 @@ let prototypeSpawn = function() {
         */
         const GENERAL_WORKER_CARRY_PART_CAP = Math.ceil(this.room.energyCapacityAvailable / DEFAULT_HARVEST_COUNT / (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / EXTENSION_ENERGY_CAPACITY[1]) / CARRY_CAPACITY);
         
-        let slowUpgraderCarryCount = 1; // Used for upgraders with moveRatio == 0
+        let slowUpgraderCarryCount = 1; // Used for upgraders with moveRatio == ONE_MOVE_RATIO
         
         let partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), GENERAL_WORKER_CARRY_PART_CAP);
         if (roleName == "miner") {
@@ -453,7 +478,7 @@ let prototypeSpawn = function() {
             partMultiplier = Math.floor(energyAvaliable / bodyCost); // go all out if we're under attack, going after a power bank or doing some ad-hoc stuff
         }
         else if (roleName == "upgrader") {
-            if (moveRatio == 0) {
+            if (moveRatio == ONE_MOVE_RATIO) {
                 /*const TOTAL_CARRY = (bodyPartCounts[CARRY] || 1) * CARRY_CAPACITY;
                 const TICKS_TO_FILL = TOTAL_CARRY / ((bodyPartCounts[WORK] || 1) * HARVEST_POWER);
                 const TICKS_TO_UPGRADE = TOTAL_CARRY / ((bodyPartCounts[WORK] || 1) * UPGRADE_CONTROLLER_POWER);
@@ -492,14 +517,15 @@ let prototypeSpawn = function() {
         
         // can't use MAX_CREEP_SIZE directly as we need to account for parts not included in the bodyTemplate
         let maxCreepSize = MAX_CREEP_SIZE;
-        if (moveRatio == 0) {
+        if (moveRatio == ONE_MOVE_RATIO) {
             --maxCreepSize;
             if (roleName == "upgrader") {
                 maxCreepSize -= slowUpgraderCarryCount;
             }
         }
-        if (roleName == "hauler" 
-            || roleName == "miner") {
+        if (roleName == "hauler" // haulers have extra work part
+            || roleName == "miner" // miners have extra carry part
+            || needsHeal == true) { // some creeps have extra heal part
             --maxCreepSize;
         }
         partMultiplier = Math.min(partMultiplier, Math.floor(maxCreepSize / ((bodyTemplate.length > 0) ? bodyTemplate.length : 1))); // make sure we only don't try and make a creep with more than 50 body parts
@@ -520,12 +546,12 @@ let prototypeSpawn = function() {
             body.push(CARRY);
         }
         else if (roleName == "upgrader" 
-            && moveRatio == 0) {
+            && moveRatio == ONE_MOVE_RATIO) {
             body.push(_.fill(Array(slowUpgraderCarryCount), CARRY));
         }
         
         // Add the move part(s)
-        if (moveRatio == 0) {
+        if (moveRatio == ONE_MOVE_RATIO) {
             body.push(MOVE);
             bodyPartCounts[MOVE] = 1;
         }
@@ -534,10 +560,14 @@ let prototypeSpawn = function() {
         }
         else {
             body = _.flattenDeep(body);
-            body.push(_.fill(Array(Math.ceil((body.length + partMultiplier * (bodyPartCounts[HEAL] || 0)) * moveRatio)), MOVE));
+            body.push(_.fill(Array(Math.ceil((body.length + partMultiplier * (bodyPartCounts[HEAL] || 0) + (((roleName == "hauler") || (needsHeal == true)) ? 1 : 0)) * moveRatio)), MOVE));
         }
         
-        body.push(_.fill(Array(partMultiplier * (bodyPartCounts[HEAL] || 0)), HEAL)); // add any heal parts last
+        // add any heal parts last
+        if (needsHeal = true) {
+            body.push(HEAL);
+        }
+        body.push(_.fill(Array(partMultiplier * (bodyPartCounts[HEAL] || 0)), HEAL));
         
         body = _.flattenDeep(body);
         
@@ -549,11 +579,11 @@ let prototypeSpawn = function() {
         
         options.memory.spawnTick = Game.time + (body.length * CREEP_SPAWN_TIME) - 1 // -1 because it uses the last tick to leave the spawn
         
-		// Worst case (full carry parts) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
+		// Worst case (full/destroyed carry parts) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
         options.memory.speeds = {
-            ["1"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1)
-            , ["2"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1)
-            , ["10"]: Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1)
+            ["1"]: (moveRatio == 0 ? 0 : Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1))
+            , ["2"]: (moveRatio == 0 ? 0 : Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1))
+            , ["10"]: (moveRatio == 0 ? 0 : Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1))
         };
         
         let nameList = MALE_NAMES;
@@ -562,8 +592,7 @@ let prototypeSpawn = function() {
         let numGivenNames = 0;
         do {
             nameList = ((Math.random() > 0.5) ? MALE_NAMES : FEMALE_NAMES);
-            numGivenNames++;
-            creepName = _.sample(nameList, numGivenNames).toString().replace(",", "");
+            creepName = _.sample(nameList, ++numGivenNames).toString().replace(",", "");
             nameExists = _.any(Memory.creeps, (cm, cn) => (cn == creepName));
         } while (nameExists == true);
         

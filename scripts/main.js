@@ -1759,12 +1759,14 @@ module.exports.loop = function () {
         if (creep.memory.role != "attacker" 
             && creep.memory.role != "powerHarvester") {
             if (creep.hits < creep.hitsMax 
-                && creep.memory.role != "adaptable" 
                 && creep.memory.role != "healer") { // TODO: Check if creep has active heal parts instead
-                creep.memory.droppedResource = undefined;
-                creep.memory.tombstone = undefined;
-                ROLES["recyclable"].run(creep);
-                runningRole = true;
+                creep.heal(creep);
+                if (creep.memory.role != "adaptable") {
+                    creep.memory.droppedResource = undefined;
+                    creep.memory.tombstone = undefined;
+                    ROLES["recyclable"].run(creep);
+                    runningRole = true;
+                }
             }
             else if (creep.carryCapacityAvailable > 0
                 && (_.get(creep.memory, ["droppedResource", "id"], undefined) != undefined 
