@@ -1525,7 +1525,7 @@ module.exports.loop = function () {
                                     if (deposit <= Game.market.credits) {
                                         let err = Game.market.createOrder(ORDER_SELL, resourceName, sellPrice, resourceCount, roomID);
                                         if (err == OK) {
-                                            console.log("Created " + ORDER_SELL + " for " + resourceCount + " " + resourceName + " from " + roomID + " using " + deposit + " credits for " + (sellPrice * resourceCount).toFixed(3) + " (" + sellPrice + " each) credits");
+                                            console.log("Created " + ORDER_SELL + " for " + resourceCount + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * resourceCount).toFixed(3) + " (" + sellPrice + " each) credits");
                                         }
                                         else {
                                             console.log(roomID, "createOrder", err);
@@ -1539,7 +1539,7 @@ module.exports.loop = function () {
                                         if (deposit <= Game.market.credits) {
                                             let err = Game.market.changeOrderPrice(sellOrder.id, sellPrice);
                                             if (err == OK) {
-                                                console.log("Changed " + ORDER_SELL + " price for " + sellOrder.remainingAmount + " " + resourceName + " from " + roomID + " using " + deposit + " credits from " + (sellOrder.price * sellOrder.remainingAmount).toFixed(3) + " (" + sellOrder.price + " each) to " + (sellPrice * sellOrder.remainingAmount).toFixed(3) + " (" + sellPrice + " each) credits");
+                                                console.log("Changed " + ORDER_SELL + " price for " + sellOrder.remainingAmount + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (sellOrder.price * sellOrder.remainingAmount).toFixed(3) + " (" + sellOrder.price + " each) to " + (sellPrice * sellOrder.remainingAmount).toFixed(3) + " (" + sellPrice + " each) credits");
                                             }
                                             else {
                                                 console.log(roomID, "changeOrderPrice", err);
@@ -1553,7 +1553,7 @@ module.exports.loop = function () {
                                         if (deposit <= Game.market.credits) {
                                             let err = Game.market.extendOrder(sellOrder.id, amountToAdd);
                                             if (err == OK) {
-                                                console.log("Changed " + ORDER_SELL + " amount from " + sellOrder.remainingAmount + " to " + resourceCount + " " + resourceName + " from " + roomID + " using " + deposit + " credits for " + (sellPrice * resourceCount).toFixed(3) + " (" + sellPrice + " each) credits");
+                                                console.log("Changed " + ORDER_SELL + " amount from " + sellOrder.remainingAmount + " to " + resourceCount + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * resourceCount).toFixed(3) + " (" + sellPrice + " each) credits");
                                             }
                                             else {
                                                 console.log(roomID, "extendOrder", err);
@@ -1623,7 +1623,7 @@ module.exports.loop = function () {
                             if (deposit <= Game.market.credits) {
                                 let err = Game.market.createOrder(ORDER_BUY, RESOURCE_POWER, buyPrice, amountToBuy, roomID);
                                 if (err == OK) {
-                                    console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
+                                    console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
                                 }
                                 else {
                                     console.log(roomID, "createOrder", err);
@@ -1637,7 +1637,7 @@ module.exports.loop = function () {
                                 if (deposit <= Game.market.credits) {
                                     let err = Game.market.changeOrderPrice(buyOrder.id, buyPrice);
                                     if (err == OK) {
-                                        console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
+                                        console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
                                     }
                                     else {
                                         console.log(roomID, "changeOrderPrice", err);
@@ -1651,7 +1651,7 @@ module.exports.loop = function () {
                                 if (deposit <= Game.market.credits) {
                                     let err = Game.market.extendOrder(buyOrder.id, amountToAdd);
                                     if (err == OK) {
-                                        console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
+                                        console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
                                     }
                                     else {
                                         console.log(roomID, "extendOrder", err);
@@ -1686,7 +1686,7 @@ module.exports.loop = function () {
                         if (deposit <= Game.market.credits) {
                             let err = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, buyPrice, amountToBuy, roomID);
                             if (err == OK) {
-                                console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
+                                console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
                             }
                             else {
                                 console.log(roomID, "createOrder", err);
@@ -1700,7 +1700,7 @@ module.exports.loop = function () {
                             if (deposit <= Game.market.credits) {
                                 let err = Game.market.changeOrderPrice(buyOrder.id, buyPrice);
                                 if (err == OK) {
-                                    console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
+                                    console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
                                 }
                                 else {
                                     console.log(roomID, "changeOrderPrice", err);
@@ -1714,7 +1714,7 @@ module.exports.loop = function () {
                             if (deposit <= Game.market.credits) {
                                 let err = Game.market.extendOrder(buyOrder.id, amountToAdd);
                                 if (err == OK) {
-                                    console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
+                                    console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
                                 }
                                 else {
                                     console.log(roomID, "extendOrder", err);
