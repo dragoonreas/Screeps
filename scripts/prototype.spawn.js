@@ -564,7 +564,7 @@ let prototypeSpawn = function() {
         }
         
         // add any heal parts last
-        if (needsHeal = true) {
+        if (needsHeal == true) {
             body.push(HEAL);
         }
         body.push(_.fill(Array(partMultiplier * (bodyPartCounts[HEAL] || 0)), HEAL));
