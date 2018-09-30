@@ -497,7 +497,7 @@ module.exports = function(globalOpts = {}){
             let left = ((_.get(exits, LEFT, undefined) == undefined) ? 1 : 0);
             for (let y = top; y <= bottom; ++y) {
                 for (let x = left; x <= right; x += ((y % 49 == 0) ? 1 : (49 - left))) {
-                    if (matrix.get(x, y) < 0x03 && (terrain.get(x, y) & TERRAIN_MASK_WALL) == true) {
+                    if (matrix.get(x, y) < 0x03 && (terrain.get(x, y) & TERRAIN_MASK_WALL) == false) {
                         matrix.set(x, y, 0x03);
                     }
                 }
