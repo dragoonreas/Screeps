@@ -1156,15 +1156,15 @@ module.exports.loop = function () {
                 && theController.safeModeCooldown == undefined 
                 && theController.safeModeAvaliable > 0 
                 && theController.upgradeBlocked == undefined 
-                && theController.ticksToDowngrade > CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD 
+                && theController.ticksToDowngrade > ((CONTROLLER_DOWNGRADE[theController.level] / 2) - CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD) 
                 && (theController.level < 3 
-                || _.some(Game.spawns, (s) => (
-                    s.room.name == roomID 
-                    && s.hits < s.hitsMax 
-                    && s.isActive() == true)) == true // TODO: Calculate the maximum damage output of hostile creeps within range a spawn, and activate safemode if the combined HP of the spawn and rampart covering it is <= x2 the damage output calculated (x2 to account for damage taken this turn if their attacks get run before our safemode)
-                || _.some(invaders, (i) => (
-                    _.some(Memory.agressivePlayers, (aP) => (
-                        i.owner.username == aP)))) == true)) { // TODO: Check that this is all working
+                    || _.some(Game.spawns, (s) => (
+                        s.room.name == roomID 
+                        && s.hits < s.hitsMax 
+                        && s.isActive() == true)) == true // TODO: Calculate the maximum damage output of hostile creeps within range a spawn, and activate safemode if the combined HP of the spawn and rampart covering it is <= x2 the damage output calculated (x2 to account for damage taken this turn if their attacks get run before our safemode)
+                    || _.some(invaders, (i) => (
+                        _.some(Memory.agressivePlayers, (aP) => (
+                            i.owner.username == aP)))) == true)) { // TODO: Check that this is all working
 				//console.log("Attempting to activate Safe Mode in: " + roomID);
 				//Game.notify("Attempting to activate Safe Mode in: " + roomID, 30);
 				let err = theController.activateSafeMode();
@@ -1174,6 +1174,8 @@ module.exports.loop = function () {
 				}
 			}
 			else if (_.get(theRoom, ["controller", "my"], false) == true && justNPCs == false && highestTargetWeighting > 0) { // TODO: Remove after defences have been properly tested
+				//console.log("Attempting to activate (backup) Safe Mode in: " + roomID);
+				//Game.notify("Attempting to activate (backup) Safe Mode in: " + roomID, 30);
 				let err = theController.activateSafeMode();
 				if (err == OK) {
 				    console.log("Activated (backup) Safe Mode in: " + roomID);
