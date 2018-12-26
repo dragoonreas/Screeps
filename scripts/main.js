@@ -350,7 +350,11 @@ _.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
     , all: 1
 });*/
 
-// NOTE: To delete old room memory from console: _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
+/*
+    NOTE:
+    To delete old room memory from console:
+    _.pull(managedRooms, <roomName>); delete Memory.rooms.<roomName>;
+*/
 let managedRooms = [];
 for (let roomID in Memory.rooms) {
     if (Memory.rooms[roomID].repairerTypeMins != undefined) {

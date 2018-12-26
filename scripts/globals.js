@@ -216,7 +216,34 @@ let globals = function() {
             .filter((r) => (_.get(r, ["controller", "my"], false) == true))
             .forEach((r) => { console.log(r.name + ": " + _.get(r, ["controller", "safeModeAvailable"], 0) + "/" + Math.max(0, _.get(r, ["controller", "level"], 0) - 1)); })
             .run();
-    }
+    };
+    
+    global.listStorageContents = function() {
+        _.forEach(Game.rooms, (r, rn) => {
+            if (_.get(r, ["storage", "my"], false) == true) {
+                console.log(rn + " storage: ");
+                _.forEach(_.get(r, ["storage", "store"], { RESOURCE_ENERGY: 0 }), (q, rt) => (
+                    console.log("\t" + rt + ": " + q))
+                );
+            }
+        });
+    };
+    
+    global.listTerminalContents = function() {
+        _.forEach(Game.rooms, (r, rn) => {
+            if (_.get(r, ["terminal", "my"], false) == true) {
+                console.log(rn + " terminal: ");
+                _.forEach(_.get(r, ["terminal", "store"], { RESOURCE_ENERGY: 0 }), (q, rt) => (
+                    console.log("\t" + rt + ": " + q))
+                );
+            }
+        });
+    };
+    
+    global.listRoomContents = function() {
+        listStorageContents();
+        listTerminalContents();
+    };
     
     global.relocateRoom = function(fromRoomName, toRoomName) {
         // TODO: Add room name validation
