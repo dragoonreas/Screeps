@@ -1575,7 +1575,7 @@ module.exports.loop = function () {
                                 let sendAmount = Math.min(resourceCount, ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)), _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0));
                                 let energyCost = Game.market.calcTransactionCost(resourceCount, roomID, sellOrderRoom);
                                 if (energyCost <= terminalEnergy) {
-                                    let err = theTerminal.send(resourceName, resourceCount, sellOrderRoom, "To extend order " + sellOrder.id);
+                                    let err = theTerminal.send(resourceName, sendAmount, sellOrderRoom, "To extend order " + sellOrder.id);
                                     if (err == OK) {
                                         madeTransaction = true;
                                     }

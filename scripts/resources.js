@@ -159,7 +159,7 @@ function summarize_room_internal(room) {
     // Energy in a source when it resets (wasted/lost energy)
 
     let retval = {
-        room_name: room.name, // In case this gets taken out of context
+        //room_name: room.name, // In case this gets taken out of context
         controller_level,
         controller_progress,
         controller_needed,
@@ -172,7 +172,7 @@ function summarize_room_internal(room) {
         energy_cap,
         num_sources,
         source_energy,
-        mineral_type,
+        //mineral_type,
         mineral_amount,
         num_extractors,
         has_storage,
