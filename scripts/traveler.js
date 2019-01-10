@@ -32,7 +32,7 @@ module.exports = function(globalOpts = {}){
         exportTraveler:    true,
         installTraveler:   false,
         installPrototype:  true,
-        maxOps:            40000, // 50 * 50 * 16 (tiles in room * max rooms)
+        maxOps:            20000, // 50 * 50 * 64 / 8 (tiles in room * max rooms / adjacent tiles)
         defaultStuckValue: 3,
         reportThreshold:   2000,
         visualisePathStyle:undefined,
@@ -42,7 +42,7 @@ module.exports = function(globalOpts = {}){
         constructor() {
         }
         findAllowedRooms(origin, destination, options = {}) {
-            _.defaults(options, { restrictDistance: 16 });
+            _.defaults(options, { restrictDistance: 64 });
             if (Game.map.getRoomLinearDistance(origin, destination) > options.restrictDistance) {
                 return;
             }
@@ -247,7 +247,7 @@ module.exports = function(globalOpts = {}){
                     console.log("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                     Game.notify("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                 }
-                _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], (creep.room.controller.level >= 1 ? Game.time + EST_TICKS_PER_DAY : 0));
+                _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], _.get(creep.room, ["controllerMem", "neutralAt"], 0));
             }
             // initialize data object
             if (!creep.memory._travel) {

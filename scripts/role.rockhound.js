@@ -116,30 +116,30 @@ let roleRockhound = {
                     else {
                         incrementIdleCreepCount(creep);
                         switch (creep.saying) {
-                            case ICONS["wait0"] + ICONS["harvest"]: creep.say(ICONS["wait1"] + ICONS["harvest"], true); break;
-                            case ICONS["wait1"] + ICONS["harvest"]: creep.say(ICONS["wait2"] + ICONS["harvest"], true); break;
-                            case ICONS["wait2"] + ICONS["harvest"]: creep.say(ICONS["wait3"] + ICONS["harvest"], true); break;
-                            case ICONS["wait3"] + ICONS["harvest"]: creep.say(ICONS["wait4"] + ICONS["harvest"], true); break;
-                            case ICONS["wait4"] + ICONS["harvest"]: creep.say(ICONS["wait5"] + ICONS["harvest"], true); break;
-                            case ICONS["wait5"] + ICONS["harvest"]: creep.say(ICONS["wait6"] + ICONS["harvest"], true); break;
-                            case ICONS["wait6"] + ICONS["harvest"]: creep.say(ICONS["wait7"] + ICONS["harvest"], true); break;
-                            case ICONS["wait7"] + ICONS["harvest"]: creep.say(ICONS["wait8"] + ICONS["harvest"], true); break;
-                            case ICONS["wait8"] + ICONS["harvest"]: creep.say(ICONS["wait9"] + ICONS["harvest"], true); break;
-                            case ICONS["wait9"] + ICONS["harvest"]: creep.say(ICONS["wait10"] + ICONS["harvest"], true); break;
-                            case ICONS["wait10"] + ICONS["harvest"]: creep.say(ICONS["wait11"] + ICONS["harvest"], true); break;
-                            case ICONS["wait11"] + ICONS["harvest"]: creep.say(ICONS["wait12"] + ICONS["harvest"], true); break;
-                            case ICONS["wait12"] + ICONS["harvest"]: creep.say(ICONS["wait13"] + ICONS["harvest"], true); break;
-                            case ICONS["wait13"] + ICONS["harvest"]: creep.say(ICONS["wait14"] + ICONS["harvest"], true); break;
-                            case ICONS["wait14"] + ICONS["harvest"]: creep.say(ICONS["wait15"] + ICONS["harvest"], true); break;
-                            case ICONS["wait15"] + ICONS["harvest"]: creep.say(ICONS["wait16"] + ICONS["harvest"], true); break;
-                            case ICONS["wait16"] + ICONS["harvest"]: creep.say(ICONS["wait17"] + ICONS["harvest"], true); break;
-                            case ICONS["wait17"] + ICONS["harvest"]: creep.say(ICONS["wait18"] + ICONS["harvest"], true); break;
-                            case ICONS["wait18"] + ICONS["harvest"]: creep.say(ICONS["wait19"] + ICONS["harvest"], true); break;
-                            case ICONS["wait19"] + ICONS["harvest"]: creep.say(ICONS["wait20"] + ICONS["harvest"], true); break;
-                            case ICONS["wait20"] + ICONS["harvest"]: creep.say(ICONS["wait21"] + ICONS["harvest"], true); break;
-                            case ICONS["wait21"] + ICONS["harvest"]: creep.say(ICONS["wait22"] + ICONS["harvest"], true); break;
-                            case ICONS["wait22"] + ICONS["harvest"]: creep.say(ICONS["wait23"] + ICONS["harvest"], true); break;
-                            default: creep.say(ICONS["wait0"] + ICONS["harvest"], true);
+                            case ICONS["wait00"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait01"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait01"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait02"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait02"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait03"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait03"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait04"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait04"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait05"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait05"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait06"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait06"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait07"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait07"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait08"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait08"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait09"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait09"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait10"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait10"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait11"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait11"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait12"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait12"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait13"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait13"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait14"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait14"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait15"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait15"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait16"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait16"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait17"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait17"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait18"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait18"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait19"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait19"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait20"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait20"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait21"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait21"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait22"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            case ICONS["wait22"] + ICONS["harvest"] + theMineral.mineralType: creep.say(ICONS["wait23"] + ICONS["harvest"] + theMineral.mineralType, true); break;
+                            default: creep.say(ICONS["wait00"] + ICONS["harvest"] + theMineral.mineralType, true);
                         }
                     }
                 }

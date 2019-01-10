@@ -49,9 +49,6 @@ let roleExporter = {
             return;
         }
         
-        let shuttingDown = [
-        ];
-        
         let safeRooms = [
             "W91N42"
             , "W53N38"
@@ -97,7 +94,7 @@ let roleExporter = {
                     if (theStorage != undefined 
                         && _.sum(theStorage.store) > 0 
                         && (((theStorage.my == false 
-                                    || _.any(shuttingDown, (r) => (sentFrom)) == true) 
+                                    || _.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true) 
                                 && _.filter(theStorage.pos.lookFor(LOOK_STRUCTURES), (s) => (
                                     s.structureType == STRUCTURE_RAMPART 
                                     && s.my == false 
@@ -125,7 +122,7 @@ let roleExporter = {
                     else if (theTerminal != undefined 
                         && _.sum(theTerminal.store) > 0 
                         && (theTerminal.my == false
-                            || _.any(shuttingDown, (r) => (sentFrom)) == true) 
+                            || _.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true) 
                         && _.filter(theTerminal.pos.lookFor(LOOK_STRUCTURES), (s) => (
                             s.structureType == STRUCTURE_RAMPART 
                             && s.my == false 
@@ -174,7 +171,7 @@ let roleExporter = {
                                     || structure.structureType == STRUCTURE_EXTENSION 
                                     || structure.structureType == STRUCTURE_LINK) 
                                 && structure.energy == 0)) {
-                            structure = creep.pos.findClosestByPath(((_.any(shuttingDown, (r) => (sentFrom)) == true) ? FIND_STRUCTURES : FIND_HOSTILE_STRUCTURES), { filter: (s) => (
+                            structure = creep.pos.findClosestByPath(((_.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true) ? FIND_STRUCTURES : FIND_HOSTILE_STRUCTURES), { filter: (s) => (
                                 ((s.structureType == STRUCTURE_CONTAINER 
                                         && _.sum(s.store) > 0)
                                     || (s.structureType == STRUCTURE_POWER_SPAWN 

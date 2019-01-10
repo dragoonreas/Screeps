@@ -70,22 +70,22 @@ let globals = function() {
         , claimController: "\uD83D\uDDDD" // old key
         , reserveController: "\uD83D\uDD12" // locked
         , attackController: "\uD83D\uDDE1" // dagger NOTE: Same as attack
-        , signController: "\uD83D\uDCDD" // meno
+        , signController: "\uD83D\uDCDD" // memo
         , recycle: "\u267B" // recycling symbol
         , tired: "\uD83D\uDCA6" // sweat droplets
         , stuck0: "\uD83D\uDCA5" // collision
         , stuck1: "\uD83D\uDCAB" // dizzy
         , stuck2: "\uD83D\uDCA2" // anger symbol
-        , wait0: "\uD83D\uDD5B" // 12:00
-        , wait1: "\uD83D\uDD67" // 12:30
-        , wait2: "\uD83D\uDD50" // 01:00
-        , wait3: "\uD83D\uDD5C" // 01:30
-        , wait4: "\uD83D\uDD51" // 02:00
-        , wait5: "\uD83D\uDD5D" // 02:30
-        , wait6: "\uD83D\uDD52" // 03:00
-        , wait7: "\uD83D\uDD5E" // 03:30
-        , wait8: "\uD83D\uDD53" // 04:00
-        , wait9: "\uD83D\uDD5F" // 04:30
+        , wait00: "\uD83D\uDD5B" // 12:00
+        , wait01: "\uD83D\uDD67" // 12:30
+        , wait02: "\uD83D\uDD50" // 01:00
+        , wait03: "\uD83D\uDD5C" // 01:30
+        , wait04: "\uD83D\uDD51" // 02:00
+        , wait05: "\uD83D\uDD5D" // 02:30
+        , wait06: "\uD83D\uDD52" // 03:00
+        , wait07: "\uD83D\uDD5E" // 03:30
+        , wait08: "\uD83D\uDD53" // 04:00
+        , wait09: "\uD83D\uDD5F" // 04:30
         , wait10: "\uD83D\uDD54" // 05:00
         , wait11: "\uD83D\uDD60" // 05:30
         , wait12: "\uD83D\uDD55" // 06:00
@@ -202,7 +202,7 @@ let globals = function() {
     
     global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
     
-    global.EST_SEC_PER_TICK = 5.37; // time between ticks is currently averaging ~5.37 seconds (as of 2018/05/30)
+    global.EST_SEC_PER_TICK = 4.916; // time between ticks is currently averaging ~4.916 seconds (as of 2019/01/09)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     
