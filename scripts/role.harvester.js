@@ -28,7 +28,7 @@ let roleHarvester = {
                     || (theStorage != undefined 
                         && theStorage.store[RESOURCE_ENERGY] > 0) 
                     || (theTerminal != undefined 
-                        & theTerminal.store[RESOURCE_ENERGY] > 0)));
+                        && theTerminal.store[RESOURCE_ENERGY] > 0)));
             let source = Game.getObjectById(creep.memory.sourceID);
             if (quickFill == false 
                 && (source == undefined
@@ -169,6 +169,12 @@ let roleHarvester = {
                             , "579fa8c50700be0674d2e3f9" // W52N42
                             , "579fa8b30700be0674d2e273" // W53N43
                             , "579fa8b30700be0674d2e277" // W53N42
+                        ]
+                        , "W46N41": [
+                            "577b92a40f9d51615fa46dc9" // W47N41
+                            , "577b92b30f9d51615fa46f1a" // W46N42
+                            , "577b92c20f9d51615fa47108" // W45N41
+                            , "577b92b30f9d51615fa46f1f" // W46N41
                         ]
                         , "W52N47": [
                             "579fa8d40700be0674d2e574" // W51N47
@@ -585,6 +591,30 @@ let roleHarvester = {
                                 creep.say(travelToIcons(creep) + "W53N42", true);
                                 return;
                             }
+                            else if (sourceID == "577b92a40f9d51615fa46dc9") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(27, 12, "W47N41"));
+                                creep.say(travelToIcons(creep) + "W47N41", true);
+                                return;
+                            }
+                            else if (sourceID == "577b92b30f9d51615fa46f1a") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(16, 7, "W46N42"));
+                                creep.say(travelToIcons(creep) + "W46N42", true);
+                                return;
+                            }
+                            else if (sourceID == "577b92c20f9d51615fa47108") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(13, 10, "W45N41"));
+                                creep.say(travelToIcons(creep) + "W45N41", true);
+                                return;
+                            }
+                            else if (sourceID == "577b92b30f9d51615fa46f1f") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(8, 45, "W46N41"));
+                                creep.say(travelToIcons(creep) + "W46N41", true);
+                                return;
+                            }
                             else if (sourceID == "579fa8d40700be0674d2e574") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
                                 creep.travelTo(new RoomPosition(10, 25, "W51N47"));
@@ -887,7 +917,8 @@ let roleHarvester = {
             }
             else if (theStorage != undefined 
                     && storageEnergy < Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + storageEnergy)) 
-                    && theStorage.my == true) {
+                    && theStorage.my == true 
+                    && _.get(Memory.rooms, [creep.memory.roomID, "isShuttingDown"], false) == false) {
                 let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + storageEnergy)) - storageEnergy));
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.travelTo(theStorage);
@@ -923,6 +954,10 @@ let roleHarvester = {
                 else {
                     ROLES["upgrader"].run(creep);
                 }
+            }
+            else {
+                incrementConfusedCreepCount(creep);
+                creep.say("?", true);
             }
         }
     }

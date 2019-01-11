@@ -24,7 +24,8 @@ let roleHoarder = {
         }
         else if (theStorage != undefined 
             && _.sum(theStorage.store) < theStorage.storeCapacity
-            && theStorage.my == true) {
+            && theStorage.my == true 
+            && _.get(Memory.rooms, [creep.memory.roomID, "isShuttingDown"], false) == false) {
             for (let resourceType in creep.carry) {
                 if (resourceType != RESOURCE_ENERGY) {
                     let err = creep.transfer(theStorage, resourceType, Math.min(creep.carry[resourceType], (theStorage.storeCapacity - _.sum(theStorage.store))));

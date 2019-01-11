@@ -201,6 +201,11 @@ _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
     , "W53N47"
     , "W52N48"
 ]);
+_.set(Memory.rooms, ["W46N41", "harvestRooms"], [
+    "W47N41"
+    , "W46N42"
+    , "W45N41"
+]);
 /*_.set(Memory.rooms, ["W48N52", "harvestRooms"], [
     "W49N52"
     , "W48N53"
@@ -338,6 +343,13 @@ _.set(Memory.rooms, ["W53N39", "repairerTypeMins"], {
 _.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+_.set(Memory.rooms, ["W46N41", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 1
+    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
@@ -599,6 +611,21 @@ _.set(Memory.rooms, ["W52N47", "creepMins"], {
     , builder: 1
     , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W52N47", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W52N47", "canHarvestMineral"], false) ? 1 : 0)
+});
+_.set(Memory.rooms, ["W46N41", "creepMins"], {
+    attacker: 0
+    , harvester: 3
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W46N41", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N41", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
+    , scout: 0
+    , claimer: 1
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W46N41", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
+    , builder: 1
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N41", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
+    , rockhound: (_.get(Game.rooms, ["W46N41", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W48N52", "creepMins"], {
     attacker: 0
@@ -1796,6 +1823,49 @@ module.exports.loop = function () {
                     console.log("No Energy Orders: " + roomID);
                 }
             }
+            else if ((terminalEnergy - ((TERMINAL_CAPACITY / 2) * 1.1)) >= 100) {
+                let balanceAmount = terminalEnergy - (TERMINAL_CAPACITY / 2);
+                let storeRoom = { 
+                    roomID: roomID
+                    , amount: (TERMINAL_CAPACITY / 2)
+                    , free: 0
+                };
+                //console.log("Starting rebalance of " + balanceAmount + " " + RESOURCE_ENERGY + " in " + roomID);
+                _.forEach(Game.rooms, (r, rn) => {
+                    if (rn != storeRoom.roomID 
+                        && _.get(r, ["controller", "my"], false) == true 
+                        && _.get(r, ["controller", "level"], 0) >= 6 
+                        && _.get(r, ["terminal", "my"], false) == true 
+                        && _.get(r.memory, ["isShuttingDown"], false) == false
+                        && _.get(r, ["terminal", "store", RESOURCE_ENERGY], 0) < (TERMINAL_CAPACITY / 2) 
+                        && ((TERMINAL_CAPACITY / 2) - _.get(r, ["terminal", "store", RESOURCE_ENERGY], 0)) >= 100 
+                        && _.get(r, ["terminal", "energyCapacityFree"], 0) >= 100) {
+                        if (_.get(r, ["terminal", "store", RESOURCE_ENERGY], 0) < storeRoom.amount 
+                            || (_.get(r, ["terminal", "store", RESOURCE_ENERGY], 0) == storeRoom.amount 
+                                && _.get(r, ["terminal", "energyCapacityFree"], 0) > storeRoom.free) 
+                            || _.get(Memory.rooms, [storeRoom.roomID, "isShuttingDown"], false) == true 
+                            || storeRoom.amount == (TERMINAL_CAPACITY / 2)) {
+                            storeRoom = { 
+                                roomID: rn
+                                , amount: _.get(r, ["terminal", "store", RESOURCE_ENERGY], 0)
+                                , free: _.get(r, ["terminal", "energyCapacityFree"], 0)
+                            };
+                            //console.log("\tConsidering " + rn + " with " + storeRoom.amount + " " + RESOURCE_ENERGY + " and " + storeRoom.free + " free space");
+                        }
+                    }
+                });
+                if (storeRoom.roomID != roomID) {
+                    let sendAmount = Math.min(balanceAmount, ((TERMINAL_CAPACITY / 2) - storeRoom.amount, storeRoom.free));
+                    let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, storeRoom.roomID);
+                    if (energyCost <= (terminalEnergy + sendAmount)) {
+                        let err = theTerminal.send(RESOURCE_ENERGY, sendAmount, storeRoom.roomID, "Balance " + RESOURCE_ENERGY);
+                        if (err == OK) {
+                            console.log("Sent " + sendAmount + " " + RESOURCE_ENERGY + " from " + roomID + " to " + storeRoom.roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to balance terminal resources");
+                            madeTransaction = true;
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -1993,6 +2063,7 @@ module.exports.loop = function () {
     _.set(Memory.rooms, ["W53N39", "creepMins", "adaptable"], ((
         /*(_.get(Memory.rooms, ["W53N42", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N42", "creepCounts", "adaptable"], -1) == 0) 
         || */(_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["W46N41", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W46N41", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
     /*_.set(Memory.rooms, ["W52N47", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W48N52", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W48N52", "creepCounts", "adaptable"], -1) == 0) 

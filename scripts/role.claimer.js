@@ -18,6 +18,7 @@ let roleClaimer = {
             , "579fa8850700be0674d2dc0e" // W56N31
             , "579fa8a50700be0674d2e04b" // W54N39
             , "579fa8b40700be0674d2e27a" // W53N41
+            , "577b92a40f9d51615fa46dc8" // W47N41
             , "579fa8d40700be0674d2e575" // W51N47
             , "579fa8e60700be0674d2e700" // W49N52
             , "579fa8fa0700be0674d2e965" // W41N51
@@ -108,6 +109,10 @@ let roleClaimer = {
                 creep.travelTo(new RoomPosition(29, 10, "W53N41"));
                 creep.say(travelToIcons(creep) + "W53N41", true);
             }
+            else if (creep.memory.controllerID == "577b92a40f9d51615fa46dc8") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(6, 11, "W47N41"));
+                creep.say(travelToIcons(creep) + "W47N41", true);
+            }
             else if (creep.memory.controllerID == "579fa8d40700be0674d2e575") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.travelTo(new RoomPosition(29, 32, "W51N47"));
                 creep.say(travelToIcons(creep) + "W51N47", true);
@@ -167,6 +172,10 @@ let roleClaimer = {
             else if (creep.memory.controllerID == "579fa8b30700be0674d2e276") {
                 creep.travelTo(new RoomPosition(23, 8, "W53N42"));
                 creep.say(travelToIcons(creep) + "W53N42", true);
+            }
+            else if (creep.memory.controllerID == "577b92b30f9d51615fa46f1e") {
+                creep.travelTo(new RoomPosition(14, 17, "W46N41"));
+                creep.say(travelToIcons(creep) + "W46N41", true);
             }
             else if (creep.memory.controllerID == "579fa8c40700be0674d2e3e9") {
                 creep.travelTo(new RoomPosition(35, 28, "W52N47"));

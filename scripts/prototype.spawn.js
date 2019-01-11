@@ -166,6 +166,9 @@ let prototypeSpawn = function() {
                 else */if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W52N47";
                 }
+                else if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
+                    options.memory.roomSentTo = "W46N41";
+                }
             }/*
             else if (this.room.name == "W52N47") {
                 if (Memory.rooms.W48N52.creepCounts.builder == 0 && Memory.rooms.W48N52.creepCounts.adaptable == 0) {
@@ -280,7 +283,8 @@ let prototypeSpawn = function() {
                     options.memory.controllerID = "579fa8a50700be0674d2e04b"; // harvest room
                 }
                 else {
-                    options.memory.controllerID = "579fa8b30700be0674d2e276";
+                    //options.memory.controllerID = "579fa8b30700be0674d2e276";
+                    options.memory.controllerID = "577b92b30f9d51615fa46f1e";
                 }
             }
             else if (this.room.name == "W53N42") {
@@ -289,6 +293,11 @@ let prototypeSpawn = function() {
                 }
                 else {
                     options.memory.controllerID = "579fa8c40700be0674d2e3e9";
+                }
+            }
+            else if (this.room.name == "W46N41") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    options.memory.controllerID = "577b92a40f9d51615fa46dc8"; // harvest room
                 }
             }
             else if (this.room.name == "W52N47") {
@@ -374,6 +383,7 @@ let prototypeSpawn = function() {
                 || this.room.name == "W53N39" 
                 || this.room.name == "W53N42" 
                 || this.room.name == "W52N47" 
+                || this.room.name == "W46N41" 
                 || this.room.name == "W48N52"
                 || this.room.name == "W42N51") { // these rooms have a source in range of the controller
                 moveRatio = ONE_MOVE_RATIO;

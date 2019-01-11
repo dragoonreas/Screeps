@@ -30,6 +30,7 @@ let roleExporter = {
                 case "W55N31": sentTo = "W64N31"; break;
                 case "W53N39": sentTo = "W64N31"; break;
                 case "W53N42": sentTo = "W53N39"; break;
+                case "W46N41": sentTo = "W53N39"; break;
                 case "W52N47": sentTo = "W53N39"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
@@ -88,10 +89,49 @@ let roleExporter = {
                 }
                 let theStorage = _.get(Game.rooms, [sentFrom, "storage"], undefined);
                 let theTerminal = _.get(Game.rooms, [sentFrom, "terminal"], undefined);
+                let thePowerSpawn = _.get(Game.rooms, [sentFrom, "powerSpawn"], undefined);
+                let requiredPower = Math.floor(_.get(thePowerSpawn, ["energy"], 0) / POWER_SPAWN_ENERGY_RATIO) - (_.get(thePowerSpawn, ["power"], 0) + (creep.carry[RESOURCE_POWER] || 0));
                 if ((_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
                         && _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") 
                     || _.any(safeRooms, (r) => (creep.room.name)) == true) {
-                    if (theStorage != undefined 
+                    if (sentFrom == sentTo 
+                        && _.get(creep.room.memory, ["isShuttingDown"], false) == true 
+                        && _.get(creep.room, ["controller", "level"], 0) == 8 
+                        && _.get(creep.room, ["controller", "owner", "username"], undefined) == "dragoonreas" 
+                        && _.get(thePowerSpawn, ["my"], false) == true 
+                        && requiredPower > 0 
+                        && (_.get(theStorage, ["store", RESOURCE_POWER], 0) > 0 
+                            || _.get(theTerminal, ["store", RESOURCE_POWER], 0) > 0)) {
+                        if (_.get(theStorage, ["store", RESOURCE_POWER], 0) > 0) {
+                            let err = creep.withdraw(theStorage, RESOURCE_POWER, Math.min(requiredPower, _.get(theStorage, ["store", RESOURCE_POWER], 0), creep.carryCapacityAvailable));
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(theStorage);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
+                                creep.memory.withdrawStructure = { 
+                                    id: theStorage.id
+                                    , pos: theStorage.pos
+                                };
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_STORAGE], true);
+                            }
+                        }
+                        else if (_.get(theTerminal, ["store", RESOURCE_POWER], 0) > 0) {
+                            let err = creep.withdraw(theTerminal, RESOURCE_POWER, Math.min(requiredPower, _.get(theTerminal, ["store", RESOURCE_POWER], 0), creep.carryCapacityAvailable));
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(theTerminal);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                                creep.memory.withdrawStructure = { 
+                                    id: theTerminal.id
+                                    , pos: theTerminal.pos
+                                };
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["withdraw"] + ICONS[STRUCTURE_TERMINAL], true);
+                            }
+                        }
+                    }
+                    else if (theStorage != undefined 
                         && _.sum(theStorage.store) > 0 
                         && (((theStorage.my == false 
                                     || _.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true) 
@@ -176,7 +216,11 @@ let roleExporter = {
                                         && _.sum(s.store) > 0)
                                     || (s.structureType == STRUCTURE_POWER_SPAWN 
                                         && (s.energy > 0 
-                                            || s.power > 0)) 
+                                            || s.power > 0) 
+                                        && (_.get(creep.room.memory, ["isShuttingDown"], false) == false 
+                                            || _.get(creep.room, ["controller", "level"], 0) < 8 
+                                            || _.get(creep.room, ["controller", "owner", "username"], undefined) != "dragoonreas" 
+                                            || _.get(thePowerSpawn, ["my"], false) == false)) 
                                     || (s.structureType == STRUCTURE_LAB 
                                         && (s.energy > 0 
                                             || s.mineralAmount > 0)) 
@@ -320,9 +364,33 @@ let roleExporter = {
                 let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
                 if (sentFrom == sentTo 
                     || tripsLeft > 0) {
+                    let thePowerSpawn = _.get(Game.rooms, [sentFrom, "powerSpawn"], undefined);
                     if (creep.carryTotal > creep.carry[RESOURCE_ENERGY]) {
-                        ROLES["hoarder"].run(creep);
-                        creep.memory.transferStructure = true;
+                        let requiredPower = Math.floor(_.get(thePowerSpawn, ["energy"], 0) / POWER_SPAWN_ENERGY_RATIO) - _.get(thePowerSpawn, ["power"], 0);
+                        if (sentFrom == sentTo 
+                            && _.get(creep.room, ["controller", "level"], 0) == 8 
+                            && _.get(creep.room, ["controller", "owner", "username"], undefined) == "dragoonreas" 
+                            && _.get(creep.room.memory, ["isShuttingDown"], false) == true 
+                            && _.get(thePowerSpawn, ["my"], false) == true 
+                            && requiredPower > 0 
+                            && _.get(creep.carry, [RESOURCE_POWER], 0) > 0) {
+                            let err = creep.transfer(thePowerSpawn, RESOURCE_POWER);
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(thePowerSpawn);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_POWER_SPAWN], true);
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["transfer"] + ICONS[STRUCTURE_POWER_SPAWN], true);
+                            }
+                            else {
+                                incrementConfusedCreepCount(creep);
+                                creep.say(ICONS["transfer"] + ICONS[STRUCTURE_POWER_SPAWN] + "?", true);
+                            }
+                        }
+                        else {
+                            ROLES["hoarder"].run(creep);
+                            creep.memory.transferStructure = true;
+                        }
                     }
                     else {
                         if (creep.memory.transferStructure === true) {
@@ -351,76 +419,84 @@ let roleExporter = {
                         if (theTerminal != undefined 
                             && theTerminal.energyCapacityFree > 0 
                             && theTerminal.my == true) {
-                            for (let resourceType in creep.carry) {
-                                let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], theTerminal.energyCapacityFree));
-                                if (err == ERR_NOT_IN_RANGE) {
-                                    creep.travelTo(theTerminal);
-                                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
-                                    creep.memory.transferStructure = { 
-                                        id: theTerminal.id
-                                        , pos: theTerminal.pos
-                                    };
-                                    break;
-                                }
-                                else if (err == OK) {
-                                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
-                                    break;
-                                }
-                                else {
-                                    console.log(creep.name + " (exporter) is confused transfering " + resourceType + " to " + STRUCTURE_TERMINAL + ": " + err);
-                                    incrementConfusedCreepCount(creep);
-                                    creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
-                                }
+                            let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], theTerminal.energyCapacityFree));
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(theTerminal);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                                creep.memory.transferStructure = { 
+                                    id: theTerminal.id
+                                    , pos: theTerminal.pos
+                                };
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
+                            }
+                            else {
+                                console.log(creep.name + " (exporter) is confused transfering " + RESOURCE_ENERGY + " to " + STRUCTURE_TERMINAL + ": " + err);
+                                incrementConfusedCreepCount(creep);
+                                creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
+                            }
+                        }
+                        else if (sentFrom == sentTo 
+                            && _.get(creep.room.memory, ["isShuttingDown"], false) == true 
+                            && _.get(creep.room, ["controller", "level"], 0) == 8 
+                            && _.get(creep.room, ["controller", "owner", "username"], undefined) == "dragoonreas" 
+                            && _.get(thePowerSpawn, ["my"], false) == true 
+                            && _.get(thePowerSpawn, ["energy"], 0) < _.get(thePowerSpawn, ["energyCapacity"], 0)) {
+                            let err = creep.transfer(thePowerSpawn, RESOURCE_ENERGY);
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(thePowerSpawn);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_POWER_SPAWN], true);
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["transfer"] + ICONS[STRUCTURE_POWER_SPAWN], true);
+                            }
+                            else {
+                                incrementConfusedCreepCount(creep);
+                                creep.say(ICONS["transfer"] + ICONS[STRUCTURE_POWER_SPAWN] + "?", true);
                             }
                         }
                         else if (theStorage != undefined 
                             && _.sum(theStorage.store) < theStorage.storeCapacity 
-                            && theStorage.my == true) {
-                            for (let resourceType in creep.carry) {
-                                let err = creep.transfer(theStorage, resourceType, Math.min(creep.carry[resourceType], theStorage.storeCapacity - _.sum(theStorage.store)));
-                                if (err == ERR_NOT_IN_RANGE) {
-                                    creep.travelTo(theStorage);
-                                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
-                                    creep.memory.transferStructure = { 
-                                        id: theStorage.id
-                                        , pos: theStorage.pos
-                                    };
-                                    break;
-                                }
-                                else if (err == OK) {
-                                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
-                                    break;
-                                }
-                                else {
-                                    console.log(creep.name + " (exporter) is confused transfering " + resourceType + " to " + STRUCTURE_STORAGE + ": " + err);
-                                    incrementConfusedCreepCount(creep);
-                                    creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
-                                }
+                            && theStorage.my == true 
+                            && _.get(Memory.rooms, [sentTo, "isShuttingDown"], false) == false) {
+                            let err = creep.transfer(theStorage, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], theStorage.storeCapacity - _.sum(theStorage.store)));
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(theStorage);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_STORAGE], true);
+                                creep.memory.transferStructure = { 
+                                    id: theStorage.id
+                                    , pos: theStorage.pos
+                                };
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
+                            }
+                            else {
+                                console.log(creep.name + " (exporter) is confused transfering " + RESOURCE_ENERGY + " to " + STRUCTURE_STORAGE + ": " + err);
+                                incrementConfusedCreepCount(creep);
+                                creep.say(ICONS[STRUCTURE_STORAGE] + "?", true);
                             }
                         }
                         else if (theTerminal != undefined 
-                            && theTerminal.storeCapacityFree > 0 
+                            && theTerminal.storeCapacityFree > 100 
                             && theTerminal.my == true) {
-                            for (let resourceType in creep.carry) {
-                                let err = creep.transfer(theTerminal, resourceType, Math.min(creep.carry[resourceType], theTerminal.storeCapacityFree));
-                                if (err == ERR_NOT_IN_RANGE) {
-                                    creep.travelTo(theTerminal);
-                                    creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
-                                    creep.memory.transferStructure = { 
-                                        id: theTerminal.id
-                                        , pos: theTerminal.pos
-                                    };
-                                    break;
-                                }
-                                else if (err == OK) {
-                                    creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
-                                    break;
-                                }
-                                else {
-                                    console.log(creep.name + " (exporter) is confused transfering " + resourceType + " to " + STRUCTURE_TERMINAL + ": " + err);
-                                    incrementConfusedCreepCount(creep);
-                                    creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
-                                }
+                            let err = creep.transfer(theTerminal, RESOURCE_ENERGY, Math.min(creep.carry[RESOURCE_ENERGY], (theTerminal.storeCapacityFree - 100)));
+                            if (err == ERR_NOT_IN_RANGE) {
+                                creep.travelTo(theTerminal);
+                                creep.say(travelToIcons(creep) + ICONS[STRUCTURE_TERMINAL], true);
+                                creep.memory.transferStructure = { 
+                                    id: theTerminal.id
+                                    , pos: theTerminal.pos
+                                };
+                            }
+                            else if (err == OK) {
+                                creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL], true);
+                            }
+                            else {
+                                console.log(creep.name + " (exporter) is confused transfering " + RESOURCE_ENERGY + " to " + STRUCTURE_TERMINAL + ": " + err);
+                                incrementConfusedCreepCount(creep);
+                                creep.say(ICONS[STRUCTURE_TERMINAL] + "?", true);
                             }
                         }
                         else {

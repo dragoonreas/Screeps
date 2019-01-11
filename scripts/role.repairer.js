@@ -159,6 +159,7 @@ let roleRepairer = {
                 case "W55N31": source = Game.getObjectById("579fa8950700be0674d2de53"); break;
                 case "W53N39": source = Game.getObjectById("579fa8b40700be0674d2e27d"); break;
                 case "W53N42": source = Game.getObjectById("579fa8b30700be0674d2e277"); break;
+                case "W46N41": source = Game.getObjectById("577b92b30f9d51615fa46f1f"); break;
                 case "W52N47": source = Game.getObjectById("579fa8c40700be0674d2e3e8"); break;
                 case "W48N52": source = Game.getObjectById("579fa8e90700be0674d2e743"); break;
                 case "W42N51": source = Game.getObjectById("579fa8f80700be0674d2e929"); break;

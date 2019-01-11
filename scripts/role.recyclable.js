@@ -23,7 +23,8 @@ let roleRecyclable = {
 		if (creep.carryTotal > 0 
             && theStorage != undefined 
             && _.sum(theStorage.store) < theStorage.storeCapacity 
-            && theStorage.my == true) {
+            && theStorage.my == true 
+            && _.get(Memory.rooms, [creep.memory.roomID, "isShuttingDown"], false) == false) {
             for (let resourceType in creep.carry) {
                 let err = creep.transfer(theStorage, resourceType, Math.min(creep.carry[resourceType], (theStorage.storeCapacity - _.sum(theStorage.store))));
                 if (err == ERR_NOT_IN_RANGE) {

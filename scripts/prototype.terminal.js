@@ -3,7 +3,7 @@ let prototypeTerminal = function() {
     defineCachedGetter(StructureTerminal.prototype, "storeTotal", (t) => (_.sum(t.store)));
     defineCachedGetter(StructureTerminal.prototype, "storeCapacityFree", (t) => (t.storeCapacity - t.storeTotal));
     defineCachedGetter(StructureTerminal.prototype, "energyCapacity", (t) => (Math.min((t.storeCapacity / 2), (t.storeCapacity - (t.storeTotal - t.store[RESOURCE_ENERGY])))));
-    defineCachedGetter(StructureTerminal.prototype, "energyCapacityFree", (t) => (t.energyCapacity - t.store[RESOURCE_ENERGY]));
+    defineCachedGetter(StructureTerminal.prototype, "energyCapacityFree", (t) => (Math.max(t.energyCapacity - t.store[RESOURCE_ENERGY]), 0));
     defineCachedGetter(StructureTerminal.prototype, "needsEnergy", (t) => (t.store[RESOURCE_ENERGY] < (t.energyCapacity * 0.9)));
     
     /*if (StructureTerminal.prototype.energyAvaliableOnSpawn == undefined) {
