@@ -19,6 +19,7 @@ let roleClaimer = {
             , "579fa8a50700be0674d2e04b" // W54N39
             , "579fa8b40700be0674d2e27a" // W53N41
             , "577b92a40f9d51615fa46dc8" // W47N41
+            , "577b92b60f9d51615fa46f8c" // W46N17
             , "579fa8d40700be0674d2e575" // W51N47
             , "579fa8e60700be0674d2e700" // W49N52
             , "579fa8fa0700be0674d2e965" // W41N51
@@ -41,6 +42,8 @@ let roleClaimer = {
                     switch (creep.memory.controllerID) {
                         case "577b935b0f9d51615fa48076": creep.memory.roomSentTo = "W9N45"; break;
                         case "58dbc3288283ff5308a3d211": creep.memory.roomSentTo = "W91N45"; break;
+                        case "577b92b60f9d51615fa46f88": creep.memory.roomSentTo = "W46N18"; break;
+                        case "577b92a40f9d51615fa46dbd": creep.memory.roomSentTo = "W47N44"; break;
                     }
                     ROLES["scout"].run(creep);
                 }
@@ -113,6 +116,10 @@ let roleClaimer = {
                 creep.travelTo(new RoomPosition(6, 11, "W47N41"));
                 creep.say(travelToIcons(creep) + "W47N41", true);
             }
+            else if (creep.memory.controllerID == "577b92b60f9d51615fa46f8c") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(37, 5, "W46N17"));
+                creep.say(travelToIcons(creep) + "W46N17", true);
+            }
             else if (creep.memory.controllerID == "579fa8d40700be0674d2e575") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.travelTo(new RoomPosition(29, 32, "W51N47"));
                 creep.say(travelToIcons(creep) + "W51N47", true);
@@ -124,14 +131,6 @@ let roleClaimer = {
             else if (creep.memory.controllerID == "579fa8fa0700be0674d2e965") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.travelTo(new RoomPosition(42, 17, "W41N51"));
                 creep.say(travelToIcons(creep) + "W41N51", true);
-            }
-            else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63cd") {
-                creep.travelTo(new RoomPosition(19, 19, "W86N39"));
-                creep.say(travelToIcons(creep) + "W86N39", true);
-            }
-            else if (creep.memory.controllerID == "5873bbc711e3e4361b4d6732") {
-                creep.travelTo(new RoomPosition(43, 37, "W85N38"));
-                creep.say(travelToIcons(creep) + "W85N38", true);
             }
             else if (creep.memory.controllerID == "5873bbaa11e3e4361b4d63c3") {
                 creep.travelTo(new RoomPosition(30, 17, "W86N43"));
@@ -177,6 +176,10 @@ let roleClaimer = {
                 creep.travelTo(new RoomPosition(14, 17, "W46N41"));
                 creep.say(travelToIcons(creep) + "W46N41", true);
             }
+            else if (creep.memory.controllerID == "577b92b60f9d51615fa46f88") {
+                creep.memory.roomSentTo = "W46N18";
+                ROLES["scout"].run(creep);
+            }
             else if (creep.memory.controllerID == "579fa8c40700be0674d2e3e9") {
                 creep.travelTo(new RoomPosition(35, 28, "W52N47"));
                 creep.say(travelToIcons(creep) + "W52N47", true);
@@ -203,8 +206,37 @@ let roleClaimer = {
             let err = ERR_GCL_NOT_ENOUGH;
             if (_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" 
                 || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "username"], "dragoonreas") != "dragoonreas") { // TODO: Add additional checks to make sure we're not accidently attacking an ally
-                if (_.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time) > Game.time) {
+                if (_.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time - 1) > Game.time + creep.ticksToLive) {
                     creep.memory.role = "recyclable"; // recycle this creep since it can't attack the controller
+                }
+                else if (_.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time - 1) > Game.time) {
+                    incrementIdleCreepCount(creep);
+                    switch (creep.saying) {
+                        case ICONS["wait00"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait01"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait01"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait02"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait02"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait03"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait03"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait04"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait04"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait05"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait05"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait06"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait06"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait07"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait07"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait08"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait08"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait09"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait09"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait10"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait10"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait11"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait11"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait12"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait12"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait13"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait13"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait14"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait14"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait15"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait15"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait16"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait16"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait17"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait17"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait18"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait18"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait19"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait19"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait20"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait20"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait21"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait21"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait22"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        case ICONS["wait22"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait23"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;
+                        default: creep.say(ICONS["wait00"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true);
+                    }
                 }
                 else {
                     err = creep.attackController(theController);

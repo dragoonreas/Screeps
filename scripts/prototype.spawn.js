@@ -69,9 +69,6 @@ let prototypeSpawn = function() {
                 else if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W85N23";
                 }
-                else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W85N38";
-                }
             }
             else */if (this.room.name == "W86N29") {
                 /*if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
@@ -80,9 +77,6 @@ let prototypeSpawn = function() {
                 else */if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W85N23";
                 }
-                /*else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N39.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W86N39";
-                }*/
                 /*else if (Memory.rooms.W81N29.creepCounts.builder == 0 && Memory.rooms.W81N29.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W81N29";
                 }*/
@@ -101,50 +95,10 @@ let prototypeSpawn = function() {
                     options.memory.roomSentTo = "W86N29";
                 }
             }
-            else if (this.room.name == "W86N39") {
-                /*if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W86N43";
-                }
-                else if (Memory.rooms.W91N45.creepCounts.builder == 0 && Memory.rooms.W91N45.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W91N45";
-                }
-                else if (Memory.rooms.W94N49.creepCounts.builder == 0 && Memory.rooms.W94N49.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W94N49";
-                }
-                else */if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W85N38";
-                }
-                /*else if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W87N29";
-                }*/
-            }
-            else if (this.room.name == "W85N38") {
-                /*if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W86N43";
-                }
-                else if (Memory.rooms.W91N45.creepCounts.builder == 0 && Memory.rooms.W91N45.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W91N45";
-                }
-                else if (Memory.rooms.W94N49.creepCounts.builder == 0 && Memory.rooms.W94N49.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W94N49";
-                }
-                else */if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W86N39";
-                }
-                /*else if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W86N29";
-                }*/
-            }
             else if (this.room.name == "W86N43") {
                 if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W86N43";
                 }
-                /*else if (Memory.rooms.W86N39.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W86N39";
-                }
-                else if (Memory.rooms.W85N38.creepCounts.builder == 0 && Memory.rooms.W85N38.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W85N38";
-                }*/
             }
             else if (this.room.name == "W9N45") {
                 if (Memory.rooms.W9N45.creepCounts.builder == 0 && Memory.rooms.W9N45.creepCounts.adaptable == 0) {
@@ -166,8 +120,13 @@ let prototypeSpawn = function() {
                 else */if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W52N47";
                 }
-                else if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
+                else if (Memory.rooms.W46N41.creepCounts.builder == 0 && Memory.rooms.W46N41.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W46N41";
+                }
+            }
+            else if (this.room.name == "W46N41") {
+                if (Memory.rooms.W46N18.creepCounts.builder == 0 && Memory.rooms.W46N18.creepCounts.adaptable == 0) {
+                    options.memory.roomSentTo = "W46N18";
                 }
             }/*
             else if (this.room.name == "W52N47") {
@@ -216,12 +175,6 @@ let prototypeSpawn = function() {
                 else {
                     options.memory.controllerID = "5873bccb11e3e4361b4d8313";
                 }
-            }
-            else if (this.room.name == "W86N39") {
-                options.memory.controllerID = "5873bb9411e3e4361b4d6139"; // harvest room
-            }
-            else if (this.room.name == "W85N38") {
-                options.memory.controllerID = "5873bbaa11e3e4361b4d63d1"; // harvest room
             }
             else if (this.room.name == "W86N43") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
@@ -299,6 +252,14 @@ let prototypeSpawn = function() {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     options.memory.controllerID = "577b92a40f9d51615fa46dc8"; // harvest room
                 }
+                else {
+                    options.memory.controllerID = "577b92b60f9d51615fa46f88";
+                }
+            }
+            else if (this.room.name == "W46N18") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    options.memory.controllerID = "577b92b60f9d51615fa46f8c"; // harvest room
+                }
             }
             else if (this.room.name == "W52N47") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
@@ -373,9 +334,7 @@ let prototypeSpawn = function() {
             bodyTemplate = [CARRY, ATTACK, HEAL];
         }
         else if (roleName == "upgrader") {
-            if (this.room.name == "W86N39"
-                || this.room.name == "W85N38" 
-                || this.room.name == "W94N49" 
+            if (this.room.name == "W94N49" 
                 || this.room.name == "W9N45" 
                 || this.room.name == "W72N28" 
                 || this.room.name == "W64N31" 
@@ -384,6 +343,7 @@ let prototypeSpawn = function() {
                 || this.room.name == "W53N42" 
                 || this.room.name == "W52N47" 
                 || this.room.name == "W46N41" 
+                || this.room.name == "W46N18" 
                 || this.room.name == "W48N52"
                 || this.room.name == "W42N51") { // these rooms have a source in range of the controller
                 moveRatio = ONE_MOVE_RATIO;

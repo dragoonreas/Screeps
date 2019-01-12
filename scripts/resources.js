@@ -104,8 +104,12 @@ function summarize_room_internal(room) {
     const num_towers = towers ? towers.length : 0;
     const tower_energy = _.sum(towers, t => t.energy);
     const const_sites = room.find(FIND_CONSTRUCTION_SITES);
-    const my_const_sites = room.find(FIND_CONSTRUCTION_SITES, { filter: cs => cs.my });
+    const construction_site_progress = _.sum(const_sites, cs => cs.progress);
+    const construction_site_progress_total = _.sum(const_sites, cs => cs.progressTotal);
     const num_construction_sites = const_sites.length;
+    const my_const_sites = room.find(FIND_CONSTRUCTION_SITES, { filter: cs => cs.my });
+    const my_construction_site_progress = _.sum(my_const_sites, mcs => mcs.progress);
+    const my_construction_site_progress_total = _.sum(my_const_sites, mcs => mcs.progressTotal);
     const num_my_construction_sites = my_const_sites.length;
     const num_source_containers = count_source_containers(room);
     const has_terminal = ((room.terminal != null) ? 1 : 0);
@@ -197,7 +201,11 @@ function summarize_room_internal(room) {
         num_towers,
         tower_energy,
         structure_info,
+        construction_site_progress,
+        construction_site_progress_total,
         num_construction_sites,
+        my_construction_site_progress,
+        my_construction_site_progress_total,
         num_my_construction_sites,
         ground_resources: reduced_resources,
         num_source_containers,

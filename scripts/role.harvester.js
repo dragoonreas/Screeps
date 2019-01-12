@@ -79,18 +79,6 @@ let roleHarvester = {
                             , "5873bbac11e3e4361b4d6424"
                             , "5873bbc911e3e4361b4d677e"
                         ]
-                        , "W86N39": [
-                            "5873bb9411e3e4361b4d6137" // W87N39
-                            , "5873bb9411e3e4361b4d6138" // W87N39
-                            //, "5873bb7e11e3e4361b4d5ef2" // W88N39, no longer avaliable
-                            //, "5873bbdf11e3e4361b4d6a6f" // W84N39, no longer avaliable
-                            , "5873bbaa11e3e4361b4d63cf" // W86N39
-                        ]
-                        , "W85N38": [
-                            "5873bbaa11e3e4361b4d63d2" // W86N38
-                            //, "5873bbc711e3e4361b4d672e" // W85N39, no longer avaliable
-                            , "5873bbc711e3e4361b4d6731" // W85N38
-                        ]
                         , "W86N43": [
                             /*"5873bb9311e3e4361b4d612d"
                             , "5873bb9311e3e4361b4d612b"
@@ -175,6 +163,13 @@ let roleHarvester = {
                             , "577b92b30f9d51615fa46f1a" // W46N42
                             , "577b92c20f9d51615fa47108" // W45N41
                             , "577b92b30f9d51615fa46f1f" // W46N41
+                        ]
+                        , "W46N18": [
+                            "577b92b60f9d51615fa46f8b" // W46N17
+                            , "577b92b60f9d51615fa46f8d" // W46N17
+                            , "577b92c50f9d51615fa4716a" // W45N18
+                            , "577b92b60f9d51615fa46f84" // W46N19
+                            , "577b92b60f9d51615fa46f87" // W46N18
                         ]
                         , "W52N47": [
                             "579fa8d40700be0674d2e574" // W51N47
@@ -613,6 +608,30 @@ let roleHarvester = {
                                 creep.memory.sourceID = sourceID;
                                 creep.travelTo(new RoomPosition(8, 45, "W46N41"));
                                 creep.say(travelToIcons(creep) + "W46N41", true);
+                                return;
+                            }
+                            else if (sourceID == "577b92b60f9d51615fa46f8b") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(19, 5, "W46N17"));
+                                creep.say(travelToIcons(creep) + "W46N17", true);
+                                return;
+                            }
+                            else if (sourceID == "577b92c50f9d51615fa4716a") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(39, 6, "W45N18"));
+                                creep.say(travelToIcons(creep) + "W45N18", true);
+                                return;
+                            }
+                            else if (sourceID == "577b92b60f9d51615fa46f84") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(30, 7, "W46N19"));
+                                creep.say(travelToIcons(creep) + "W46N19", true);
+                                return;
+                            }
+                            else if (sourceID == "577b92b60f9d51615fa46f87") { // TODO: Remove this after the source has been added to memory
+                                creep.memory.sourceID = sourceID;
+                                creep.travelTo(new RoomPosition(38, 23, "W46N18"));
+                                creep.say(travelToIcons(creep) + "W46N18", true);
                                 return;
                             }
                             else if (sourceID == "579fa8d40700be0674d2e574") { // TODO: Remove this after the source has been added to memory

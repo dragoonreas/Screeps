@@ -130,15 +130,6 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
     , "W86N23"
     , "W85N25"
 ]);
-_.set(Memory.rooms, ["W86N39", "harvestRooms"], [
-    "W87N39"
-    //, "W88N39" // No longer avaliable
-    //, "W84N39" // No longer avaliable
-]);
-_.set(Memory.rooms, ["W85N38", "harvestRooms"], [
-    "W86N38"
-    //, "W85N39" // No longer avaliable
-]);
 /*_.set(Memory.rooms, ["W86N43", "harvestRooms"], [
     "W87N43"
     , "W87N44"
@@ -206,6 +197,11 @@ _.set(Memory.rooms, ["W46N41", "harvestRooms"], [
     , "W46N42"
     , "W45N41"
 ]);
+_.set(Memory.rooms, ["W46N18", "harvestRooms"], [
+    "W46N17"
+    , "W45N18"
+    , "W46N19"
+]);
 /*_.set(Memory.rooms, ["W48N52", "harvestRooms"], [
     "W49N52"
     , "W48N53"
@@ -253,20 +249,6 @@ _.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 1
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W86N39", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W85N38", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
@@ -354,6 +336,13 @@ _.set(Memory.rooms, ["W46N41", "repairerTypeMins"], {
     , [STRUCTURE_WALL]: 0
     , all: 1
 });
+_.set(Memory.rooms, ["W46N18", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 1
+    , [STRUCTURE_ROAD]: 0
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
 /*_.set(Memory.rooms, ["W48N52", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 0
@@ -416,36 +405,6 @@ _.set(Memory.rooms, ["W85N23", "creepMins"], {
     , builder: 1
     , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N23", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W85N23", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W86N39", "creepMins"], {
-    attacker: 0
-    , harvester: 3
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W86N39", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N39", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W86N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N39", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W86N39", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W85N38", "creepMins"], {
-    attacker: 0
-    , harvester: 3
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W85N38", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N38", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W85N38", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N38", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W85N38", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W86N43", "creepMins"], {
     attacker: 0
@@ -626,6 +585,21 @@ _.set(Memory.rooms, ["W46N41", "creepMins"], {
     , builder: 1
     , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N41", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W46N41", "canHarvestMineral"], false) ? 1 : 0)
+});
+_.set(Memory.rooms, ["W46N18", "creepMins"], {
+    attacker: 0
+    , harvester: 3
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W46N18", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N18", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
+    , scout: 0
+    , claimer: 1
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W46N18", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
+    , builder: 1
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N18", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
+    , rockhound: (_.get(Game.rooms, ["W46N18", "canHarvestMineral"], false) ? 1 : 0)
 });
 /*_.set(Memory.rooms, ["W48N52", "creepMins"], {
     attacker: 0
@@ -2016,59 +1990,47 @@ module.exports.loop = function () {
         }
     }
     
-    // TODO: Reorganise bootstrapping network in relation to the removal of W87N29
+    /*
+        TODO: Incorporate this into propper bootstrapping code
+        TODO: Reorganise bootstrapping network in relation to the removal of W87N29
+    */
     /*_.set(Memory.rooms, ["W87N29", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W85N38", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N38", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));*/ // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));*/
     _.set(Memory.rooms, ["W86N29", "creepMins", "adaptable"], ((
         //(_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
         (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
-        //|| (_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0)
         //|| (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)
         //|| (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)
         || (_.get(Memory.rooms, ["W64N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W64N31", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));
     _.set(Memory.rooms, ["W85N23", "creepMins", "adaptable"], ((
         //(_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
         (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
-    _.set(Memory.rooms, ["W86N39", "creepMins", "adaptable"], ((
-        /*(_.get(Memory.rooms, ["W86N43", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N43", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W91N45", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W91N45", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W94N49", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W94N49", "creepCounts", "adaptable"], -1) == 0)
-        || */(_.get(Memory.rooms, ["W85N38", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N38", "creepCounts", "adaptable"], -1) == 0) 
-        //|| (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
-    _.set(Memory.rooms, ["W85N38", "creepMins", "adaptable"], ((
-        /*(_.get(Memory.rooms, ["W86N43", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N43", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W91N45", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W91N45", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W94N49", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W94N49", "creepCounts", "adaptable"], -1) == 0)
-        || */(_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0) 
-        //|| (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));
     /*_.set(Memory.rooms, ["W86N43", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W86N43", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N43", "creepCounts", "adaptable"], -1) == 0) 
-        //||(_.get(Memory.rooms, ["W86N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N39", "creepCounts", "adaptable"], -1) == 0) 
-        //|| (_.get(Memory.rooms, ["W85N38", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N38", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));*/ // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));*/
     _.set(Memory.rooms, ["W9N45", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W9N45", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W9N45", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));
     _.set(Memory.rooms, ["W64N31", "creepMins", "adaptable"], ((
         /*(_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) 
         || */(_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N39", "creepCounts", "adaptable"], -1) == 0) 
-    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));
     _.set(Memory.rooms, ["W53N39", "creepMins", "adaptable"], ((
         /*(_.get(Memory.rooms, ["W53N42", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N42", "creepCounts", "adaptable"], -1) == 0) 
         || */(_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W46N41", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W46N41", "creepCounts", "adaptable"], -1) == 0) 
-    ) ? 1 : 0)); // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));
+    _.set(Memory.rooms, ["W46N41", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W46N18", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W46N18", "creepCounts", "adaptable"], -1) == 0) 
+    ) ? 1 : 0));
     /*_.set(Memory.rooms, ["W52N47", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W48N52", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W48N52", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["W42N51", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W42N51", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));*/ // TODO: Incorporate this into propper bootstrapping code
+    ) ? 1 : 0));*/
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     

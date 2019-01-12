@@ -2,14 +2,27 @@
   "annotations": {
     "list": [
       {
-        "$$hashKey": "object:935",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
+        "limit": 100,
         "name": "Annotations & Alerts",
+        "showIn": 0,
         "type": "dashboard"
+      },
+      {
+        "datasource": "ScreepsPlus-Graphite",
+        "enable": false,
+        "hide": false,
+        "iconColor": "#0a50a1",
+        "limit": 100,
+        "name": "Code Commit",
+        "showIn": 0,
+        "tags": [],
+        "target": "alias(changed(removeAboveValue(derivative(screeps.dragoonreas.codeUptime), 0)), \"Code Commit\")",
+        "type": "tags"
       }
     ]
   },
@@ -18,7 +31,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": 1180,
-  "iteration": 1521885891239,
+  "iteration": 1547286311602,
   "links": [],
   "panels": [
     {
@@ -118,6 +131,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "My Creeps",
       "tooltip": {
@@ -155,7 +169,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -203,6 +221,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Source Energy",
       "tooltip": {
@@ -236,7 +255,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -287,6 +310,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Enemy Creeps",
       "tooltip": {
@@ -320,7 +344,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -382,6 +410,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Spawn Activity",
       "tooltip": {
@@ -416,7 +445,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -466,6 +499,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Ground Energy",
       "tooltip": {
@@ -499,7 +533,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -549,6 +587,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Container Energy",
       "tooltip": {
@@ -582,7 +621,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -642,6 +685,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Spawn Energy",
       "tooltip": {
@@ -675,7 +719,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -723,6 +771,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Creep Energy",
       "tooltip": {
@@ -756,7 +805,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -806,6 +859,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Tower Energy",
       "tooltip": {
@@ -827,7 +881,7 @@
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": null,
+          "max": "6000",
           "min": "0",
           "show": true
         },
@@ -839,7 +893,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -900,6 +958,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Storage Energy",
       "tooltip": {
@@ -933,7 +992,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -983,6 +1046,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Link Energy",
       "tooltip": {
@@ -1016,7 +1080,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -1026,7 +1094,7 @@
       "datasource": "ScreepsPlus-Graphite",
       "editable": true,
       "error": false,
-      "fill": 1,
+      "fill": 0,
       "grid": {},
       "gridPos": {
         "h": 4,
@@ -1036,15 +1104,16 @@
       },
       "id": 17,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
+        "current": true,
         "hideEmpty": true,
         "hideZero": true,
         "max": false,
         "min": false,
         "show": false,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1054,23 +1123,71 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "/^.*Sites$/",
+          "steppedLine": true,
+          "yaxis": 2
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
+          "hide": false,
+          "refCount": 1,
           "refId": "A",
           "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.num_construction_sites, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'All \\1 Sites')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "B",
+          "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.construction_site_progress, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'All \\1 Site Progress')"
+        },
+        {
+          "hide": true,
+          "refCount": 0,
+          "refId": "C",
+          "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.construction_site_progress_total, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'All \\1 Site Progress Total')"
+        },
+        {
+          "hide": true,
+          "refCount": 1,
+          "refId": "D",
           "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.num_my_construction_sites, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'My \\1 Sites')"
+        },
+        {
+          "hide": true,
+          "refCount": 1,
+          "refId": "E",
+          "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.my_construction_site_progress, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'My \\1 Site Progress')"
+        },
+        {
+          "hide": true,
+          "refCount": 1,
+          "refId": "F",
+          "target": "aliasSub(screeps.dragoonreas.roomSummary.$Room.my_construction_site_progress_total, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'My \\1 Site Progress Total')"
+        },
+        {
+          "hide": false,
+          "refCount": 1,
+          "refId": "G",
+          "target": "aliasSub(asPercent(screeps.dragoonreas.roomSummary.$Room.construction_site_progress, #C), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'All \\1 Site Progress (%)')",
+          "targetFull": "aliasSub(asPercent(screeps.dragoonreas.roomSummary.$Room.construction_site_progress, aliasSub(screeps.dragoonreas.roomSummary.$Room.construction_site_progress_total, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'All \\1 Site Progress Total')), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'All \\1 Site Progress (%)')"
+        },
+        {
+          "hide": true,
+          "refCount": 0,
+          "refId": "H",
+          "target": "aliasSub(asPercent(screeps.dragoonreas.roomSummary.$Room.my_construction_site_progress, #F), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'My \\1 Site Progress (%)')",
+          "targetFull": "aliasSub(asPercent(screeps.dragoonreas.roomSummary.$Room.my_construction_site_progress, aliasSub(screeps.dragoonreas.roomSummary.$Room.my_construction_site_progress_total, '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'My \\1 Site Progress Total')), '^.*([WE](?:[0-9]+)[NS](?:[0-9]+)).*$', 'My \\1 Site Progress (%)')"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Construction Sites",
       "tooltip": {
@@ -1089,23 +1206,28 @@
       },
       "yaxes": [
         {
-          "decimals": 0,
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": 0,
-          "show": true
-        },
-        {
+          "decimals": null,
           "format": "short",
           "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
           "show": true
+        },
+        {
+          "decimals": 0,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -1262,68 +1384,81 @@
       "targets": [
         {
           "hide": true,
+          "refCount": 1,
           "refId": "A",
           "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.count, 3, 5), 'Travelling')"
         },
         {
           "hide": false,
+          "refCount": 1,
           "refId": "B",
-          "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), 'Total CPU')"
+          "target": "alias(sumSeriesWithWildcards(transformNull(removeBelowValue(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 0), 0), 3, 5), 'Total CPU')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "C",
           "target": "alias(transformNull(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.incompletePath, 3, 5), 0), 'Incomplete Path')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "D",
           "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.newDestination, 3, 5), 'New Destination')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "E",
           "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.offCourse, 3, 5), 'Off Course')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "F",
           "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "G",
           "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.portalCheck, 3, 5), 'Portal Check')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "H",
           "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.stuck, 3, 5), 'Stuck')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "I",
-          "target": "alias(divideSeries(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), #F), 'Avg/Creep CPU')",
-          "targetFull": "alias(divideSeries(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 3, 5), alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')), 'Avg/Creep CPU')"
+          "target": "alias(divideSeries(sumSeriesWithWildcards(transformNull(removeBelowValue(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 0), 0), 3, 5), #F), 'Avg/Creep CPU')",
+          "targetFull": "alias(divideSeries(sumSeriesWithWildcards(transformNull(removeBelowValue(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.cpu, 0), 0), 3, 5), alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.pathfinding, 3, 5), 'Pathfinding')), 'Avg/Creep CPU')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "J",
           "target": "alias(transformNull(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.collision, 3, 5), 0), 'Collision')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "L",
           "target": "alias(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.forceRepath, 3, 5), 'Forced Repath')"
         },
         {
           "hide": true,
+          "refCount": 1,
           "refId": "M",
           "target": "alias(transformNull(sumSeriesWithWildcards(screeps.dragoonreas.roomSummary.$Room.traveler.$TravelerRole.noPath, 3, 5), 0), 'No Path')"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Traveler",
       "tooltip": {
@@ -1356,7 +1491,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -1384,7 +1523,7 @@
       "fill": 0,
       "grid": {},
       "gridPos": {
-        "h": 5,
+        "h": 6,
         "w": 16,
         "x": 0,
         "y": 22
@@ -1397,8 +1536,9 @@
         "hideZero": false,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
+        "sideWidth": null,
         "total": false,
         "values": true
       },
@@ -1487,6 +1627,7 @@
           "target": "alias(screeps.dragoonreas.cpu.bucket, 'Bucket')"
         },
         {
+          "hide": false,
           "refId": "A",
           "target": "alias(screeps.dragoonreas.cpu.used, 'Used')"
         },
@@ -1506,6 +1647,7 @@
           "target": "alias(movingAverage(screeps.dragoonreas.cpu.used, '1hour'), 'Used MA')"
         },
         {
+          "hide": false,
           "refId": "F",
           "target": "alias(movingAverage(screeps.dragoonreas.cpu.bucket, '1hour'), 'Bucket MA')"
         },
@@ -1524,26 +1666,30 @@
         {
           "colorMode": "critical",
           "fill": false,
-          "line": false,
+          "line": true,
           "op": "lt",
-          "value": 500
+          "value": 500,
+          "yaxis": "left"
         },
         {
           "colorMode": "warning",
           "fill": false,
-          "line": false,
+          "line": true,
           "op": "lt",
-          "value": 7500
+          "value": 7500,
+          "yaxis": "left"
         },
         {
           "colorMode": "ok",
           "fill": false,
           "line": false,
           "op": "gt",
-          "value": 7500
+          "value": 7500,
+          "yaxis": "left"
         }
       ],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "CPU",
       "tooltip": {
@@ -1552,6 +1698,7 @@
         "sort": 0,
         "value_type": "cumulative"
       },
+      "transparent": false,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -1579,7 +1726,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -1592,7 +1743,7 @@
       "fill": 0,
       "grid": {},
       "gridPos": {
-        "h": 5,
+        "h": 6,
         "w": 8,
         "x": 16,
         "y": 22
@@ -1627,6 +1778,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Memory",
       "tooltip": {
@@ -1660,7 +1812,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -1670,10 +1826,10 @@
       "datasource": "-- Mixed --",
       "fill": 0,
       "gridPos": {
-        "h": 5,
+        "h": 6,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 28
       },
       "id": 238,
       "legend": {
@@ -1684,7 +1840,7 @@
         "hideZero": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "sideWidth": null,
         "sort": null,
@@ -1831,6 +1987,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Heap",
       "tooltip": {
@@ -1864,7 +2021,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -1872,7 +2033,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 34
       },
       "id": 242,
       "panels": [],
@@ -1886,12 +2047,13 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "ScreepsPlus-Graphite",
+      "decimals": 3,
       "fill": 1,
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 35
       },
       "hideTimeOverride": false,
       "id": 63,
@@ -1902,7 +2064,7 @@
         "hideZero": false,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -2011,69 +2173,82 @@
       "targets": [
         {
           "hide": true,
+          "refCount": 0,
           "refId": "A",
           "target": "alias(screeps.dragoonreas.currentTick, 'Tick Number')",
           "textEditor": false
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "D",
           "target": "alias(absolute(screeps.dragoonreas.timeSinceLastTick), 'Tick Duration')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "E",
           "target": "alias(absolute(movingAverage(screeps.dragoonreas.timeSinceLastTick, '1hour')), 'Tick Duration MA')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "F",
           "target": "alias(screeps.dragoonreas.node.totalTicksUsed, 'Node Usage')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "G",
           "target": "alias(screeps.dragoonreas.node.hasSwapped, 'Node Swapping')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "H",
           "target": "alias(screeps.dragoonreas.node.hasReset, 'Node Resetting')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "B",
           "target": "alias(screeps.dragoonreas.newCommit, 'Code Committed')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "C",
           "target": "alias(screeps.dragoonreas.codeUptime, 'Code Uptime')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "I",
           "target": "alias(transformNull(removeBelowValue(screeps.dragoonreas.ticksSkipped, 0), 0), 'Ticks Skipped')"
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "J",
           "target": "alias(absolute(transformNull(removeAboveValue(screeps.dragoonreas.ticksSkipped, 0), 0)), 'Ticks Repeated')"
         },
         {
           "hide": true,
+          "refCount": 0,
           "refId": "K",
           "target": "alias(derivative(screeps.dragoonreas.currentTick), 'Ticks/Graph Update')",
           "textEditor": false
         },
         {
           "hide": false,
+          "refCount": 0,
           "refId": "L",
           "target": "alias(transformNull(screeps.dragoonreas.tickSlept, 0), 'Tick Slept')",
           "textEditor": false
         },
         {
           "hide": true,
+          "refCount": 0,
           "refId": "M",
           "target": "alias(scale(invert(perSecond(screeps.dragoonreas.currentTick)), 1000),\"Tick Duration (alt)\")",
           "textEditor": true
@@ -2081,6 +2256,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Ticks",
       "tooltip": {
@@ -2102,7 +2278,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": "0",
+          "min": null,
           "show": true
         },
         {
@@ -2113,7 +2289,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -2121,7 +2301,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 40
       },
       "id": 245,
       "panels": [],
@@ -2138,10 +2318,10 @@
       "decimals": null,
       "fill": 1,
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 41
       },
       "id": 137,
       "legend": {
@@ -2150,7 +2330,7 @@
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -2212,6 +2392,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "GCL Monthly Leaderboard",
       "tooltip": {
@@ -2245,7 +2426,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -2253,7 +2438,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 42
+        "y": 46
       },
       "id": 244,
       "panels": [],
@@ -2276,7 +2461,7 @@
         "h": 5,
         "w": 16,
         "x": 0,
-        "y": 43
+        "y": 47
       },
       "id": 23,
       "legend": {
@@ -2364,6 +2549,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "GCL",
       "tooltip": {
@@ -2399,7 +2585,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -2423,7 +2613,7 @@
         "h": 5,
         "w": 4,
         "x": 16,
-        "y": 43
+        "y": 47
       },
       "id": 36,
       "interval": null,
@@ -2509,7 +2699,7 @@
         "h": 5,
         "w": 4,
         "x": 20,
-        "y": 43
+        "y": 47
       },
       "id": 28,
       "interval": null,
@@ -2592,7 +2782,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 48
+        "y": 52
       },
       "id": 243,
       "panels": [],
@@ -2614,7 +2804,7 @@
         "h": 4,
         "w": 12,
         "x": 0,
-        "y": 49
+        "y": 53
       },
       "id": 14,
       "legend": {
@@ -2651,6 +2841,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Controller Downgrade",
       "tooltip": {
@@ -2684,7 +2875,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -2700,7 +2895,7 @@
         "h": 4,
         "w": 12,
         "x": 12,
-        "y": 49
+        "y": 53
       },
       "height": "",
       "id": 15,
@@ -2830,6 +3025,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Controller Progress",
       "tooltip": {
@@ -2864,7 +3060,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -2872,7 +3072,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 53
+        "y": 57
       },
       "id": 246,
       "panels": [],
@@ -2894,7 +3094,7 @@
         "h": 3,
         "w": 8,
         "x": 0,
-        "y": 54
+        "y": 58
       },
       "id": 24,
       "legend": {
@@ -2926,6 +3126,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Terminal Energy",
       "tooltip": {
@@ -2959,7 +3160,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -2976,7 +3181,7 @@
         "h": 3,
         "w": 8,
         "x": 8,
-        "y": 54
+        "y": 58
       },
       "id": 25,
       "legend": {
@@ -3010,6 +3215,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Terminal Minerals",
       "tooltip": {
@@ -3043,7 +3249,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -3060,7 +3270,7 @@
         "h": 3,
         "w": 8,
         "x": 16,
-        "y": 54
+        "y": 58
       },
       "id": 26,
       "legend": {
@@ -3092,6 +3302,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Credits",
       "tooltip": {
@@ -3127,7 +3338,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -3135,7 +3350,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 61
       },
       "id": 247,
       "panels": [],
@@ -3157,7 +3372,7 @@
         "h": 3,
         "w": 8,
         "x": 0,
-        "y": 58
+        "y": 62
       },
       "id": 21,
       "legend": {
@@ -3189,6 +3404,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Mineral Storage",
       "tooltip": {
@@ -3222,7 +3438,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -3238,7 +3458,7 @@
         "h": 3,
         "w": 8,
         "x": 8,
-        "y": 58
+        "y": 62
       },
       "id": 22,
       "legend": {
@@ -3270,6 +3490,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Mineral Available",
       "tooltip": {
@@ -3303,7 +3524,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -3319,7 +3544,7 @@
         "h": 3,
         "w": 8,
         "x": 16,
-        "y": 58
+        "y": 62
       },
       "id": 27,
       "legend": {
@@ -3357,6 +3582,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Ground Minerals",
       "tooltip": {
@@ -3390,7 +3616,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -3398,7 +3628,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 61
+        "y": 65
       },
       "id": 248,
       "panels": [],
@@ -3417,18 +3647,18 @@
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 62
+        "y": 66
       },
       "id": 139,
       "legend": {
-        "avg": true,
-        "current": true,
+        "avg": false,
+        "current": false,
         "max": false,
         "min": false,
-        "rightSide": true,
-        "show": true,
+        "rightSide": false,
+        "show": false,
         "total": false,
-        "values": true
+        "values": false
       },
       "lines": true,
       "linewidth": 1,
@@ -3443,7 +3673,6 @@
           "alias": "Processed",
           "color": "#BF1B00",
           "fill": 1,
-          "legend": false,
           "linewidth": 2,
           "zindex": -1
         },
@@ -3456,7 +3685,6 @@
         {
           "alias": "Processed/s MA",
           "color": "#EAB839",
-          "legend": false,
           "linewidth": 2,
           "yaxis": 2,
           "zindex": 2
@@ -3484,6 +3712,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Power",
       "tooltip": {
@@ -3516,7 +3745,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -3524,7 +3757,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 65
+        "y": 69
       },
       "id": 249,
       "panels": [],
@@ -3546,7 +3779,7 @@
         "h": 3,
         "w": 12,
         "x": 0,
-        "y": 66
+        "y": 70
       },
       "id": 13,
       "legend": {
@@ -3592,6 +3825,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Worst Container/Road",
       "tooltip": {
@@ -3625,7 +3859,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -3641,7 +3879,7 @@
         "h": 3,
         "w": 12,
         "x": 12,
-        "y": 66
+        "y": 70
       },
       "id": 19,
       "legend": {
@@ -3689,6 +3927,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Worst Rampart/Wall",
       "tooltip": {
@@ -3724,67 +3963,78 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 69
+        "y": 73
       },
       "id": 250,
-      "panels": [],
+      "panels": [
+        {
+          "dashboardFilter": "",
+          "folderId": null,
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 0,
+            "y": 74
+          },
+          "id": 80,
+          "limit": "10",
+          "links": [],
+          "nameFilter": "",
+          "onlyAlertsOnDashboard": true,
+          "show": "current",
+          "sortOrder": 3,
+          "stateFilter": [
+            "no_data",
+            "ok",
+            "paused",
+            "execution_error",
+            "alerting"
+          ],
+          "title": "Current Status",
+          "type": "alertlist"
+        },
+        {
+          "dashboardFilter": "",
+          "folderId": null,
+          "gridPos": {
+            "h": 4,
+            "w": 12,
+            "x": 12,
+            "y": 74
+          },
+          "id": 79,
+          "limit": "10",
+          "links": [],
+          "nameFilter": "",
+          "onlyAlertsOnDashboard": true,
+          "show": "changes",
+          "sortOrder": 3,
+          "stateFilter": [
+            "no_data",
+            "ok",
+            "paused",
+            "execution_error",
+            "alerting"
+          ],
+          "title": "Status History",
+          "type": "alertlist"
+        }
+      ],
       "repeat": null,
       "title": "Alert Status",
       "type": "row"
-    },
-    {
-      "gridPos": {
-        "h": 4,
-        "w": 12,
-        "x": 0,
-        "y": 70
-      },
-      "id": 80,
-      "limit": "10",
-      "links": [],
-      "onlyAlertsOnDashboard": true,
-      "show": "current",
-      "sortOrder": 3,
-      "stateFilter": [
-        "no_data",
-        "ok",
-        "paused",
-        "execution_error",
-        "alerting"
-      ],
-      "title": "Current Status",
-      "type": "alertlist"
-    },
-    {
-      "gridPos": {
-        "h": 4,
-        "w": 12,
-        "x": 12,
-        "y": 70
-      },
-      "id": 79,
-      "limit": "10",
-      "links": [],
-      "onlyAlertsOnDashboard": true,
-      "show": "changes",
-      "sortOrder": 3,
-      "stateFilter": [
-        "no_data",
-        "ok",
-        "paused",
-        "execution_error",
-        "alerting"
-      ],
-      "title": "Status History",
-      "type": "alertlist"
     },
     {
       "collapsed": false,
@@ -3800,8 +4050,8 @@
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W52N47",
-          "value": "W52N47"
+          "text": "W46N18",
+          "value": "W46N18"
         }
       },
       "title": "$Room",
@@ -3848,8 +4098,8 @@
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W52N47",
-          "value": "W52N47"
+          "text": "W46N18",
+          "value": "W46N18"
         }
       },
       "seriesOverrides": [
@@ -3925,11 +4175,13 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)",
+          "textEditor": false
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Assigned Roles",
       "tooltip": {
@@ -3963,7 +4215,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
@@ -3980,8 +4236,8 @@
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W52N47",
-          "value": "W52N47"
+          "text": "W46N18",
+          "value": "W46N18"
         }
       },
       "title": "Room Layout",
@@ -4028,8 +4284,8 @@
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W52N47",
-          "value": "W52N47"
+          "text": "W46N18",
+          "value": "W46N18"
         }
       },
       "seriesOverrides": [
@@ -4162,6 +4418,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Executed Roles",
       "tooltip": {
@@ -4196,7 +4453,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -4213,11 +4474,12 @@
       },
       "id": 99,
       "legend": {
+        "alignAsTable": false,
         "avg": true,
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -4233,8 +4495,8 @@
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W52N47",
-          "value": "W52N47"
+          "text": "W46N18",
+          "value": "W46N18"
         }
       },
       "seriesOverrides": [
@@ -4297,6 +4559,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "RCL",
       "tooltip": {
@@ -4329,7 +4592,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -4386,8 +4653,8 @@
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W52N47",
-          "value": "W52N47"
+          "text": "W46N18",
+          "value": "W46N18"
         }
       },
       "sparkline": {
@@ -4477,8 +4744,8 @@
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W52N47",
-          "value": "W52N47"
+          "text": "W46N18",
+          "value": "W46N18"
         }
       },
       "sparkline": {
@@ -4567,8 +4834,8 @@
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W52N47",
-          "value": "W52N47"
+          "text": "W46N18",
+          "value": "W46N18"
         }
       },
       "seriesOverrides": [
@@ -4624,6 +4891,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Walls Vs. Ramparts",
       "tooltip": {
@@ -4656,7 +4924,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -4669,13 +4941,13 @@
       "id": 252,
       "panels": [],
       "repeat": null,
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 251,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W53N39",
-          "value": "W53N39"
+          "text": "W46N41",
+          "value": "W46N41"
         }
       },
       "title": "$Room",
@@ -4719,14 +4991,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 35,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W53N39",
-          "value": "W53N39"
+          "text": "W46N41",
+          "value": "W46N41"
         }
       },
       "seriesOverrides": [
@@ -4802,11 +5074,13 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)",
+          "textEditor": false
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Assigned Roles",
       "tooltip": {
@@ -4840,7 +5114,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
@@ -4854,14 +5132,14 @@
       "id": 254,
       "links": [],
       "mode": "html",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 188,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W53N39",
-          "value": "W53N39"
+          "text": "W46N41",
+          "value": "W46N41"
         }
       },
       "title": "Room Layout",
@@ -4905,14 +5183,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 138,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W53N39",
-          "value": "W53N39"
+          "text": "W46N41",
+          "value": "W46N41"
         }
       },
       "seriesOverrides": [
@@ -5045,6 +5323,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Executed Roles",
       "tooltip": {
@@ -5079,7 +5358,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -5096,11 +5379,12 @@
       },
       "id": 256,
       "legend": {
+        "alignAsTable": false,
         "avg": true,
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -5113,14 +5397,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 99,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W53N39",
-          "value": "W53N39"
+          "text": "W46N41",
+          "value": "W46N41"
         }
       },
       "seriesOverrides": [
@@ -5183,6 +5467,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "RCL",
       "tooltip": {
@@ -5215,7 +5500,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -5269,14 +5558,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 47,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W53N39",
-          "value": "W53N39"
+          "text": "W46N41",
+          "value": "W46N41"
         }
       },
       "sparkline": {
@@ -5363,14 +5652,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 29,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W53N39",
-          "value": "W53N39"
+          "text": "W46N41",
+          "value": "W46N41"
         }
       },
       "sparkline": {
@@ -5456,14 +5745,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 100,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W53N39",
-          "value": "W53N39"
+          "text": "W46N41",
+          "value": "W46N41"
         }
       },
       "seriesOverrides": [
@@ -5519,6 +5808,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Walls Vs. Ramparts",
       "tooltip": {
@@ -5551,7 +5841,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -5564,13 +5858,13 @@
       "id": 260,
       "panels": [],
       "repeat": null,
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 251,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W64N31",
-          "value": "W64N31"
+          "text": "W52N47",
+          "value": "W52N47"
         }
       },
       "title": "$Room",
@@ -5614,14 +5908,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 35,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W64N31",
-          "value": "W64N31"
+          "text": "W52N47",
+          "value": "W52N47"
         }
       },
       "seriesOverrides": [
@@ -5697,11 +5991,13 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)",
+          "textEditor": false
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Assigned Roles",
       "tooltip": {
@@ -5735,7 +6031,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
@@ -5749,14 +6049,14 @@
       "id": 262,
       "links": [],
       "mode": "html",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 188,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W64N31",
-          "value": "W64N31"
+          "text": "W52N47",
+          "value": "W52N47"
         }
       },
       "title": "Room Layout",
@@ -5800,14 +6100,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 138,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W64N31",
-          "value": "W64N31"
+          "text": "W52N47",
+          "value": "W52N47"
         }
       },
       "seriesOverrides": [
@@ -5940,6 +6240,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Executed Roles",
       "tooltip": {
@@ -5974,7 +6275,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -5991,11 +6296,12 @@
       },
       "id": 264,
       "legend": {
+        "alignAsTable": false,
         "avg": true,
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -6008,14 +6314,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 99,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W64N31",
-          "value": "W64N31"
+          "text": "W52N47",
+          "value": "W52N47"
         }
       },
       "seriesOverrides": [
@@ -6078,6 +6384,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "RCL",
       "tooltip": {
@@ -6110,7 +6417,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -6164,14 +6475,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 47,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W64N31",
-          "value": "W64N31"
+          "text": "W52N47",
+          "value": "W52N47"
         }
       },
       "sparkline": {
@@ -6258,14 +6569,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 29,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W64N31",
-          "value": "W64N31"
+          "text": "W52N47",
+          "value": "W52N47"
         }
       },
       "sparkline": {
@@ -6351,14 +6662,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 100,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W64N31",
-          "value": "W64N31"
+          "text": "W52N47",
+          "value": "W52N47"
         }
       },
       "seriesOverrides": [
@@ -6414,6 +6725,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Walls Vs. Ramparts",
       "tooltip": {
@@ -6446,7 +6758,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -6459,13 +6775,13 @@
       "id": 268,
       "panels": [],
       "repeat": null,
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 251,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N23",
-          "value": "W85N23"
+          "text": "W53N39",
+          "value": "W53N39"
         }
       },
       "title": "$Room",
@@ -6509,14 +6825,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 35,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N23",
-          "value": "W85N23"
+          "text": "W53N39",
+          "value": "W53N39"
         }
       },
       "seriesOverrides": [
@@ -6592,11 +6908,13 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)",
+          "textEditor": false
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Assigned Roles",
       "tooltip": {
@@ -6630,7 +6948,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
@@ -6644,14 +6966,14 @@
       "id": 270,
       "links": [],
       "mode": "html",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 188,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N23",
-          "value": "W85N23"
+          "text": "W53N39",
+          "value": "W53N39"
         }
       },
       "title": "Room Layout",
@@ -6695,14 +7017,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 138,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N23",
-          "value": "W85N23"
+          "text": "W53N39",
+          "value": "W53N39"
         }
       },
       "seriesOverrides": [
@@ -6835,6 +7157,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Executed Roles",
       "tooltip": {
@@ -6869,7 +7192,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -6886,11 +7213,12 @@
       },
       "id": 272,
       "legend": {
+        "alignAsTable": false,
         "avg": true,
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -6903,14 +7231,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 99,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N23",
-          "value": "W85N23"
+          "text": "W53N39",
+          "value": "W53N39"
         }
       },
       "seriesOverrides": [
@@ -6973,6 +7301,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "RCL",
       "tooltip": {
@@ -7005,7 +7334,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -7059,14 +7392,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 47,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N23",
-          "value": "W85N23"
+          "text": "W53N39",
+          "value": "W53N39"
         }
       },
       "sparkline": {
@@ -7153,14 +7486,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 29,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N23",
-          "value": "W85N23"
+          "text": "W53N39",
+          "value": "W53N39"
         }
       },
       "sparkline": {
@@ -7246,14 +7579,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 100,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N23",
-          "value": "W85N23"
+          "text": "W53N39",
+          "value": "W53N39"
         }
       },
       "seriesOverrides": [
@@ -7309,6 +7642,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Walls Vs. Ramparts",
       "tooltip": {
@@ -7341,7 +7675,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -7354,13 +7692,13 @@
       "id": 276,
       "panels": [],
       "repeat": null,
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 251,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N38",
-          "value": "W85N38"
+          "text": "W64N31",
+          "value": "W64N31"
         }
       },
       "title": "$Room",
@@ -7404,14 +7742,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 35,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N38",
-          "value": "W85N38"
+          "text": "W64N31",
+          "value": "W64N31"
         }
       },
       "seriesOverrides": [
@@ -7487,11 +7825,13 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)",
+          "textEditor": false
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Assigned Roles",
       "tooltip": {
@@ -7525,7 +7865,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
@@ -7539,14 +7883,14 @@
       "id": 278,
       "links": [],
       "mode": "html",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 188,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N38",
-          "value": "W85N38"
+          "text": "W64N31",
+          "value": "W64N31"
         }
       },
       "title": "Room Layout",
@@ -7590,14 +7934,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 138,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N38",
-          "value": "W85N38"
+          "text": "W64N31",
+          "value": "W64N31"
         }
       },
       "seriesOverrides": [
@@ -7730,6 +8074,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Executed Roles",
       "tooltip": {
@@ -7764,7 +8109,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -7781,11 +8130,12 @@
       },
       "id": 280,
       "legend": {
+        "alignAsTable": false,
         "avg": true,
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -7798,14 +8148,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 99,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N38",
-          "value": "W85N38"
+          "text": "W64N31",
+          "value": "W64N31"
         }
       },
       "seriesOverrides": [
@@ -7868,6 +8218,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "RCL",
       "tooltip": {
@@ -7900,7 +8251,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -7954,14 +8309,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 47,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N38",
-          "value": "W85N38"
+          "text": "W64N31",
+          "value": "W64N31"
         }
       },
       "sparkline": {
@@ -8048,14 +8403,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 29,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N38",
-          "value": "W85N38"
+          "text": "W64N31",
+          "value": "W64N31"
         }
       },
       "sparkline": {
@@ -8141,14 +8496,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 100,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W85N38",
-          "value": "W85N38"
+          "text": "W64N31",
+          "value": "W64N31"
         }
       },
       "seriesOverrides": [
@@ -8204,6 +8559,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Walls Vs. Ramparts",
       "tooltip": {
@@ -8236,7 +8592,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -8249,13 +8609,13 @@
       "id": 284,
       "panels": [],
       "repeat": null,
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 251,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N29",
-          "value": "W86N29"
+          "text": "W85N23",
+          "value": "W85N23"
         }
       },
       "title": "$Room",
@@ -8299,14 +8659,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 35,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N29",
-          "value": "W86N29"
+          "text": "W85N23",
+          "value": "W85N23"
         }
       },
       "seriesOverrides": [
@@ -8382,11 +8742,13 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)",
+          "textEditor": false
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Assigned Roles",
       "tooltip": {
@@ -8420,7 +8782,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
@@ -8434,14 +8800,14 @@
       "id": 286,
       "links": [],
       "mode": "html",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 188,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N29",
-          "value": "W86N29"
+          "text": "W85N23",
+          "value": "W85N23"
         }
       },
       "title": "Room Layout",
@@ -8485,14 +8851,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 138,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N29",
-          "value": "W86N29"
+          "text": "W85N23",
+          "value": "W85N23"
         }
       },
       "seriesOverrides": [
@@ -8625,6 +8991,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Executed Roles",
       "tooltip": {
@@ -8659,7 +9026,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -8676,11 +9047,12 @@
       },
       "id": 288,
       "legend": {
+        "alignAsTable": false,
         "avg": true,
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -8693,14 +9065,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 99,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N29",
-          "value": "W86N29"
+          "text": "W85N23",
+          "value": "W85N23"
         }
       },
       "seriesOverrides": [
@@ -8763,6 +9135,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "RCL",
       "tooltip": {
@@ -8795,7 +9168,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -8849,14 +9226,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 47,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N29",
-          "value": "W86N29"
+          "text": "W85N23",
+          "value": "W85N23"
         }
       },
       "sparkline": {
@@ -8943,14 +9320,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 29,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N29",
-          "value": "W86N29"
+          "text": "W85N23",
+          "value": "W85N23"
         }
       },
       "sparkline": {
@@ -9036,14 +9413,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 100,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N29",
-          "value": "W86N29"
+          "text": "W85N23",
+          "value": "W85N23"
         }
       },
       "seriesOverrides": [
@@ -9099,6 +9476,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Walls Vs. Ramparts",
       "tooltip": {
@@ -9131,7 +9509,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -9144,13 +9526,13 @@
       "id": 292,
       "panels": [],
       "repeat": null,
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 251,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N39",
-          "value": "W86N39"
+          "text": "W86N29",
+          "value": "W86N29"
         }
       },
       "title": "$Room",
@@ -9194,14 +9576,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 35,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N39",
-          "value": "W86N39"
+          "text": "W86N29",
+          "value": "W86N29"
         }
       },
       "seriesOverrides": [
@@ -9277,11 +9659,13 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)",
+          "textEditor": false
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Assigned Roles",
       "tooltip": {
@@ -9315,7 +9699,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
@@ -9329,14 +9717,14 @@
       "id": 294,
       "links": [],
       "mode": "html",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 188,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N39",
-          "value": "W86N39"
+          "text": "W86N29",
+          "value": "W86N29"
         }
       },
       "title": "Room Layout",
@@ -9380,14 +9768,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 138,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N39",
-          "value": "W86N39"
+          "text": "W86N29",
+          "value": "W86N29"
         }
       },
       "seriesOverrides": [
@@ -9520,6 +9908,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Executed Roles",
       "tooltip": {
@@ -9554,7 +9943,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -9571,11 +9964,12 @@
       },
       "id": 296,
       "legend": {
+        "alignAsTable": false,
         "avg": true,
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -9588,14 +9982,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 99,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N39",
-          "value": "W86N39"
+          "text": "W86N29",
+          "value": "W86N29"
         }
       },
       "seriesOverrides": [
@@ -9658,6 +10052,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "RCL",
       "tooltip": {
@@ -9690,7 +10085,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -9744,14 +10143,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 47,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N39",
-          "value": "W86N39"
+          "text": "W86N29",
+          "value": "W86N29"
         }
       },
       "sparkline": {
@@ -9838,14 +10237,14 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 29,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N39",
-          "value": "W86N39"
+          "text": "W86N29",
+          "value": "W86N29"
         }
       },
       "sparkline": {
@@ -9931,14 +10330,14 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 100,
       "repeatedByRow": true,
       "scopedVars": {
         "Room": {
           "selected": false,
-          "text": "W86N39",
-          "value": "W86N39"
+          "text": "W86N29",
+          "value": "W86N29"
         }
       },
       "seriesOverrides": [
@@ -9994,6 +10393,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Walls Vs. Ramparts",
       "tooltip": {
@@ -10026,7 +10426,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -10039,7 +10443,7 @@
       "id": 300,
       "panels": [],
       "repeat": null,
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 251,
       "scopedVars": {
         "Room": {
@@ -10089,7 +10493,7 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 35,
       "repeatedByRow": true,
       "scopedVars": {
@@ -10172,11 +10576,13 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)"
+          "target": "aliasByNode(sortByMaxima(sortByTotal(screeps.dragoonreas.roomSummary.$Room.creep_counts.$AssignedRole)), 5)",
+          "textEditor": false
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Assigned Roles",
       "tooltip": {
@@ -10210,7 +10616,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "content": "<center>\n<p>\n<a href=\"https://screeps.com/a/#!/room/shard0/$Room\">$Room</a>\n</p>\n<img src=\"https://d3os7yery2usni.cloudfront.net/map/shard0/$Room.png\" />\n</center>\n",
@@ -10224,7 +10634,7 @@
       "id": 302,
       "links": [],
       "mode": "html",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 188,
       "repeatedByRow": true,
       "scopedVars": {
@@ -10275,7 +10685,7 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 138,
       "repeatedByRow": true,
       "scopedVars": {
@@ -10415,6 +10825,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Executed Roles",
       "tooltip": {
@@ -10449,7 +10860,11 @@
           "min": "0.5",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "aliasColors": {},
@@ -10466,11 +10881,12 @@
       },
       "id": 304,
       "legend": {
+        "alignAsTable": false,
         "avg": true,
         "current": true,
         "max": true,
         "min": true,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -10483,7 +10899,7 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 99,
       "repeatedByRow": true,
       "scopedVars": {
@@ -10553,6 +10969,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "RCL",
       "tooltip": {
@@ -10585,7 +11002,11 @@
           "min": "0",
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -10639,7 +11060,7 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 47,
       "repeatedByRow": true,
       "scopedVars": {
@@ -10733,7 +11154,7 @@
           "to": "null"
         }
       ],
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 29,
       "repeatedByRow": true,
       "scopedVars": {
@@ -10826,7 +11247,7 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "repeatIteration": 1521885891239,
+      "repeatIteration": 1547286311602,
       "repeatPanelId": 100,
       "repeatedByRow": true,
       "scopedVars": {
@@ -10889,6 +11310,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Walls Vs. Ramparts",
       "tooltip": {
@@ -10921,7 +11343,11 @@
           "min": null,
           "show": true
         }
-      ]
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "1m",
@@ -10935,12 +11361,12 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
-          "value": [
-            "$__all"
-          ]
+          "value": "$__all"
         },
         "datasource": "ScreepsPlus-Graphite",
+        "definition": "",
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -10949,7 +11375,8 @@
         "options": [],
         "query": "screeps.dragoonreas.roomSummary.*",
         "refresh": 1,
-        "regex": "W(?!17|19|24|42|47|48|55|65|72|81|84|87|91|94)\\d+N(?!32|42|43)\\d+",
+        "regex": "(?!W61N41|W85N38|W86N39)\\S+",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -10960,10 +11387,12 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
         "datasource": "ScreepsPlus-Graphite",
+        "definition": "",
         "hide": 2,
         "includeAll": true,
         "label": null,
@@ -10973,6 +11402,7 @@
         "query": "screeps.dragoonreas.roomSummary.*.ground_resources.*",
         "refresh": 1,
         "regex": "(?!energy|power)\\w+",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -10983,10 +11413,12 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
         "datasource": "ScreepsPlus-Graphite",
+        "definition": "",
         "hide": 2,
         "includeAll": true,
         "label": null,
@@ -10996,6 +11428,7 @@
         "query": "screeps.dragoonreas.roomSummary.*.creep_counts.*",
         "refresh": 1,
         "regex": "(?!collector|hoarder)\\w+",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -11006,10 +11439,12 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
         "datasource": "ScreepsPlus-Graphite",
+        "definition": "",
         "hide": 2,
         "includeAll": true,
         "label": null,
@@ -11019,6 +11454,7 @@
         "query": "screeps.dragoonreas.roomSummary.*.creep_exe_counts.*",
         "refresh": 1,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -11029,10 +11465,12 @@
       {
         "allValue": null,
         "current": {
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
         "datasource": "ScreepsPlus-Graphite",
+        "definition": "",
         "hide": 2,
         "includeAll": true,
         "label": null,
@@ -11042,6 +11480,33 @@
         "query": "screeps.dragoonreas.roomSummary.*.creep_confusion_counts.*",
         "refresh": 1,
         "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "ScreepsPlus-Graphite",
+        "definition": "",
+        "hide": 2,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "IdleRole",
+        "options": [],
+        "query": "screeps.dragoonreas.roomSummary.*.creep_idle_counts.*",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -11056,31 +11521,7 @@
           "value": "$__all"
         },
         "datasource": "ScreepsPlus-Graphite",
-        "hide": 2,
-        "includeAll": true,
-        "label": null,
-        "multi": true,
-        "name": "IdleRole",
-        "options": [],
-        "query": "screeps.dragoonreas.roomSummary.*.creep_idle_counts.*",
-        "refresh": 1,
-        "regex": "",
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": null,
-        "current": {
-          "text": "All",
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": "ScreepsPlus-Graphite",
+        "definition": "",
         "hide": 2,
         "includeAll": true,
         "label": null,
@@ -11090,6 +11531,7 @@
         "query": "screeps.dragoonreas.roomSummary.*.traveler.*",
         "refresh": 2,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -11132,5 +11574,5 @@
   "timezone": "browser",
   "title": "Screeps (Upgraded)",
   "uid": "000001180",
-  "version": 244
+  "version": 263
 }

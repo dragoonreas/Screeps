@@ -328,158 +328,6 @@ let roleScout = {
                     }
                 }
             }
-            else if (sentFrom == "W91N42" 
-                && (sentTo == "W85N38" 
-                    || sentTo == "W86N39")) {
-                let waypoints = [
-                    "W90N40"
-                    , sentTo
-                ];
-                if (creep.memory.waypoint < waypoints.length 
-                    && creep.room.name == waypoints[creep.memory.waypoint]) {
-                    ++creep.memory.waypoint;
-                }
-                
-                if (creep.memory.waypoint == 0) {
-                    creep.travelTo(new RoomPosition(25, 25, "W90N40"), { 
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W90N40", true);
-                }
-                else if (creep.memory.waypoint == 1 
-                    || (sentTo == "W85N38" && creep.pos.isNearTo(43, 37) == false) 
-                    || (sentTo == "W86N39" && creep.pos.isNearTo(19, 19) == false)) {
-                    if (sentTo == "W85N38") {
-                        creep.travelTo(new RoomPosition(43, 37, "W85N38"));
-                        creep.say(travelToIcons(creep) + "W85N38", true);
-                    }
-                    else if (sentTo == "W86N39") {
-                        creep.travelTo(new RoomPosition(19, 19, "W86N39"));
-                        creep.say(travelToIcons(creep) + "W86N39", true);
-                    }
-                    else {
-                        incrementConfusedCreepCount(creep);
-                        creep.say("?", true);
-                    }
-                }
-                else if (creep.memory.goalReached != true) {
-                    creep.say(ICONS["testPassed"], true);
-                    creep.memory.goalReached = true;
-                    if (creep.memory.role == "scout") {
-                        console.log("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Game.notify("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
-                    }
-                }
-            }
-            else if (sentTo == "W91N42" 
-                && (sentFrom == "W85N38" 
-                    || sentFrom == "W86N39")) {
-                let waypoints = [
-                    "W90N40"
-                    , "W91N42"
-                ];
-                if (creep.memory.waypoint < waypoints.length 
-                    && creep.room.name == waypoints[creep.memory.waypoint]) {
-                    ++creep.memory.waypoint;
-                }
-                
-                if (creep.memory.waypoint == 0) {
-                    creep.travelTo(new RoomPosition(25, 25, "W90N40"), { 
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W90N40", true);
-                }
-                else if (creep.memory.waypoint == 1 
-                    || creep.pos.isNearTo(12, 28) == false) {
-                    creep.travelTo(new RoomPosition(12, 28, "W91N42"));
-                    creep.say(travelToIcons(creep) + "W91N42", true);
-                }
-                else if (creep.memory.goalReached != true) {
-                    creep.say(ICONS["testPassed"], true);
-                    creep.memory.goalReached = true;
-                    if (creep.memory.role == "scout") {
-                        console.log("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Game.notify("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
-                    }
-                }
-            }
-            else if (sentFrom == "W94N49" 
-                && (sentTo == "W85N38" 
-                    || sentTo == "W86N39")) {
-                let waypoints = [
-                    "W93N40"
-                    , sentTo
-                ];
-                if (creep.memory.waypoint < waypoints.length 
-                    && creep.room.name == waypoints[creep.memory.waypoint]) {
-                    ++creep.memory.waypoint;
-                }
-                
-                if (creep.memory.waypoint == 0 
-                    || creep.room.name == "W93N50") {
-                    creep.travelTo(new RoomPosition(47, 41, "W93N50"));
-                    creep.say(travelToIcons(creep) + "W93N50", true);
-                }
-                else if (creep.memory.waypoint == 1 
-                    || (sentTo == "W85N38" && creep.pos.isNearTo(43, 37) == false) 
-                    || (sentTo == "W86N39" && creep.pos.isNearTo(19, 19) == false)) {
-                    if (sentTo == "W85N38") {
-                        creep.travelTo(new RoomPosition(43, 37, "W85N38"));
-                        creep.say(travelToIcons(creep) + "W85N38", true);
-                    }
-                    else if (sentTo == "W86N39") {
-                        creep.travelTo(new RoomPosition(19, 19, "W86N39"));
-                        creep.say(travelToIcons(creep) + "W86N39", true);
-                    }
-                    else {
-                        incrementConfusedCreepCount(creep);
-                        creep.say("?", true);
-                    }
-                }
-                else if (creep.memory.goalReached != true) {
-                    creep.say(ICONS["testPassed"], true);
-                    creep.memory.goalReached = true;
-                    if (creep.memory.role == "scout") {
-                        console.log("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Game.notify("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
-                    }
-                }
-            }
-            else if (sentTo == "W94N49" 
-                && (sentFrom == "W85N38" 
-                    || sentFrom == "W86N39")) {
-                let waypoints = [
-                    "W93N50"
-                    , "W94N49"
-                ];
-                if (creep.memory.waypoint < waypoints.length 
-                    && creep.room.name == waypoints[creep.memory.waypoint]) {
-                    ++creep.memory.waypoint;
-                }
-                
-                if (creep.memory.waypoint == 0 
-                    || creep.room.name == "W93N40") {
-                    creep.travelTo(new RoomPosition(47, 12, "W93N40"));
-                    creep.say(travelToIcons(creep) + "W93N40", true);
-                }
-                else if (creep.memory.waypoint == 1 
-                    || creep.pos.isNearTo(15, 36) == false) {
-                    creep.travelTo(new RoomPosition(15, 36, "W94N49"));
-                    creep.say(travelToIcons(creep) + "W94N49", true);
-                }
-                else if (creep.memory.goalReached != true) {
-                    creep.say(ICONS["testPassed"], true);
-                    creep.memory.goalReached = true;
-                    if (creep.memory.role == "scout") {
-                        console.log("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Game.notify("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
-                    }
-                }
-            }
             else if (sentFrom == "W48N42" 
                 && sentTo == "W53N39") {
                 let waypoints = [
@@ -835,28 +683,29 @@ let roleScout = {
                     }
                 }
             }
-            else if (sentTo == "W91N45" 
-                && (sentFrom == "W85N38" 
-                    || sentFrom == "W86N39")) {
+            else if (sentFrom == "W46N41" 
+                || sentTo == "W46N18") {
                 let waypoints = [
-                    "W90N40"
-                    , "W91N45"
+                    "W46N20"
+                    , "W46N18"
                 ];
-                if (creep.memory.waypoint < waypoints.length 
+                if (creep.memory.waypoint > 0 
+                    && creep.room.name == "W46N40") { // back-tracked through portal
+                    creep.memory.waypoint = 0;
+                }
+                else if (creep.memory.waypoint < waypoints.length 
                     && creep.room.name == waypoints[creep.memory.waypoint]) {
                     ++creep.memory.waypoint;
                 }
                 
                 if (creep.memory.waypoint == 0) {
-                    creep.travelTo(new RoomPosition(25, 25, "W90N40"), { 
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W90N40", true);
+                    creep.travelTo(new RoomPosition(48, 37, "W46N40"));
+                    creep.say(travelToIcons(creep) + "W46N40", true);
                 }
                 else if (creep.memory.waypoint == 1 
-                    || creep.pos.isNearTo(44, 42) == false) {
-                    creep.travelTo(new RoomPosition(44, 42, "W91N45"));
-                    creep.say(travelToIcons(creep) + "W91N45", true);
+                    || creep.pos.isNearTo(10, 27) == false) {
+                    creep.travelTo(new RoomPosition(10, 27, "W46N18"));
+                    creep.say(travelToIcons(creep) + "W46N18", true);
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);
@@ -868,100 +717,29 @@ let roleScout = {
                     }
                 }
             }
-            else if (sentFrom == "W86N43" 
-                && (sentTo == "W85N38" 
-                    || sentTo == "W86N39")) {
+            else if (sentFrom == "W46N18" 
+                || sentTo == "W46N41") {
                 let waypoints = [
-                    "W86N46"
-                    , "W90N46"
-                    , "W90N40"
-                    , sentTo
+                    "W46N40"
+                    , "W46N41"
                 ];
-                if (creep.memory.waypoint < waypoints.length 
+                if (creep.memory.waypoint > 0 
+                    && creep.room.name == "W46N20") { // back-tracked through portal
+                    creep.memory.waypoint = 0;
+                }
+                else if (creep.memory.waypoint < waypoints.length 
                     && creep.room.name == waypoints[creep.memory.waypoint]) {
                     ++creep.memory.waypoint;
                 }
                 
                 if (creep.memory.waypoint == 0) {
-                    creep.travelTo(new RoomPosition(25, 25, "W86N46"), { 
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W86N46", true);
+                    creep.travelTo(new RoomPosition(20, 6, "W46N20"));
+                    creep.say(travelToIcons(creep) + "W46N20", true);
                 }
-                else if (creep.memory.waypoint == 1) {
-                    creep.travelTo(new RoomPosition(25, 25, "W90N46"), {
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W90N46", true);
-                }
-                else if (creep.memory.waypoint == 2) {
-                    creep.travelTo(new RoomPosition(25, 25, "W90N40"), {
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W90N40", true);
-                }
-                else if (creep.memory.waypoint == 3 
-                    || (sentTo == "W85N38" && creep.pos.isNearTo(43, 37) == false) 
-                    || (sentTo == "W86N39" && creep.pos.isNearTo(19, 19) == false)) {
-                    if (sentTo == "W85N38") {
-                        creep.travelTo(new RoomPosition(43, 37, "W85N38"));
-                        creep.say(travelToIcons(creep) + "W85N38", true);
-                    }
-                    else if (sentTo == "W86N39") {
-                        creep.travelTo(new RoomPosition(19, 19, "W86N39"));
-                        creep.say(travelToIcons(creep) + "W86N39", true);
-                    }
-                    else {
-                        incrementConfusedCreepCount(creep);
-                        creep.say("?", true);
-                    }
-                }
-                else if (creep.memory.goalReached != true) {
-                    creep.say(ICONS["testPassed"], true);
-                    creep.memory.goalReached = true;
-                    if (creep.memory.role == "scout") {
-                        console.log("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Game.notify("CLAIMER TEST RUN: It would take a claimer " + (CREEP_LIFE_TIME - creep.ticksToLive) + " ticks to get to its goal.");
-                        Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
-                    }
-                }
-            }
-            else if (sentTo == "W86N43" 
-                && (sentFrom == "W85N38" 
-                    || sentFrom == "W86N39")) {
-                let waypoints = [
-                    "W90N40"
-                    , "W90N46"
-                    , "W86N46"
-                    , "W86N43"
-                ];
-                if (creep.memory.waypoint < waypoints.length 
-                    && creep.room.name == waypoints[creep.memory.waypoint]) {
-                    ++creep.memory.waypoint;
-                }
-                
-                if (creep.memory.waypoint == 0) {
-                    creep.travelTo(new RoomPosition(25, 25, "W90N40"), { 
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W90N40", true);
-                }
-                else if (creep.memory.waypoint == 1) {
-                    creep.travelTo(new RoomPosition(25, 25, "W90N46"), {
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W90N46", true);
-                }
-                else if (creep.memory.waypoint == 2) {
-                    creep.travelTo(new RoomPosition(25, 25, "W86N46"), {
-                        range: 23
-                    });
-                    creep.say(travelToIcons(creep) + "W86N46", true);
-                }
-                else if (creep.memory.waypoint == 3 
-                    || creep.pos.isNearTo(30, 17) == false) {
-                    creep.travelTo(new RoomPosition(30, 17, "W86N43"));
-                    creep.say(travelToIcons(creep) + "W86N43", true);
+                else if (creep.memory.waypoint == 1 
+                    || creep.pos.isNearTo(14, 17) == false) {
+                    creep.travelTo(new RoomPosition(14, 17, "W46N41"));
+                    creep.say(travelToIcons(creep) + "W46N41", true);
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);

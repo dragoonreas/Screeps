@@ -16,14 +16,12 @@ let roleAdaptable = {
                 //case "W87N29": sentTo = "W86N29"; break; // TODO: Update when bootstrapping network reconfigured
                 case "W86N29": sentTo = "W85N23"; break;
                 case "W85N23": sentTo = "W86N29"; break;
-                case "W86N39": sentTo = "W85N38"; break;
-                case "W85N38": sentTo = "W86N39"; break;
                 case "W81N29": sentTo = "W64N31"; break;
                 case "W72N28": sentTo = "W64N31"; break;
                 case "W64N31": sentTo = "W53N39"; break;
                 case "W53N39": sentTo = "W52N47"; break;
                 case "W53N42": sentTo = "W52N47"; break;
-                case "W46N41": sentTo = "W46N41"; break;
+                case "W46N41": sentTo = "W46N18"; break;
                 case "W52N47": sentTo = "W52N47"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
@@ -106,6 +104,7 @@ let roleAdaptable = {
                     || sentTo == "W9N45" 
                     || sentTo == "W53N39" 
                     || sentTo == "W52N47" 
+                    || sentTo == "W46N18" 
                     || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }

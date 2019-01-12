@@ -22,8 +22,6 @@ let roleExporter = {
                 //case "W87N29": sentTo = "W86N29"; break; // NOTE: Update when bootstrapping network reconfigured
                 case "W86N29": sentTo = "W85N23"; break;
                 case "W85N23": sentTo = "W86N29"; break;
-                case "W86N39": sentTo = "W85N38"; break;
-                case "W85N38": sentTo = "W86N39"; break;
                 case "W81N29": sentTo = "W86N29"; break;
                 case "W72N28": sentTo = "W86N29"; break;
                 case "W64N31": sentTo = "W86N29"; break;
@@ -31,6 +29,7 @@ let roleExporter = {
                 case "W53N39": sentTo = "W64N31"; break;
                 case "W53N42": sentTo = "W53N39"; break;
                 case "W46N41": sentTo = "W53N39"; break;
+                case "W46N18": sentTo = "W46N41"; break;
                 case "W52N47": sentTo = "W53N39"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
@@ -168,6 +167,13 @@ let roleExporter = {
                             && s.my == false 
                             && s.isPublic == false)) < 1) {
                         let resourceType = _.max(_.keys(theTerminal.store), (r) => (resourceWorth(r)));
+                        if (_.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true                                            || _.get(creep.room, ["controller", "level"], 0) < 8 
+                            && _.get(creep.room, ["controller", "level"], 0) >= 6 
+                            && _.get(creep.room, ["controller", "owner", "username"], undefined) == "dragoonreas" 
+                            && theTerminal.my == true 
+                            && theTerminal.store[RESOURCE_ENERGY] >= (_.sum(theTerminal.store) / 2)) {
+                            resourceType = RESOURCE_ENERGY;
+                        }
                         let err = creep.withdraw(theTerminal, resourceType);
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(theTerminal);
@@ -345,6 +351,8 @@ let roleExporter = {
                             || sentFrom == "W52N47" 
                             || sentFrom == "W48N42" 
                             || sentFrom == "W47N44")) 
+                    || (sentTo == "W46N41" 
+                        && sentFrom == "W46N18")
                     || sentFrom == "W48N42" 
                     || sentFrom == "W47N44" 
                     || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
