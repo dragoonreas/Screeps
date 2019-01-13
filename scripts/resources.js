@@ -106,10 +106,12 @@ function summarize_room_internal(room) {
     const const_sites = room.find(FIND_CONSTRUCTION_SITES);
     const construction_site_progress = _.sum(const_sites, cs => cs.progress);
     const construction_site_progress_total = _.sum(const_sites, cs => cs.progressTotal);
+    const construction_site_progress_remaining = construction_site_progress_total - construction_site_progress;
     const num_construction_sites = const_sites.length;
     const my_const_sites = room.find(FIND_CONSTRUCTION_SITES, { filter: cs => cs.my });
     const my_construction_site_progress = _.sum(my_const_sites, mcs => mcs.progress);
     const my_construction_site_progress_total = _.sum(my_const_sites, mcs => mcs.progressTotal);
+    const my_construction_site_progress_remaining = my_construction_site_progress_total - my_construction_site_progress;
     const num_my_construction_sites = my_const_sites.length;
     const num_source_containers = count_source_containers(room);
     const has_terminal = ((room.terminal != null) ? 1 : 0);
@@ -203,9 +205,11 @@ function summarize_room_internal(room) {
         structure_info,
         construction_site_progress,
         construction_site_progress_total,
+        construction_site_progress_remaining,
         num_construction_sites,
         my_construction_site_progress,
         my_construction_site_progress_total,
+        my_construction_site_progress_remaining,
         num_my_construction_sites,
         ground_resources: reduced_resources,
         num_source_containers,

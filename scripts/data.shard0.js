@@ -22,12 +22,12 @@ let dataShard0 = function() {
                     , { role: "upgrader", min: 1 }
                     , { role: "miner", min: 0 } // set dynamically
                     , { role: "adaptable", min: 0 } // set dynamically
-                    , { role: "demolisher", min: 0 }
+                    , { role: "demolisher", min: 0 } // set dynamically
                     , { role: "scout", min: 0 }
                     , { role: "claimer", min: 1 }
                     , { role: "repairer", min: 0 } // set dynamically
                     , { role: "builder", min: 1 }
-                    , { role: "exporter", min: 0 }
+                    , { role: "exporter", min: 0 } // set dynamically
                     , { role: "rockhound", min: 0 } // set dynamically
                 ]
                 , bootstrappedRooms: [
@@ -38,9 +38,6 @@ let dataShard0 = function() {
                 ]
                 , creepMemory: {
                     claimer: {
-                        roomSentTo: "W81N29"
-                    }
-                    , demolisher: {
                         roomSentTo: "W81N29"
                     }
                 }

@@ -99,23 +99,22 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "harvestRooms", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["harvestRooms"], undefined) == undefined) {
-                    _.set(this.memory, ["harvestRooms"], []);
-                }
                 if (_.isArray(this.memory.harvestRooms) == false) {
-                    return undefined;
+                    _.set(this.memory, ["harvestRooms"], []);
                 }
                 return this.memory.harvestRooms;
             },
             
             set: function(value) {
-                if (_.get(this.memory, ["harvestRooms"], undefined) == undefined) {
+                if (_.isArray(this.memory.harvestRooms) == false) {
                     _.set(this.memory, ["harvestRooms"], []);
                 }
-                if (_.isArray(this.memory.harvestRooms) == false) {
-                    throw new Error("Could not set Room.harvestRooms property");
+                if (_.isArray(value) == false) {
+                    _.set(this.memory, ["harvestRooms"], []);
                 }
-                this.memory.harvestRooms = value;
+                else {
+                    this.memory.harvestRooms = value;
+                }
             }
         });
     }
@@ -211,23 +210,22 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "checkForDrops", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["checkForDrops"], undefined) == undefined) {
+                if (_.get(this.memory, ["checkForDrops"], false) == true) {
                     _.set(this.memory, ["checkForDrops"], true);
                 }
-                if (_.isBoolean(this.memory.checkForDrops) == false) {
-                    return undefined;
+                else {
+                    this.memory.checkForDrops = undefined;
                 }
-                return this.memory.checkForDrops;
+                return _.get(this.memory, ["checkForDrops"], false);
             },
             
             set: function(value) {
-                if (_.get(this.memory, ["checkForDrops"], undefined) == undefined) {
+                if (value == true) {
                     _.set(this.memory, ["checkForDrops"], true);
                 }
-                if (_.isBoolean(this.memory.checkForDrops) == false) {
-                    throw new Error("Could not set Room.checkForDrops property");
+                else {
+                    this.memory.checkForDrops = undefined;
                 }
-                this.memory.checkForDrops = value;
             }
         });
     }
@@ -236,23 +234,22 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "buildOrderFILO", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["buildOrderFILO"], undefined) == undefined) {
-                    _.set(this.memory, ["buildOrderFILO"], false);
+                if (_.get(this.memory, ["buildOrderFILO"], false) == true) {
+                    _.set(this.memory, ["buildOrderFILO"], true);
                 }
-                if (_.isBoolean(this.memory.buildOrderFILO) == false) {
-                    return undefined;
+                else {
+                    this.memory.buildOrderFILO = undefined;
                 }
-                return this.memory.buildOrderFILO;
+                return _.get(this.memory, ["buildOrderFILO"], false);
             },
             
             set: function(value) {
-                if (_.get(this.memory, ["buildOrderFILO"], undefined) == undefined) {
-                    _.set(this.memory, ["buildOrderFILO"], false);
+                if (value == true) {
+                    _.set(this.memory, ["buildOrderFILO"], true);
                 }
-                if (_.isBoolean(this.memory.buildOrderFILO) == false) {
-                    throw new Error("Could not set Room.buildOrderFILO property");
+                else {
+                    this.memory.buildOrderFILO = undefined;
                 }
-                this.memory.buildOrderFILO = value;
             }
         });
     }
@@ -261,23 +258,22 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "hasHostileCreep", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["hasHostileCreep"], undefined) == undefined) {
-                    _.set(this.memory, ["hasHostileCreep"], false);
+                if (_.get(this.memory, ["hasHostileCreep"], false) == true) {
+                    _.set(this.memory, ["hasHostileCreep"], true);
                 }
-                if (_.isBoolean(this.memory.hasHostileCreep) == false) {
-                    return undefined;
+                else {
+                    this.memory.hasHostileCreep = undefined;
                 }
-                return this.memory.hasHostileCreep;
+                return _.get(this.memory, ["hasHostileCreep"], false);
             },
             
             set: function(value) {
-                if (_.get(this.memory, ["hasHostileCreep"], undefined) == undefined) {
-                    _.set(this.memory, ["hasHostileCreep"], false);
+                if (value == true) {
+                    _.set(this.memory, ["hasHostileCreep"], true);
                 }
-                if (_.isBoolean(this.memory.hasHostileCreep) == false) {
-                    throw new Error("Could not set Room.hasHostileCreep property");
+                else {
+                    this.memory.hasHostileCreep = undefined;
                 }
-                this.memory.hasHostileCreep = value;
             }
         });
     }
@@ -286,23 +282,22 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "hasHostileTower", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["hasHostileTower"], undefined) == undefined) {
-                    _.set(this.memory, ["hasHostileTower"], false);
+                if (_.get(this.memory, ["hasHostileTower"], false) == true) {
+                    _.set(this.memory, ["hasHostileTower"], true);
                 }
-                if (_.isBoolean(this.memory.hasHostileTower) == false) {
-                    return undefined;
+                else {
+                    this.memory.hasHostileTower = undefined;
                 }
-                return this.memory.hasHostileTower;
+                return _.get(this.memory, ["hasHostileTower"], false);
             },
             
             set: function(value) {
-                if (_.get(this.memory, ["hasHostileTower"], undefined) == undefined) {
-                    _.set(this.memory, ["hasHostileTower"], false);
+                if (value == true) {
+                    _.set(this.memory, ["hasHostileTower"], true);
                 }
-                if (_.isBoolean(this.memory.hasHostileTower) == false) {
-                    throw new Error("Could not set Room.hasHostileTower property");
+                else {
+                    this.memory.hasHostileTower = undefined;
                 }
-                this.memory.hasHostileTower = value;
             }
         });
     }
@@ -311,23 +306,25 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "priorityTargetID", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["priorityTargetID"], undefined) == undefined) {
-                    _.set(this.memory, ["priorityTargetID"], "");
+                if (_.isString(this.memory.priorityTargetID) == false 
+                    || _.get(this.memory, ["priorityTargetID"], "") == "") {
+                    this.memory.priorityTargetID = undefined;
                 }
-                if (_.isString(this.memory.priorityTargetID) == false) {
-                    return undefined;
-                }
-                return this.memory.priorityTargetID;
+                return _.get(this.memory, ["priorityTargetID"], "");
             },
             
             set: function(value) {
-                if (_.get(this.memory, ["priorityTargetID"], undefined) == undefined) {
-                    _.set(this.memory, ["priorityTargetID"], "");
+                if (_.isString(value) == true 
+                    && value != "") {
+                    _.set(this.memory, ["priorityTargetID"], value);
                 }
-                if (_.isString(this.memory.priorityTargetID) == false) {
-                    throw new Error("Could not set Room.priorityTargetID property");
+                else if (_.isString(_.get(value, ["id"], undefined)) == true 
+                    && _.get(value, ["id"], "") != "") {
+                    _.set(this.memory, ["priorityTargetID"], _.get(value, ["id"], ""));
                 }
-                this.memory.priorityTargetID = value;
+                else {
+                    this.memory.priorityTargetID = undefined;
+                }
             }
         });
     }
@@ -336,23 +333,22 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "clearPathCaches", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["clearPathCaches"], undefined) == undefined) {
-                    _.set(this.memory, ["clearPathCaches"], false);
+                if (_.get(this.memory, ["clearPathCaches"], false) == true) {
+                    _.set(this.memory, ["clearPathCaches"], true);
                 }
-                if (_.isBoolean(this.memory.clearPathCaches) == false) {
-                    return undefined;
+                else {
+                    this.memory.clearPathCaches = undefined;
                 }
-                return this.memory.clearPathCaches;
+                return _.get(this.memory, ["clearPathCaches"], false);
             },
             
             set: function(value) {
-                if (_.get(this.memory, ["clearPathCaches"], undefined) == undefined) {
-                    _.set(this.memory, ["clearPathCaches"], false);
+                if (value == true) {
+                    _.set(this.memory, ["clearPathCaches"], true);
                 }
-                if (_.isBoolean(this.memory.clearPathCaches) == false) {
-                    throw new Error("Could not set Room.clearPathCaches property");
+                else {
+                    this.memory.clearPathCaches = undefined;
                 }
-                this.memory.clearPathCaches = value;
             }
         });
     }
@@ -361,23 +357,19 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "avoidTravelUntil", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["avoidTravelUntil"], undefined) == undefined) {
-                    _.set(this.memory, ["avoidTravelUntil"], 0);
+                if (_.isNumber(this.memory.avoidTravelUntil) == false 
+                    || _.get(this.memory, ["avoidTravelUntil"], 0) < Game.time) {
+                    this.memory.avoidTravelUntil = undefined;
                 }
-                if (_.isNumber(this.memory.avoidTravelUntil) == false) {
-                    return undefined;
-                }
-                return this.memory.avoidTravelUntil;
+                return _.get(this.memory, ["avoidTravelUntil"], 0);
             },
             
             set: function(value) {
-                if (_.get(this.memory, ["avoidTravelUntil"], undefined) == undefined) {
-                    _.set(this.memory, ["avoidTravelUntil"], 0);
+                if (_.isNumber(value) == false 
+                    || value < Game.time) {
+                    this.memory.avoidTravelUntil = value;
                 }
-                if (_.isNumber(this.memory.avoidTravelUntil) == false) {
-                    throw new Error("Could not set Room.avoidTravelUntil property");
-                }
-                this.memory.avoidTravelUntil = value;
+                _.set(this.memory, ["avoidTravelUntil"], value);
             }
         });
     }
@@ -491,24 +483,15 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "beingViewed", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["lastViewed"], undefined) == undefined) {
-                    _.set(this.memory, ["lastViewed"], 0);
+                if (_.get(this.memory, ["lastViewed"], 0) < (Game.time - ROOM_VISUAL_TIMEOUT)) {
+                    this.memory.lastViewed = undefined;
                 }
-                if (_.isNumber(this.memory.lastViewed) == false) {
-                    return false;
-                }
-                return (this.memory.lastViewed > (Game.time - ROOM_VISUAL_TIMEOUT));
-            }/*,
+                return (_.get(this.memory, ["lastViewed"], 0) >= (Game.time - ROOM_VISUAL_TIMEOUT));
+            },
             
             set: function(value) {
-                if (_.get(this.memory, ["lastViewed"], undefined) == undefined) {
-                    _.set(this.memory, ["lastViewed"], 0);
-                }
-                if (_.isNumber(this.memory.lastViewed) == false) {
-                    throw new Error("Could not set Room.beingViewed property");
-                }
-                this.memory.lastViewed = ((value == true) ? Game.time : 0);
-            }*/
+                this.memory.lastViewed = ((value == true) ? Game.time : undefined);
+            }
         });
     }
     
