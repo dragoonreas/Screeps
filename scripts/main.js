@@ -812,9 +812,8 @@ module.exports.loop = function () {
             }
         }
         
+        // Garbage collection for invader weightings
         if (_.size(_.get(Memory.rooms[roomID], "invaderWeightings", {})) > 0) {
-            
-            // Garbage collection for invader weightings
             for (let invaderID in Memory.rooms[roomID].invaderWeightings) {
                 if ((Memory.rooms[roomID].invaderWeightings[invaderID].expiresAt || 0) < Game.time) {
                     //console.log("Running garbage collection on invaderWeightings for " + invaderID + " in room memory: " + roomID);
@@ -822,13 +821,27 @@ module.exports.loop = function () {
                 }
             }
         }
-        
-        // Garbage collection for dangerZones
+        if (_.size(_.get(Memory.rooms[roomID], "invaderWeightings", {})) > 0) {
+            let priorityTarget = _.max(_.get(Memory.rooms[roomID], "invaderWeightings", {}), (iW) => (iW.weighting));
+            let priorityTargetWeighting = _.get(priorityTarget, ["wighting"], 0);
+            if (_.get(Memory.rooms, [roomID, "invaderWeightings", _.get(Memory.rooms, [roomID, "priorityTargetID"], ""), "wighting"], 0) < priorityTargetWeighting) {
+                let priorityTargetID = _.findKey(_.get(Memory.rooms[roomID], "invaderWeightings", {}), (iW) => (iW.wighting = priorityTargetWeighting)) || undefined;
+                _.set(Memory.rooms, [roomID, "priorityTargetID"], priorityTargetID);
+            }
+        }
+        else {
+            Memory.rooms[roomID].invaderWeightings = undefined;
+            Memory.rooms[roomID].priorityTargetID = undefined;
+        }
+
+        // Garbage collection for danger zones
         if (Game.rooms[roomID] != undefined) {
             Game.rooms[roomID].dangerZones = [];
         }
         
-        Memory.rooms[roomID].clearPathCaches = false;
+        if (_.get(Memory.rooms, [roomID, "clearPathCaches"], false) == false) {
+            Memory.rooms[roomID].clearPathCaches = undefined;
+        }
     }
     
     // Garbage collection for orders
@@ -877,11 +890,11 @@ module.exports.loop = function () {
         let theRoom = Game.rooms[roomID];
         
         // Make sure all required room memory objects exist
-        theRoom.memory.memoryExpiration = getRoomMemoryExpiration(roomID); // Update scheduled time for room memory garbage collection
-        _.defaults(theRoom.memory, {
-            "checkForDrops": true
+        theRoom.memoryExpiration = getRoomMemoryExpiration(roomID); // Update scheduled time for room memory garbage collection
+        _.defaults(theRoom, {
+            "checkForDrops": false
             , "hasHostileCreep": false
-            , "clearPathCaches": true
+            , "clearPathCaches": false
             , "avoidTravelUntil": 0
             , "buildOrderFILO": false
         });
@@ -895,7 +908,7 @@ module.exports.loop = function () {
             */
             let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
             let neutralAt = ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || undefined);
-            _.set(theRoom.memory, ["controller"], { 
+            _.set(theRoom, ["controllerMem"], { 
                 id: theController.id
                 , pos: theController.pos
                 , owner: theController.owner
@@ -1893,11 +1906,11 @@ module.exports.loop = function () {
                 && (creep.memory.role != "builder" 
                     || ((creep.carryTotal - (creep.carry[RESOURCE_POWER] || 0)) > creep.carry[RESOURCE_ENERGY]))
                 && ((theStorage != undefined 
-                    && theStorage.my == true 
-                    && _.sum(theStorage.store) < theStorage.storeCapacity) 
-                || (theTerminal != undefined 
-                    && theTerminal.my == true 
-                    && theTerminal.storeCapacityFree > 0))) {
+                        && theStorage.my == true 
+                        && _.sum(theStorage.store) < theStorage.storeCapacity) 
+                    || (theTerminal != undefined 
+                        && theTerminal.my == true 
+                        && theTerminal.storeCapacityFree > 0))) {
                 ROLES["hoarder"].run(creep);
                 runningRole = true;
             }

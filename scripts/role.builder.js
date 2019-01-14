@@ -73,7 +73,7 @@ let roleBuilder = {
                 }
                 */
                 if (roomConstructionSites.length > 0) {
-                    if (Memory.rooms[creep.room.name].buildOrderFILO == true) {
+                    if (_.get(Memory.rooms, [creep.room.name, "buildOrderFILO"], false) == true) {
                         constructionSite = roomConstructionSites[roomConstructionSites.length - 1]; // TODO: Get max based on id instead
                         creep.memory.constructionSite = { 
                             id: constructionSite.id
