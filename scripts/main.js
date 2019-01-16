@@ -906,15 +906,15 @@ module.exports.loop = function () {
                 pos: theController.pos
             });
             */
-            let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
-            let neutralAt = ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || undefined);
+            let downgradesAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
+            let neutralAt = ((downgradesAt && (downgradesAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || undefined);
             _.set(theRoom, ["controllerMem"], { 
                 id: theController.id
                 , pos: theController.pos
                 , owner: theController.owner
                 , reservation: ((theController.reservation && { username: _.get(theController.reservation, ["username"], ""), endsAt: Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1) }) || undefined)
                 , level: theController.level
-                , downgradeAt: downgradeAt
+                , downgradesAt: downgradesAt
                 , neutralAt: neutralAt
                 , unblockedAt: ((theController.upgradeBlocked && (Game.time + theController.upgradeBlocked)) || undefined)
                 , safeModeEndsAt: ((theController.safeMode && (Game.time + theController.safeMode)) || undefined)

@@ -276,8 +276,8 @@ let globals = function() {
         let theController = _.get(Game.rooms, [roomName, "controller"], undefined);
         let theControllerMem = _.get(Memory.rooms, [roomName, "controller"], undefined);
         if (_.get(theController, "my", true) != true) {
-            let downgradeAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
-            controllerNeutralAt = ((downgradeAt && (downgradeAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || controllerNeutralAt);
+            let downgradesAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
+            controllerNeutralAt = ((downgradesAt && (downgradesAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || controllerNeutralAt);
         } else if (_.get(theControllerMem, "neutralAt", controllerNeutralAt) > Game.time) {
             controllerNeutralAt = theControllerMem.neutralAt;
         }
