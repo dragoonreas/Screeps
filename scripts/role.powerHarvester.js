@@ -32,7 +32,7 @@ let rolePowerHarvester = {
                     }
                 }
                 else {
-                    creep.travelTo(new RoomPosition(creep.memory.harvestRoom.x, creep.memory.harvestRoom.y, creep.memory.harvestRoom.id));
+                    creep.travelTo(RoomPositionFromObject(creep.memory.harvestRoom));
                 }
             }
             else {

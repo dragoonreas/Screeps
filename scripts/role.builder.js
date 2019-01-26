@@ -27,7 +27,7 @@ let roleBuilder = {
             if (constructionSite == undefined && constructionSiteMemPos != undefined) {
                 let constructionSiteMemRoomName = _.get(creep.memory, ["constructionSite", "pos", "roomName"], undefined); 
                 if (Game.rooms[constructionSiteMemRoomName] == undefined) {
-                    constructionSitePos = _.create(RoomPosition.prototype, constructionSiteMemPos);
+                    constructionSitePos = RoomPositionFromObject(constructionSiteMemPos);
                     creep.travelTo(constructionSitePos, {
                         range: 3
                     });

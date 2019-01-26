@@ -70,7 +70,7 @@ let roleExporter = {
                 }
                 else if (structureMemPos != undefined 
                     && Game.rooms[structureMemRoomName] == undefined) {
-                    let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                    let structurePos = RoomPositionFromObject(structureMemPos);
                     creep.travelTo(structurePos);
                     creep.say(travelToIcons(creep) + structurePos.roomName, true);
                     return;
@@ -195,7 +195,7 @@ let roleExporter = {
                         if (structure == undefined 
                             && structureMemPos != undefined 
                             && Game.rooms[structureMemRoomName] == undefined) {
-                            let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                            let structurePos = RoomPositionFromObject(structureMemPos);
                             creep.travelTo(structurePos);
                             creep.say(travelToIcons(creep) + structurePos.roomName, true);
                             return;
@@ -412,7 +412,7 @@ let roleExporter = {
                         if (structure == undefined 
                             && structureMemPos != undefined 
                             && Game.rooms[structureMemRoomName] == undefined) {
-                            let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                            let structurePos = RoomPositionFromObject(structureMemPos);
                             creep.travelTo(structurePos);
                             creep.say(travelToIcons(creep) + structurePos.roomName, true);
                             return;

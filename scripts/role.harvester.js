@@ -45,7 +45,7 @@ let roleHarvester = {
                 if (sourceMem != undefined
                     && sourceMem.regenAt <= Game.time
                     && creep.room.name != sourceMem.pos.roomName) {
-                    creep.travelTo(_.create(RoomPosition.prototype, sourceMem.pos));
+                    creep.travelTo(RoomPositionFromObject(sourceMem.pos));
                     creep.say(travelToIcons(creep) + sourceMem.pos.roomName, true);
                     return;
                 }
@@ -225,7 +225,7 @@ let roleHarvester = {
                                     && _.get(Memory.rooms, [_.get(sourceMem, ["pos", "roomname"], ""), "controller", "reservation", "username"], "dragoonreas") == "dragoonreas") {
                                     if (sourceMem.regenAt <= Game.time) {
                                         creep.memory.sourceID = sourceID;
-                                        creep.travelTo(_.create(RoomPosition.prototype, sourceMem.pos));
+                                        creep.travelTo(RoomPositionFromObject(sourceMem.pos));
                                         creep.say(travelToIcons(creep) + sourceMem.pos.roomName, true);
                                         return;
                                     }
@@ -821,7 +821,7 @@ let roleHarvester = {
             if (structure == undefined 
                 && structureMemPos != undefined 
                 && Game.rooms[structureMemRoomName] == undefined) {
-                let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                let structurePos = RoomPositionFromObject(structureMemPos);
                 creep.travelTo(structurePos);
                 creep.say(travelToIcons(creep) + structurePos.roomName, true);
                 return;

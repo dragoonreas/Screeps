@@ -7,7 +7,7 @@ let roleCollector = {
             let droppedResourcePos = _.get(creep.memory, ["droppedResource", "pos"], undefined);
             if (droppedResource == undefined) {
                 if (creep.room.name != _.get(droppedResourcePos, ["roomName"], creep.room.name)) {
-                    creep.travelTo(_.create(RoomPosition.prototype, droppedResourcePos));
+                    creep.travelTo(RoomPositionFromObject(droppedResourcePos));
                     creep.say(travelToIcons(creep) + droppedResourcePos.roomName, true);
                 }
                 else {
@@ -33,7 +33,7 @@ let roleCollector = {
             let tombstonePos = _.get(creep.memory, ["tombstone", "pos"], undefined);
             if (tombstone == undefined) {
                 if (creep.room.name != _.get(tombstonePos, ["roomName"], creep.room.name)) {
-                    creep.travelTo(_.create(RoomPosition.prototype, tombstonePos));
+                    creep.travelTo(RoomPositionFromObject(tombstonePos));
                     creep.say(travelToIcons(creep) + tombstonePos.roomName, true);
                 }
                 else {

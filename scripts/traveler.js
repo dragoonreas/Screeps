@@ -138,7 +138,7 @@ module.exports = function(globalOpts = {}){
             }
             /*
             // Room visuals to display goals for creeps
-            let origRoomPos = _.create(RoomPosition.prototype, origPos);
+            let origRoomPos = RoomPositionFromObject(origPos);
             let executingRole = _.get(_.first(_.filter(Game.creeps, (c) => (c.pos.isEqualTo(origRoomPos)))), ["memory", "executingRole"], undefined);
             if (executingRole != undefined) {
                 let theRoomVisual = new RoomVisual(destPos.roomName);
@@ -437,7 +437,7 @@ module.exports = function(globalOpts = {}){
             return this.structureMatrixCache[room.name];
         }
         static initPosition(pos) {
-            return _.create(RoomPosition.prototype, pos);
+            return RoomPositionFromObject(pos);
         }
         static addStructuresToMatrix(room, matrix, roadCost) {
             for (let structure of room.find(FIND_STRUCTURES)) {
@@ -608,16 +608,16 @@ module.exports = function(globalOpts = {}){
             creep.room.visual.poly(path, pathStyle);
             // Draw line to target
             if (pathData.length == (path.length - 1)) {
-                let goal = _.create(RoomPosition.prototype, {
-                    x: _.get(creep.memory, ["_travel", "dest", "x"], _.last(path)[0])
-                    , y: _.get(creep.memory, ["_travel", "dest", "y"], _.last(path)[1])
-                    , roomName: _.get(creep.memory, ["_travel", "dest", "roomName"], creep.room.name)
-                });
-                let dest = _.create(RoomPosition.prototype, {
-                    x: _.last(path)[0]
-                    , y: _.last(path)[1]
-                    , roomName: _.get(creep.memory, ["_travel", "dest", "roomName"], creep.room.name)
-                });
+                let goal = new RoomPosition(
+                    _.get(creep.memory, ["_travel", "dest", "x"], _.last(path)[0])
+                    , _.get(creep.memory, ["_travel", "dest", "y"], _.last(path)[1])
+                    , _.get(creep.memory, ["_travel", "dest", "roomName"], creep.room.name)
+                );
+                let dest = new RoomPosition(
+                    _.last(path)[0]
+                    , _.last(path)[1]
+                    , _.get(creep.memory, ["_travel", "dest", "roomName"], creep.room.name)
+                );
                 if (dest.getRangeTo(goal) > 0) {
                     pathStyle.width = pathStyle.strokeWidth;
                     pathStyle.color = pathStyle.stroke;

@@ -355,6 +355,14 @@ let globals = function() {
         );
     };
     
+    global.RoomPositionFromObject = function(obj) {
+        return new RoomPosition(
+            _.get(obj, ["x"], 0)
+            , _.get(obj, ["y"], 0)
+            , _.get(obj, ["roomName"], "S0E0")
+        );
+    };
+    
     /*
         For tracking viewed rooms to display room visuals in: https://github.com/Esryok/screeps-browser-ext
         NOTE: Run "loadVisableRoomTracker();" from the command line to see visuals in viewed rooms when opening a new tab / steam client window.

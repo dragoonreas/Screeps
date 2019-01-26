@@ -32,7 +32,7 @@ let roleMiner = {
                         if (sourceMem != undefined && _.get(sourceMem, "minerName", creep.name) == creep.name) {
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
-                            creep.travelTo(_.create(RoomPosition.prototype, sourceMem));
+                            creep.travelTo(RoomPositionFromObject(sourceMem));
                             creep.say(travelToIcons(creep) + sourceMem.pos.roomName, true);
                             return;
                         }

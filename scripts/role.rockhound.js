@@ -33,7 +33,7 @@ let roleRockhound = {
                     if (_.isString(_.get(mineralPos, ["roomName"], undefined)) 
                         && (mineralPos.roomName != creep.room.name) 
                         && _.get(theMineral, ["mineralAmount"], 1) > 0) {
-                        creep.travelTo(_.create(RoomPosition.prototype, mineralPos));
+                        creep.travelTo(RoomPositionFromObject(mineralPos));
                         creep.say(travelToIcons(creep) + mineralPos.roomName, true);
                         return;
                     }

@@ -1030,7 +1030,7 @@ module.exports.loop = function () {
                     let oldPos = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "pos"], undefined);
                     let oldAvoidanceRange = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "avoidanceRange"], undefined);
                     let oldDangerZones = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "dangerZones"], []);
-                    if (oldPos != undefined && aPriorityTarget.pos.isEqualTo(_.create(RoomPosition.prototype, oldPos)) && oldAvoidanceRange != undefined && oldAvoidanceRange == avoidanceRange) {
+                    if (oldPos != undefined && aPriorityTarget.pos.isEqualTo(oldPos.x, oldPos.y) && oldAvoidanceRange != undefined && oldAvoidanceRange == avoidanceRange) {
                         for (let oldDangerZone of oldDangerZones) {
                             if (_.some(theRoom.dangerZones, oldDangerZone) == false) {
                                 theRoom.dangerZones.push(oldDangerZone);
@@ -1112,7 +1112,7 @@ module.exports.loop = function () {
                     let oldPos = _.get(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "pos"], undefined);
                     let oldAvoidanceRange = _.get(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "avoidanceRange"], undefined);
                     let oldDangerZones = _.get(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "dangerZones"], []);
-                    if (oldPos != undefined && aNonPriorityTarget.pos.isEqualTo(_.create(RoomPosition.prototype, oldPos)) && oldAvoidanceRange != undefined && oldAvoidanceRange == avoidanceRange) {
+                    if (oldPos != undefined && aNonPriorityTarget.pos.isEqualTo(oldPos.x, oldPos.y) && oldAvoidanceRange != undefined && oldAvoidanceRange == avoidanceRange) {
                         for (let oldDangerZone of oldDangerZones) {
                             if (_.some(theRoom.dangerZones, oldDangerZone) == false) {
                                 theRoom.dangerZones.push(oldDangerZone);

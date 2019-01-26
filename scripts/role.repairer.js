@@ -25,7 +25,7 @@ let roleRepairer = {
             if (structure == undefined 
                 && structureMemPos != undefined 
                 && Game.rooms[structureMemRoomName] == undefined) {
-                let structurePos = _.create(RoomPosition.prototype, structureMemPos);
+                let structurePos = RoomPositionFromObject(structureMemPos);
                 creep.travelTo(structurePos, {
                     range: 3
                 });

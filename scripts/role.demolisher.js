@@ -36,7 +36,7 @@ let roleDemolisher = {
                     || creep.room.name != sentTo) {
                     if (_.isString(_.get(demolishStructurePos, ["roomName"], undefined)) 
                         && (demolishStructurePos.roomName != creep.room.name)) {
-                        creep.travelTo(_.create(RoomPosition.prototype, demolishStructurePos));
+                        creep.travelTo(RoomPositionFromObject(demolishStructurePos));
                         creep.say(travelToIcons(creep) + demolishStructurePos.roomName, true);
                         return;
                     }

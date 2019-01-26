@@ -48,7 +48,7 @@ let roleClaimer = {
                     ROLES["scout"].run(creep);
                 }
                 else {
-                    creep.travelTo(_.create(RoomPosition.prototype, controllerMem.pos));
+                    creep.travelTo(RoomPositionFromObject(controllerMem.pos));
                     creep.say(travelToIcons(creep) + controllerMem.pos.roomName, true);
                 }
             }
