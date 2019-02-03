@@ -17,7 +17,6 @@ let roleClaimer = {
             , "57ef9cad86f108ae6e60ca51" // W64N32
             , "579fa8850700be0674d2dc0e" // W56N31
             , "579fa8a50700be0674d2e04b" // W54N39
-            , "579fa8b40700be0674d2e27a" // W53N41
             , "577b92a40f9d51615fa46dc8" // W47N41
             , "577b92b60f9d51615fa46f8c" // W46N17
             , "579fa8d40700be0674d2e575" // W51N47
@@ -107,10 +106,6 @@ let roleClaimer = {
             else if (creep.memory.controllerID == "579fa8a50700be0674d2e04b") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.travelTo(new RoomPosition(34, 21, "W54N39"));
                 creep.say(travelToIcons(creep) + "W54N39", true);
-            }
-            else if (creep.memory.controllerID == "579fa8b40700be0674d2e27a") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(29, 10, "W53N41"));
-                creep.say(travelToIcons(creep) + "W53N41", true);
             }
             else if (creep.memory.controllerID == "577b92a40f9d51615fa46dc8") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.travelTo(new RoomPosition(6, 11, "W47N41"));

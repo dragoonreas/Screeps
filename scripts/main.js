@@ -177,20 +177,14 @@ _.set(Memory.rooms, ["W53N39", "harvestRooms"], [
     "W54N39"
     //, "W53N38" // owned by Donatzor
     //, "W52N39" // remote mined by Donatzor
-    , "W52N41"
-    , "W53N41"
-    , "W55N41"
-    , "W54N41"
 ]);
 /*_.set(Memory.rooms, ["W53N42", "harvestRooms"], [
-    "W53N41"
     , "W52N42"
     , "W53N43"
 ]);*/
 _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
     "W51N47"
     , "W53N47"
-    , "W52N48"
 ]);
 _.set(Memory.rooms, ["W46N41", "harvestRooms"], [
     "W47N41"
@@ -528,7 +522,7 @@ _.set(Memory.rooms, ["W64N31", "creepMins"], {
 });*/
 _.set(Memory.rooms, ["W53N39", "creepMins"], {
     attacker: 0
-    , harvester: 5
+    , harvester: 3
     , powerHarvester: 0
     , upgrader: 1
     , miner: 0//_.size(_.get(Game.rooms, ["W53N39", "minerSources"], {}))

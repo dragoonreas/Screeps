@@ -1089,117 +1089,10 @@ let dataShard0 = function() {
                     }
                 ]
             }
-            , W53N42: {
-                /*harvestRooms: [
-                    "W53N41"
-                    , "W52N42"
-                    , "W53N43"
-                ]
-                , repairerTypeMins: [
-                    { type: STRUCTURE_CONTAINER, min: 0 }
-                    , { type: STRUCTURE_ROAD, min: 0 }
-                    , { type: STRUCTURE_RAMPART, min: 0 }
-                    , { type: STRUCTURE_WALL, min: 0 }
-                    , { type: "all", min: 0 }
-                ]
-                , creepMins: [
-                    { role: "attacker", min: 0 } // set dynamically
-                    , { role: "harvester", min: 6 }
-                    , { role: "powerHarvester", min: 0 }
-                    , { role: "upgrader", min: 1 }
-                    , { role: "miner", min: 0 } // set dynamically
-                    , { role: "adaptable", min: 0 } // set dynamically
-                    , { role: "demolisher", min: 0 }
-                    , { role: "scout", min: 0 }
-                    , { role: "claimer", min: 0 }
-                    , { role: "repairer", min: 0 } // set dynamically
-                    , { role: "builder", min: 1 }
-                    , { role: "exporter", min: 0 }
-                    , { role: "rockhound", min: 0 } // set dynamically
-                ]
-                , */creepMemory: {
-                    claimer: {
-                        roomSentTo: "W52N47"
-                    }
-                }
-                , controller: {
-                    id: "579fa8b30700be0674d2e276"
-                    , pos: {
-                        roomName: "W53N42"
-                        , x: 23
-                        , y: 8
-                    }
-                }
-                , controllerToSource: 3
-                , canDemolishIn: true
-                , sources: [
-                    {
-                        id: "579fa8b30700be0674d2e277"
-                        , pos: {
-                            roomName: "W53N42"
-                            , x: 40
-                            , y: 35
-                        }
-                    }
-                    , {
-                        id: "579fa8b30700be0674d2e275"
-                        , pos: {
-                            roomName: "W53N42"
-                            , x: 23
-                            , y: 4
-                        }
-                    }
-                ]
-            }
-            , W53N41: {
-                controller: {
-                    id: "579fa8b40700be0674d2e27a"
-                    , pos: {
-                        roomName: "W53N41"
-                        , x: 29
-                        , y: 10
-                    }
-                }
-                , sources: [
-                    {
-                        id: "579fa8b40700be0674d2e279"
-                        , pos: {
-                            roomName: "W53N41"
-                            , x: 27
-                            , y: 9
-                        }
-                    }
-                ]
-            }
-            , W52N42: {
-                sources: [
-                    {
-                        id: "579fa8c50700be0674d2e3f9"
-                        , pos: {
-                            roomName: "W52N42"
-                            , x: 31
-                            , y: 20
-                        }
-                    }
-                ]
-            }
-            , W53N43: {
-                sources: [
-                    {
-                        id: "579fa8b30700be0674d2e273"
-                        , pos: {
-                            roomName: "W53N43"
-                            , x: 32
-                            , y: 35
-                        }
-                    }
-                ]
-            }
             , W52N47: {
                 harvestRooms: [
                     "W51N47"
                     , "W53N47"
-                    , "W52N48"
                 ]
                 , repairerTypeMins: [
                     { type: STRUCTURE_CONTAINER, min: 0 }
@@ -1303,18 +1196,6 @@ let dataShard0 = function() {
                             roomName: "W53N47"
                             , x: 40
                             , y: 34
-                        }
-                    }
-                ]
-            }
-            , W52N48: {
-                sources: [
-                    {
-                        id: "579fa8c40700be0674d2e3e6"
-                        , pos: {
-                            roomName: "W52N48"
-                            , x: 4
-                            , y: 32
                         }
                     }
                 ]
