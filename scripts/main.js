@@ -179,7 +179,7 @@ _.set(Memory.rooms, ["W53N39", "harvestRooms"], [
     //, "W52N39" // remote mined by Donatzor
 ]);
 /*_.set(Memory.rooms, ["W53N42", "harvestRooms"], [
-    , "W52N42"
+    "W52N42"
     , "W53N43"
 ]);*/
 _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
