@@ -1446,7 +1446,6 @@ module.exports.loop = function () {
 		    console.log(c + " tower(s) in " + roomID + " attacking hostile from " + t)
         ));
         
-        let requiredPower = 0;
         if (_.get(theRoom, ["controller", "my"], false) == true && _.get(theRoom, ["controller", "level"], 0) == 8) {
             let observer = _.first(theRoom.find(FIND_MY_STRUCTURES, { filter: (s) => (s.structureType == STRUCTURE_OBSERVER) })); // TODO: Store this structure id in room memory
             if (false && observer != undefined && Game.cpu.bucket > 7500) { // TODO: Turn this back on once sparse room memory has been implemented and room positions are stored as world position strings instead of objects in memory
@@ -1482,16 +1481,9 @@ module.exports.loop = function () {
             
             let thePowerSpawn = theRoom.powerSpawn;
             if (_.get(thePowerSpawn, ["my"], false) == true 
-                && thePowerSpawn.energy >= POWER_SPAWN_ENERGY_RATIO) {
-                if (thePowerSpawn.power > 0) {
-                    thePowerSpawn.processPower();
-                }
-                
-                let terminalPower = _.get(theRoom, ["terminal", "store", RESOURCE_POWER], 0);
-                let storagePower = _.get(theRoom, ["storage", "store", RESOURCE_POWER], 0);
-                let creepPower = _.sum(Game.creeps, (c) => (c.memory.roomID == roomID ? _.get(c, ["carry", RESOURCE_POWER], 0) : 0));
-                // TODO: Check for power in containers
-                requiredPower = Math.floor(thePowerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - (thePowerSpawn.power + terminalPower + storagePower + creepPower);
+                && thePowerSpawn.energy >= POWER_SPAWN_ENERGY_RATIO 
+                && thePowerSpawn.power > 0) {
+                thePowerSpawn.processPower();
             }
         }
         
@@ -1662,15 +1654,39 @@ module.exports.loop = function () {
                 }
             }
             
+            let requiredPower = theRoom.requiredPower;
             if (madeTransaction == false 
                 && requiredPower > 0 
                 && theTerminal.storeCapacityFree > 0) {
-                // TODO: Check for power in terminals of rooms that have >=100 spare before checking sell orders
-                
+                let powerRoomID = roomID;
+                let excessPower = 99;
+                for (let managedRoomID of managedRooms) {
+                    if (_.get(Game.rooms, [managedRoomID, "excessPower"], 0) > excessPower 
+                        && _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0) >= 100 
+                        && _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0) > excessPower) {
+                        powerRoomID = managedRoomID;
+                        excessPower = Math.max(Math.min(requiredPower, _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0)), 100);
+                    }
+                }
+
                 let sellOrders = _.filter(Game.market.orderCache(ORDER_SELL, RESOURCE_POWER), (o) => (
                     o.price <= 2.5 // NOTE: Don't pay over 2.5 Credits per Power
                 ));
-                if (sellOrders.length > 0) {
+
+                if (powerRoomID != roomID 
+                    && theTerminal.storeCapacityFree >= 100) {
+                    let sendAmount = Math.min(excessPower, theTerminal.storeCapacityFree);
+                    let energyCost = Game.market.calcTransactionCost(sendAmount, powerRoomID, roomID);
+                    let powerRoomTerminal = _.get(Game.rooms, [powerRoomID, "terminal"], undefined);
+                    if (powerRoomTerminal != undefined 
+                        && energyCost <= _.get(powerRoomTerminal, ["store", "energy"], 0)) {
+                        let err = powerRoomTerminal.send(RESOURCE_POWER, sendAmount, roomID, "Power Supply");
+                        if (err == OK) {
+                            console.log("Sent " + sendAmount + " " + RESOURCE_POWER + " from " + powerRoomID + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to supply Power Spawn");
+                        }
+                    }
+                }
+                else if (sellOrders.length > 0) {
                     sellOrders = _.groupBy(sellOrders, (o) => (o.price));
                     sellOrders = _.min(sellOrders, (v, k) => (k))
                     let sellOrder = _.min(sellOrders, (o) => (

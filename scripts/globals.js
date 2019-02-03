@@ -128,6 +128,8 @@ let globals = function() {
             else {
                 ++global.summarized_rooms[creepRoomID].creep_confusion_counts[creepRole];
             }
+            let creepExecutedRole = _.get(creep.memory, ["executingRole"], "noRole");
+            console.log(creep.name + " (" +  creepRoomID + " " + creepRole + ") at " + creep.pos.toString() + " is confused being a " + creepExecutedRole);
         }
     };
     

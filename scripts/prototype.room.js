@@ -154,7 +154,36 @@ let prototypeRoom = function() {
             return _.first(powerSpawns);
         });
     }
+
+    if (Room.prototype.ownedPower == undefined) { // NOTE: Must be defined after Room.powerSpawn
+        defineCachedGetter(Room.prototype, "ownedPower", (r) => {
+            let powerSpawnPower = _.get(r, ["powerSpawn", "power"], 0);
+            let terminalPower = _.get(r, ["terminal", "store", RESOURCE_POWER], 0);
+            let storagePower = _.get(r, ["storage", "store", RESOURCE_POWER], 0);
+            let creepPower = _.sum(Game.creeps, (c) => (c.memory.roomID == r.name ? _.get(c, ["carry", RESOURCE_POWER], 0) : 0));
+            // TODO: Check for power in containers
+            return (powerSpawnPower + terminalPower + storagePower + creepPower);
+        });
+    }
     
+    if (Room.prototype.requiredPower == undefined) { // NOTE: Must be defined after Room.ownedPower
+        defineCachedGetter(Room.prototype, "requiredPower", (r) => {
+            if (_.get(r, ["controller", "my"], false) == false 
+                || _.get(r, ["controller", "level"], 0) < 8 
+                || _.get(r ["powerSpawn", "my"], false) == false 
+                || _.get(r ["powerSpawn", "energy"], 0) < POWER_SPAWN_ENERGY_RATIO) {
+                return 0;
+            }
+            return (Math.floor(r.powerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - r.ownedPower);
+        });
+    }
+
+    if (Room.prototype.excessPower == undefined) { // NOTE: Must be defined after Room.requiredPower
+        defineCachedGetter(Room.prototype, "excessPower", (r) => {
+            return (r.ownedPower - r.requiredPower);
+        });
+    }
+
     if (Room.prototype.myActiveTowers == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, "myActiveTowers", (r) => {
             if (r.controller == undefined) { return []; }
@@ -278,11 +307,27 @@ let prototypeRoom = function() {
         });
     }
     
-    if (Room.prototype.hasHostileTower == undefined) {
+    if (Room.prototype.hostileTowers == undefined) { // NOTE: Must be defined after global.defineCachedGetter
+        defineCachedGetter(Room.prototype, "hostileTowers", (r) => {
+            if (r.controller == undefined) { return []; }
+            let towers = r.find(FIND_STRUCTURES, { filter: (s) => (
+                s.structureType == STRUCTURE_TOWER
+            )});
+            let someTowersInactive = (_.get(r, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (v) => (v >= towers.length)));
+            return _.filter(towers, (t) => (
+                t.my == false 
+                && _.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), t.owner) == false 
+                && (someTowersInactive == false 
+                    || t.isActive() == true)
+            ));
+        });
+    }
+    
+    if (Room.prototype.hasHostileTower == undefined) { // NOTE: Must be defined after Room.hostileTowers
         Object.defineProperty(Room.prototype, "hasHostileTower", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["hasHostileTower"], false) == true) {
+                if (_.get(this, ["hostileTowers", "length"], 0) > 0) {
                     _.set(this.memory, ["hasHostileTower"], true);
                 }
                 else {
@@ -292,11 +337,45 @@ let prototypeRoom = function() {
             },
             
             set: function(value) {
-                if (value == true) {
+                if (_.get(this, ["hostileTowers", "length"], 0) > 0) {
                     _.set(this.memory, ["hasHostileTower"], true);
                 }
                 else {
                     this.memory.hasHostileTower = undefined;
+                }
+            }
+        });
+    }
+    
+    if (Room.prototype.hostileActiveTowers == undefined) { // NOTE: Must be defined after Room.hostileTowers
+        defineCachedGetter(Room.prototype, "hostileActiveTowers", (r) => {
+            if (r.controller == undefined) { return []; }
+            let towers = r.hostileTowers;
+            return _.filter(r.hostileTowers, (t) => (
+                t.energy >= TOWER_ENERGY_COST 
+            ));
+        });
+    }
+    
+    if (Room.prototype.hasHostileActiveTower == undefined) { // NOTE: Must be defined after Room.hostileActiveTowers
+        Object.defineProperty(Room.prototype, "hasHostileActiveTower", {
+            get: function() {
+                if (this === Room.prototype || this == undefined) { return; }
+                if (_.get(this, ["hostileActiveTowers", "length"], 0) > 0) {
+                    _.set(this.memory, ["hasHostileActiveTower"], true);
+                }
+                else {
+                    this.memory.hasHostileActiveTower = undefined;
+                }
+                return _.get(this.memory, ["hasHostileActiveTower"], false);
+            },
+            
+            set: function(value) {
+                if (_.get(this, ["hostileActiveTowers", "length"], 0) > 0) {
+                    _.set(this.memory, ["hasHostileActiveTower"], true);
+                }
+                else {
+                    this.memory.hasHostileActiveTower = undefined;
                 }
             }
         });

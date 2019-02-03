@@ -178,8 +178,16 @@ let roleDemolisher = {
                     || sentTo == "W43N42")) {
                 ROLES["scout"].run(creep);
             }
-            else {
+            else if (creep.carryCapacity > 0) {
                 ROLES["harvester"].run(creep);
+            }
+            else if (Game.time < _.get(Memory.rooms, [sentTo, "avoidTravelUntil"], 0)) {
+                ROLES["recyclable"].run(creep);
+                creep.memory.role = "recyclable";
+            }
+            else {
+                incrementConfusedCreepCount(creep);
+                creep.say(ICONS["dismantle"] + "?", true);
             }
         }
     }

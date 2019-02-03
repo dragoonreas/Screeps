@@ -148,12 +148,18 @@ let prototypeSpawn = function() {
                 || Game.map.getRoomLinearDistance(_.get(options.memory, "roomSentFrom", this.room.name), _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
                 needsHeal = true;
             }
+            if (Game.time < _.get(Memory.rooms, [options.memory.roomSentFrom, "avoidTravelUntil"], 0)) {
+                return -10.5; // NOTE: Fake error for when an exporter would just die to a hostile in the room they're going to export from
+            }
         }
         else if (roleName == "demolisher") {
             options.memory.roomSentTo = _.get(this.room.nextDemolisher, "to", _.get(Memory.rooms, [this.room.name, "harvestRooms", 0], undefined));
             options.memory.demolishStructure = _.get(this.room.nextDemolisher, "target", undefined);
             if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
                 needsHeal = true;
+            }
+            if (Game.time < _.get(Memory.rooms, [options.memory.roomSentTo, "avoidTravelUntil"], 0)) {
+                return -10.5; // NOTE: Fake error for when a demolisher would just die to a hostile in the room they're going to demolish
             }
         }
         else if (roleName == "claimer") {
