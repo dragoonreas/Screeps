@@ -485,6 +485,8 @@ let prototypeRoom = function() {
         defineCachedGetter(Room.prototype, 'exportersToSpawn', (r) => {
             if (r.exporterInfo.length == 0) { return []; }
             return _.chain(r.exporterInfo)
+                .filter((eI) => (
+                    _.get(Memory.rooms, [eI.from, "avoidTravelUntil"], 0) < Game.time))
                 .groupBy("priority")
                 .min((eI, p) => (p))
                 .value();
@@ -535,6 +537,8 @@ let prototypeRoom = function() {
         defineCachedGetter(Room.prototype, 'demolishersToSpawn', (r) => {
             if (r.demolisherInfo.length == 0) { return []; }
             return _.chain(r.demolisherInfo)
+                .filter((dI) => (
+                    _.get(Memory.rooms, [dI.from, "avoidTravelUntil"], 0) < Game.time))
                 .groupBy("priority")
                 .min((dI, p) => (p))
                 .value();

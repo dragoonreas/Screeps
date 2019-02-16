@@ -49,6 +49,9 @@ module.exports = function(globalOpts = {}){
             let allowedRooms = { [origin]: true, [destination]: true };
             let ret = Game.map.findRoute(origin, destination, {
                 routeCallback: (roomName) => {
+                    if (Game.map.getRoomLinearDistance(origin, roomName) > options.restrictDistance) {
+                        return Infinity;
+                    }
                     if (Game.map.isRoomAvailable(roomName) == false) {
                         return Infinity;
                     }
@@ -57,9 +60,6 @@ module.exports = function(globalOpts = {}){
                         if (outcome !== undefined) {
                             return outcome;
                         }
-                    }
-                    if (Game.map.getRoomLinearDistance(origin, roomName) > options.restrictDistance) {
-                        return Infinity;
                     }
                     let parsed;
                     if (options.preferHighway) {
@@ -84,7 +84,7 @@ module.exports = function(globalOpts = {}){
                     }
                     if (!options.allowHostile && _.get(Memory.rooms, [roomName, "avoidTravelUntil"], 0) >= Game.time &&
                         roomName !== destination && roomName !== origin) {
-                        return Number.POSITIVE_INFINITY;
+                        return Infinity;
                     }
                     return 2.5;
                 }
