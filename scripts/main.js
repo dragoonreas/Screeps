@@ -193,8 +193,8 @@ _.set(Memory.rooms, ["W46N41", "harvestRooms"], [
 ]);
 _.set(Memory.rooms, ["W46N18", "harvestRooms"], [
     "W46N17"
-    , "W45N18"
-    , "W46N19"
+    //, "W45N18" // remote mined by cacomixl8
+    //, "W46N19" // remote mined by cacomixl8
 ]);
 /*_.set(Memory.rooms, ["W48N52", "harvestRooms"], [
     "W49N52"
@@ -877,6 +877,8 @@ module.exports.loop = function () {
         , "W42N51"
     ];
     
+    let balancedResources = [];
+    
     // Manage rooms and run structures (except spawns)
     for (let roomID in Game.rooms) {
         if (_.includes(ignoredRooms, roomID) == true) { continue; }
@@ -939,6 +941,18 @@ module.exports.loop = function () {
 		
         let mayHaveRamparts = (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], (v) => (v > 0)) == false);
         
+        // Get ramparts near controller
+        if (_.get(theController, ["my"], false) == true 
+            && mayHaveRamparts == true) {
+            let rampartsNearController = theController.pos.findInRange(FIND_MY_STRUCTURES, 1, (s) => (
+                s.structureType == STRUCTURE_RAMPART 
+                && s.my == true
+            ));
+            _.forEach(rampartsNearController, (rnc) => {
+                privateRamparts[rnc.id] = true; // Make ramparts near controller private
+            });
+        }
+        
         let justNPCs = undefined;
         let noHealers = undefined;
         
@@ -949,7 +963,11 @@ module.exports.loop = function () {
         let invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
             filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false
         )});
-        if (invaders.length > 0) {
+        let powerfulInvaders = theRoom.find(FIND_HOSTILE_POWER_CREEPS, {
+            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false
+        )});
+        if (invaders.length > 0 
+            || powerfulInvaders.length > 0) {
             theRoom.hasHostileCreep = true;
             if (theController == undefined || theController.my == false || theController.safeMode == undefined) {
                 theRoom.checkForDrops = false; // TODO: Change this to flag only checking for drops inside the base when under attack (no path between drop and invaders when considering ramparts an obsticle)
@@ -1158,6 +1176,95 @@ module.exports.loop = function () {
                     )); // TODO: Filter theRamparts variable above if avaliable instead
                     _.forEach(rampartsNearInvader, (rni) => {
                         privateRamparts[rni.id] = true;
+                    });
+                }
+            }
+            
+            // Deal with powerful targets
+            for (let aPowerfulTarget of powerfulInvaders) {
+                
+                // Apply target weightings to the invaders
+                let targetWeighting = 0;
+                targetWeighting = _.get(Memory.rooms[aPowerfulTarget.room.name], ["invaderWeightings", aPowerfulTarget.id, "weighting"], undefined);
+                if (targetWeighting == undefined) {
+                    targetWeighting = 5; // TODO: Take into account powers
+                    
+                    _.set(Memory.rooms[aPowerfulTarget.room.name], ["invaderWeightings", aPowerfulTarget.id], {
+                        weighting: targetWeighting
+                        , expiresAt: (Game.time + aPowerfulTarget.ticksToLive)
+                    }); // TODO: Store the weightings somewhere else since weighting data is duplicated for each room an invader enters
+                }
+
+                // Save ID of new highest target if applicable
+                if (targetWeighting > highestTargetWeighting) {
+                    highestTargetWeighting = targetWeighting;
+                    theRoom.priorityTargetID = aPowerfulTarget.id;
+                }
+                
+                // Record positions targets can attack within the next tick (TODO: but not during safemode)
+                let avoidanceRange = 4; // TODO: Base this on powers
+                if (avoidanceRange > 0) {
+                    let oldPos = _.get(Memory.rooms[aPowerfulTarget.room.name], ["invaderWeightings", aPowerfulTarget.id, "pos"], undefined);
+                    let oldAvoidanceRange = _.get(Memory.rooms[aPowerfulTarget.room.name], ["invaderWeightings", aPowerfulTarget.id, "avoidanceRange"], undefined);
+                    let oldDangerZones = _.get(Memory.rooms[aPowerfulTarget.room.name], ["invaderWeightings", aPowerfulTarget.id, "dangerZones"], []);
+                    if (oldPos != undefined && aPowerfulTarget.pos.isEqualTo(oldPos.x, oldPos.y) && oldAvoidanceRange != undefined && oldAvoidanceRange == avoidanceRange) {
+                        for (let oldDangerZone of oldDangerZones) {
+                            if (_.some(theRoom.dangerZones, oldDangerZone) == false) {
+                                theRoom.dangerZones.push(oldDangerZone);
+                                //theRoom.visual.rect(oldDangerZone.x - 0.5, oldDangerZone.y - 0.5, 1, 1, { fill: "red" });
+                            }
+                        }
+                    }
+                    else {
+                        clearPathCaches = true;
+                        let topRange = _.max([aPowerfulTarget.pos.y - avoidanceRange, 0]);
+                        let leftRange = _.max([aPowerfulTarget.pos.x - avoidanceRange, 0]);
+                        let bottomRange = _.min([aPowerfulTarget.pos.y + avoidanceRange, 49]);
+                        let rightRange = _.min([aPowerfulTarget.pos.x + avoidanceRange, 49]);
+                        let theWalls = _.filter(theRoom.lookForAtArea(LOOK_TERRAIN, topRange, leftRange, bottomRange, rightRange, true), (t) => (
+                            t.terrain == "wall"
+                        ));
+                        let theRamparts = [];
+                        if (mayHaveRamparts == true) {
+                            theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
+                                s.structure.structureType == STRUCTURE_RAMPART 
+                                && (s.structure.my == true 
+                                || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                    && s.structure.isPublic == true))
+                            ));
+                        }
+                        _.set(Memory.rooms[aPowerfulTarget.room.name], ["invaderWeightings", aPowerfulTarget.id, "pos"], aPowerfulTarget.pos);
+                        _.set(Memory.rooms[aPowerfulTarget.room.name], ["invaderWeightings", aPowerfulTarget.id, "avoidanceRange"], avoidanceRange);
+                        _.set(Memory.rooms[aPowerfulTarget.room.name], ["invaderWeightings", aPowerfulTarget.id, "dangerZones"], []);
+                        for (let yPos = topRange; yPos <= bottomRange; ++yPos) {
+                            for (let xPos = leftRange; xPos <= rightRange; ++xPos) {
+                                let thePos = {
+                                    x: xPos
+                                    , y: yPos
+                                };
+                                if ((theRamparts.length == 0 || _.some(theRamparts, thePos) == false) && (theWalls.length == 0 || _.some(theWalls, thePos) == false)) { // TODO: Filter all other non-walkable objects from dangerzones (maybe after all dangerzones have been created)
+                                    Memory.rooms[aPowerfulTarget.room.name].invaderWeightings[aPowerfulTarget.id].dangerZones.push(thePos);
+                                    if (_.some(theRoom.dangerZones, thePos) == false) {
+                                        theRoom.dangerZones.push(thePos);
+                                        //theRoom.visual.rect(thePos.x - 0.5, thePos.y - 0.5, 1, 1, { fill: "red" });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Get ramparts near target
+                if (mayHaveRamparts == true) {
+                    let rampartsNearInvader = aPowerfulTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
+                        s.structureType == STRUCTURE_RAMPART 
+                        && s.my == true
+                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    _.forEach(rampartsNearInvader, (rni) => {
+                        privateRamparts[rni.id] = true; // Make ramparts near priority target private
+                        if (targetWeighting > 0 && rni.pos.isNearTo(aPowerfulTarget) == true && _.some(rampartsToUse, rni.id) == false) {
+                            rampartsToUse.push(rni.id); // Save ID of ramparts in melee range of target
+                        }
                     });
                 }
             }
@@ -1418,9 +1525,14 @@ module.exports.loop = function () {
                 }
             }
             else { // Else heal a creep if needed
-                target = tower.pos.findClosestByRange(FIND_MY_CREEPS, { 
+                target = tower.pos.findClosestByRange(FIND_MY_POWER_CREEPS, { 
                     filter: (c) => (c.hits < c.hitsMax
-                )}); // TODO: Also heal ally creeps
+                )}); // TODO: Also heal ally power creeps
+                if (target == undefined) {
+                    target = tower.pos.findClosestByRange(FIND_MY_CREEPS, { 
+                        filter: (c) => (c.hits < c.hitsMax
+                    )}); // TODO: Also heal ally creeps
+                }
                 if (target != undefined) {
                     tower.heal(target);
                 }
@@ -1516,7 +1628,7 @@ module.exports.loop = function () {
                                 }
                             }
                         }
-                        else {
+                        else if (_.includes(balancedResources, resourceName) == false) {
                             let sellOrders = _.filter(Game.market.orders, (o) => (
                                 o.type == ORDER_SELL 
                                 && o.resourceType == resourceName 
@@ -1548,6 +1660,7 @@ module.exports.loop = function () {
                                     if (deposit <= Game.market.credits) {
                                         let err = Game.market.createOrder(ORDER_SELL, resourceName, sellPrice, amountToSell, roomID);
                                         if (err == OK) {
+                                            balancedResources.push(resourceName);
                                             console.log("Created " + ORDER_SELL + " for " + amountToSell + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * amountToSell).toFixed(3) + " (" + sellPrice + " each) credits");
                                         }
                                         else {
@@ -1594,6 +1707,7 @@ module.exports.loop = function () {
                                     if (energyCost <= terminalEnergy) {
                                         let err = theTerminal.send(resourceName, sendAmount, sellOrderRoom, "To extend order " + sellOrder.id);
                                         if (err == OK) {
+                                            balancedResources.push(resourceName);
                                             console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + sellOrderRoom + " using " + energyCost + " " + RESOURCE_ENERGY + " to extend order " + sellOrder.id);
                                             madeTransaction = true;
                                         }
@@ -1636,6 +1750,7 @@ module.exports.loop = function () {
                                         if (energyCost <= terminalEnergy) {
                                             let err = theTerminal.send(resourceName, sendAmount, storeRoom.roomID, "Balance " + resourceName);
                                             if (err == OK) {
+                                                balancedResources.push(resourceName);
                                                 console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + storeRoom.roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to balance terminal resources");
                                                 madeTransaction = true;
                                             }
@@ -1664,7 +1779,7 @@ module.exports.loop = function () {
                 }
 
                 let sellOrders = _.filter(Game.market.orderCache(ORDER_SELL, RESOURCE_POWER), (o) => (
-                    o.price <= 2.5 // NOTE: Don't pay over 2.5 Credits per Power
+                    o.price <= 5 // NOTE: Don't pay over 5 Credits per Power
                 ));
 
                 if (powerRoomID != roomID 
@@ -1926,9 +2041,14 @@ module.exports.loop = function () {
             }
             else if (creep.memory.role == "healer") { // TODO: Make this a proper role
                 creep.memory.executingRole = "healer";
-                let target = creep.pos.findClosestByRange(FIND_MY_CREEPS, { 
+                let target = creep.pos.findClosestByRange(FIND_MY_POWER_CREEPS, {
                     filter: (c) => (c.hits < c.hitsMax
-                )}); // TODO: Also heal ally creeps
+                )}); // TODO: Also heal ally power creeps
+                if (target == undefined) {
+                    target = creep.pos.findClosestByRange(FIND_MY_CREEPS, {
+                        filter: (c) => (c.hits < c.hitsMax
+                    )}); // TODO: Also heal ally creeps
+                }
                 if (target != undefined) {
                     let err = creep.heal(target);
                     if (err == ERR_NOT_IN_RANGE) {

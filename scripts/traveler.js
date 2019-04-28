@@ -476,6 +476,7 @@ module.exports = function(globalOpts = {}){
         }
         static addCreepsToMatrix(room, matrix) {
             room.find(FIND_CREEPS).forEach((creep) => matrix.set(creep.pos.x, creep.pos.y, 0xff));
+            room.find(FIND_POWER_CREEPS).forEach((creep) => matrix.set(creep.pos.x, creep.pos.y, 0xff));
             return matrix;
         }
         getBorderMatrix(room) {

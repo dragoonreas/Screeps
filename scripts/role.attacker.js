@@ -44,6 +44,12 @@ let roleAttacker = {
             invader = Game.getObjectById(creep.room.priorityTargetID);
             
             if (invader == undefined) {
+                invader = creep.pos.findClosestByRange(FIND_HOSTILE_POWER_CREEPS, {
+                    filter: (i) => (_.includes(Memory.nonAgressivePlayers, i.owner.username) == false
+                )});
+            }
+            
+            if (invader == undefined) {
                 invader = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
                     filter: (i) => (_.includes(Memory.nonAgressivePlayers, i.owner.username) == false
                 )});

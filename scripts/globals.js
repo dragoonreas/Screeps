@@ -212,6 +212,18 @@ let globals = function() {
     
     global.toStr = (obj) => JSON.stringify(obj, null, 2); // shortcut to stringify an object (idea credit: warinternal, from the Screeps Slack)
     
+    global.objGenDate = function(objID) {
+        let d = new Date(0);
+        d.setUTCSeconds(parseInt(objID.substring(0, 8), 16));
+        return d.toLocaleString();
+    }
+    
+    global.listCreepAge = function() {
+        _.forEach(Game.creeps, (c) => {
+            console.log(`${c.name} (${c.room.name} ${c.memory.role}) started spawning at ${objGenDate(c.id)}, ${(Game.time - c.memory.spawnTick + (c.body.length * CREEP_SPAWN_TIME) - 1).toLocaleString()} ticks ago`);
+        });
+    }
+    
     global.listSafeModeAvailability = function() {
         console.log("Safe Mode Availability:");
         _.chain(Game.rooms)

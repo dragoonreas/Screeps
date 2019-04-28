@@ -170,8 +170,8 @@ let prototypeRoom = function() {
         defineCachedGetter(Room.prototype, "requiredPower", (r) => {
             if (_.get(r, ["controller", "my"], false) == false 
                 || _.get(r, ["controller", "level"], 0) < 8 
-                || _.get(r ["powerSpawn", "my"], false) == false 
-                || _.get(r ["powerSpawn", "energy"], 0) < POWER_SPAWN_ENERGY_RATIO) {
+                || _.get(r, ["powerSpawn", "my"], false) == false 
+                || _.get(r, ["powerSpawn", "energy"], 0) < POWER_SPAWN_ENERGY_RATIO) {
                 return 0;
             }
             return (Math.floor(r.powerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - r.ownedPower);
