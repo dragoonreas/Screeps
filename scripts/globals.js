@@ -204,7 +204,7 @@ let globals = function() {
     
     global.CUMULATIVE_CONTROLLER_DOWNGRADE = _.map(CONTROLLER_DOWNGRADE, (v1,k1,c1) => (_.reduce(c1, (a,v2,k2,c2) => (a + ((k2 <= k1) ? v2 : 0)), 0)));
     
-    global.EST_SEC_PER_TICK = 4.916; // time between ticks is currently averaging ~4.916 seconds (as of 2019/01/09)
+    global.EST_SEC_PER_TICK = 5.725; // time between ticks is currently averaging ~5.725 seconds (as of 2019/06/29)
     global.EST_TICKS_PER_MIN = Math.ceil(60 / EST_SEC_PER_TICK); // 60s
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     

@@ -412,13 +412,13 @@ let prototypeRoom = function() {
         Object.defineProperty(Room.prototype, "clearPathCaches", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
-                if (_.get(this.memory, ["clearPathCaches"], false) == true) {
+                if (_.get(this.memory, ["clearPathCaches"], true) == true) {
                     _.set(this.memory, ["clearPathCaches"], true);
                 }
                 else {
-                    this.memory.clearPathCaches = undefined;
+                    _.set(this.memory, ["clearPathCaches"], false);
                 }
-                return _.get(this.memory, ["clearPathCaches"], false);
+                return _.get(this.memory, ["clearPathCaches"], true);
             },
             
             set: function(value) {
@@ -426,7 +426,7 @@ let prototypeRoom = function() {
                     _.set(this.memory, ["clearPathCaches"], true);
                 }
                 else {
-                    this.memory.clearPathCaches = undefined;
+                    _.set(this.memory, ["clearPathCaches"], false);
                 }
             }
         });
@@ -446,9 +446,11 @@ let prototypeRoom = function() {
             set: function(value) {
                 if (_.isNumber(value) == false 
                     || value < Game.time) {
-                    this.memory.avoidTravelUntil = value;
+                    this.memory.avoidTravelUntil = undefined;
                 }
-                _.set(this.memory, ["avoidTravelUntil"], value);
+                else {
+                    _.set(this.memory, ["avoidTravelUntil"], value);
+                }
             }
         });
     }

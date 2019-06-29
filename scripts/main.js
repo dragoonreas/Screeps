@@ -46,7 +46,7 @@ require("traveler")({
     NOTE: Must be called after globals initialisation
 */
 const resourcesInfo = require("resources");
-const screepsPlus = require("screepsplus"); // Used to put stats in memory for agent to collect and push to Grafana dashboard
+const screepsPlus = require("screepsplus"); // Used to put stats in memory/segment for agent to collect and push to Grafana dashboard
 //const visualiser = require("visualiser"); // NOTE: Must be called after globals initialisation
 
 // TODO: Only do all the following memory initialisation on code commits instead of global resets
@@ -58,6 +58,7 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
     , "spawns": {}
     , "flags": {}
     , "MonCPU": false
+    , "MonGlobal": false
     , "refillBucket": false
     , "TooAngelDealings": { // can pay a friend tax to opt into this AIs non-agressive list (wish more people did this...)
         "idiotRating": 0 // stay below 0 to be friendly with this AI (value needs to be entered manually based on what their creep by the controller says)
@@ -89,11 +90,7 @@ for (let roomID in Game.rooms) {
     let theRoom = Game.rooms[roomID];
     _.defaults(theRoom, {
          "memoryExpiration": getRoomMemoryExpiration(roomID) // TODO: Don't let harvest rooms expire
-        , "checkForDrops": true
-        , "hasHostileCreep": false
         , "clearPathCaches": true
-        , "avoidTravelUntil": 0
-        , "buildOrderFILO": false
     }); // TODO: Implement sparse memory storage for rooms (assume a default value for undefined keys)
     
     let theController = theRoom.controller;
@@ -130,23 +127,6 @@ _.set(Memory.rooms, ["W85N23", "harvestRooms"], [
     , "W86N23"
     , "W85N25"
 ]);
-/*_.set(Memory.rooms, ["W86N43", "harvestRooms"], [
-    "W87N43"
-    , "W87N44"
-    , "W85N45"
-]);*/
-/*_.set(Memory.rooms, ["W91N45", "harvestRooms"], [
-    "W92N45"
-    , "W91N44"
-    , "W91N46"
-]);*/
-/*_.set(Memory.rooms, ["W94N49", "harvestRooms"], [
-    "W95N49"
-    , "W94N48"
-    , "W93N49"
-    , "W94N51"
-    , "W93N51"
-]);*/
 _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
     "W9N44"
     , "W8N45"
@@ -155,11 +135,10 @@ _.set(Memory.rooms, ["W9N45", "harvestRooms"], [
 /*_.set(Memory.rooms, ["W81N29", "harvestRooms"], [
     "W81N28"
     , "W82N29"
-    , "W81N31"
-    , "W82N31"
 ]);*/
-/*_.set(Memory.rooms, ["W72N28", "harvestRooms"], [
-    "W72N29"
+/*_.set(Memory.rooms, ["W72N28", "harvestRooms"], [ // owned by demawi
+    "W71N28"
+    , "W72N29"
     , "W73N28"
     , "W72N27"
 ]);*/
@@ -168,7 +147,7 @@ _.set(Memory.rooms, ["W64N31", "harvestRooms"], [
     , "W63N31"
     //, "W65N31" // remote mined by Pimaco
 ]);
-/*_.set(Memory.rooms, ["W55N31", "harvestRooms"], [
+/*_.set(Memory.rooms, ["W55N31", "harvestRooms"], [ // owned by steamingpile02
     "W56N31"
     , "W54N31"
     , "W55N32"
@@ -178,10 +157,6 @@ _.set(Memory.rooms, ["W53N39", "harvestRooms"], [
     //, "W53N38" // owned by Donatzor
     //, "W52N39" // remote mined by Donatzor
 ]);
-/*_.set(Memory.rooms, ["W53N42", "harvestRooms"], [
-    "W52N42"
-    , "W53N43"
-]);*/
 _.set(Memory.rooms, ["W52N47", "harvestRooms"], [
     "W51N47"
     , "W53N47"
@@ -732,7 +707,7 @@ module.exports.loop = function () {
     
     // Update TooAngel 
     let taDealingFromRoom = "W86N29";
-    let taDealingToRoom = "E33N15";
+    let taDealingToRoom = "E12S1";
     Memory.TooAngelDealings.isFriendly = (Memory.TooAngelDealings.idiotRating < 0); // TODO: Since more than just TooAngel uses this AI, need to setup an array of players to use this with
     if (Memory.TooAngelDealings.isFriendly == false 
         && Memory.TooAngelDealings.lastIdiotRating != Memory.TooAngelDealings.idiotRating) {
@@ -866,15 +841,9 @@ module.exports.loop = function () {
     let privateRamparts = {};
     
     let ignoredRooms = [
-        "W86N43"
-        , "W17N79"
-        , "W94N49"
-        , "W81N29"
-        , "W72N28"
-        , "W55N31"
-        , "W53N42"
-        , "W48N52"
-        , "W42N51"
+        // "W81N29"
+        // , "W72N28"
+        // , "W55N31"
     ];
     
     let balancedResources = [];
@@ -2054,9 +2023,14 @@ module.exports.loop = function () {
                     if (err == ERR_NOT_IN_RANGE) {
                         creep.rangedHeal(target);
                         creep.travelTo(target);
+                        creep.say(travelToIcons(creep) + ICONS["rangeHeal"] + ICONS["creep"], true);
                     }
-                    else if (err != OK) {
+                    else if (err == OK) {
+                        creep.say(ICONS["heal"] + ICONS["creep"], true);
+                    }
+                    else {
                         creep.rangedHeal(target);
+                        creep.say(ICONS["rangeheal"] + ICONS["creep"], true);
                     }
                 }
                 else {
@@ -2135,21 +2109,14 @@ module.exports.loop = function () {
     
     /*
         TODO: Incorporate this into propper bootstrapping code
-        TODO: Reorganise bootstrapping network in relation to the removal of W87N29
     */
-    /*_.set(Memory.rooms, ["W87N29", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
-    ) ? 1 : 0));*/
     _.set(Memory.rooms, ["W86N29", "creepMins", "adaptable"], ((
-        //(_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
         (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
         //|| (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)
         //|| (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)
         || (_.get(Memory.rooms, ["W64N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W64N31", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));
     _.set(Memory.rooms, ["W85N23", "creepMins", "adaptable"], ((
-        //(_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) 
         (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));
     /*_.set(Memory.rooms, ["W86N43", "creepMins", "adaptable"], ((

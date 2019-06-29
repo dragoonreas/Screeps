@@ -1,12 +1,12 @@
 let dataShard0 = function() {
     global.shardData = {
-        estSecPerTick: 4.76 // NOTE: Last updated 2017/07/18
+        estSecPerTick: 5.725 // NOTE: Last updated 2019/06/29
         , rooms: {
             W86N29: {
                 harvestRooms: [
                     "W85N29"
                     , "W86N28"
-                    , "W86N31"
+                    , "W87N29"
                 ]
                 , repairerTypeMins: [
                     { type: STRUCTURE_CONTAINER, min: 0 }
@@ -100,14 +100,22 @@ let dataShard0 = function() {
                     }
                 ]
             }
-            , W86N31: {
+            , W87N29: {
                 sources: [
                     {
-                        id: "5873bbab11e3e4361b4d63f9"
+                        id: "5873bb9511e3e4361b4d6159"
                         , pos: {
-                            roomName: "W86N31"
-                            , x: 39
-                            , y: 41
+                            roomName: "W87N29"
+                            , x: 13
+                            , y: 25
+                        }
+                    }
+                    , {
+                        id: "5873bb9511e3e4361b4d6157"
+                        , pos: {
+                            roomName: "W87N29"
+                            , x: 3
+                            , y: 14
                         }
                     }
                 ]
@@ -226,127 +234,6 @@ let dataShard0 = function() {
                             roomName: "W85N25"
                             , x: 32
                             , y: 37
-                        }
-                    }
-                ]
-            }
-            , W86N43: {
-                harvestRooms: [
-                    /*"W87N43"
-                    , "W88N39"
-                    , "W86N41"*/
-                ]
-                , repairerTypeMins: [
-                    { type: STRUCTURE_CONTAINER, min: 0 }
-                    , { type: STRUCTURE_ROAD, min: 0 }
-                    , { type: STRUCTURE_RAMPART, min: 0 }
-                    , { type: STRUCTURE_WALL, min: 0 }
-                    , { type: "all", min: 1 }
-                ]
-                , creepMins: [
-                    { role: "attacker", min: 0 } // set dynamically
-                    , { role: "harvester", min: 1 }
-                    , { role: "powerHarvester", min: 0 }
-                    , { role: "upgrader", min: 1 }
-                    , { role: "miner", min: 0 } // set dynamically
-                    , { role: "adaptable", min: 0 } // set dynamically
-                    , { role: "demolisher", min: 0 }
-                    , { role: "scout", min: 0 }
-                    , { role: "claimer", min: 0 }
-                    , { role: "repairer", min: 0 } // set dynamically
-                    , { role: "builder", min: 1 }
-                    , { role: "exporter", min: 0 }
-                    , { role: "rockhound", min: 0 } // set dynamically
-                ]
-                , bootstrappedRooms: [
-                    "W86N43"
-                ]
-                , creepMemory: {
-                    claimer: {
-                        roomSentTo: "W9N45"
-                    }
-                    , exporter: {
-                        roomSentFrom: "W94N49"
-                    }
-                }
-                , waypointsFor: [
-                    "adaptable"
-                ]
-                , sources: [
-                    {
-                        id: "5873bbaa11e3e4361b4d63c4"
-                        , pos: {
-                            roomName: "W86N43"
-                            , x: 20
-                            , y: 44
-                        }
-                    }
-                    , {
-                        id: "5873bbaa11e3e4361b4d63c2"
-                        , pos: {
-                            roomName: "W86N43"
-                            , x: 38
-                            , y: 15
-                        }
-                    }
-                ]
-            }
-            , W87N43: {
-                controller: {
-                    id: "5873bb9311e3e4361b4d612e"
-                    , pos: {
-                        roomName: "W87N43"
-                        , x: 8
-                        , y: 39
-                    }
-                }
-                , sources: [
-                    {
-                        id: "5873bb9311e3e4361b4d612d"
-                        , pos: {
-                            roomName: "W87N43"
-                            , x: 18
-                            , y: 36
-                        }
-                    }
-                ]
-            }
-            , W87N44: {
-                sources: [
-                    {
-                        id: "5873bb9311e3e4361b4d612b"
-                        , pos: {
-                            roomName: "W87N44"
-                            , x: 4
-                            , y: 35
-                        }
-                    }
-                ]
-            }
-            , W85N45: {
-                sources: [
-                    {
-                        id: "5873bbc611e3e4361b4d6715"
-                        , pos: {
-                            roomName: "W85N45"
-                            , x: 17
-                            , y: 41
-                        }
-                    }
-                    , {
-                        id: "5873bbc611e3e4361b4d6713"
-                        , pos: {
-                            roomName: "W85N45"
-                            , x: 15
-                            , y: 6
-                        }
-                    }
-                    , {
-                        id: "5873bbc611e3e4361b4d6714"
-                        , pos: {
-                            roomName: "W85N45"
-                            , x: 38
-                            , y: 6
                         }
                     }
                 ]
@@ -472,8 +359,6 @@ let dataShard0 = function() {
                 /*harvestRooms: [
                     "W81N28"
                     , "W82N29"
-                    , "W81N31"
-                    , "W82N31"
                 ]
                 , repairerTypeMins: [
                     { type: STRUCTURE_CONTAINER, min: 0 }
@@ -562,41 +447,10 @@ let dataShard0 = function() {
                     }
                 ]
             }
-            , W81N31: {
-                sources: [
-                    {
-                        id: "5873bc2711e3e4361b4d7252"
-                        , pos: {
-                            roomName: "W81N31"
-                            , x: 18
-                            , y: 22
-                        }
-                    }
-                ]
-            }
-            , W82N31: {
-                sources: [
-                    {
-                        id: "5873bc1011e3e4361b4d6fff"
-                        , pos: {
-                            roomName: "W82N31"
-                            , x: 38
-                            , y: 27
-                        }
-                    }
-                    , {
-                        id: "5873bc1011e3e4361b4d6ffe"
-                        , pos: {
-                            roomName: "W82N31"
-                            , x: 5
-                            , y: 14
-                        }
-                    }
-                ]
-            }
-            , W72N28: {
+            , W72N28: { // owned by demawi
                 /*harvestRooms: [
-                    "W72N29"
+                    "W71N28"
+                    , "W72N29"
                     , "W73N28"
                     , "W72N27"
                 ]
@@ -656,16 +510,36 @@ let dataShard0 = function() {
                     }
                 ]
             }
-            , W72N29: {
+            , W71N28: {
                 controller: {
-                    id: "5836b6eb8b8b9619519ef90b"
+                    id: "5836b7008b8b9619519efb11"
                     , pos: {
-                        roomName: "W72N29"
-                        , x: 7
-                        , y: 9
+                        roomName: "W71N28"
+                        , x: 11
+                        , y: 31
                     }
                 }
                 , sources: [
+                    {
+                        id: "5836b7008b8b9619519efb10"
+                        , pos: {
+                            roomName: "W71N28"
+                            , x: 14
+                            , y: 17
+                        }
+                    }
+                    , {
+                        id: "5836b7008b8b9619519efb12"
+                        , pos: {
+                            roomName: "W71N28"
+                            , x: 20
+                            , y: 33
+                        }
+                    }
+                ]
+            }
+            , W72N29: {
+                sources: [
                     {
                         id: "5836b6eb8b8b9619519ef90a"
                         , pos: {
@@ -712,7 +586,7 @@ let dataShard0 = function() {
                 harvestRooms: [
                     "W64N32"
                     , "W63N31"
-                    , "W65N31"
+                    //, "W65N31" // remote mined by Pimaco
                 ]
                 , repairerTypeMins: [
                     { type: STRUCTURE_CONTAINER, min: 0 }
@@ -826,7 +700,7 @@ let dataShard0 = function() {
                     }
                 ]
             }
-            , W55N31: {
+            , W55N31: { // owned by steamingpile02
                 /*harvestRooms: [
                     "W56N31"
                     , "W54N31"
@@ -951,8 +825,8 @@ let dataShard0 = function() {
             , W53N39: {
                 harvestRooms: [
                     "W54N39"
-                    //, "W53N38" // now an occupied room
-                    , "W52N39"
+                    //, "W53N38" // owned by Donatzor
+                    //, "W52N39" // remote mined by Donatzor
                 ]
                 , repairerTypeMins: [
                     { type: STRUCTURE_CONTAINER, min: 0 }
@@ -978,7 +852,6 @@ let dataShard0 = function() {
                 ]
                 , bootstrappedRooms: [
                     "W64N31"
-                    //, "W53N42"
                     , "W52N47"
                 ]
                 , creepMemory: {
@@ -1118,8 +991,6 @@ let dataShard0 = function() {
                 ]
                 , bootstrappedRooms: [
                     "W53N39"
-                    //, "W48N52"
-                    , "W42N51"
                 ]
                 , creepMemory: {
                     claimer: {
@@ -1200,317 +1071,15 @@ let dataShard0 = function() {
                     }
                 ]
             }
-            , W48N52: {
-                /*harvestRooms: [
-                    "W49N52"
-                    , "W48N53"
-                    , "W48N51"
-                ]
-                , repairerTypeMins: [
-                    { type: STRUCTURE_CONTAINER, min: 0 }
-                    , { type: STRUCTURE_ROAD, min: 0 }
-                    , { type: STRUCTURE_RAMPART, min: 0 }
-                    , { type: STRUCTURE_WALL, min: 0 }
-                    , { type: "all", min: 0 }
-                ]
-                , creepMins: [
-                    { role: "attacker", min: 0 } // set dynamically
-                    , { role: "harvester", min: 6 }
-                    , { role: "powerHarvester", min: 0 }
-                    , { role: "upgrader", min: 1 }
-                    , { role: "miner", min: 0 } // set dynamically
-                    , { role: "adaptable", min: 0 } // set dynamically
-                    , { role: "demolisher", min: 0 }
-                    , { role: "scout", min: 0 }
-                    , { role: "claimer", min: 0 }
-                    , { role: "repairer", min: 0 } // set dynamically
-                    , { role: "builder", min: 1 }
-                    , { role: "exporter", min: 0 }
-                    , { role: "rockhound", min: 0 } // set dynamically
-                ]
-                , */creepMemory: {
-                    claimer: {
-                        roomSentTo: "W42N51"
-                    }
-                }
-                , controller: {
-                    id: "579fa8e90700be0674d2e742"
-                    , pos: {
-                        roomName: "W48N52"
-                        , x: 38
-                        , y: 7
-                    }
-                }
-                , controllerToSource: 3
-                , canDemolishIn: true
-                , sources: [
-                    {
-                        id: "579fa8e90700be0674d2e743"
-                        , pos: {
-                            roomName: "W48N52"
-                            , x: 28
-                            , y: 19
-                        }
-                    }
-                    , {
-                        id: "579fa8e90700be0674d2e741"
-                        , pos: {
-                            roomName: "W48N52"
-                            , x: 39
-                            , y: 5
-                        }
-                    }
-                ]
-            }
-            , W49N52: {
-                controller: {
-                    id: "579fa8e60700be0674d2e700"
-                    , pos: {
-                        roomName: "W49N52"
-                        , x: 12
-                        , y: 43
-                    }
-                }
-                , sources: [
-                    {
-                        id: "579fa8e60700be0674d2e701"
-                        , pos: {
-                            roomName: "W49N52"
-                            , x: 20
-                            , y: 43
-                        }
-                    }
-                    , {
-                        id: "579fa8e60700be0674d2e6ff"
-                        , pos: {
-                            roomName: "W49N52"
-                            , x: 34
-                            , y: 30
-                        }
-                    }
-                ]
-            }
-            , W48N53: {
-                sources: [
-                    {
-                        id: "579fa8e90700be0674d2e73f"
-                        , pos: {
-                            roomName: "W48N53"
-                            , x: 17
-                            , y: 46
-                        }
-                    }
-                ]
-            }
-            , W48N51: {
-                sources: [
-                    {
-                        id: "579fa8e90700be0674d2e746"
-                        , pos: {
-                            roomName: "W48N51"
-                            , x: 6
-                            , y: 33
-                        }
-                    }
-                ]
-            }
-            , W42N51: {
-                harvestRooms: [
-                    "W41N51"
-                    , "W41N49"
-                    , "W39N51"
-                ]
-                , repairerTypeMins: [
-                    { type: STRUCTURE_CONTAINER, min: 0 }
-                    , { type: STRUCTURE_ROAD, min: 1 }
-                    , { type: STRUCTURE_RAMPART, min: 0 }
-                    , { type: STRUCTURE_WALL, min: 0 }
-                    , { type: "all", min: 1 }
-                ]
-                , creepMins: [
-                    { role: "attacker", min: 0 } // set dynamically
-                    , { role: "harvester", min: 6 }
-                    , { role: "powerHarvester", min: 0 }
-                    , { role: "upgrader", min: 1 }
-                    , { role: "miner", min: 0 } // set dynamically
-                    , { role: "adaptable", min: 0 } // set dynamically
-                    , { role: "demolisher", min: 0 }
-                    , { role: "scout", min: 0 }
-                    , { role: "claimer", min: 1 }
-                    , { role: "repairer", min: 0 } // set dynamically
-                    , { role: "builder", min: 1 }
-                    , { role: "exporter", min: 1 }
-                    , { role: "rockhound", min: 0 } // set dynamically
-                ]
-                , bootstrappedRooms: [
-                    "W52N47"
-                    //, "W37N52"
-                ]
-                , creepMemory: {
-                    claimer: {
-                        roomSentTo: "W37N52"
-                    }
-                    , exporter: {
-                        roomSentFrom: "W42N56"
-                    }
-                }
-                , controller: {
-                    id: "579fa8f80700be0674d2e928"
-                    , pos: {
-                        roomName: "W42N51"
-                        , x: 26
-                        , y: 28
-                    }
-                }
-                , controllerToSource: 3
-                , waypointsFor: [
-                    "adaptable"
-                ]
-                , sources: [
-                    {
-                        id: "579fa8f80700be0674d2e929"
-                        , pos: {
-                            roomName: "W42N51"
-                            , x: 4
-                            , y: 35
-                        }
-                    }
-                    , {
-                        id: "579fa8f80700be0674d2e927"
-                        , pos: {
-                            roomName: "W42N51"
-                            , x: 25
-                            , y: 27
-                        }
-                    }
-                ]
-            }
-            , W41N51: {
-                controller: {
-                    id: "579fa8fa0700be0674d2e965"
-                    , pos: {
-                        roomName: "W41N51"
-                        , x: 42
-                        , y: 17
-                    }
-                }
-                , sources: [
-                    {
-                        id: "579fa8fa0700be0674d2e966"
-                        , pos: {
-                            roomName: "W41N51"
-                            , x: 10
-                            , y: 45
-                        }
-                    }
-                    , {
-                        id: "579fa8fa0700be0674d2e964"
-                        , pos: {
-                            roomName: "W41N51"
-                            , x: 15
-                            , y: 13
-                        }
-                    }
-                ]
-            }
-            , W41N49: {
-                sources: [
-                    {
-                        id: "577b92f70f9d51615fa476fe"
-                        , pos: {
-                            roomName: "W41N49"
-                            , x: 14
-                            , y: 5
-                        }
-                    }
-                ]
-            }
-            , W39N51: {
-                sources: [
-                    {
-                        id: "579fa8fe0700be0674d2e9bb"
-                        , pos: {
-                            roomName: "W39N51"
-                            , x: 22
-                            , y: 11
-                        }
-                    }
-                ]
-            }
-            , W37N52: {
-                /*harvestRooms: [
-                    "W37N51"
-                    , "W38N52"
-                    , "W37N53"
-                ]
-                , repairerTypeMins: [
-                    { type: STRUCTURE_CONTAINER, min: 0 }
-                    , { type: STRUCTURE_ROAD, min: 0 }
-                    , { type: STRUCTURE_RAMPART, min: 0 }
-                    , { type: STRUCTURE_WALL, min: 0 }
-                    , { type: "all", min: 0 }
-                ]
-                , creepMins: [
-                    { role: "attacker", min: 0 } // set dynamically
-                    , { role: "harvester", min: 6 }
-                    , { role: "powerHarvester", min: 0 }
-                    , { role: "upgrader", min: 1 }
-                    , { role: "miner", min: 0 } // set dynamically
-                    , { role: "adaptable", min: 0 } // set dynamically
-                    , { role: "demolisher", min: 0 }
-                    , { role: "scout", min: 0 }
-                    , { role: "claimer", min: 0 }
-                    , { role: "repairer", min: 0 } // set dynamically
-                    , { role: "builder", min: 1 }
-                    , { role: "exporter", min: 0 }
-                    , { role: "rockhound", min: 0 } // set dynamically
-                ]
-                , creepMemory: {
-                    claimer: {
-                        roomSentTo: "W31N53"
-                    }
-                }
-                , */controller: {
-                    id: "579fa9040700be0674d2ea36"
-                    , pos: {
-                        roomName: "W37N52"
-                        , x: 42
-                        , y: 40
-                    }
-                }
-                , canDemolishIn: true
-                , sources: [
-                    {
-                        id: "579fa9040700be0674d2ea34"
-                        , pos: {
-                            roomName: "W37N52"
-                            , x: 16
-                            , y: 28
-                        }
-                    }
-                    , {
-                        id: "579fa9040700be0674d2ea35"
-                        , pos: {
-                            roomName: "W37N52"
-                            , x: 45
-                            , y: 33
-                        }
-                    }
-                ]
-            }
         }
         , TooAngelTransactionRooms: {
             from: "W86N29"
-            , to: "E33N15"
+            , to: "E12S1"
         }
         , ignoredRooms: [
-            "W17N79"
-            , "W81N29"
-            , "W72N28"
-            , "W87N29" // TODO: Remove this when the rest of the code relating to this room's been removed
-            , "W55N31"
-            , "W53N42"
-            , "W48N52"
+            // "W81N29"
+            // , "W72N28"
+            // , "W55N31"
         ]
     };
     
@@ -1528,9 +1097,13 @@ let dataShard0 = function() {
                         creepMin.min = _.reduce(repairerTypeMins, (sum, repairerTypeMin) => (sum + repairerTypeMin.min), 0);
                     }
                 }
-                /*else if (creepMin.role == "exporter") {
-                    creepMin.min = ((_.get(theRoom, ["terminal", "my"], true) == false) && (_.sum(_.get(theRoom, ["terminal", "store"], { [RESOURCE_ENERGY]: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0);
-                }*/
+                else if (creepMin.role == "demolisher") {
+                    creepMin.min = _.parseInt(_.reduce(_.get(Game.rooms, [roomID, "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0));
+                }
+                else if (creepMin.role == "exporter") {
+                    //creepMin.min = ((_.get(theRoom, ["terminal", "my"], true) == false) && (_.sum(_.get(theRoom, ["terminal", "store"], { [RESOURCE_ENERGY]: 0 })) > 0) && (Game.cpu.bucket > 7500)) ? 1 : 0);
+                    creepMin.min = _.parseInt(_.reduce(_.get(Game.rooms, [roomID, "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0));
+                }
                 else if (creepMin.role == "rockhound") {
                     creepMin.min = (_.get(theRoom, ["canHarvestMineral"], false) ? 1 : 0);
                 }
