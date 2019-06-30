@@ -1071,6 +1071,242 @@ let dataShard0 = function() {
                     }
                 ]
             }
+            , W46N41: {
+                harvestRooms: [
+                    "W47N41"
+                    , "W46N42"
+                    , "W45N41"
+                ]
+                , repairerTypeMins: [
+                    { type: STRUCTURE_CONTAINER, min: 0 }
+                    , { type: STRUCTURE_ROAD, min: 1 }
+                    , { type: STRUCTURE_RAMPART, min: 0 }
+                    , { type: STRUCTURE_WALL, min: 0 }
+                    , { type: "all", min: 1 }
+                ]
+                , creepMins: [
+                    { role: "attacker", min: 0 } // set dynamically
+                    , { role: "harvester", min: 6 }
+                    , { role: "powerHarvester", min: 0 }
+                    , { role: "upgrader", min: 1 }
+                    , { role: "miner", min: 0 } // set dynamically
+                    , { role: "adaptable", min: 0 } // set dynamically
+                    , { role: "demolisher", min: 0 }
+                    , { role: "scout", min: 0 }
+                    , { role: "claimer", min: 1 }
+                    , { role: "repairer", min: 0 } // set dynamically
+                    , { role: "builder", min: 1 }
+                    , { role: "exporter", min: 0 }
+                    , { role: "rockhound", min: 0 } // set dynamically
+                ]
+                , bootstrappedRooms: [
+                    "W53N39"
+                ]
+                , creepMemory: {
+                    claimer: {
+                        roomSentTo: "W48N52"
+                    }
+                    , demolisher: {
+                        roomSentTo: "W48N51"
+                    }
+                    , exporter: {
+                        roomSentFrom: "W49N51"
+                    }
+                }
+                , controller: {
+                    id: "577b92b30f9d51615fa46f1e"
+                    , pos: {
+                        roomName: "W46N41"
+                        , x: 14
+                        , y: 17
+                    }
+                }
+                , controllerToSource: 1
+                , sources: [
+                    {
+                        id: "577b92b30f9d51615fa46f1d"
+                        , pos: {
+                            roomName: "W46N41"
+                            , x: 15
+                            , y: 16
+                        }
+                    }
+                    , {
+                        id: "577b92b30f9d51615fa46f1f"
+                        , pos: {
+                            roomName: "W46N41"
+                            , x: 8
+                            , y: 45
+                        }
+                    }
+                ]
+            }
+            , W47N41: {
+                controller: {
+                    id: "577b92a40f9d51615fa46dc8"
+                    , pos: {
+                        roomName: "W47N41"
+                        , x: 6
+                        , y: 11
+                    }
+                }
+                , sources: [
+                    {
+                        id: "577b92a40f9d51615fa46dc9"
+                        , pos: {
+                            roomName: "W47N41"
+                            , x: 27
+                            , y: 12
+                        }
+                    }
+                ]
+            }
+            , W46N42: {
+                sources: [
+                    {
+                        id: "577b92b30f9d51615fa46f1a"
+                        , pos: {
+                            roomName: "W46N42"
+                            , x: 16
+                            , y: 7
+                        }
+                    }
+                ]
+            }
+            , W45N41: {
+                sources: [
+                    {
+                        id: "577b92c20f9d51615fa47108"
+                        , pos: {
+                            roomName: "W45N41"
+                            , x: 13
+                            , y: 10
+                        }
+                    }
+                ]
+            }
+            , W46N18: {
+                harvestRooms: [
+                    "W46N17"
+                    //, "W45N18" // remote mined by cacomixl8
+                    //, "W46N19" // remote mined by cacomixl8
+                ]
+                , repairerTypeMins: [
+                    { type: STRUCTURE_CONTAINER, min: 0 }
+                    , { type: STRUCTURE_ROAD, min: 1 }
+                    , { type: STRUCTURE_RAMPART, min: 0 }
+                    , { type: STRUCTURE_WALL, min: 0 }
+                    , { type: "all", min: 1 }
+                ]
+                , creepMins: [
+                    { role: "attacker", min: 0 } // set dynamically
+                    , { role: "harvester", min: 6 }
+                    , { role: "powerHarvester", min: 0 }
+                    , { role: "upgrader", min: 1 }
+                    , { role: "miner", min: 0 } // set dynamically
+                    , { role: "adaptable", min: 0 } // set dynamically
+                    , { role: "demolisher", min: 0 }
+                    , { role: "scout", min: 0 }
+                    , { role: "claimer", min: 1 }
+                    , { role: "repairer", min: 0 } // set dynamically
+                    , { role: "builder", min: 1 }
+                    , { role: "exporter", min: 0 }
+                    , { role: "rockhound", min: 0 } // set dynamically
+                ]
+                , bootstrappedRooms: [
+                    "W53N39"
+                ]
+                , creepMemory: {
+                    claimer: {
+                        roomSentTo: "W48N52"
+                    }
+                    , demolisher: {
+                        roomSentTo: "W48N51"
+                    }
+                    , exporter: {
+                        roomSentFrom: "W49N51"
+                    }
+                }
+                , controller: {
+                    id: "577b92b60f9d51615fa46f88"
+                    , pos: {
+                        roomName: "W46N18"
+                        , x: 10
+                        , y: 27
+                    }
+                }
+                , controllerToSource: 4
+                , sources: [
+                    {
+                        id: "577b92b60f9d51615fa46f89"
+                        , pos: {
+                            roomName: "W46N18"
+                            , x: 6
+                            , y: 28
+                        }
+                    }
+                    , {
+                        id: "577b92b60f9d51615fa46f87"
+                        , pos: {
+                            roomName: "W46N18"
+                            , x: 38
+                            , y: 23
+                        }
+                    }
+                ]
+            }
+            , W46N17: {
+                controller: {
+                    id: "577b92b60f9d51615fa46f8c"
+                    , pos: {
+                        roomName: "W46N17"
+                        , x: 37
+                        , y: 5
+                    }
+                }
+                , sources: [
+                    {
+                        id: "577b92b60f9d51615fa46f8b"
+                        , pos: {
+                            roomName: "W46N17"
+                            , x: 19
+                            , y: 5
+                        }
+                    }
+                    , {
+                        id: "577b92b60f9d51615fa46f8d"
+                        , pos: {
+                            roomName: "W46N17"
+                            , x: 21
+                            , y: 31
+                        }
+                    }
+                ]
+            }
+            , W45N18: {
+                sources: [
+                    {
+                        id: "577b92c50f9d51615fa4716a"
+                        , pos: {
+                            roomName: "W45N18"
+                            , x: 39
+                            , y: 6
+                        }
+                    }
+                ]
+            }
+            , W46N19: {
+                sources: [
+                    {
+                        id: "577b92b60f9d51615fa46f84"
+                        , pos: {
+                            roomName: "W46N19"
+                            , x: 30
+                            , y: 7
+                        }
+                    }
+                ]
+            }
         }
         , TooAngelTransactionRooms: {
             from: "W86N29"
