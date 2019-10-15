@@ -39,6 +39,7 @@ require("traveler")({
         , strokeWidth: .1
         , opacity: .25
 }}); // TODO: Make a custom version of Creep.moveTo and remove this stopgap solution
+require("injectBirthday");
 
 // Setup constants
 /*
