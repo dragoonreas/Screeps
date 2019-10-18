@@ -33,7 +33,7 @@ let roleClaimer = {
             if (controllerMem != undefined) {
                 if ((_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" 
                         || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "username"], "dragoonreas") != "dragoonreas") 
-                    && _.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time) > Game.time) { // TODO: Add additional checks to make sure we're not accidently attacking an ally
+                    && _.get(Memory.controllers, [creep.memory.controllerID, "unblockedAt"], Game.time) > Game.time) { // TODO: Add additional checks to make sure we're not accidently attacking an ally
                     creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
                 }
                 else if (creep.memory.controllerID == "577b935b0f9d51615fa48076" 
@@ -201,10 +201,10 @@ let roleClaimer = {
             let err = ERR_GCL_NOT_ENOUGH;
             if (_.get(Memory.controllers, [creep.memory.controllerID, "owner", "username"], "dragoonreas") != "dragoonreas" 
                 || _.get(Memory.controllers, [creep.memory.controllerID, "reservation", "username"], "dragoonreas") != "dragoonreas") { // TODO: Add additional checks to make sure we're not accidently attacking an ally
-                if (_.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time - 1) > Game.time + creep.ticksToLive) {
+                if (_.get(Memory.controllers, [creep.memory.controllerID, "unblockedAt"], Game.time - 1) > Game.time + creep.ticksToLive) {
                     creep.memory.role = "recyclable"; // recycle this creep since it can't attack the controller
                 }
-                else if (_.get(Memory.controllers, [creepMemory.controllerID, "unblockedAt"], Game.time - 1) > Game.time) {
+                else if (_.get(Memory.controllers, [creep.memory.controllerID, "unblockedAt"], Game.time - 1) > Game.time) {
                     incrementIdleCreepCount(creep);
                     switch (creep.saying) {
                         case ICONS["wait00"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER]: creep.say(ICONS["wait01"] + ICONS["attackController"] + ICONS[STRUCTURE_CONTROLLER], true); break;

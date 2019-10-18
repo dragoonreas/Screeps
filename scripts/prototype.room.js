@@ -40,7 +40,7 @@ let prototypeRoom = function() {
                 if (this === Room.prototype || this == undefined) { return; }
                 if (_.get(this.memory, ["controller"], undefined) == undefined && this.controller != undefined) {
                     let theController = this.controller;
-                    let downgradesAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
+                    let downgradesAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || (theController.reservation && (Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1))) || undefined);
                     let neutralAt = ((downgradesAt && (downgradesAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || undefined);
                     _.set(this.memory, ["controller"], { 
                         id: theController.id 

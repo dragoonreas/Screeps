@@ -651,9 +651,9 @@ module.exports.loop = function () {
         }
         if (_.size(_.get(Memory.rooms[roomID], "invaderWeightings", {})) > 0) {
             let priorityTarget = _.max(_.get(Memory.rooms[roomID], "invaderWeightings", {}), (iW) => (iW.weighting));
-            let priorityTargetWeighting = _.get(priorityTarget, ["wighting"], 0);
-            if (_.get(Memory.rooms, [roomID, "invaderWeightings", _.get(Memory.rooms, [roomID, "priorityTargetID"], ""), "wighting"], 0) < priorityTargetWeighting) {
-                let priorityTargetID = _.findKey(_.get(Memory.rooms[roomID], "invaderWeightings", {}), (iW) => (iW.wighting = priorityTargetWeighting)) || undefined;
+            let priorityTargetWeighting = _.get(priorityTarget, ["weighting"], 0);
+            if (_.get(Memory.rooms, [roomID, "invaderWeightings", _.get(Memory.rooms, [roomID, "priorityTargetID"], ""), "weighting"], 0) < priorityTargetWeighting) {
+                let priorityTargetID = _.findKey(_.get(Memory.rooms[roomID], "invaderWeightings", {}), (iW) => (iW.weighting = priorityTargetWeighting)) || undefined;
                 _.set(Memory.rooms, [roomID, "priorityTargetID"], priorityTargetID);
             }
         }
@@ -730,7 +730,7 @@ module.exports.loop = function () {
                 pos: theController.pos
             });
             */
-            let downgradesAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
+            let downgradesAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || (theController.reservation && (Game.time + (theController.reservation.ticksToEnd >= 0 ? theController.reservation.ticksToEnd : -1))) || undefined);
             let neutralAt = ((downgradesAt && (downgradesAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || undefined);
             _.set(theRoom, ["controllerMem"], { 
                 id: theController.id
@@ -789,11 +789,11 @@ module.exports.loop = function () {
         
         // Get invader info
         let invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
-            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false
-        )});
+            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
+        });
         let powerfulInvaders = theRoom.find(FIND_HOSTILE_POWER_CREEPS, {
-            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false
-        )});
+            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
+        });
         if (invaders.length > 0 
             || powerfulInvaders.length > 0) {
             theRoom.hasHostileCreep = true;
