@@ -1163,7 +1163,7 @@ module.exports.loop = function () {
         
         // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
         if (dangerousToCreeps == true && theRoom.isHarvestRoom == true) {
-            let youngestInvader = _.max(invaders, "ticksToLive");
+            let youngestInvader = _.max(invaders, "ticksToLive"); // TODO: Include Power Creeps here
             if (theRoom.avoidTravelUntil < Game.time) {
                 _.each(Game.creeps, (c) => {
                     if (c.memory.role != "miner") {
@@ -1200,7 +1200,9 @@ module.exports.loop = function () {
         if (theRoom.hasHostileTower == true) { // TODO: Add a check to see if the towers are still there if a creep is in the room, instead of just waiting for it to be reset after a day due to the room memory garbage collection being run on it
             theRoom.checkForDrops = false;
         }
-        else if (theController != undefined && theController.my == false && theController.level >= _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (maxBuildable) => maxBuildable > 0)) {
+        else if ((theController == undefined) // NOTE: Invader Strongholds don't require a controller
+            || (theController.my == false 
+                && theController.level >= _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (maxBuildable) => maxBuildable > 0))) {
             let hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER && _.includes(Memory.nonAgressivePlayers, s.owner.username) == false); // TODO: Figure out if it's also worth checking if the towers are empty or not
             if (hostileTowers.length > 0) {
                 theRoom.hasHostileTower = true;
