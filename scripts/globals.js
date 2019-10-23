@@ -306,21 +306,21 @@ let globals = function() {
             - See prototype.creep for usage examples
     */
     global.defineCachedGetter = function(proto, propertyName, fn) {
-    	Object.defineProperty(proto, propertyName, {
-    		get: function() { 
-    			if(this === proto || this == undefined)
-    				return;
-    			let result = fn.call(this,this);
-    			Object.defineProperty(this, propertyName, {
-    				value: result,
-    				configurable: true,
-    				enumerable: false
-    			});
-    			return result;
-    		},
-    		configurable: true,
-    		enumerable: false
-    	});
+        Object.defineProperty(proto, propertyName, {
+            get: function() { 
+                if(this === proto || this == undefined)
+                    return;
+                let result = fn.call(this,this);
+                Object.defineProperty(this, propertyName, {
+                    value: result,
+                    configurable: true,
+                    enumerable: false
+                });
+                return result;
+            },
+            configurable: true,
+            enumerable: false
+        });
     };
     
     /*

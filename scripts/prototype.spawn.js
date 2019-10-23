@@ -436,7 +436,7 @@ let prototypeSpawn = function() {
             5:  1*300+30* 50=    1800/6/( 50/50)=   300         300*5=              1500/5/50*4=    24
             6:  1*300+40* 50=    2300/6/( 50/50)=   383         400*5=              2000/5/50*4=    32
             7:  2*300+50*100=    5600/6/(100/50)=   466         500*5=              2500/5/50*4=    40
-            8:  3*300+60*200=   12900/6/(200/50)=   537         550*5=              2750/5/50*4=	44
+            8:  3*300+60*200=   12900/6/(200/50)=   537         550*5=              2750/5/50*4=    44
         */
         const GENERAL_WORKER_CARRY_PART_CAP = Math.ceil(this.room.energyCapacityAvailable / DEFAULT_HARVEST_COUNT / (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / EXTENSION_ENERGY_CAPACITY[1]) / CARRY_CAPACITY);
         
@@ -557,7 +557,7 @@ let prototypeSpawn = function() {
         
         options.memory.spawnTick = Game.time + (body.length * CREEP_SPAWN_TIME) - 1 // -1 because it uses the last tick to leave the spawn
         
-		// Worst case (full/destroyed carry parts) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
+        // Worst case (full/destroyed carry parts) ticks per movement when transversing roads (1), plain terrain (2), or swamp terrain (10)
         options.memory.speeds = {
             ["1"]: (moveRatio == 0 ? 0 : Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 1) / (bodyPartCounts[MOVE] * 2)), 1))
             , ["2"]: (moveRatio == 0 ? 0 : Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 2) / (bodyPartCounts[MOVE] * 2)), 1))

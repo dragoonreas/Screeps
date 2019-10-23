@@ -174,23 +174,23 @@ _.set(Memory.rooms, ["W46N18", "harvestRooms"], [
 ]);
 /*
     Future Expansion Candidates:
-	From W53N39:
-	- W46N41:
-		- source to controller: 1
-		- adjacent room/source: 3/3
-	- W46N18:
-		- source to controller: 3
-		- adjacent room/source: 3/4
-	- W51N24
-		- source to controller: 1
-		- adjacent room/source: 3/4
-	- W9N21 (Temp RCL3) ?
-	- W2N21:
-		- source to controller: 2
-		- adjacent room/source: 2/2
-	- W1N27:
-		- source to controller: 3
-		- adjacent room/source: 2/4
+    From W53N39:
+    - W46N41:
+        - source to controller: 1
+        - adjacent room/source: 3/3
+    - W46N18:
+        - source to controller: 3
+        - adjacent room/source: 3/4
+    - W51N24
+        - source to controller: 1
+        - adjacent room/source: 3/4
+    - W9N21 (Temp RCL3) ?
+    - W2N21:
+        - source to controller: 2
+        - adjacent room/source: 2/2
+    - W1N27:
+        - source to controller: 3
+        - adjacent room/source: 2/4
 */
 
 /*
@@ -765,8 +765,8 @@ module.exports.loop = function () {
         
         // TODO: Check for nukes and make sure only 1 notification is sent (for the lifetime of that nuke) when the nuke is found
         
-		let towers = theRoom.myActiveTowers;
-		
+        let towers = theRoom.myActiveTowers;
+        
         let mayHaveRamparts = (_.get(theRoom, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], (v) => (v > 0)) == false);
         
         // Get ramparts near controller
@@ -800,10 +800,10 @@ module.exports.loop = function () {
             if (theController == undefined || theController.my == false || theController.safeMode == undefined) {
                 theRoom.checkForDrops = false; // TODO: Change this to flag only checking for drops inside the base when under attack (no path between drop and invaders when considering ramparts an obsticle)
             }
-			
-			justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
-			noHealers = (_.any(invaders, (c) => (c.getActiveBodyparts(HEAL) > 0)) == false);
-			
+            
+            justNPCs = _.every(invaders, (i) => (i.owner.username == "Invader" || i.owner.username == "Source Keeper"));
+            noHealers = (_.any(invaders, (c) => (c.getActiveBodyparts(HEAL) > 0)) == false);
+            
             /*
                 NOTE:
                 Don't attack player targets blinking on the borders as this is a common strat to drain towers.
@@ -1112,7 +1112,7 @@ module.exports.loop = function () {
             }
             
             // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
-			if (theController != undefined 
+            if (theController != undefined 
                 && theController.my == true 
                 && theController.safeMode == undefined 
                 && theController.safeModeCooldown == undefined 
@@ -1127,23 +1127,23 @@ module.exports.loop = function () {
                     || _.some(invaders, (i) => (
                         _.some(Memory.agressivePlayers, (aP) => (
                             i.owner.username == aP)))) == true)) { // TODO: Check that this is all working
-				//console.log("Attempting to activate Safe Mode in: " + roomID);
-				//Game.notify("Attempting to activate Safe Mode in: " + roomID, 30);
-				let err = theController.activateSafeMode();
-				if (err == OK) {
+                //console.log("Attempting to activate Safe Mode in: " + roomID);
+                //Game.notify("Attempting to activate Safe Mode in: " + roomID, 30);
+                let err = theController.activateSafeMode();
+                if (err == OK) {
                     console.log("Activated Safe Mode in: " + roomID);
                     Game.notify("Activated Safe Mode in: " + roomID);
-				}
-			}
-			else if (_.get(theRoom, ["controller", "my"], false) == true && justNPCs == false && highestTargetWeighting > 0) { // TODO: Remove after defences have been properly tested
-				//console.log("Attempting to activate (backup) Safe Mode in: " + roomID);
-				//Game.notify("Attempting to activate (backup) Safe Mode in: " + roomID, 30);
-				let err = theController.activateSafeMode();
-				if (err == OK) {
-				    console.log("Activated (backup) Safe Mode in: " + roomID);
-				    Game.notify("Activated (backup) Safe Mode in: " + roomID);
-				}
-			}
+                }
+            }
+            else if (_.get(theRoom, ["controller", "my"], false) == true && justNPCs == false && highestTargetWeighting > 0) { // TODO: Remove after defences have been properly tested
+                //console.log("Attempting to activate (backup) Safe Mode in: " + roomID);
+                //Game.notify("Attempting to activate (backup) Safe Mode in: " + roomID, 30);
+                let err = theController.activateSafeMode();
+                if (err == OK) {
+                    console.log("Activated (backup) Safe Mode in: " + roomID);
+                    Game.notify("Activated (backup) Safe Mode in: " + roomID);
+                }
+            }
         }
         else if (theRoom.hasHostileCreep == true) {
             theRoom.clearPathCaches = false;
@@ -1162,8 +1162,8 @@ module.exports.loop = function () {
         let dangerousToCreeps = (theRoom.dangerZones.length > 0) ? true : false;
         
         // TODO: Spawn attackers to defend instead of evacuating harvesters in harvest rooms
-		if (dangerousToCreeps == true && theRoom.isHarvestRoom == true) {
-			let youngestInvader = _.max(invaders, "ticksToLive");
+        if (dangerousToCreeps == true && theRoom.isHarvestRoom == true) {
+            let youngestInvader = _.max(invaders, "ticksToLive");
             if (theRoom.avoidTravelUntil < Game.time) {
                 _.each(Game.creeps, (c) => {
                     if (c.memory.role != "miner") {
@@ -1195,8 +1195,8 @@ module.exports.loop = function () {
             }
             
             // TODO: Stop claimers being spawned to reserve this harvest room properly from this point, rather than in the spawn and claimer logic
-		}
-		
+        }
+        
         if (theRoom.hasHostileTower == true) { // TODO: Add a check to see if the towers are still there if a creep is in the room, instead of just waiting for it to be reset after a day due to the room memory garbage collection being run on it
             theRoom.checkForDrops = false;
         }
@@ -1334,7 +1334,7 @@ module.exports.loop = function () {
         
         // Run towers in the room
         let towerTargets = [];
-		for (let towerID in towers) {
+        for (let towerID in towers) {
             let tower = towers[towerID];
             
             let target = priorityTarget;
@@ -1374,10 +1374,10 @@ module.exports.loop = function () {
                     }
                 }
             }
-		}
-		let targetCounts = _.countBy(towerTargets);
-		_.forEach(targetCounts, (c,t) => (
-		    console.log(c + " tower(s) in " + roomID + " attacking hostile from " + t)
+        }
+        let targetCounts = _.countBy(towerTargets);
+        _.forEach(targetCounts, (c,t) => (
+            console.log(c + " tower(s) in " + roomID + " attacking hostile from " + t)
         ));
         
         if (_.get(theRoom, ["controller", "my"], false) == true && _.get(theRoom, ["controller", "level"], 0) == 8) {
@@ -2027,23 +2027,23 @@ module.exports.loop = function () {
     
     screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
     if (Memory.MonGlobal == true) {
-    	const new_stats = globalStats();
-    	const old_stats = global[new_stats.meta_key];
-    	if (!old_stats) {
-    		console.log("<<< GLOBAL RESET >>>");
-    	} else {
-    		const diff = _.reduce(new_stats.stats, (acc,size,key) => {
-    			const old_val = old_stats[key] || 0;
-    			if (old_val) {
-    				const delta = size - old_val;
-    				if (delta !== 0)
-    					acc[key] = delta;
-    			}
-    			return acc;
-    		}, {});
-    		console.log(JSON.stringify(diff));
-    	}
-    	global[new_stats.meta_key] = new_stats.stats;
+        const new_stats = globalStats();
+        const old_stats = global[new_stats.meta_key];
+        if (!old_stats) {
+            console.log("<<< GLOBAL RESET >>>");
+        } else {
+            const diff = _.reduce(new_stats.stats, (acc,size,key) => {
+                const old_val = old_stats[key] || 0;
+                if (old_val) {
+                    const delta = size - old_val;
+                    if (delta !== 0)
+                        acc[key] = delta;
+                }
+                return acc;
+            }, {});
+            console.log(JSON.stringify(diff));
+        }
+        global[new_stats.meta_key] = new_stats.stats;
     }
     if (typeof Game.cpu.getHeapStatistics === "function") {
         Memory.stats.heap = Game.cpu.getHeapStatistics();

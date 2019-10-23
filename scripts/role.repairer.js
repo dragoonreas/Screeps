@@ -70,8 +70,8 @@ let roleRepairer = {
                         || creep.memory.repairerType == STRUCTURE_ROAD)) { // TODO: Add check for roads when towers aren't avaliable to repair them
                         if (repairerType == STRUCTURE_ROAD) {
                             structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                            	filter: (s) => (s.hits < s.hitsMax 
-                            	    && s.structureType == repairerType
+                                filter: (s) => (s.hits < s.hitsMax 
+                                    && s.structureType == repairerType
                             )});
                         }
                         else {
@@ -84,7 +84,7 @@ let roleRepairer = {
                             }
                             else {
                                 let numRoadRepairers = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "repairerTypeCounts", STRUCTURE_ROAD], 0);
-                        		let numTowers = _.get(creep.room, ["myActiveTowers", "length"], 0);
+                                let numTowers = _.get(creep.room, ["myActiveTowers", "length"], 0);
                                 theStructures = creep.room.find(FIND_STRUCTURES, {
                                     filter: (s) => (s.hits < s.hitsMax 
                                         && (s.structureType != STRUCTURE_ROAD
@@ -107,7 +107,7 @@ let roleRepairer = {
                         }
                     }
                 }
-			}
+            }
             
             if (structure != undefined) {
                 let err = undefined;
@@ -137,7 +137,7 @@ let roleRepairer = {
                 }
             }
             else {
-				creep.memory.repairStructure = undefined;
+                creep.memory.repairStructure = undefined;
                 ROLES["builder"].run(creep);
             }
         }

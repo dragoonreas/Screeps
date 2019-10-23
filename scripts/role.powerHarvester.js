@@ -28,7 +28,7 @@ let rolePowerHarvester = {
                         }
                     }
                     else {
-        			    // TODO: Recycle power harvester once power bank depleated
+                        // TODO: Recycle power harvester once power bank depleated
                     }
                 }
                 else {

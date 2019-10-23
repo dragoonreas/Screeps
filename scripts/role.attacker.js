@@ -2,7 +2,7 @@ let roleAttacker = {
     run: function(creep) {
         creep.memory.executingRole = "attacker";
         
-        if (creep.room.name != creep.memory.roomID) { // TODO: Allow attacker to move in and out of the room if required
+        /*if (creep.room.name != creep.memory.roomID) { // TODO: Allow attacker to move in and out of the room if required
             creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID), {
                 allowHostile: true
                 , ignoreHostileCreeps: true
@@ -10,7 +10,7 @@ let roleAttacker = {
             });
             creep.say(travelToIcons(creep) + creep.memory.roomID, true);
             return;
-        }
+        }*/
         
         // TODO: Automate based on ramparts with no building under them near attackers
         /*
@@ -19,7 +19,7 @@ let roleAttacker = {
                 { x: 32, y: 7 } // TODO: Update this position
             ];
             for (let i = 0; i < entrances.length; ++i) {
-            	if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
+                if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
                     break;
                 }
                 if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {
@@ -82,7 +82,9 @@ let roleAttacker = {
         else {
             let structure = Game.getObjectById(creep.memory.structureID);
             if (structure == undefined) {
-                //structure = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES); // TODO: Add extra checks for if the stucture has energy or minerals in it
+                structure = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+                    filter: { structureType: STRUCTURE_INVADER_CORE, level: 0 }
+                }); // TODO: Add extra checks for if the stucture has energy or minerals in it
                 if (structure != undefined) {
                     creep.memory.structureID = structure.id;
                 }
@@ -112,7 +114,7 @@ let roleAttacker = {
                     { x: 32, y: 7 } // TODO: Update this position
                 ];
                 for (let i = 0; i < entrances.length; ++i) {
-                	if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
+                    if (creep.pos.isEqualTo(entrances[i].x, entrances[i].y)) {
                         break;
                     }
                     if (creep.room.lookForAt(LOOK_CREEPS, entrances[i].x, entrances[i].y).length == 0) {

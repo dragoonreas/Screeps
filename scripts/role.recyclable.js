@@ -20,7 +20,7 @@ let roleRecyclable = {
             }
         }
         
-		if (creep.carryTotal > 0 
+        if (creep.carryTotal > 0 
             && theStorage != undefined 
             && _.sum(theStorage.store) < theStorage.storeCapacity 
             && theStorage.my == true 
@@ -44,8 +44,8 @@ let roleRecyclable = {
             && creep.pos.isEqualTo(recycleContainer) == false) {
             creep.travelTo(recycleContainer);
             creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
-		}
-		else if (theSpawn != undefined) {
+        }
+        else if (theSpawn != undefined) {
             let err = theSpawn.recycleCreep(creep);
             if (err == ERR_NOT_IN_RANGE) {
                 creep.travelTo(theSpawn);
@@ -55,12 +55,12 @@ let roleRecyclable = {
                 creep.say(ICONS["recycle"], true);
                 Memory.rooms[creep.room.name].checkForDrops = true;
             }
-		}
-		else {
+        }
+        else {
             incrementConfusedCreepCount(creep);
             creep.say(ICONS[STRUCTURE_SPAWN] + "?", true);
             creep.suicide();
-		}
+        }
     }
 };
 
