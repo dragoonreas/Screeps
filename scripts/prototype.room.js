@@ -309,11 +309,10 @@ let prototypeRoom = function() {
     
     if (Room.prototype.hostileTowers == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, "hostileTowers", (r) => {
-            if (r.controller == undefined) { return []; }
             let towers = r.find(FIND_STRUCTURES, { filter: (s) => (
                 s.structureType == STRUCTURE_TOWER
             )});
-            let someTowersInactive = (_.get(r, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (v) => (v >= towers.length)));
+            let someTowersInactive = ((r.controller != undefined) && (_.get(r, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (v) => (v >= towers.length))));
             return _.filter(towers, (t) => (
                 t.my == false 
                 && _.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), t.owner) == false 

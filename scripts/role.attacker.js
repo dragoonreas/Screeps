@@ -128,7 +128,10 @@ let roleAttacker = {
                 }
             }*/
             else {
-                creep.room.memory.creepMins.attacker = 0;
+                let creepMins = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room), "creepMins"], undefined);
+                if (creepMins != undefined) {
+                    _.set(creepMins, ["attacker"], 0);
+                }
                 //creep.say(ICONS["attack"] + "?", true);
                 ROLES["recyclable"].run(creep);
             }
