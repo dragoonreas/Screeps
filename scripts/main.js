@@ -1437,153 +1437,154 @@ module.exports.loop = function () {
             if (Game.cpu.bucket > 7500) {
                 for (let resourceName in theTerminal.store) {
                     let resourceCount = theTerminal.store[resourceName];
-                    if (resourceCount > 0 
-                        && resourceName != RESOURCE_ENERGY 
-                        && resourceName != RESOURCE_POWER) {
-                        let buyOrders = Game.market.orderCache(ORDER_BUY, resourceName);
-                        if (buyOrders.length > 0) {
-                            buyOrders = _.groupBy(buyOrders, (o) => (o.price));
-                            buyOrders = _.max(buyOrders, (v, k) => (k));
-                            let buyOrder = _.min(buyOrders, (o) => (
-                                Game.market.calcTransactionCost(Math.min(resourceCount, o.amount), roomID, o.roomName)
-                            ));
-                            let amountToSend = Math.min(resourceCount, buyOrder.amount);
-                            let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
-                            if (energyCost <= terminalEnergy) {
-                                let err = Game.market.deal(buyOrder.id, amountToSend, roomID);
-                                if (err == OK) {
-                                    madeTransaction = true;
-                                    console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
-                                    break; // NOTE: Each terminal can only do one deal per tick
+                    if (resourceCount <= 0 
+                        || resourceName == RESOURCE_ENERGY 
+                        || resourceName == RESOURCE_POWER) {
+                        continue;
+                    }
+                    let buyOrders = Game.market.orderCache(ORDER_BUY, resourceName);
+                    if (buyOrders.length > 0) {
+                        buyOrders = _.groupBy(buyOrders, (o) => (o.price));
+                        buyOrders = _.max(buyOrders, (v, k) => (k));
+                        let buyOrder = _.min(buyOrders, (o) => (
+                            Game.market.calcTransactionCost(Math.min(resourceCount, o.amount), roomID, o.roomName)
+                        ));
+                        let amountToSend = Math.min(resourceCount, buyOrder.amount);
+                        let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
+                        if (energyCost <= terminalEnergy) {
+                            let err = Game.market.deal(buyOrder.id, amountToSend, roomID);
+                            if (err == OK) {
+                                madeTransaction = true;
+                                console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
+                                break; // NOTE: Each terminal can only do one deal per tick
+                            }
+                        }
+                    }
+                    else if (_.includes(balancedResources, resourceName) == false) {
+                        let sellOrders = _.filter(Game.market.orders, (o) => (
+                            o.type == ORDER_SELL 
+                            && o.resourceType == resourceName 
+                        ));
+                        let sellOrder = (sellOrders.length > 0) ? _.max(sellOrders, (o) => (_.get(Game.rooms, [o.roomName, "terminal", "store", o.resourceType], 0))) : undefined;
+                        // TODO: Handle multiple sell order rooms
+                        let sellOrderRoom = _.get(sellOrder, ["roomName"], roomID);
+                        if (sellOrderRoom != roomID 
+                            && (_.get(Game.rooms, [sellOrderRoom, "controller", "my"], false) == false 
+                                || _.get(Game.rooms, [sellOrderRoom, "controller", "level"], 0) < 6 
+                                || _.get(Game.rooms, [sellOrderRoom, "terminal", "my"], false) == false 
+                                || _.get(Memory.rooms, [sellOrderRoom, "isShuttingDown"], false) == true)) {
+                            Game.market.cancelOrder(sellOrder.id);
+                            sellOrder = undefined;
+                            sellOrderRoom = roomID;
+                        }
+                        if (sellOrderRoom == roomID 
+                            && _.get(Memory.rooms, [roomID, "isShuttingDown"], false) == false) {
+                            let sellPrice = 5; // NOTE: Maximum reasonable sell price capped at 5 Credits
+                            sellOrders = Game.market.orderCache(ORDER_SELL, resourceName);
+                            if (sellOrders.length > 0) {
+                                sellOrders = _.groupBy(sellOrders, (o) => (o.price));
+                                sellOrders = _.min(sellOrders, (v, k) => (k));
+                                sellPrice = Math.min(_.first(sellOrders).price, sellPrice);
+                            }
+                            let amountToSell = resourceCount;
+                            if (sellOrder == undefined) {
+                                let deposit = sellPrice * amountToSell * 0.05;
+                                if (deposit <= Game.market.credits) {
+                                    let err = Game.market.createOrder(ORDER_SELL, resourceName, sellPrice, amountToSell, roomID);
+                                    if (err == OK) {
+                                        balancedResources.push(resourceName);
+                                        console.log("Created " + ORDER_SELL + " for " + amountToSell + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * amountToSell).toFixed(3) + " (" + sellPrice + " each) credits");
+                                    }
+                                    else {
+                                        console.log(roomID, "createOrder", err);
+                                    }
+                                }
+                            }
+                            else {
+                                if (sellOrder.price > sellPrice 
+                                    || sellOrder.remainingAmount < amountToSell) {
+                                    let deposit = Math.max((sellPrice - sellOrder.price), 0) * sellOrder.remainingAmount * 0.05;
+                                    if (deposit <= Game.market.credits) {
+                                        let err = Game.market.changeOrderPrice(sellOrder.id, sellPrice);
+                                        if (err == OK) {
+                                            console.log("Changed " + ORDER_SELL + " price for " + sellOrder.remainingAmount + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (sellOrder.price * sellOrder.remainingAmount).toFixed(3) + " (" + sellOrder.price + " each) to " + (sellPrice * sellOrder.remainingAmount).toFixed(3) + " (" + sellPrice + " each) credits");
+                                        }
+                                        else {
+                                            console.log(roomID, "changeOrderPrice", err);
+                                        }
+                                    }
+                                }
+                                sellPrice = Math.min(sellOrder.price, sellPrice);
+                                if (sellOrder.remainingAmount < amountToSell) {
+                                    let amountToAdd = amountToSell - sellOrder.remainingAmount;
+                                    let deposit = amountToAdd * sellPrice * 0.05;
+                                    if (deposit <= Game.market.credits) {
+                                        let err = Game.market.extendOrder(sellOrder.id, amountToAdd);
+                                        if (err == OK) {
+                                            console.log("Changed " + ORDER_SELL + " amount from " + sellOrder.remainingAmount + " to " + amountToSell + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * amountToSell).toFixed(3) + " (" + sellPrice + " each) credits");
+                                        }
+                                        else {
+                                            console.log(roomID, "extendOrder", err);
+                                        }
+                                    }
                                 }
                             }
                         }
-                        else if (_.includes(balancedResources, resourceName) == false) {
-                            let sellOrders = _.filter(Game.market.orders, (o) => (
-                                o.type == ORDER_SELL 
-                                && o.resourceType == resourceName 
-                            ));
-                            let sellOrder = (sellOrders.length > 0) ? _.max(sellOrders, (o) => (_.get(Game.rooms, [o.roomName, "terminal", "store", o.resourceType], 0))) : undefined;
-                            // TODO: Handle multiple sell order rooms
-                            let sellOrderRoom = _.get(sellOrder, ["roomName"], roomID);
-                            if (sellOrderRoom != roomID 
-                                && (_.get(Game.rooms, [sellOrderRoom, "controller", "my"], false) == false 
-                                    || _.get(Game.rooms, [sellOrderRoom, "controller", "level"], 0) < 6 
-                                    || _.get(Game.rooms, [sellOrderRoom, "terminal", "my"], false) == false 
-                                    || _.get(Memory.rooms, [sellOrderRoom, "isShuttingDown"], false) == true)) {
-                                Game.market.cancelOrder(sellOrder.id);
-                                sellOrder = undefined;
-                                sellOrderRoom = roomID;
-                            }
-                            if (sellOrderRoom == roomID 
-                                && _.get(Memory.rooms, [roomID, "isShuttingDown"], false) == false) {
-                                let sellPrice = 5; // NOTE: Maximum reasonable sell price capped at 5 Credits
-                                sellOrders = Game.market.orderCache(ORDER_SELL, resourceName);
-                                if (sellOrders.length > 0) {
-                                    sellOrders = _.groupBy(sellOrders, (o) => (o.price));
-                                    sellOrders = _.min(sellOrders, (v, k) => (k));
-                                    sellPrice = Math.min(_.first(sellOrders).price, sellPrice);
-                                }
-                                let amountToSell = resourceCount;
-                                if (sellOrder == undefined) {
-                                    let deposit = sellPrice * amountToSell * 0.05;
-                                    if (deposit <= Game.market.credits) {
-                                        let err = Game.market.createOrder(ORDER_SELL, resourceName, sellPrice, amountToSell, roomID);
-                                        if (err == OK) {
-                                            balancedResources.push(resourceName);
-                                            console.log("Created " + ORDER_SELL + " for " + amountToSell + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * amountToSell).toFixed(3) + " (" + sellPrice + " each) credits");
-                                        }
-                                        else {
-                                            console.log(roomID, "createOrder", err);
-                                        }
+                        else {
+                            if (_.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0) < (TERMINAL_CAPACITY / 3) 
+                                && ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)) > 0 
+                                && _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0) > 0) {
+                                let sendAmount = Math.min(resourceCount, ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)), _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0));
+                                let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, sellOrderRoom);
+                                if (energyCost <= terminalEnergy) {
+                                    let err = theTerminal.send(resourceName, sendAmount, sellOrderRoom, "To extend order " + sellOrder.id);
+                                    if (err == OK) {
+                                        balancedResources.push(resourceName);
+                                        console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + sellOrderRoom + " using " + energyCost + " " + RESOURCE_ENERGY + " to extend order " + sellOrder.id);
+                                        madeTransaction = true;
                                     }
                                 }
-                                else {
-                                    if (sellOrder.price > sellPrice 
-                                        || sellOrder.remainingAmount < amountToSell) {
-                                        let deposit = Math.max((sellPrice - sellOrder.price), 0) * sellOrder.remainingAmount * 0.05;
-                                        if (deposit <= Game.market.credits) {
-                                            let err = Game.market.changeOrderPrice(sellOrder.id, sellPrice);
-                                            if (err == OK) {
-                                                console.log("Changed " + ORDER_SELL + " price for " + sellOrder.remainingAmount + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (sellOrder.price * sellOrder.remainingAmount).toFixed(3) + " (" + sellOrder.price + " each) to " + (sellPrice * sellOrder.remainingAmount).toFixed(3) + " (" + sellPrice + " each) credits");
-                                            }
-                                            else {
-                                                console.log(roomID, "changeOrderPrice", err);
-                                            }
+                            } else if (resourceCount < (TERMINAL_CAPACITY / 3) 
+                                || (resourceCount - (TERMINAL_CAPACITY / 3)) > 0) {
+                                let balanceAmount = (resourceCount > (TERMINAL_CAPACITY / 3)) ? (resourceCount - (TERMINAL_CAPACITY / 3)) : resourceCount;
+                                let storeRoom = { 
+                                    roomID: roomID
+                                    , amount: Math.min(theTerminal.store[resourceName], (TERMINAL_CAPACITY / 3))
+                                    , free: theTerminal.storeCapacityFree
+                                };
+                                //console.log("Starting rebalance of " + balanceAmount + " " + resourceName + " in " + roomID);
+                                _.forEach(Game.rooms, (r, rn) => {
+                                    if (rn != storeRoom.roomID 
+                                        && _.get(r, ["controller", "my"], false) == true 
+                                        && _.get(r, ["controller", "level"], 0) >= 6 
+                                        && _.get(r, ["terminal", "my"], false) == true 
+                                        && _.get(r.memory, ["isShuttingDown"], false) == false
+                                        && _.get(r, ["terminal", "store", resourceName], 0) < (TERMINAL_CAPACITY / 3) 
+                                        && ((TERMINAL_CAPACITY / 3) - _.get(r, ["terminal", "store", resourceName], 0)) > 0 
+                                        && _.get(r, ["terminal", "storeCapacityFree"], 0) > 0) {
+                                        if (_.get(r, ["terminal", "store", resourceName], 0) > storeRoom.amount 
+                                            || (_.get(r, ["terminal", "store", resourceName], 0) == storeRoom.amount 
+                                                && _.get(r, ["terminal", "storeCapacityFree"], 0) > storeRoom.free) 
+                                            || _.get(Memory.rooms, [storeRoom.roomID, "isShuttingDown"], false) == true 
+                                            || storeRoom.amount == (TERMINAL_CAPACITY / 3)) {
+                                            storeRoom = { 
+                                                roomID: rn
+                                                , amount: _.get(r, ["terminal", "store", resourceName], 0)
+                                                , free: _.get(r, ["terminal", "storeCapacityFree"], 0)
+                                            };
+                                            //console.log("\tConsidering " + rn + " with " + storeRoom.amount + " " + resourceName + " and " + storeRoom.free + " free space");
                                         }
                                     }
-                                    sellPrice = Math.min(sellOrder.price, sellPrice);
-                                    if (sellOrder.remainingAmount < amountToSell) {
-                                        let amountToAdd = amountToSell - sellOrder.remainingAmount;
-                                        let deposit = amountToAdd * sellPrice * 0.05;
-                                        if (deposit <= Game.market.credits) {
-                                            let err = Game.market.extendOrder(sellOrder.id, amountToAdd);
-                                            if (err == OK) {
-                                                console.log("Changed " + ORDER_SELL + " amount from " + sellOrder.remainingAmount + " to " + amountToSell + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * amountToSell).toFixed(3) + " (" + sellPrice + " each) credits");
-                                            }
-                                            else {
-                                                console.log(roomID, "extendOrder", err);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else if (resourceCount >= 100) {
-                                if (_.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0) < (TERMINAL_CAPACITY / 3) 
-                                    && ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)) >= 100 
-                                    && _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0) >= 100) { // NOTE: Terminals can't send less than 100 resources in a single transaction
-                                    let sendAmount = Math.min(resourceCount, ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)), _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0));
-                                    let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, sellOrderRoom);
+                                });
+                                if (storeRoom.roomID != roomID) {
+                                    let sendAmount = Math.min(balanceAmount, ((TERMINAL_CAPACITY / 3) - storeRoom.amount, storeRoom.free));
+                                    let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, storeRoom.roomID);
                                     if (energyCost <= terminalEnergy) {
-                                        let err = theTerminal.send(resourceName, sendAmount, sellOrderRoom, "To extend order " + sellOrder.id);
+                                        let err = theTerminal.send(resourceName, sendAmount, storeRoom.roomID, "Balance " + resourceName);
                                         if (err == OK) {
                                             balancedResources.push(resourceName);
-                                            console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + sellOrderRoom + " using " + energyCost + " " + RESOURCE_ENERGY + " to extend order " + sellOrder.id);
+                                            console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + storeRoom.roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to balance terminal resources");
                                             madeTransaction = true;
-                                        }
-                                    }
-                                } else if (resourceCount < (TERMINAL_CAPACITY / 3) 
-                                    || (resourceCount - (TERMINAL_CAPACITY / 3)) >= 100) {
-                                    let balanceAmount = (resourceCount > (TERMINAL_CAPACITY / 3)) ? (resourceCount - (TERMINAL_CAPACITY / 3)) : resourceCount;
-                                    let storeRoom = { 
-                                        roomID: roomID
-                                        , amount: Math.min(theTerminal.store[resourceName], (TERMINAL_CAPACITY / 3))
-                                        , free: theTerminal.storeCapacityFree
-                                    };
-                                    //console.log("Starting rebalance of " + balanceAmount + " " + resourceName + " in " + roomID);
-                                    _.forEach(Game.rooms, (r, rn) => {
-                                        if (rn != storeRoom.roomID 
-                                            && _.get(r, ["controller", "my"], false) == true 
-                                            && _.get(r, ["controller", "level"], 0) >= 6 
-                                            && _.get(r, ["terminal", "my"], false) == true 
-                                            && _.get(r.memory, ["isShuttingDown"], false) == false
-                                            && _.get(r, ["terminal", "store", resourceName], 0) < (TERMINAL_CAPACITY / 3) 
-                                            && ((TERMINAL_CAPACITY / 3) - _.get(r, ["terminal", "store", resourceName], 0)) >= 100 
-                                            && _.get(r, ["terminal", "storeCapacityFree"], 0) >= 100) {
-                                            if (_.get(r, ["terminal", "store", resourceName], 0) > storeRoom.amount 
-                                                || (_.get(r, ["terminal", "store", resourceName], 0) == storeRoom.amount 
-                                                    && _.get(r, ["terminal", "storeCapacityFree"], 0) > storeRoom.free) 
-                                                || _.get(Memory.rooms, [storeRoom.roomID, "isShuttingDown"], false) == true 
-                                                || storeRoom.amount == (TERMINAL_CAPACITY / 3)) {
-                                                storeRoom = { 
-                                                    roomID: rn
-                                                    , amount: _.get(r, ["terminal", "store", resourceName], 0)
-                                                    , free: _.get(r, ["terminal", "storeCapacityFree"], 0)
-                                                };
-                                                //console.log("\tConsidering " + rn + " with " + storeRoom.amount + " " + resourceName + " and " + storeRoom.free + " free space");
-                                            }
-                                        }
-                                    });
-                                    if (storeRoom.roomID != roomID) {
-                                        let sendAmount = Math.min(balanceAmount, ((TERMINAL_CAPACITY / 3) - storeRoom.amount, storeRoom.free));
-                                        let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, storeRoom.roomID);
-                                        if (energyCost <= terminalEnergy) {
-                                            let err = theTerminal.send(resourceName, sendAmount, storeRoom.roomID, "Balance " + resourceName);
-                                            if (err == OK) {
-                                                balancedResources.push(resourceName);
-                                                console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + storeRoom.roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to balance terminal resources");
-                                                madeTransaction = true;
-                                            }
                                         }
                                     }
                                 }
@@ -1598,13 +1599,18 @@ module.exports.loop = function () {
                 && requiredPower > 0 
                 && theTerminal.storeCapacityFree > 0) {
                 let powerRoomID = roomID;
-                let excessPower = 99;
+                let excessPower = 0;
                 for (let managedRoomID of managedRooms) {
+                    if (managedRoomID == roomID) {
+                        continue;
+                    }
                     if (_.get(Game.rooms, [managedRoomID, "excessPower"], 0) > excessPower 
-                        && _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0) >= 100 
                         && _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0) > excessPower) {
                         powerRoomID = managedRoomID;
-                        excessPower = Math.max(Math.min(requiredPower, _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0)), 100);
+                        excessPower = Math.min(requiredPower, _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0));
+                        if (excessPower == requiredPower) {
+                            break;
+                        }
                     }
                 }
 
@@ -1612,8 +1618,7 @@ module.exports.loop = function () {
                     o.price <= 5 // NOTE: Don't pay over 5 Credits per Power
                 ));
 
-                if (powerRoomID != roomID 
-                    && theTerminal.storeCapacityFree >= 100) {
+                if (theTerminal.storeCapacityFree > 0) {
                     let sendAmount = Math.min(excessPower, theTerminal.storeCapacityFree);
                     let energyCost = Game.market.calcTransactionCost(sendAmount, powerRoomID, roomID);
                     let powerRoomTerminal = _.get(Game.rooms, [powerRoomID, "terminal"], undefined);
@@ -1765,7 +1770,7 @@ module.exports.loop = function () {
                     console.log("No Energy Orders: " + roomID);
                 }
             }
-            else if ((terminalEnergy - ((TERMINAL_CAPACITY / 2) * 1.1)) >= 100) {
+            else if ((terminalEnergy - ((TERMINAL_CAPACITY / 2) * 1.1)) >= 100) { // NOTE: Don't send Energy in transfers of less than 100
                 let balanceAmount = terminalEnergy - (TERMINAL_CAPACITY / 2);
                 let storeRoom = { 
                     roomID: roomID
