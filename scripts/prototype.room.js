@@ -348,7 +348,6 @@ let prototypeRoom = function() {
     
     if (Room.prototype.hostileActiveTowers == undefined) { // NOTE: Must be defined after Room.hostileTowers
         defineCachedGetter(Room.prototype, "hostileActiveTowers", (r) => {
-            if (r.controller == undefined) { return []; }
             let towers = r.hostileTowers;
             return _.filter(r.hostileTowers, (t) => (
                 t.energy >= TOWER_ENERGY_COST 
