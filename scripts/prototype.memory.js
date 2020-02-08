@@ -106,19 +106,19 @@ let prototypeMemory = function() {
                 return true;
             }
         };
-        let sourceProxy = new Proxy({}, handler);
+        let controllerProxy = new Proxy({}, handler);
         
         Object.defineProperty(Memory, "controllers", {
             get: function() {
-                return sourceProxy;
+                return controllerProxy;
             },
             
             set: function(value) {
-                sourceProxy = value;
+                controllerProxy = value;
             }
         });
         
-        Memory.sources[Symbol.iterator] = function*() {
+        Memory.controllers[Symbol.iterator] = function*() {
             for (let roomID in Memory.rooms) {
                 yield Memory.rooms[roomID].controller;
             }

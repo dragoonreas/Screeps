@@ -1618,7 +1618,8 @@ module.exports.loop = function () {
                     o.price <= 5 // NOTE: Don't pay over 5 Credits per Power
                 ));
 
-                if (theTerminal.storeCapacityFree > 0) {
+                if (powerRoomID != roomID
+                    && theTerminal.storeCapacityFree > 0) {
                     let sendAmount = Math.min(excessPower, theTerminal.storeCapacityFree);
                     let energyCost = Game.market.calcTransactionCost(sendAmount, powerRoomID, roomID);
                     let powerRoomTerminal = _.get(Game.rooms, [powerRoomID, "terminal"], undefined);
