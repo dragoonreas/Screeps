@@ -395,7 +395,7 @@ let prototypeRoom = function() {
                 let collapsesAt = 0;
                 if (_.get(this.memory, ["invaderCore"], undefined) == undefined && this.invaderCore != undefined) {
                     let theInvaderCore = this.invaderCore;
-                    let collapseTimer = (_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER) || INVADER_CORE_ACTIVE_TIME);
+                    let collapseTimer = _.get(_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER), ["ticksRemaining"], INVADER_CORE_ACTIVE_TIME);
                     let deploysAt = Game.time + _.get(theInvaderCore, ["ticksToDeploy"], 0);
                     collapsesAt = (deploysAt + collapseTimer);
                     _.set(this.memory, ["invaderCore"], { 
@@ -428,7 +428,7 @@ let prototypeRoom = function() {
                 let collapsesAt = 0;
                 if (_.get(this.memory, ["invaderCore"], undefined) == undefined && this.invaderCore != undefined) {
                     let theInvaderCore = this.invaderCore;
-                    let collapseTimer = (_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER) || INVADER_CORE_ACTIVE_TIME);
+                    let collapseTimer = _.get(_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER), ["ticksRemaining"], INVADER_CORE_ACTIVE_TIME);
                     let deploysAt = Game.time + _.get(theInvaderCore, ["ticksToDeploy"], 0);
                     collapsesAt = (deploysAt + collapseTimer);
                     _.set(this.memory, ["invaderCore"], { 

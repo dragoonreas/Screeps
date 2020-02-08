@@ -789,7 +789,7 @@ module.exports.loop = function () {
         
         let theInvaderCore = theRoom.invaderCore;
         if (theInvaderCore != undefined) {
-            let collapseTimer = (_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER) || INVADER_CORE_ACTIVE_TIME);
+            let collapseTimer = _.get(_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER), ["ticksRemaining"], INVADER_CORE_ACTIVE_TIME);
             let deploysAt = Game.time + _.get(theInvaderCore, ["ticksToDeploy"], 0);
             let collapsesAt = (deploysAt + collapseTimer);
             _.set(theRoom.memory, ["invaderCore"], { 
