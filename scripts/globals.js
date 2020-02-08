@@ -209,7 +209,9 @@ let globals = function() {
     global.EST_TICKS_PER_DAY = Math.ceil(86400 / EST_SEC_PER_TICK); // 24h * 60m * 60s = 86400s
     
     global.MAX_SEGMENT_LENGTH = 100 * 1024;
-    
+
+    global.INVADER_CORE_ACTIVE_TIME = 80000;
+
     global.toStr = (obj) => JSON.stringify(obj, null, 2); // shortcut to stringify an object (idea credit: warinternal, from the Screeps Slack)
     
     global.objGenDate = function(objID) {

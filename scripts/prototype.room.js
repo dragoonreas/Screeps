@@ -379,6 +379,81 @@ let prototypeRoom = function() {
         });
     }
     
+    if (Room.prototype.invaderCore == undefined) { // NOTE: Must be defined after global.defineCachedGetter
+        defineCachedGetter(Room.prototype, "invaderCore", (r) => {
+            let invaderCores = r.find(FIND_HOSTILE_STRUCTURES, { filter: (s) => (
+                s.structureType == STRUCTURE_INVADER_CORE
+            )});
+            return _.first(invaderCores);
+        });
+    }
+    
+    if (Room.prototype.invaderCoreMem == undefined) { // NOTE: Must be defined after global.invaderCore
+        Object.defineProperty(Room.prototype, "invaderCoreMem", {
+            get: function() {
+                if (this === Room.prototype || this == undefined) { return; }
+                let collapsesAt = 0;
+                if (_.get(this.memory, ["invaderCore"], undefined) == undefined && this.invaderCore != undefined) {
+                    let theInvaderCore = this.invaderCore;
+                    let collapseTimer = (_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER) || INVADER_CORE_ACTIVE_TIME);
+                    let deploysAt = Game.time + _.get(theInvaderCore, ["ticksToDeploy"], 0);
+                    collapsesAt = (deploysAt + collapseTimer);
+                    _.set(this.memory, ["invaderCore"], { 
+                        id: theInvaderCore.id 
+                        , pos: theInvaderCore.pos 
+                        , level: theInvaderCore.level 
+                        , deploysAt: deploysAt 
+                        , collapsesAt: collapsesAt
+                    });
+                }
+                else if (this.invaderCore == undefined) {
+                    this.memory.invaderCore = undefined;
+                }
+                if (_.isObject(this.memory.invaderCore) == false) {
+                    return undefined;
+                }
+                collapsesAt = _.get(this.memory.invaderCore, ["collapsesAt"], 0);
+                if (collapsesAt > this.memory.memoryExpiration) {
+                    this.memory.memoryExpiration = collapsesAt;
+                }
+                if (_.get(this.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
+                    && collapsesAt > this.memory.avoidTravelUntil) {
+                    this.memory.avoidTravelUntil = collapsesAt;
+                }
+                return this.memory.invaderCore;
+            },
+            
+            set: function(value) {
+                let collapsesAt = 0;
+                if (_.get(this.memory, ["invaderCore"], undefined) == undefined && this.invaderCore != undefined) {
+                    let theInvaderCore = this.invaderCore;
+                    let collapseTimer = (_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER) || INVADER_CORE_ACTIVE_TIME);
+                    let deploysAt = Game.time + _.get(theInvaderCore, ["ticksToDeploy"], 0);
+                    collapsesAt = (deploysAt + collapseTimer);
+                    _.set(this.memory, ["invaderCore"], { 
+                        id: theInvaderCore.id 
+                        , pos: theInvaderCore.pos 
+                        , level: theInvaderCore.level 
+                        , deploysAt: deploysAt 
+                        , collapsesAt: collapsesAt
+                    });
+                }
+                if (_.isObject(this.memory.invaderCore) == false && this.invaderCore != undefined) {
+                    throw new Error("Could not set Room.invaderCoreMem property");
+                }
+                collapsesAt = _.get(this.memory.invaderCore, ["collapsesAt"], 0);
+                if (collapsesAt > this.memory.memoryExpiration) {
+                    this.memory.memoryExpiration = collapsesAt;
+                }
+                if (_.get(this.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
+                    && collapsesAt > this.memory.avoidTravelUntil) {
+                    this.memory.avoidTravelUntil = collapsesAt;
+                }
+                this.memory.invaderCore = value;
+            }
+        });
+    }
+    
     if (Room.prototype.priorityTargetID == undefined) {
         Object.defineProperty(Room.prototype, "priorityTargetID", {
             get: function() {

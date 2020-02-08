@@ -639,6 +639,12 @@ module.exports.loop = function () {
                 continue;
             }
         }
+
+        // Garbage collection for invader cores
+        if (_.get(Game.rooms, ["roomID", "invaderCore"], undefined) == undefined 
+            && _.get(Memory.rooms, ["roomID", "invaderCoreMem", "collapsesAt"], 0) < Game.time) {
+            Memory.rooms[roomID].invaderCoreMem = undefined;
+        }
         
         // Garbage collection for invader weightings
         if (_.size(_.get(Memory.rooms[roomID], "invaderWeightings", {})) > 0) {
@@ -779,6 +785,27 @@ module.exports.loop = function () {
             _.forEach(rampartsNearController, (rnc) => {
                 privateRamparts[rnc.id] = true; // Make ramparts near controller private
             });
+        }
+        
+        let theInvaderCore = theRoom.invaderCore;
+        if (theInvaderCore != undefined) {
+            let collapseTimer = (_.find(_.get(theInvaderCore, ["effects"], []), "effect", EFFECT_COLLAPSE_TIMER) || INVADER_CORE_ACTIVE_TIME);
+            let deploysAt = Game.time + _.get(theInvaderCore, ["ticksToDeploy"], 0);
+            let collapsesAt = (deploysAt + collapseTimer);
+            _.set(theRoom.memory, ["invaderCore"], { 
+                id: theInvaderCore.id 
+                , pos: theInvaderCore.pos 
+                , level: theInvaderCore.level 
+                , deploysAt: deploysAt 
+                , collapsesAt: collapsesAt
+            });
+            if (collapsesAt > theRoom.memory.memoryExpiration) {
+                theRoom.memory.memoryExpiration = collapsesAt;
+            }
+            if (_.get(theRoom.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
+                && collapsesAt > theRoom.memory.avoidTravelUntil) {
+                theRoom.memory.avoidTravelUntil = collapsesAt;
+            }
         }
         
         let justNPCs = undefined;
