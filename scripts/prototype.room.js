@@ -416,7 +416,8 @@ let prototypeRoom = function() {
                 if (collapsesAt > this.memory.memoryExpiration) {
                     this.memory.memoryExpiration = collapsesAt;
                 }
-                if (_.get(this.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
+                if (_.get(this.memory.invaderCore, ["level"], 0) > 0 
+                    && _.get(this.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
                     && collapsesAt > this.memory.avoidTravelUntil) {
                     this.memory.avoidTravelUntil = collapsesAt;
                 }
@@ -445,7 +446,8 @@ let prototypeRoom = function() {
                 if (collapsesAt > this.memory.memoryExpiration) {
                     this.memory.memoryExpiration = collapsesAt;
                 }
-                if (_.get(this.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
+                if (_.get(this.memory.invaderCore, ["level"], 0) > 0 
+                    && _.get(this.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
                     && collapsesAt > this.memory.avoidTravelUntil) {
                     this.memory.avoidTravelUntil = collapsesAt;
                 }

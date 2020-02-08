@@ -642,7 +642,7 @@ module.exports.loop = function () {
 
         // Garbage collection for invader cores
         if (_.get(Game.rooms, ["roomID", "invaderCore"], undefined) == undefined 
-            && _.get(Memory.rooms, ["roomID", "invaderCoreMem", "collapsesAt"], 0) < Game.time) {
+            && _.get(Memory.rooms, ["roomID", "invaderCore", "collapsesAt"], 0) < Game.time) {
             Memory.rooms[roomID].invaderCoreMem = undefined;
         }
         
@@ -802,7 +802,8 @@ module.exports.loop = function () {
             if (collapsesAt > theRoom.memory.memoryExpiration) {
                 theRoom.memory.memoryExpiration = collapsesAt;
             }
-            if (_.get(theRoom.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
+            if (_.get(theRoom.memory.invaderCore, ["level"], 0) > 0 
+                && _.get(theRoom.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
                 && collapsesAt > theRoom.memory.avoidTravelUntil) {
                 theRoom.memory.avoidTravelUntil = collapsesAt;
             }
