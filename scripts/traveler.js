@@ -242,12 +242,12 @@ module.exports = function(globalOpts = {}){
             }
             // register hostile rooms entered
             let creepPos = creep.pos, destPos = (destination.pos || destination);
-            if (_.get(creep.room, ["controller", "owner", "username"], undefined) && !creep.room.controller.my && !_.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), creep.room.controller.owner.username)) {
+            if ((_.get(creep.room, ["controller", "owner", "username"], undefined) != undefined) && (!creep.room.controller.my) && (!_.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), creep.room.controller.owner.username))) {
                 if (_.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0) < Game.time && creep.room.controller.level >= 1) {
                     console.log("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                     Game.notify("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                 }
-                _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], _.get(creep.room, ["controllerMem", "neutralAt"], 0));
+                _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], _.Max(_.get(creep.room, ["controllerMem", "neutralAt"], 0), _.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0)));
             }
             // initialize data object
             if (!creep.memory._travel) {
