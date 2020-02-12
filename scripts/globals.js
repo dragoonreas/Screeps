@@ -291,13 +291,22 @@ let globals = function() {
         let controllerNeutralAt = Game.time - 1;
         let theController = _.get(Game.rooms, [roomName, "controller"], undefined);
         let theControllerMem = _.get(Memory.rooms, [roomName, "controller"], undefined);
-        if (_.get(theController, "my", true) != true) {
+        if (_.get(theController, ["my"], true) != true) {
             let downgradesAt = ((theController.ticksToDowngrade && (Game.time + theController.ticksToDowngrade)) || undefined);
             controllerNeutralAt = ((downgradesAt && (downgradesAt + _.get(CUMULATIVE_CONTROLLER_DOWNGRADE, [theController.level - 2], 0))) || controllerNeutralAt);
-        } else if (_.get(theControllerMem, "neutralAt", controllerNeutralAt) > Game.time) {
+        } else if (_.get(theControllerMem, ["neutralAt"], controllerNeutralAt) > Game.time) {
             controllerNeutralAt = theControllerMem.neutralAt;
         }
-        return Math.max(currentExpiration, defaultExpiration, roomVisualExpiration, controllerNeutralAt);
+        let theInvaderCoreMem = _.get(Game.rooms, [roomName, "invaderCoreMem"], undefined);
+        let invaderCoreCollapasesAt = Game.time - 1;
+        if (theInvaderCoreMem == undefined) {
+            theInvaderCoreMem = _.get(Memory.rooms, [roomName, "invaderCore"], undefined);
+        }
+        if (_.get(theInvaderCoreMem, ["collapsesAt"], invaderCoreCollapasesAt) > Game.time) {
+            invaderCoreCollapasesAt = theInvaderCoreMem.collapsesAt;
+        }
+        let avoidTravelUntil = _.get(Memory.rooms, [roomName, "avoidTravelUntil"], Game.time - 1);
+        return Math.max(currentExpiration, defaultExpiration, roomVisualExpiration, controllerNeutralAt, invaderCoreCollapasesAt, avoidTravelUntil);
     }
     
     /*
