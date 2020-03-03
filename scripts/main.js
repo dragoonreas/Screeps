@@ -804,8 +804,8 @@ module.exports.loop = function () {
             }
             if (_.get(theRoom.memory.invaderCore, ["level"], 0) > 0 
                 && _.get(theRoom.memory.invaderCore, ["deploysAt"], 0) < (Game.time + 50) 
-                && collapsesAt > theRoom.memory.avoidTravelUntil) {
-                theRoom.memory.avoidTravelUntil = collapsesAt;
+                && collapsesAt > theRoom.avoidTravelUntil) {
+                theRoom.avoidTravelUntil = collapsesAt;
             }
         }
         

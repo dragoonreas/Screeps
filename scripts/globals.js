@@ -220,6 +220,11 @@ let globals = function() {
         return d.toLocaleString();
     }
     
+    global.setStronghold = function(roomID, ticksRemaining) {
+        _.set(Memory.rooms, [roomID, "memoryExpiration"], Math.max(_.get(Memory.rooms, [roomID, "memoryExpiration"], Game.time - 1), Game.time + ticksRemaining));
+        _.set(Memory.rooms, [roomID, "avoidTravelUntil"], Math.max(_.get(Memory.rooms, [roomID, "avoidTravelUntil"], Game.time - 1), Game.time + ticksRemaining));
+    }
+    
     global.listCreepAge = function() {
         _.forEach(Game.creeps, (c) => {
             console.log(`${c.name} (${c.room.name} ${c.memory.role}) started spawning at ${objGenDate(c.id)}, ${(Game.time - c.memory.spawnTick + (c.body.length * CREEP_SPAWN_TIME) - 1).toLocaleString()} ticks ago`);
