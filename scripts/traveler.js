@@ -247,7 +247,7 @@ module.exports = function(globalOpts = {}){
                     console.log("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                     Game.notify("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                 }
-                _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], _.Max(_.get(creep.room, ["controllerMem", "neutralAt"], 0), _.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0)));
+                _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], _.max(_.get(creep.room, ["controllerMem", "neutralAt"], 0), _.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0)));
             }
             // initialize data object
             if (!creep.memory._travel) {
