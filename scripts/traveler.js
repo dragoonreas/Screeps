@@ -52,7 +52,7 @@ module.exports = function(globalOpts = {}){
                     if (Game.map.getRoomLinearDistance(origin, roomName) > options.restrictDistance) {
                         return Infinity;
                     }
-                    if (Game.map.isRoomAvailable(roomName) == false) {
+                    if (Game.map.getRoomStatus(roomName).status != "normal") {
                         return Infinity;
                     }
                     if (options.routeCallback) {
@@ -177,7 +177,7 @@ module.exports = function(globalOpts = {}){
             }
             */
             let callback = (roomName) => {
-                if (Game.map.isRoomAvailable(roomName) == false) {
+                if (Game.map.getRoomStatus(roomName).status != "normal") {
                     return false;
                 }
                 if (options.roomCallback) {
@@ -346,7 +346,7 @@ module.exports = function(globalOpts = {}){
                 travelData.dest = destPos;
                 travelData.prev = undefined;
                 global.summarized_rooms[creepRoomID].traveler[creepRole].pathfinding = (global.summarized_rooms[creepRoomID].traveler[creepRole].pathfinding || 0) + 1;
-                if (Game.map.isRoomAvailable(destPos.roomName) == true) {
+                if (Game.map.getRoomStatus(destPost.roomName).status == "normal") {
                     let cpu = Game.cpu.getUsed();
                     let ret = this.findTravelPath(creep, destPos, options);
                     travelData.cpu += (Game.cpu.getUsed() - cpu);
