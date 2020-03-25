@@ -346,7 +346,7 @@ module.exports = function(globalOpts = {}){
                 travelData.dest = destPos;
                 travelData.prev = undefined;
                 global.summarized_rooms[creepRoomID].traveler[creepRole].pathfinding = (global.summarized_rooms[creepRoomID].traveler[creepRole].pathfinding || 0) + 1;
-                if (Game.map.getRoomStatus(destPost.roomName).status == "normal") {
+                if (Game.map.getRoomStatus(destPos.roomName).status == "normal") {
                     let cpu = Game.cpu.getUsed();
                     let ret = this.findTravelPath(creep, destPos, options);
                     travelData.cpu += (Game.cpu.getUsed() - cpu);
