@@ -52,7 +52,7 @@ module.exports = function(globalOpts = {}){
                     if (Game.map.getRoomLinearDistance(origin, roomName) > options.restrictDistance) {
                         return Infinity;
                     }
-                    if (Game.map.getRoomStatus(roomName).status != "normal") {
+                    if ((Game.map.getRoomStatus(roomName) == undefined) || (Game.map.getRoomStatus(roomName).status != "normal")) {
                         return Infinity;
                     }
                     if (options.routeCallback) {
