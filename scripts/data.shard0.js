@@ -1188,8 +1188,8 @@ let dataShard0 = function() {
             , W46N18: {
                 harvestRooms: [
                     "W46N17"
-                    //, "W45N18" // remote mined by cacomixl8
-                    //, "W46N19" // remote mined by cacomixl8
+                    , "W45N18"
+                    , "W46N19"
                 ]
                 , repairerTypeMins: [
                     { type: STRUCTURE_CONTAINER, min: 0 }

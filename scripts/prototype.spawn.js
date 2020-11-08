@@ -564,13 +564,18 @@ let prototypeSpawn = function() {
             , ["10"]: (moveRatio == 0 ? 0 : Math.max(Math.ceil(((body.length - bodyPartCounts[MOVE]) * 10) / (bodyPartCounts[MOVE] * 2)), 1))
         };
         
+        let cosmeticPrefix = "";
+        if (this.room.name == "W46N41") {
+            cosmeticPrefix = "Xeno-";
+        }
+        
         let nameList = MALE_NAMES;
         let creepName = "";
         let nameExists = true;
         let numGivenNames = 0;
         do {
             nameList = ((Math.random() > 0.5) ? MALE_NAMES : FEMALE_NAMES);
-            creepName = _.sample(nameList, ++numGivenNames).toString().replace(",", "");
+            creepName = cosmeticPrefix + _.sample(nameList, ++numGivenNames).toString().replace(",", "");
             nameExists = _.any(Memory.creeps, (cm, cn) => (cn == creepName));
         } while (nameExists == true);
         

@@ -163,8 +163,8 @@ let roleHarvester = {
                         , "W46N18": [
                             "577b92b60f9d51615fa46f8b" // W46N17
                             , "577b92b60f9d51615fa46f8d" // W46N17
-                            //, "577b92c50f9d51615fa4716a" // W45N18 (remote mined by cacomixl8)
-                            //, "577b92b60f9d51615fa46f84" // W46N19 (remote mined by cacomixl8)
+                            , "577b92c50f9d51615fa4716a" // W45N18
+                            , "577b92b60f9d51615fa46f84" // W46N19
                             , "577b92b60f9d51615fa46f87" // W46N18
                         ]
                         , "W52N47": [

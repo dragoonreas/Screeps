@@ -89,6 +89,7 @@ function collect_stats() {
     Memory.stats.market = {
         credits: _.round(Game.market.credits, 2),
         num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
+        resources: Game.resources,
     };
     
     Memory.stats.roomSummary = resources.summarize_rooms();

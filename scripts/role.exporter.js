@@ -52,6 +52,7 @@ let roleExporter = {
         let safeRooms = [
             "W91N42"
             , "W53N38"
+            , "W88N27"
         ];
         
         if (creep.memory.working == false) {
