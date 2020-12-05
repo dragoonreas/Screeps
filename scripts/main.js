@@ -732,6 +732,9 @@ module.exports.loop = function () {
     
     let balancedResources = [];
     
+    let latestEnergyHistory = _.max(Game.market.getHistory(RESOURCE_ENERGY), (h) => { return new Date(h.date).getTime(); });
+    let estEnergyPrice = _.get(latestEnergyHistory, ["avgPrice"], 0.001);
+    
     // Manage rooms and run structures (except spawns)
     for (let roomID in Game.rooms) {
         if (_.includes(ignoredRooms, roomID) == true) { continue; }
@@ -1501,16 +1504,18 @@ module.exports.loop = function () {
                         ));
                         let amountToSend = Math.min(resourceCount, buyOrder.amount);
                         let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
-                        if (energyCost <= terminalEnergy) {
+                        if ((energyCost <= terminalEnergy) 
+                            && ((estEnergyPrice * energyCost) < (buyOrder.price * amountToSend))) {
                             let err = Game.market.deal(buyOrder.id, amountToSend, roomID);
                             if (err == OK) {
                                 madeTransaction = true;
-                                console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
+                                console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " (worth ~" + (estEnergyPrice * energyCost) + " credits) for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
                                 break; // NOTE: Each terminal can only do one deal per tick
                             }
                         }
                     }
-                    else if (_.includes(balancedResources, resourceName) == false) {
+                    if ((madeTransaction == false) 
+                        && (_.includes(balancedResources, resourceName) == false)) {
                         let sellOrders = _.filter(Game.market.orders, (o) => (
                             o.type == ORDER_SELL 
                             && o.resourceType == resourceName 
@@ -1554,11 +1559,13 @@ module.exports.loop = function () {
                             }
                             else {
                                 if (sellOrder.price > sellPrice 
-                                    || sellOrder.remainingAmount < amountToSell) {
+                                    || ((sellOrder.remainingAmount < amountToSell) 
+                                        && (sellOrder.price != sellPrice))) {
                                     let deposit = Math.max((sellPrice - sellOrder.price), 0) * sellOrder.remainingAmount * 0.05;
                                     if (deposit <= Game.market.credits) {
                                         let err = Game.market.changeOrderPrice(sellOrder.id, sellPrice);
                                         if (err == OK) {
+                                            // console.log(toStr(sellOrders));
                                             console.log("Changed " + ORDER_SELL + " price for " + sellOrder.remainingAmount + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (sellOrder.price * sellOrder.remainingAmount).toFixed(3) + " (" + sellOrder.price + " each) to " + (sellPrice * sellOrder.remainingAmount).toFixed(3) + " (" + sellPrice + " each) credits");
                                         }
                                         else {
@@ -1778,7 +1785,7 @@ module.exports.loop = function () {
                 }
             }
             
-            const MAX_ENERGY_PRICE = 0.5;
+            const MAX_ENERGY_PRICE = 0.75;
             if (theTerminal.needsEnergy == true 
                 && theTerminal.energyCapacityFree > 0 
                 && _.get(theTerminal.room.memory, ["isShuttingDown"], false) == false) {
