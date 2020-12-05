@@ -94,6 +94,9 @@ function collect_stats() {
     
     Memory.stats.roomSummary = resources.summarize_rooms();
     
+    _.set(Memory.stats, ["debugging", "roomAvoidance"], {});
+    _.forEach(Memory.rooms, (r, rn) => { if (_.get(r, ["avoidTravelUntil"], 0) > Game.time) { _.set(Memory.stats.debugging.roomAvoidance, [rn], _.get(r, ["avoidTravelUntil"], 0) - Game.time); } });
+    
     // Add callback functions which we can call to add additional
     // statistics to here, and have a way to register them.
     // 1. Merge in the current repair ratchets into the room summary
