@@ -315,7 +315,7 @@ let prototypeRoom = function() {
             let someTowersInactive = ((r.controller != undefined) && (_.get(r, ["controller", "level"], 0) < _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (v) => (v >= towers.length))));
             return _.filter(towers, (t) => (
                 t.my == false 
-                && _.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), t.owner) == false 
+                && _.includes(_.difference(Memory.nonAggressivePlayers, []), t.owner) == false 
                 && (someTowersInactive == false 
                     || t.isActive() == true)
             ));

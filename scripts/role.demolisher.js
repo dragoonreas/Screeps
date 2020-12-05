@@ -42,9 +42,7 @@ let roleDemolisher = {
                     }
                     
                     if (creep.room.name != sentTo) {
-                        if (sentTo == "W48N42" 
-                            || sentTo == "W47N44" 
-                            || sentTo == "W43N42") { // NOTE: Any rooms that require waypoints to get to should be added here
+                        if (false) { // NOTE: Any rooms that require waypoints to get to should be added here
                             ROLES["scout"].run(creep);
                         }
                         else {
@@ -78,7 +76,7 @@ let roleDemolisher = {
                         
                         demoTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: (cs) => (
                             _.get(cs, "my", false) == false 
-                            && _.some(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), _.get(cs, ["owner", "username"], "")) == false 
+                            && _.some(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), _.get(cs, ["owner", "username"], "")) == false 
                             && cs.structureType != STRUCTURE_ROAD 
                             && cs.structureType != STRUCTURE_CONTAINER
                         )});
@@ -87,7 +85,7 @@ let roleDemolisher = {
                     if (demoTarget == undefined) {
                         demoTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, { filter: (s) => (
                             _.get(s, "my", false) == false 
-                            && _.some(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), _.get(s, ["owner", "username"], "")) == false 
+                            && _.some(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), _.get(s, ["owner", "username"], "")) == false 
                             && s.structureType != STRUCTURE_ROAD 
                             && s.structureType != STRUCTURE_CONTAINER
                             && s.structureType != STRUCTURE_PORTAL 
@@ -169,13 +167,7 @@ let roleDemolisher = {
         }
         else {
             if (creep.room.name != creep.memory.roomID 
-                && ((creep.memory.roomID == "W53N39" 
-                        && (sentTo == "W64N31" 
-                            || sentTo == "W52N47" 
-                            || sentTo == "W48N42" 
-                            || sentTo == "W47N44")) 
-                    || sentTo == "W47N44" 
-                    || sentTo == "W43N42")) {
+                && false) {
                 ROLES["scout"].run(creep);
             }
             else if (creep.carryCapacity > 0) {

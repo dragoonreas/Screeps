@@ -19,18 +19,7 @@ let roleExporter = {
         let sentTo = creep.memory.roomSentTo;
         if (_.isString(sentTo) == false) {
             switch (creep.memory.roomID) {
-                //case "W87N29": sentTo = "W86N29"; break; // NOTE: Update when bootstrapping network reconfigured
-                case "W86N29": sentTo = "W85N23"; break;
-                case "W85N23": sentTo = "W86N29"; break;
-                case "W81N29": sentTo = "W86N29"; break;
-                case "W72N28": sentTo = "W86N29"; break;
-                case "W64N31": sentTo = "W86N29"; break;
-                case "W55N31": sentTo = "W64N31"; break;
-                case "W53N39": sentTo = "W64N31"; break;
-                case "W53N42": sentTo = "W53N39"; break;
-                case "W46N41": sentTo = "W53N39"; break;
-                case "W46N18": sentTo = "W46N41"; break;
-                case "W52N47": sentTo = "W53N39"; break;
+                //case "W28N5": sentTo = "W28N5"; break; // NOTE: Update when bootstrapping network reconfigured
                 default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {
@@ -50,9 +39,6 @@ let roleExporter = {
         }
         
         let safeRooms = [
-            "W91N42"
-            , "W53N38"
-            , "W88N27"
         ];
         
         if (creep.memory.working == false) {
@@ -61,13 +47,7 @@ let roleExporter = {
                 || Game.rooms[sentFrom] == undefined) {
                 let structureMemPos = _.get(creep.memory, ["withdrawStructure", "pos"], undefined);
                 let structureMemRoomName = _.get(creep.memory, ["withdrawStructure", "pos", "roomName"], undefined);
-                if (sentFrom == "W94N49" 
-                    || sentFrom == "W91N42" 
-                    || sentFrom == "W67N25" 
-                    || sentFrom == "W48N42" 
-                    || sentFrom == "W47N44" 
-                    || sentFrom == "W42N51"
-                    || sentFrom == "W23N48") { // NOTE: Any rooms that require waypoints to get to should be added here
+                if (false) { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else if (structureMemPos != undefined 
@@ -343,23 +323,7 @@ let roleExporter = {
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
                     creep.memory.roomID = sentTo;
                 }
-                if (sentTo == "W94N49" 
-                    || sentFrom == "W94N49" 
-                    || sentFrom == "W91N42" 
-                    || sentFrom == "W9N45" 
-                    || sentFrom == "W67N25" 
-                    || (sentTo == "W53N39" 
-                        && (sentFrom == "W64N31" 
-                            || sentFrom == "W52N47" 
-                            || sentFrom == "W48N42" 
-                            || sentFrom == "W47N44")) 
-                    || (sentTo == "W46N41" 
-                        && sentFrom == "W46N18")
-                    || sentFrom == "W48N42" 
-                    || sentFrom == "W47N44" 
-                    || sentTo == "W42N51"
-                    || (sentTo == "W9N45"
-                        && sentFrom == "W23N48")) { // NOTE: Any rooms that require waypoints to get to should be added here
+                if (false) { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {

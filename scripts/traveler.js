@@ -221,12 +221,6 @@ module.exports = function(globalOpts = {}){
                 for (let obstacle of options.obstacles) {
                     matrix.set(obstacle.pos.x, obstacle.pos.y, 0xff);
                 }
-                if (roomName == "W82N39" && destPos.roomName == "W82N39" && destPos.isEqualTo(15, 25) == false) { // stop blocking only access to source at [15,25] in room W82N39 when not harvesting it
-                    matrix.set(14, 26, 0xff);
-                }
-                if (roomName == "W46N41" && destPos.roomName == "W46N41" && destPos.isEqualTo(15, 16) == false) { // stop blocking only access to source at [15,16] in room W46N41 when not harvesting it
-                    matrix.set(16, 17, 0xff);
-                }
                 return matrix;
             };
             return PathFinder.search(origPos, goals, {
@@ -242,7 +236,7 @@ module.exports = function(globalOpts = {}){
             }
             // register hostile rooms entered
             let creepPos = creep.pos, destPos = (destination.pos || destination);
-            if ((_.get(creep.room, ["controller", "owner", "username"], undefined) != undefined) && (!creep.room.controller.my) && (!_.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), creep.room.controller.owner.username))) {
+            if ((_.get(creep.room, ["controller", "owner", "username"], undefined) != undefined) && (!creep.room.controller.my) && (!_.includes(_.difference(Memory.nonAggressivePlayers, []), creep.room.controller.owner.username))) {
                 if (_.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0) < Game.time && creep.room.controller.level >= 1) {
                     console.log("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                     Game.notify("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
@@ -443,7 +437,7 @@ module.exports = function(globalOpts = {}){
         static addStructuresToMatrix(room, matrix, roadCost) {
             for (let structure of room.find(FIND_STRUCTURES)) {
                 if (structure instanceof StructureRampart) {
-                    if (structure.my == false && (structure.isPublic == false || _.includes(Memory.nonAgressivePlayers, structure.owner.username) == true)) {
+                    if (structure.my == false && (structure.isPublic == false || _.includes(Memory.nonAggressivePlayers, structure.owner.username) == true)) {
                         matrix.set(structure.pos.x, structure.pos.y, 0xff);
                     }
                 }
@@ -462,7 +456,7 @@ module.exports = function(globalOpts = {}){
                 if (site.my == false && (site.structureType === STRUCTURE_CONTAINER || site.structureType === STRUCTURE_ROAD) && matrix.get(site.pos.x, site.pos.y) < 0xfe) { // try not to step on possible ally construction site
                     matrix.set(site.pos.x, site.pos.y, 0xfe);
                 }
-                else if ((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == true) || _.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), site.owner.username)) { // ensure we don't step on an ally construction site and don't block our own construction site
+                else if ((site.my == true && _.includes(OBSTACLE_OBJECT_TYPES, site.structureType) == true) || _.includes(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), site.owner.username)) { // ensure we don't step on an ally construction site and don't block our own construction site
                     matrix.set(site.pos.x, site.pos.y, 0xff);
                 }
             }

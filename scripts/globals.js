@@ -36,10 +36,13 @@ let globals = function() {
         , [STRUCTURE_OBSERVER]: "\uD83D\uDCE1" // satellite antenna
         , [STRUCTURE_POWER_SPAWN]: "\u2668" // hot springs
         , [STRUCTURE_NUKER]: "\u2622" // radioactive
-        , [STRUCTURE_KEEPER_LAIR]: "\uD83C\uDFDB" // classical building
+        , [STRUCTURE_KEEPER_LAIR]: "\uD83D\uDD73" // hole
         , [STRUCTURE_PORTAL]: "\uD83C\uDF00" // cyclone
         , [STRUCTURE_POWER_BANK]: "\uD83C\uDF0B" // volcano
         , tombstone: "\u26b1" // funeral urn
+        , ruin: "\uD83C\uDFDB" // classical building
+        , scoreContainer: "\u2736" // six pointed black star
+        , scoreCollector: "\uD83D\uDFCC" // heavy six pointed black star
         , source: "\uD83C\uDF04" // sunrise over mountains
         , constructionSite: "\uD83C\uDFD7" // building construction
         , resource: "\uD83D\uDEE2" // oil drum
@@ -148,6 +151,7 @@ let globals = function() {
     
     global.resourceWorth = function(resourceType) {
         switch (resourceType) {
+            case RESOURCE_SCORE: return 100000000; // 10^8
             case RESOURCE_POWER: return 10000000; // 10^7
             case RESOURCE_CATALYZED_UTRIUM_ACID:
             case RESOURCE_CATALYZED_UTRIUM_ALKALIDE:

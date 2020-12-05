@@ -53,7 +53,7 @@ const screepsPlus = require("screepsplus"); // Used to put stats in memory/segme
 // TODO: Only do all the following memory initialisation on code commits instead of global resets
 
 // Make sure all required root memory objects exist
-_.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngel AI users, potentual agressive players, potential allies and allies
+_.defaultsDeep(Memory, { // TODO: Implement the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngel AI users, potentual agressive players, potential allies and allies
     "creeps": {}
     , "rooms": {}
     , "spawns": {}
@@ -61,10 +61,7 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
     , "MonCPU": false
     , "MonGlobal": false
     , "refillBucket": false
-    , "TooAngelDealings": { // can pay a friend tax to opt into this AIs non-agressive list (wish more people did this...)
-        "idiotRating": 0 // stay below 0 to be friendly with this AI (value needs to be entered manually based on what their creep by the controller says)
-    }
-    , "agressivePlayers": [ // these players attack first and ask questions later (if at all)
+    , "aggressivePlayers": [ // these players attack first and ask questions later (if at all)
         "rysade"
         , "roncli" // uses players with no RCL 8 rooms as testing grounds to improve their combat code with
         , "rudykocur" // uses nukes
@@ -72,17 +69,11 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
         , "Archangel"
         , "Vultured"
         , "vrs" // open to negotiations
-        , "a2coder" // indiscriminately agressive towards PINK alliance members
+        , "a2coder" // indiscriminately aggressive towards PINK alliance members
         , "GiantDwarf" // uses nukes, open to negotiations
     ]
-    , "nonAgressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
+    , "nonAggressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-aggressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
         SYSTEM_USERNAME
-        , "Bovius" // allows passage through their remote mining rooms
-        , "Cade" // PINK alliance (not yet added to their whitelist)
-        , "Palle" // PINK alliance
-        , "Kendalor" // PINK alliance
-        , "InfiniteJoe" // PINK alliance (not yet added to their whitelist)
-        , "KermitFrog" // PINK alliance (not yet added to their whitelist)
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
 }); // TODO: Get alliance data from user "LeagueOfAutomatedNations" public segment every 6hrs
 
@@ -117,92 +108,15 @@ for (let roomID in Game.rooms) {
     }
 }
 
-/*
-    Room Decoration Themes:
-    - W85N23:	Desert
-    - W26N29:	Mono
-    - W64N31:	Fire
-    - W53N39:	Winter
-    - W52N47:	Nature
-    - W46N41:	Alien
-    - W64N18:	Sea
-    - W9N45:	Nature
-*/
-
 // Setup room memory objects for owned rooms
-_.set(Memory.rooms, ["W86N29", "harvestRooms"], [
-    "W85N29"
-    , "W86N28"
-    , "W87N29"
-]);
-_.set(Memory.rooms, ["W85N23", "harvestRooms"], [
-    "W84N23"
-    , "W86N23"
-    , "W85N25"
-]);
-_.set(Memory.rooms, ["W9N45", "harvestRooms"], [
-    "W9N44"
-    , "W8N45"
-    , "W9N46"
-]);
-/*_.set(Memory.rooms, ["W81N29", "harvestRooms"], [
-    "W81N28"
-    , "W82N29"
-]);*/
-/*_.set(Memory.rooms, ["W72N28", "harvestRooms"], [ // owned by demawi
-    "W71N28"
-    , "W72N29"
-    , "W73N28"
-    , "W72N27"
-]);*/
-_.set(Memory.rooms, ["W64N31", "harvestRooms"], [
-    "W64N32"
-    , "W63N31"
-    //, "W65N31" // remote mined by Pimaco
-]);
-/*_.set(Memory.rooms, ["W55N31", "harvestRooms"], [ // owned by steamingpile02
-    "W56N31"
-    , "W54N31"
-    , "W55N32"
-]);*/
-_.set(Memory.rooms, ["W53N39", "harvestRooms"], [
-    "W54N39"
-    //, "W53N38" // owned by Donatzor
-    //, "W52N39" // remote mined by Donatzor
-]);
-_.set(Memory.rooms, ["W52N47", "harvestRooms"], [
-    "W51N47"
-    , "W53N47"
-]);
-_.set(Memory.rooms, ["W46N41", "harvestRooms"], [
-    "W47N41"
-    , "W46N42"
-    , "W45N41"
-]);
-_.set(Memory.rooms, ["W46N18", "harvestRooms"], [
-    "W46N17"
-    , "W45N18"
-    , "W46N19"
+_.set(Memory.rooms, ["W28N5", "harvestRooms"], [
+    "W27N5"
+    , "W29N5"
+    , "W28N6"
 ]);
 /*
     Future Expansion Candidates:
-    From W53N39:
-    - W46N41:
-        - source to controller: 1
-        - adjacent room/source: 3/3
-    - W46N18:
-        - source to controller: 3
-        - adjacent room/source: 3/4
-    - W51N24
-        - source to controller: 1
-        - adjacent room/source: 3/4
-    - W9N21 (Temp RCL3) ?
-    - W2N21:
-        - source to controller: 2
-        - adjacent room/source: 2/2
-    - W1N27:
-        - source to controller: 3
-        - adjacent room/source: 2/4
+    From W28N5:
 */
 
 /*
@@ -210,79 +124,9 @@ _.set(Memory.rooms, ["W46N18", "harvestRooms"], [
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["W86N29", "repairerTypeMins"], {
+_.set(Memory.rooms, ["W28N5", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W85N23", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 1
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W9N45", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-/*_.set(Memory.rooms, ["W81N29", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 0
-});*/
-/*_.set(Memory.rooms, ["W72N28", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 0
-});*/
-_.set(Memory.rooms, ["W64N31", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-/*_.set(Memory.rooms, ["W55N31", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 0
-});*/
-_.set(Memory.rooms, ["W53N39", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 1
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W52N47", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W46N41", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 0
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W46N18", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 1
-    , [STRUCTURE_ROAD]: 0
     , [STRUCTURE_RAMPART]: 0
     , [STRUCTURE_WALL]: 0
     , all: 1
@@ -306,170 +150,20 @@ for (let roomID in Memory.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["W86N29", "creepMins"], {
+_.set(Memory.rooms, ["W28N5", "creepMins"], {
     attacker: 0
     , harvester: 4
     , powerHarvester: 0
     , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W86N29", "minerSources"], {}))
+    , miner: 0//_.size(_.get(Game.rooms, ["W28N5", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N29", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W28N5", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W86N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W28N5", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W86N29", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W86N29", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W85N23", "creepMins"], {
-    attacker: 0
-    , harvester: 4
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W85N23", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N23", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W85N23", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W85N23", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W85N23", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W9N45", "creepMins"], {
-    attacker: 0
-    , harvester: 5
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W9N45", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W9N45", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W9N45", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W9N45", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W9N45", "canHarvestMineral"], false) ? 1 : 0)
-});
-/*_.set(Memory.rooms, ["W81N29", "creepMins"], {
-    attacker: 0
-    , harvester: 6
-    , powerHarvester: 0
-    , upgrader: 4
-    , miner: 0//_.size(_.get(Game.rooms, ["W81N29", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W81N29", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W81N29", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W81N29", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W81N29", "canHarvestMineral"], false) ? 1 : 0)
-});*/
-/*_.set(Memory.rooms, ["W72N28", "creepMins"], {
-    attacker: 0
-    , harvester: 6
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W72N28", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W72N28", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W72N28", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W72N28", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W72N28", "canHarvestMineral"], false) ? 1 : 0)
-});*/
-_.set(Memory.rooms, ["W64N31", "creepMins"], {
-    attacker: 0
-    , harvester: 3
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W64N31", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W64N31", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W64N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W64N31", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W64N31", "canHarvestMineral"], false) ? 1 : 0)
-});
-/*_.set(Memory.rooms, ["W55N31", "creepMins"], {
-    attacker: 0
-    , harvester: 4
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W55N31", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W55N31", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 0
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W55N31", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W55N31", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W55N31", "canHarvestMineral"], false) ? 1 : 0)
-});*/
-_.set(Memory.rooms, ["W53N39", "creepMins"], {
-    attacker: 0
-    , harvester: 3
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W53N39", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W53N39", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W53N39", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W53N39", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W53N39", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W52N47", "creepMins"], {
-    attacker: 0
-    , harvester: 5
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W52N47", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W52N47", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W52N47", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W52N47", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W52N47", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W46N41", "creepMins"], {
-    attacker: 0
-    , harvester: 3
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W46N41", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N41", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W46N41", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N41", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W46N41", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W46N18", "creepMins"], {
-    attacker: 0
-    , harvester: 3
-    , powerHarvester: 0
-    , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W46N18", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N18", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W46N18", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W46N18", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W46N18", "canHarvestMineral"], false) ? 1 : 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W28N5", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
+    , rockhound: (_.get(Game.rooms, ["W28N5", "canHarvestMineral"], false) ? 1 : 0)
 });
 
 if (Memory.MonCPU == true) { console.log("init>loopStart:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -574,35 +268,8 @@ module.exports.loop = function () {
         }
     }
     
-    if (Memory.MonCPU == true) { console.log("stats>ta:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
-    
-    // Update TooAngel 
-    let taDealingFromRoom = "W86N29";
-    let taDealingToRoom = "E12S1";
-    Memory.TooAngelDealings.isFriendly = (Memory.TooAngelDealings.idiotRating < 0); // TODO: Since more than just TooAngel uses this AI, need to setup an array of players to use this with
-    if (Memory.TooAngelDealings.isFriendly == false 
-        && Memory.TooAngelDealings.lastIdiotRating != Memory.TooAngelDealings.idiotRating) {
-        let energySellOrders = Game.market.orderCache(ORDER_SELL, RESOURCE_ENERGY);
-        let energyPrice = _.get(_.min(energySellOrders, "price"), "price", 0);
-        Memory.TooAngelDealings.energyToFriendly = (parseInt(Memory.TooAngelDealings.idiotRating) + 1) / energyPrice;
-        Memory.TooAngelDealings.totalCost = Memory.TooAngelDealings.energyToFriendly + Game.market.calcTransactionCost(Memory.TooAngelDealings.energyToFriendly, taDealingFromRoom, taDealingToRoom); // TODO: Make sure the total cost isn't more than what the terminal can hold, and if it is divide it up into multiple transactions
-        Memory.TooAngelDealings.lastIdiotRating = Memory.TooAngelDealings.idiotRating;
-    }
-    
-    let dealingsTerminal = _.get(Game.rooms, [taDealingFromRoom, "terminal"], undefined);
-    if (_.get(Memory, ["TooAngelDealings", "isFriendly"], false) == false
-        && dealingsTerminal != undefined 
-        && dealingsTerminal.store[RESOURCE_ENERGY] >= Math.min(dealingsTerminal.storeCapacity, Memory.TooAngelDealings.totalCost)) {
-        if (dealingsTerminal.send(RESOURCE_ENERGY, Memory.TooAngelDealings.energyToFriendly, taDealingToRoom, "brain.isFriend('dragoonreas') == true?") == OK) {
-            console.log("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
-            Game.notify("Used " + Memory.TooAngelDealings.totalCost.toLocaleString() + " energy to lose " + Memory.TooAngelDealings.idiotRating.toLocaleString() + " to be friendly with TooAngel");
-            Memory.TooAngelDealings.idiotRating = -1;
-            Memory.TooAngelDealings.lastIdiotRating = Memory.TooAngelDealings.idiotRating;
-        }
-    }
-    
-    if (Memory.MonCPU == true) { console.log("ta>gc:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
-    
+    if (Memory.MonCPU == true) { console.log("stats>gc:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
+
     let checkingForDrops = false;
     
     // Garbage collection for creep memory
@@ -718,17 +385,7 @@ module.exports.loop = function () {
     let privateRamparts = {};
     
     let ignoredRooms = [
-        // "W81N29"
-        // , "W72N28"
-        // , "W55N31"
     ];
-    
-    let requiredCredits = 0;
-    _.forEach(Game.market.orders, (order) => {
-        if (_.get(order, ["type"], "") == ORDER_BUY) {
-            requiredCredits += _.get(order, ["remainingAmount"], 0) * _.get(order, ["price"], 0);
-        }
-    });
     
     let balancedResources = [];
     
@@ -839,10 +496,10 @@ module.exports.loop = function () {
         
         // Get invader info
         let invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
-            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
+            filter: (i) => (_.includes(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
         });
         let powerfulInvaders = theRoom.find(FIND_HOSTILE_POWER_CREEPS, {
-            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
+            filter: (i) => (_.includes(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
         });
         if (invaders.length > 0 
             || powerfulInvaders.length > 0) {
@@ -942,7 +599,7 @@ module.exports.loop = function () {
                             theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
                                 s.structure.structureType == STRUCTURE_RAMPART 
                                 && (s.structure.my == true 
-                                || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                || (_.includes(Memory.nonAggressivePlayers, s.structure.owner.username) == true 
                                     && s.structure.isPublic == true))
                             ));
                         }
@@ -972,7 +629,7 @@ module.exports.loop = function () {
                     let rampartsNearInvader = aPriorityTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
                         s.structureType == STRUCTURE_RAMPART 
                         && s.my == true
-                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    )); // TODO: Filter theRamparts variable above if available instead
                     _.forEach(rampartsNearInvader, (rni) => {
                         privateRamparts[rni.id] = true; // Make ramparts near priority target private
                         if (targetWeighting > 0 && rni.pos.isNearTo(aPriorityTarget) == true && _.some(rampartsToUse, rni.id) == false) {
@@ -1021,7 +678,7 @@ module.exports.loop = function () {
                             theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
                                 s.structure.structureType == STRUCTURE_RAMPART 
                                 && (s.structure.my == true 
-                                || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                || (_.includes(Memory.nonAggressivePlayers, s.structure.owner.username) == true 
                                     && s.structure.isPublic == true))
                             ));
                         }
@@ -1051,7 +708,7 @@ module.exports.loop = function () {
                     let rampartsNearInvader = aNonPriorityTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
                         s.structureType == STRUCTURE_RAMPART 
                         && s.my == true
-                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    )); // TODO: Filter theRamparts variable above if available instead
                     _.forEach(rampartsNearInvader, (rni) => {
                         privateRamparts[rni.id] = true;
                     });
@@ -1107,7 +764,7 @@ module.exports.loop = function () {
                             theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
                                 s.structure.structureType == STRUCTURE_RAMPART 
                                 && (s.structure.my == true 
-                                || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                || (_.includes(Memory.nonAggressivePlayers, s.structure.owner.username) == true 
                                     && s.structure.isPublic == true))
                             ));
                         }
@@ -1137,7 +794,7 @@ module.exports.loop = function () {
                     let rampartsNearInvader = aPowerfulTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
                         s.structureType == STRUCTURE_RAMPART 
                         && s.my == true
-                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    )); // TODO: Filter theRamparts variable above if available instead
                     _.forEach(rampartsNearInvader, (rni) => {
                         privateRamparts[rni.id] = true; // Make ramparts near priority target private
                         if (targetWeighting > 0 && rni.pos.isNearTo(aPowerfulTarget) == true && _.some(rampartsToUse, rni.id) == false) {
@@ -1161,7 +818,7 @@ module.exports.loop = function () {
                 }
             }
             
-            // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
+            // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an aggressive players creep being present
             if (theController != undefined 
                 && theController.my == true 
                 && theController.safeMode == undefined 
@@ -1175,7 +832,7 @@ module.exports.loop = function () {
                         && s.hits < s.hitsMax 
                         && s.isActive() == true)) == true // TODO: Calculate the maximum damage output of hostile creeps within range a spawn, and activate safemode if the combined HP of the spawn and rampart covering it is <= x2 the damage output calculated (x2 to account for damage taken this turn if their attacks get run before our safemode)
                     || _.some(invaders, (i) => (
-                        _.some(Memory.agressivePlayers, (aP) => (
+                        _.some(Memory.aggressivePlayers, (aP) => (
                             i.owner.username == aP)))) == true)) { // TODO: Check that this is all working
                 //console.log("Attempting to activate Safe Mode in: " + roomID);
                 //Game.notify("Attempting to activate Safe Mode in: " + roomID, 30);
@@ -1185,7 +842,7 @@ module.exports.loop = function () {
                     Game.notify("Activated Safe Mode in: " + roomID);
                 }
             }
-            else if (_.get(theRoom, ["controller", "my"], false) == true && justNPCs == false && highestTargetWeighting > 0) { // TODO: Remove after defences have been properly tested
+            else if (_.get(theRoom, ["controller", "my"], false) == true && justNPCs == false && highestTargetWeighting > 0) { // TODO: Remove after defenses have been properly tested
                 //console.log("Attempting to activate (backup) Safe Mode in: " + roomID);
                 //Game.notify("Attempting to activate (backup) Safe Mode in: " + roomID, 30);
                 let err = theController.activateSafeMode();
@@ -1198,7 +855,7 @@ module.exports.loop = function () {
         else if (theRoom.hasHostileCreep == true) {
             theRoom.clearPathCaches = false;
             theRoom.hasHostileCreep = false;
-            theRoom.checkForDrops = true; // TODO: If the invaders were players, consider drops near the exits as suspisious as they may just be trying to lure creeps outside walls/ramparts to attack them
+            theRoom.checkForDrops = true; // TODO: If the invaders were players, consider drops near the exits as suspicious as they may just be trying to lure creeps outside walls/ramparts to attack them
             
             // Make sure we're not spawning attacker creeps needlessly
             if (theRoom.memory.creepMins != undefined) {
@@ -1253,7 +910,7 @@ module.exports.loop = function () {
         else if ((theController == undefined) // NOTE: Invader Strongholds don't require a controller
             || (theController.my == false 
                 && theController.level >= _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (maxBuildable) => maxBuildable > 0))) {
-            let hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER && _.includes(Memory.nonAgressivePlayers, s.owner.username) == false); // TODO: Figure out if it's also worth checking if the towers are empty or not
+            let hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER && _.includes(Memory.nonAggressivePlayers, s.owner.username) == false); // TODO: Figure out if it's also worth checking if the towers are empty or not
             if (hostileTowers.length > 0) {
                 theRoom.hasHostileTower = true;
                 theRoom.checkForDrops = false;
@@ -1273,14 +930,27 @@ module.exports.loop = function () {
             _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));
         }
         
-        if (theRoom.checkForDrops == true || (checkingForDrops == true && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
+        let scoreContainers = theRoom.find(FIND_SCORE_CONTAINERS, {
+                filter: (sc) => (
+                    _.sum(sc.store) > 0
+            )});
+        if (theRoom.checkForDrops == true || ((scoreContainers.length > 0 || checkingForDrops == true) && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
             theRoom.checkForDrops = false;
-            let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
+            let recycleContainer = _.get(Game.rooms, [roomID, "recycleContainer"], undefined);
+            let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES, {
+                filter: (dr) => (
+                    (recycleContainer == undefined) 
+                    || (dr.pos.isEqualTo(recycleContainer) == true)
+            )});
             let tombstones = theRoom.find(FIND_TOMBSTONES, { 
                 filter: (t) => (
                     _.sum(t.store) > 0
             )});
-            if (droppedResources.length > 0 || tombstones.length > 0) {
+            let ruins = theRoom.find(FIND_RUINS, {
+                filter: (r) => (
+                    _.sum(r.store) > 0
+            )});
+            if (scoreContainers.length > 0 || droppedResources.length > 0 || tombstones.length > 0 || ruins.length > 0) {
                 let collectorCreeps = theRoom.find(FIND_MY_CREEPS, {
                     filter: (c) => (
                         c.spawning == false 
@@ -1297,6 +967,47 @@ module.exports.loop = function () {
                         && c.carryCapacityAvailable > 0
                 )});
                 
+                if (scoreContainers.length > 0) {
+                    scoreContainers = _.sortByOrder(scoreContainers, (t) => (_.sum(t.store, (a, r) => (resourceWorth(r) * a))), "desc");
+                    toStr(scoreContainers);
+                    for (let scoreContainer of scoreContainers) {
+                        let hasAssignedCreep = _.some(Game.creeps, (c) => (
+                            _.get(c.memory, ["scoreContainer", "id"], undefined) == scoreContainer.id
+                        ));
+                        if (hasAssignedCreep == false) {
+                            let creep = scoreContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                    _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                    && c.carryCapacityAvailable >= _.sum(scoreContainer.store)
+                                    && c.pos.inRangeTo(scoreContainer.pos, scoreContainer.ticksToDecay + _.max(scoreContainer.store))
+                            )});
+                            if (creep == undefined) {
+                                creep = scoreContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                        _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                        && c.carryTotal == 0
+                                        && c.pos.inRangeTo(scoreContainer.pos, scoreContainer.ticksToDecay + _.max(scoreContainer.store))
+                                )});
+                                if (creep == undefined) {
+                                    creep = scoreContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                            _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                            && c.pos.inRangeTo(scoreContainer.pos, scoreContainer.ticksToDecay + _.max(scoreContainer.store))
+                                    )});
+                                }
+                            }
+                            if (creep != undefined) {
+                                creep.memory.scoreContainer = {
+                                    id: scoreContainer.id
+                                    , pos: scoreContainer.pos
+                                };
+                                console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(_.sum(scoreContainer.store), creep.carryCapacityAvailable) + " resources from score container in " + roomID);
+                            }
+                            else {
+                                //console.log("No creeps available to pickup " + _.sum(scoreContainer.store) + " resources from score container in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                theRoom.checkForDrops = true;
+                            }
+                        }
+                    }
+                }
+                
                 if (droppedResources.length > 0) {
                     droppedResources = _.sortByOrder(droppedResources, (dr) => (resourceWorth(dr.resourceType) * dr.amount), "desc");
                     for (let droppedResource of droppedResources) {
@@ -1305,19 +1016,22 @@ module.exports.loop = function () {
                         ));
                         if (hasAssignedCreep == false) {
                             let creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                    _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                    && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && c.carryCapacityAvailable >= droppedResource.amount
                                     && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                             )});
                             if (creep == undefined) {
                                 creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                        _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                        && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && c.carryTotal == 0
                                         && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                 )});
                                 if (creep == undefined) {
                                     creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                            _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                            && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                             && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                     )});
                                 }
@@ -1330,7 +1044,7 @@ module.exports.loop = function () {
                                 console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(droppedResource.amount, creep.carryCapacityAvailable) + " of " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
                             }
                             else {
-                                //console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                //console.log("No creeps available to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
                                 theRoom.checkForDrops = true;
                             }
                         }
@@ -1346,21 +1060,24 @@ module.exports.loop = function () {
                         ));
                         if (hasAssignedCreep == false) {
                             let creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                    _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                    && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                     && c.carryCapacityAvailable >= _.sum(tombstone.store)
                                     && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
                             )});
                             if (creep == undefined) {
                                 creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                        _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                        && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                         && c.carryTotal == 0
                                         && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
                                 )});
                                 if (creep == undefined) {
                                     creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                            _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                            && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                             && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
                                     )});
@@ -1374,7 +1091,57 @@ module.exports.loop = function () {
                                 console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(_.sum(tombstone.store), creep.carryCapacityAvailable) + " resources from tombstone of " + tombstone.creep.name + " in " + roomID);
                             }
                             else {
-                                //console.log("No creeps avaliable to pickup " + _.sum(tombstone.store) + " resources from tombstone of " + tombstone.creep.name + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                //console.log("No creeps available to pickup " + _.sum(tombstone.store) + " resources from tombstone of " + tombstone.creep.name + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                theRoom.checkForDrops = true;
+                            }
+                        }
+                    }
+                }
+                
+                if (ruins.length > 0) {
+                    ruins = _.sortByOrder(ruins, (t) => (_.sum(t.store, (a, r) => (resourceWorth(r) * a))), "desc");
+                    toStr(ruins);
+                    for (let ruin of ruins) {
+                        let hasAssignedCreep = _.some(Game.creeps, (c) => (
+                            _.get(c.memory, ["ruin", "id"], undefined) == ruin.id
+                        ));
+                        if (hasAssignedCreep == false) {
+                            let creep = ruin.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                    _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                    && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                    && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                    && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
+                                    && c.carryCapacityAvailable >= _.sum(ruin.store)
+                                    && c.pos.inRangeTo(ruin.pos, ruin.ticksToDecay + _.max(ruin.store))
+                            )});
+                            if (creep == undefined) {
+                                creep = ruin.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                        _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                        && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                        && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                        && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
+                                        && c.carryTotal == 0
+                                        && c.pos.inRangeTo(ruin.pos, ruin.ticksToDecay + _.max(ruin.store))
+                                )});
+                                if (creep == undefined) {
+                                    creep = ruin.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                            _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                            && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                            && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                            && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
+                                            && c.pos.inRangeTo(ruin.pos, ruin.ticksToDecay + _.max(ruin.store))
+                                    )});
+                                }
+                            }
+                            if (creep != undefined) {
+                                creep.memory.ruin = {
+                                    id: ruin.id
+                                    , pos: ruin.pos
+                                };
+                                console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(_.sum(ruin.store), creep.carryCapacityAvailable) + " resources from ruin in " + roomID);
+                            }
+                            else {
+                                //console.log("No creeps available to pickup " + _.sum(ruin.store) + " resources from ruin in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
                                 theRoom.checkForDrops = true;
                             }
                         }
@@ -1382,7 +1149,7 @@ module.exports.loop = function () {
                 }
             }
         }
-        // TODO: Else case for unassigning dropped resources and tombstones from creeps in a room when it's unsafe to try and collect them
+        // TODO: Else case for unassigned dropped resources and tombstones from creeps in a room when it's unsafe to try and collect them
         
         // Run towers in the room
         let towerTargets = [];
@@ -1391,7 +1158,7 @@ module.exports.loop = function () {
             
             let target = priorityTarget;
             /*
-            // TODO: Maybe group PC and NPC targets seperatly so the same weightings can be applied to each, rather than the NPCs having no weighting
+            // TODO: Maybe group PC and NPC targets separately so the same weightings can be applied to each, rather than the NPCs having no weighting
             if (target == undefined && priorityTargets != undefined) {
                 target = tower.pos.findClosestByRange(priorityTargets);
             }
@@ -1489,126 +1256,14 @@ module.exports.loop = function () {
                     let resourceCount = theTerminal.store[resourceName];
                     if (resourceCount <= 0 
                         || resourceName == RESOURCE_ENERGY 
-                        || resourceName == RESOURCE_POWER) {
+                        || resourceName == RESOURCE_POWER 
+                        || resourceName == RESOURCE_SCORE) {
                         continue;
-                    }
-                    let buyOrders = Game.market.orderCache(ORDER_BUY, resourceName);
-                    if (buyOrders.length > 0) {
-                        if (theRoom.terminal.cooldown != 0) {
-                            continue;
-                        }
-                        buyOrders = _.groupBy(buyOrders, (o) => (o.price));
-                        buyOrders = _.max(buyOrders, (v, k) => (k));
-                        let buyOrder = _.min(buyOrders, (o) => (
-                            Game.market.calcTransactionCost(Math.min(resourceCount, o.amount), roomID, o.roomName)
-                        ));
-                        let amountToSend = Math.min(resourceCount, buyOrder.amount);
-                        let energyCost = Game.market.calcTransactionCost(amountToSend, roomID, buyOrder.roomName);
-                        if ((energyCost <= terminalEnergy) 
-                            && ((estEnergyPrice * energyCost) < (buyOrder.price * amountToSend))) {
-                            let err = Game.market.deal(buyOrder.id, amountToSend, roomID);
-                            if (err == OK) {
-                                madeTransaction = true;
-                                console.log("Selling " + amountToSend + " " + resourceName + " from " + roomID + " to " + buyOrder.roomName + " using " + energyCost + " " + RESOURCE_ENERGY + " (worth ~" + (estEnergyPrice * energyCost) + " credits) for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
-                                break; // NOTE: Each terminal can only do one deal per tick
-                            }
-                        }
                     }
                     if ((madeTransaction == false) 
                         && (_.includes(balancedResources, resourceName) == false)) {
-                        let sellOrders = _.filter(Game.market.orders, (o) => (
-                            o.type == ORDER_SELL 
-                            && o.resourceType == resourceName 
-                        ));
-                        let sellOrder = (sellOrders.length > 0) ? _.max(sellOrders, (o) => (_.get(Game.rooms, [o.roomName, "terminal", "store", o.resourceType], 0))) : undefined;
-                        // TODO: Handle multiple sell order rooms
-                        let sellOrderRoom = _.get(sellOrder, ["roomName"], roomID);
-                        if (sellOrderRoom != roomID 
-                            && (_.get(Game.rooms, [sellOrderRoom, "controller", "my"], false) == false 
-                                || _.get(Game.rooms, [sellOrderRoom, "controller", "level"], 0) < 6 
-                                || _.get(Game.rooms, [sellOrderRoom, "terminal", "my"], false) == false 
-                                || _.get(Memory.rooms, [sellOrderRoom, "isShuttingDown"], false) == true)) {
-                            Game.market.cancelOrder(sellOrder.id);
-                            sellOrder = undefined;
-                            sellOrderRoom = roomID;
-                        }
-                        if (sellOrderRoom == roomID 
-                            && _.get(Memory.rooms, [roomID, "isShuttingDown"], false) == false) {
-                            let sellPrice = MAX_RESOURCE_PRICE; // NOTE: Maximum reasonable sell price capped at MAX_RESOURCE_PRICE Credits
-                            sellOrders = Game.market.orderCache(ORDER_SELL, resourceName);
-                            if (sellOrders.length > 0) {
-                                sellOrders = _.groupBy(sellOrders, (o) => (o.price));
-                                sellOrders = _.min(sellOrders, (v, k) => (k));
-                                sellPrice = Math.min(_.first(sellOrders).price, sellPrice);
-                            }
-                            let amountToSell = resourceCount;
-                            if (sellOrder == undefined) {
-                                let deposit = sellPrice * amountToSell * 0.05;
-                                if (deposit <= Game.market.credits) {
-                                    let err = Game.market.createOrder(ORDER_SELL, resourceName, sellPrice, amountToSell, roomID);
-                                    if (err == OK) {
-                                        balancedResources.push(resourceName);
-                                        console.log("Created " + ORDER_SELL + " for " + amountToSell + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * amountToSell).toFixed(3) + " (" + sellPrice + " each) credits");
-                                    }
-                                    else {
-                                        console.log(roomID, "createOrder", err);
-                                    }
-                                } else {
-                                    requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                                }
-                            }
-                            else {
-                                if (sellOrder.price > sellPrice 
-                                    || ((sellOrder.remainingAmount < amountToSell) 
-                                        && (sellOrder.price != sellPrice))) {
-                                    let deposit = Math.max((sellPrice - sellOrder.price), 0) * sellOrder.remainingAmount * 0.05;
-                                    if (deposit <= Game.market.credits) {
-                                        let err = Game.market.changeOrderPrice(sellOrder.id, sellPrice);
-                                        if (err == OK) {
-                                            // console.log(toStr(sellOrders));
-                                            console.log("Changed " + ORDER_SELL + " price for " + sellOrder.remainingAmount + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (sellOrder.price * sellOrder.remainingAmount).toFixed(3) + " (" + sellOrder.price + " each) to " + (sellPrice * sellOrder.remainingAmount).toFixed(3) + " (" + sellPrice + " each) credits");
-                                        }
-                                        else {
-                                            console.log(roomID, "changeOrderPrice", err);
-                                        }
-                                    } else {
-                                        requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                                    }
-                                }
-                                sellPrice = Math.min(sellOrder.price, sellPrice);
-                                if (sellOrder.remainingAmount < amountToSell) {
-                                    let amountToAdd = amountToSell - sellOrder.remainingAmount;
-                                    let deposit = amountToAdd * sellPrice * 0.05;
-                                    if (deposit <= Game.market.credits) {
-                                        let err = Game.market.extendOrder(sellOrder.id, amountToAdd);
-                                        if (err == OK) {
-                                            console.log("Changed " + ORDER_SELL + " amount from " + sellOrder.remainingAmount + " to " + amountToSell + " " + resourceName + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (sellPrice * amountToSell).toFixed(3) + " (" + sellPrice + " each) credits");
-                                        }
-                                        else {
-                                            console.log(roomID, "extendOrder", err);
-                                        }
-                                    } else {
-                                        requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                                    }
-                                }
-                            }
-                        }
-                        else if (theRoom.terminal.cooldown == 0) {
-                            if (_.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0) < (TERMINAL_CAPACITY / 3) 
-                                && ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)) > 0 
-                                && _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0) > 0) {
-                                let sendAmount = Math.min(resourceCount, ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)), _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0));
-                                let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, sellOrderRoom);
-                                if (energyCost <= terminalEnergy) {
-                                    let err = theTerminal.send(resourceName, sendAmount, sellOrderRoom, "To extend order " + sellOrder.id);
-                                    if (err == OK) {
-                                        balancedResources.push(resourceName);
-                                        madeTransaction = true;
-                                        console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + sellOrderRoom + " using " + energyCost + " " + RESOURCE_ENERGY + " to extend order " + sellOrder.id);
-                                        break;
-                                    }
-                                }
-                            } else if (resourceCount < (TERMINAL_CAPACITY / 3) 
+                        if (theRoom.terminal.cooldown == 0) {
+                            if (resourceCount < (TERMINAL_CAPACITY / 3) 
                                 || (resourceCount - (TERMINAL_CAPACITY / 3)) > 0) {
                                 let balanceAmount = (resourceCount > (TERMINAL_CAPACITY / 3)) ? (resourceCount - (TERMINAL_CAPACITY / 3)) : resourceCount;
                                 let storeRoom = { 
@@ -1659,7 +1314,6 @@ module.exports.loop = function () {
                 }
             }
             
-            const MAX_POWER_PRICE = 15;
             let requiredPower = theRoom.requiredPower;
             if (madeTransaction == false 
                 && requiredPower > 0 
@@ -1680,10 +1334,6 @@ module.exports.loop = function () {
                     }
                 }
 
-                let sellOrders = _.filter(Game.market.orderCache(ORDER_SELL, RESOURCE_POWER), (o) => (
-                    o.price <= MAX_POWER_PRICE // NOTE: Don't pay over MAX_POWER_PRICE Credits per Power
-                ));
-
                 if (powerRoomID != roomID
                     && theTerminal.storeCapacityFree > 0) {
                     let sendAmount = Math.min(excessPower, theTerminal.storeCapacityFree);
@@ -1697,164 +1347,9 @@ module.exports.loop = function () {
                         }
                     }
                 }
-                else if (sellOrders.length > 0) {
-                    sellOrders = _.groupBy(sellOrders, (o) => (o.price));
-                    sellOrders = _.min(sellOrders, (v, k) => (k))
-                    let sellOrder = _.min(sellOrders, (o) => (
-                        Game.market.calcTransactionCost(requiredPower, roomID, o.roomName)
-                    ));
-                    let amountToBuy = Math.min(requiredPower, theTerminal.storeCapacityFree, sellOrder.amount, Math.floor((Game.market.credits - requiredCredits) / sellOrder.price));
-                    if (amountToBuy > 0) {
-                        let energyCost = Game.market.calcTransactionCost(amountToBuy, roomID, sellOrder.roomName);
-                        if (energyCost <= terminalEnergy) {
-                            let err = Game.market.deal(sellOrder.id, amountToBuy, roomID);
-                            if (err == OK) {
-                                madeTransaction = true;
-                                console.log("Buying " + amountToBuy + " " + RESOURCE_POWER + " from " + sellOrder.roomName + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (sellOrder.price * amountToBuy).toFixed(3) + " (" + sellOrder.price + " each) credits");
-                            }
-                        }
-                    } else if (Math.floor((Game.market.credits - requiredCredits) / sellOrder.price) < requiredPower) {
-                        requiredCredits += (requiredPower * sellOrder.price) - Math.max(0, Game.market.credits - requiredCredits);
-                    }
-                }
-                else {
-                    let buyOrder = _.find(Game.market.orders, (o) => (
-                        o.roomName == roomID 
-                        && o.type == ORDER_BUY 
-                        && o.resourceType == RESOURCE_POWER 
-                    ));
-                    let buyOrders = _.filter(Game.market.orderCache(ORDER_BUY, RESOURCE_POWER), (o) => (
-                        o.price <= MAX_POWER_PRICE // NOTE: Don't pay over MAX_POWER_PRICE Credits per Power
-                        && o.amount >= 100 // NOTE: Don't consider any buy order for less than 100 Power serious competition
-                        && o.roomName != roomID
-                    ));
-                    if (buyOrders.length > 0) {
-                        let buyPrice = _.get(_.max(buyOrders, (o) => (o.price)), ["price"], MAX_POWER_PRICE);
-                        let amountToBuy = requiredPower;
-                        if (buyOrder == undefined) {
-                            let deposit = buyPrice * amountToBuy * 0.05;
-                            if (deposit <= Game.market.credits) {
-                                let err = Game.market.createOrder(ORDER_BUY, RESOURCE_POWER, buyPrice, amountToBuy, roomID);
-                                if (err == OK) {
-                                    console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
-                                }
-                                else {
-                                    console.log(roomID, "createOrder", err);
-                                }
-                            } else {
-                                requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                            }
-                        }
-                        else {
-                            if (buyOrder.price < buyPrice 
-                                || buyOrder.remainingAmount == 0) {
-                                let deposit = Math.max((buyPrice - buyOrder.price), 0) * buyOrder.remainingAmount * 0.05;
-                                if (deposit <= Game.market.credits) {
-                                    let err = Game.market.changeOrderPrice(buyOrder.id, buyPrice);
-                                    if (err == OK) {
-                                        console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
-                                    }
-                                    else {
-                                        console.log(roomID, "changeOrderPrice", err);
-                                    }
-                                } else {
-                                    requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                                }
-                            }
-                            buyPrice = Math.max(buyOrder.price, buyPrice);
-                            if (buyOrder.remainingAmount < amountToBuy) {
-                                let amountToAdd = amountToBuy - buyOrder.remainingAmount;
-                                let deposit = amountToAdd * buyPrice * 0.05;
-                                if (deposit <= Game.market.credits) {
-                                    let err = Game.market.extendOrder(buyOrder.id, amountToAdd);
-                                    if (err == OK) {
-                                        console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_POWER + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
-                                    }
-                                    else {
-                                        console.log(roomID, "extendOrder", err);
-                                    }
-                                } else {
-                                    requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        console.log("No Power Orders: " + roomID);
-                    }
-                }
             }
             
-            const MAX_ENERGY_PRICE = 0.75;
-            if (theTerminal.needsEnergy == true 
-                && theTerminal.energyCapacityFree > 0 
-                && _.get(theTerminal.room.memory, ["isShuttingDown"], false) == false) {
-                let buyOrder = _.find(Game.market.orders, (o) => (
-                    o.roomName == roomID 
-                    && o.type == ORDER_BUY 
-                    && o.resourceType == RESOURCE_ENERGY 
-                ));
-                let buyOrders = _.filter(Game.market.orderCache(ORDER_BUY, RESOURCE_ENERGY), (o) => (
-                    o.price <= MAX_ENERGY_PRICE // NOTE: Don't pay over MAX_ENERGY_PRICE Credits per Energy
-                    && o.amount >= 100 // NOTE: Don't consider any buy order for less than 100 Energy serious competition
-                    && o.roomName != roomID
-                ));
-                if (buyOrders.length > 0) {
-                    let buyPrice = _.get(_.max(buyOrders, (o) => (o.price)), ["price"], MAX_ENERGY_PRICE);
-                    let amountToBuy = theTerminal.energyCapacityFree;
-                    if (buyOrder == undefined) {
-                        let deposit = buyPrice * amountToBuy * 0.05;
-                        if (deposit <= Game.market.credits) {
-                            let err = Game.market.createOrder(ORDER_BUY, RESOURCE_ENERGY, buyPrice, amountToBuy, roomID);
-                            if (err == OK) {
-                                console.log("Created " + ORDER_BUY + " for " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
-                            }
-                            else {
-                                console.log(roomID, "createOrder", err);
-                            }
-                        } else {
-                            requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                        }
-                    }
-                    else {
-                        if (buyOrder.price < buyPrice 
-                            || buyOrder.remainingAmount == 0) {
-                            let deposit = Math.max((buyPrice - buyOrder.price), 0) * buyOrder.remainingAmount * 0.05;
-                            if (deposit <= Game.market.credits) {
-                                let err = Game.market.changeOrderPrice(buyOrder.id, buyPrice);
-                                if (err == OK) {
-                                    console.log("Changed " + ORDER_BUY + " price for " + buyOrder.remainingAmount + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit.toFixed(3) + " credits from " + (buyOrder.price * buyOrder.remainingAmount).toFixed(3) + " (" + buyOrder.price + " each) to " + (buyPrice * buyOrder.remainingAmount).toFixed(3) + " (" + buyPrice + " each) credits");
-                                }
-                                else {
-                                    console.log(roomID, "changeOrderPrice", err);
-                                }
-                            } else {
-                                requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                            }
-                        }
-                        buyPrice = Math.max(buyOrder.price, buyPrice);
-                        if (buyOrder.remainingAmount < amountToBuy) {
-                            let amountToAdd = amountToBuy - buyOrder.remainingAmount;
-                            let deposit = amountToAdd * buyPrice * 0.05;
-                            if (deposit <= Game.market.credits) {
-                                let err = Game.market.extendOrder(buyOrder.id, amountToAdd);
-                                if (err == OK) {
-                                    console.log("Changed " + ORDER_BUY + " amount from " + buyOrder.remainingAmount + " to " + amountToBuy + " " + RESOURCE_ENERGY + " from " + roomID + " using " + deposit.toFixed(3) + " credits for " + (buyPrice * amountToBuy).toFixed(3) + " (" + buyPrice + " each) credits");
-                                }
-                                else {
-                                    console.log(roomID, "extendOrder", err);
-                                }
-                            } else {
-                                requiredCredits += deposit - Math.max(0, Game.market.credits - requiredCredits);
-                            }
-                        }
-                    }
-                }
-                else {
-                    console.log("No Energy Orders: " + roomID);
-                }
-            }
-            else if ((terminalEnergy - ((TERMINAL_CAPACITY / 2) * 1.1)) >= 100) { // NOTE: Don't send Energy in transfers of less than 100
+            if ((terminalEnergy - ((TERMINAL_CAPACITY / 2) * 1.1)) >= 100) { // NOTE: Don't send Energy in transfers of less than 100
                 let balanceAmount = terminalEnergy - (TERMINAL_CAPACITY / 2);
                 let storeRoom = { 
                     roomID: roomID
@@ -1900,23 +1395,6 @@ module.exports.loop = function () {
         }
     }
 
-    if (requiredCredits > Game.market.credits 
-        && _.get(Game.resources, [PIXEL], 0) > 0) {
-        let buyOrders = Game.market.orderCache(ORDER_BUY, PIXEL);
-        if (buyOrders.length > 0) {
-            buyOrders = _.groupBy(buyOrders, (o) => (o.price));
-            buyOrders = _.max(buyOrders, (v, k) => (k));
-            let buyOrder = _.max(buyOrders, (o) => (o.amount));
-            let amountToSend = Math.min(Math.ceil((requiredCredits - Game.market.credits) / buyOrder.price), _.get(Game.resources, [PIXEL], 0), buyOrder.amount);
-            let err = Game.market.deal(buyOrder.id, amountToSend);
-            if (err == OK) {
-                console.log("Selling " + amountToSend + " " + PIXEL + " for " + (buyOrder.price * amountToSend).toFixed(3) + " (" + buyOrder.price + " each) credits");
-            }
-        } else {
-            console.log("No Pixel Orders to buy " + requiredCredits + " credits");
-        }
-    }
-
     if (Memory.MonCPU == true) { console.log("room>creeps:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     // Run creeps
@@ -1937,8 +1415,9 @@ module.exports.loop = function () {
             } // TODO: Add default for closest active spawn/room to be set as creep.memory.spawnID/creep.memory.roomID, and also set energyAvaliableOnSpawn & spawnTick to a default like in the creep garbage collection
         });
         
-        let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined); // Get home room storage if avaliable
-        let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined); // Get home room terminal if avaliable
+        let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined); // Get home room storage if available
+        let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined); // Get home room terminal if available
+        let recycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined); // Get home room recycle container if available
         
         // Run a role that's not stored in creep.memory.role
         let runningRole = false;
@@ -1949,15 +1428,19 @@ module.exports.loop = function () {
                 && creep.memory.role != "healer") { // TODO: Check if creep has active heal parts instead
                 creep.heal(creep);
                 if (creep.memory.role != "adaptable") {
+                    creep.memory.scoreContainer = undefined;
                     creep.memory.droppedResource = undefined;
                     creep.memory.tombstone = undefined;
+                    creep.memory.ruin = undefinied;
                     ROLES["recyclable"].run(creep);
                     runningRole = true;
                 }
             }
             else if (creep.carryCapacityAvailable > 0
-                && (_.get(creep.memory, ["droppedResource", "id"], undefined) != undefined 
-                    || _.get(creep.memory, ["tombstone", "id"], undefined) != undefined)) {
+                && (_.get(creep.memory, ["scoreContainer", "id"], undefined) != undefined 
+                    || _.get(creep.memory, ["droppedResource", "id"], undefined) != undefined 
+                    || _.get(creep.memory, ["tombstone", "id"], undefined) != undefined 
+                    || _.get(creep.memory, ["ruin", "id"], undefined) != undefined)) {
                 ROLES["collector"].run(creep);
                 runningRole = true;
             }
@@ -1971,7 +1454,8 @@ module.exports.loop = function () {
                         && _.sum(theStorage.store) < theStorage.storeCapacity) 
                     || (theTerminal != undefined 
                         && theTerminal.my == true 
-                        && theTerminal.storeCapacityFree > 0))) {
+                        && theTerminal.storeCapacityFree > 0) 
+                    || (recycleContainer != undefined))) {
                 ROLES["hoarder"].run(creep);
                 runningRole = true;
             }
@@ -2075,36 +1559,11 @@ module.exports.loop = function () {
     }
     
     /*
-        TODO: Incorporate this into propper bootstrapping code
+        TODO: Incorporate this into proper bootstrapping code
     */
-    _.set(Memory.rooms, ["W86N29", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 
-        //|| (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0)
-        //|| (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0)
-        || (_.get(Memory.rooms, ["W64N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W64N31", "creepCounts", "adaptable"], -1) == 0)
+    _.set(Memory.rooms, ["W28N5", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W28N5", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W28N5", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));
-    _.set(Memory.rooms, ["W85N23", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));
-    _.set(Memory.rooms, ["W9N45", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W9N45", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W9N45", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));
-    _.set(Memory.rooms, ["W64N31", "creepMins", "adaptable"], ((
-        /*(_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) 
-        || */(_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N39", "creepCounts", "adaptable"], -1) == 0) 
-    ) ? 1 : 0));
-    _.set(Memory.rooms, ["W53N39", "creepMins", "adaptable"], ((
-        /*(_.get(Memory.rooms, ["W53N42", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W53N42", "creepCounts", "adaptable"], -1) == 0) 
-        || */(_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W46N41", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W46N41", "creepCounts", "adaptable"], -1) == 0) 
-    ) ? 1 : 0));
-    _.set(Memory.rooms, ["W46N41", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W46N18", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W46N18", "creepCounts", "adaptable"], -1) == 0) 
-    ) ? 1 : 0));
-    /*_.set(Memory.rooms, ["W52N47", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W48N52", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W48N52", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W42N51", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W42N51", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));*/
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
@@ -2133,12 +1592,6 @@ module.exports.loop = function () {
     
     if (Memory.MonCPU == true) { console.log("ramparts>screepsPlus:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
-    // Generate pixel
-    let pixelsGenerated = 0;
-    if (Math.min(Game.cpu.bucket - (Game.cpu.getUsed() - Game.cpu.limit), 10000) > 7500) {
-        pixelsGenerated = ((Game.cpu.generatePixel() === OK) ? 1 : 0);
-    }
-    
     screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
     if (Memory.MonGlobal == true) {
         const new_stats = globalStats();
@@ -2165,7 +1618,6 @@ module.exports.loop = function () {
     else {
         Memory.stats.heap = undefined;
     }
-    Memory.stats.cpu.pixelsGenerated = pixelsGenerated;
     Memory.stats.cpu.used = Game.cpu.getUsed();
     let statsStr = JSON.stringify(Memory.stats);
     let statsSize = statsStr.length;

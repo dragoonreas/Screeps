@@ -13,16 +13,7 @@ let roleAdaptable = {
         let sentTo = creep.memory.roomSentTo;
         if (_.isString(sentTo) == false) {
             switch (creep.memory.roomID) {
-                //case "W87N29": sentTo = "W86N29"; break; // TODO: Update when bootstrapping network reconfigured
-                case "W86N29": sentTo = "W85N23"; break;
-                case "W85N23": sentTo = "W86N29"; break;
-                case "W81N29": sentTo = "W64N31"; break;
-                case "W72N28": sentTo = "W64N31"; break;
-                case "W64N31": sentTo = "W53N39"; break;
-                case "W53N39": sentTo = "W52N47"; break;
-                case "W53N42": sentTo = "W52N47"; break;
-                case "W46N41": sentTo = "W46N18"; break;
-                case "W52N47": sentTo = "W52N47"; break;
+                //case "W28N5": sentTo = "W28N5"; break; // TODO: Update when bootstrapping network reconfigured
                 default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {
@@ -97,15 +88,7 @@ let roleAdaptable = {
                     _.set(Memory.rooms, [sentFrom, "creepCounts", "adaptables"], _.get(Memory.rooms, [sentFrom, "creepCounts", "adaptables"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "adaptables"], _.get(Memory.rooms, [sentTo, "creepCounts", "adaptables"], 0) + 1);
                 }
-                if (sentTo == "W86N43" 
-                    || sentTo == "W91N45" 
-                    || sentTo == "W94N49" 
-                    || sentFrom == "W94N49" 
-                    || sentTo == "W9N45" 
-                    || sentTo == "W53N39" 
-                    || sentTo == "W52N47" 
-                    || sentTo == "W46N18" 
-                    || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
+                if (false) { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {
@@ -117,10 +100,7 @@ let roleAdaptable = {
             }
             else {
                 console.log("Adaptable made it to " + creep.room.name + " with " + creep.ticksToLive.toLocaleString() + " ticks to live & " + creep.hits.toLocaleString() + "/" + creep.hitsMax.toLocaleString() + " HP");
-                if (creep.memory.roomID == "W91N45" 
-                    || creep.memory.roomID == "W81N29" 
-                    || creep.memory.roomID == "W72N28" 
-                    || creep.memory.roomID == "W55N31") { // Allows these creeps to demolish in the room they're sent to
+                if (false) { // Allows these creeps to demolish in the room they're sent to
                     creep.memory.roomSentFrom = undefined;
                 }
                 else if (_.get(Memory, ["rooms", sentTo, "creepCounts", "builder"], 0) >= _.get(Memory, ["rooms", sentTo, "creepMins", "builder"], 0) 

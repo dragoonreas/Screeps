@@ -5,6 +5,7 @@ let roleHoarder = {
         
         let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined);
         let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);
+        let recycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined);
         if (theTerminal != undefined 
             && theTerminal.storeCapacityFree > 0 
             && theTerminal.my == true) {
@@ -35,6 +36,33 @@ let roleHoarder = {
                     }
                     else if (err == OK) {
                         creep.say(ICONS["transfer"] + ICONS[STRUCTURE_STORAGE], true);
+                    }
+                    break;
+                }
+            }
+        }
+        else if (recycleContainer != undefined 
+            && _.get(Memory.rooms, [creep.memory.roomID, "isShuttingDown"], false) == false) {
+            for (let resourceType in creep.carry) {
+                if (resourceType != RESOURCE_ENERGY) {
+                    if (_.sum(recycleContainer.store) < recycleContainer.storeCapacity) {
+                        let err = creep.transfer(recycleContainer, resourceType, Math.min(creep.carry[resourceType], (recycleContainer.storeCapacity - _.sum(recycleContainer.store))));
+                        if (err == ERR_NOT_IN_RANGE) {
+                            creep.travelTo(recycleContainer);
+                            creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                        }
+                        else if (err == OK) {
+                            creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER], true);
+                        }
+                    }
+                    else {
+                        if (creep.pos.isEqualTo(recycleContainer) == false) {
+                            creep.travelTo(recycleContainer);
+                            creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                        }
+                        else {
+                            creep.drop(resourceType);
+                        }
                     }
                     break;
                 }
