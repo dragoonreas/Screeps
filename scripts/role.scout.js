@@ -32,14 +32,14 @@ let roleScout = {
                 sentTo = _.get(creep.memory, ["roomSentFrom"], creep.memory.roomID);
             } // TODO: May need to account for when neither from nor to rooms match room spawned in
             
-            /*if (sentFrom == "W46N41" 
-                || sentTo == "W46N18") {
+            if (sentFrom == "W28N5" 
+                || sentTo == "W12S26") {
                 let waypoints = [
-                    "W46N20"
-                    , "W46N18"
+                    "W15S25"
+                    , "W12S26"
                 ];
                 if (creep.memory.waypoint > 0 
-                    && creep.room.name == "W46N40") { // back-tracked through portal
+                    && creep.room.name == "W25N5") { // back-tracked through portal
                     creep.memory.waypoint = 0;
                 }
                 else if (creep.memory.waypoint < waypoints.length 
@@ -48,13 +48,13 @@ let roleScout = {
                 }
                 
                 if (creep.memory.waypoint == 0) {
-                    creep.travelTo(new RoomPosition(48, 37, "W46N40"));
-                    creep.say(travelToIcons(creep) + "W46N40", true);
+                    creep.travelTo(new RoomPosition(14, 6, "W25N5"));
+                    creep.say(travelToIcons(creep) + "W25N5", true);
                 }
                 else if (creep.memory.waypoint == 1 
-                    || creep.pos.isNearTo(10, 27) == false) {
-                    creep.travelTo(new RoomPosition(10, 27, "W46N18"));
-                    creep.say(travelToIcons(creep) + "W46N18", true);
+                    || creep.pos.isNearTo(6, 42) == false) {
+                    creep.travelTo(new RoomPosition(6, 42, "W12S26"));
+                    creep.say(travelToIcons(creep) + "W12S26", true);
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);
@@ -66,14 +66,14 @@ let roleScout = {
                     }
                 }
             }
-            else if (sentFrom == "W46N18" 
-                || sentTo == "W46N41") {
+            else if (sentFrom == "W12S26" 
+                || sentTo == "W28N5") {
                 let waypoints = [
-                    "W46N40"
-                    , "W46N41"
+                    "W25N5"
+                    , "W28N5"
                 ];
                 if (creep.memory.waypoint > 0 
-                    && creep.room.name == "W46N20") { // back-tracked through portal
+                    && creep.room.name == "W15S25") { // back-tracked through portal
                     creep.memory.waypoint = 0;
                 }
                 else if (creep.memory.waypoint < waypoints.length 
@@ -82,13 +82,13 @@ let roleScout = {
                 }
                 
                 if (creep.memory.waypoint == 0) {
-                    creep.travelTo(new RoomPosition(20, 6, "W46N20"));
-                    creep.say(travelToIcons(creep) + "W46N20", true);
+                    creep.travelTo(new RoomPosition(5, 10, "W15S25"));
+                    creep.say(travelToIcons(creep) + "W15S25", true);
                 }
                 else if (creep.memory.waypoint == 1 
-                    || creep.pos.isNearTo(14, 17) == false) {
-                    creep.travelTo(new RoomPosition(14, 17, "W46N41"));
-                    creep.say(travelToIcons(creep) + "W46N41", true);
+                    || creep.pos.isNearTo(12, 31) == false) {
+                    creep.travelTo(new RoomPosition(12, 31, "W28N5"));
+                    creep.say(travelToIcons(creep) + "W28N5", true);
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);
@@ -99,10 +99,10 @@ let roleScout = {
                         Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
                     }
                 }
-            } else {*/
+            } else {
                 incrementConfusedCreepCount(creep);
                 creep.say("?", true);
-            //}
+            }
         }
         else {
             creep.say(ICONS["testFinished"], true);

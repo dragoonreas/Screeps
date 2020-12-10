@@ -45,6 +45,7 @@ let roleUpgrader = {
             let source = undefined;
             switch (creep.memory.roomID) {
                 case "W28N5": source = Game.getObjectById("5fb29bce0d314f7d0888d152"); break;
+                case "W12S26": source = Game.getObjectById("5fb29dfd0d314f7d0888e8eb"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);

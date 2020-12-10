@@ -95,7 +95,7 @@ let roleBuilder = {
                                              STRUCTURE_TERMINAL, 
                                              STRUCTURE_OBSERVER, 
                                              STRUCTURE_POWER_SPAWN, 
-                                             STRUCTURE_NUKER];
+                                             STRUCTURE_NUKER]; // TODO: Add STRUCTURE_FACTORY
                         let i = 0;
                         do {
                             constructionSite = creep.pos.findClosestByRange(roomConstructionSites, {
@@ -105,7 +105,7 @@ let roleBuilder = {
                             ++i;
                         }
                         while (i < priorityQueue.length
-                            && constructionSite == undefined) // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined
+                            && constructionSite == undefined); // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined
                         
                         if (constructionSite != undefined) {
                             creep.memory.constructionSite = { 
@@ -169,6 +169,7 @@ let roleBuilder = {
             let source = undefined;
             switch (creep.memory.roomID) {
                 case "W28N5": source = Game.getObjectById("5fb29bce0d314f7d0888d151"); break;
+                case "W12S26": source = Game.getObjectById("5fb29dfd0d314f7d0888e8e9"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);

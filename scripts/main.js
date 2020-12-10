@@ -114,9 +114,14 @@ _.set(Memory.rooms, ["W28N5", "harvestRooms"], [
     , "W29N5"
     , "W28N6"
 ]);
+_.set(Memory.rooms, ["W12S26", "harvestRooms"], [
+    "W12S27"
+    , "W13S26"
+]);
 /*
     Future Expansion Candidates:
     From W28N5:
+        - W12S26
 */
 
 /*
@@ -125,6 +130,13 @@ _.set(Memory.rooms, ["W28N5", "harvestRooms"], [
     Also be sure to use for...of instead of for..in where their order is important
 */
 _.set(Memory.rooms, ["W28N5", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+_.set(Memory.rooms, ["W12S26", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
@@ -164,6 +176,21 @@ _.set(Memory.rooms, ["W28N5", "creepMins"], {
     , builder: 1
     , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W28N5", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["W28N5", "canHarvestMineral"], false) ? 1 : 0)
+});
+_.set(Memory.rooms, ["W12S26", "creepMins"], {
+    attacker: 0
+    , harvester: 4
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["W12S26", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W12S26", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
+    , scout: 0
+    , claimer: 1
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W12S26", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
+    , builder: 1
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W12S26", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
+    , rockhound: (_.get(Game.rooms, ["W12S26", "canHarvestMineral"], false) ? 1 : 0)
 });
 
 if (Memory.MonCPU == true) { console.log("init>loopStart:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -940,7 +967,7 @@ module.exports.loop = function () {
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES, {
                 filter: (dr) => (
                     (recycleContainer == undefined) 
-                    || (dr.pos.isEqualTo(recycleContainer) == true)
+                    || (dr.pos.isEqualTo(recycleContainer) != true)
             )});
             let tombstones = theRoom.find(FIND_TOMBSTONES, { 
                 filter: (t) => (
@@ -1417,7 +1444,7 @@ module.exports.loop = function () {
         
         let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined); // Get home room storage if available
         let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined); // Get home room terminal if available
-        let recycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined); // Get home room recycle container if available
+        let recycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined); // Get home room recycle container if avaliable
         
         // Run a role that's not stored in creep.memory.role
         let runningRole = false;
@@ -1431,7 +1458,7 @@ module.exports.loop = function () {
                     creep.memory.scoreContainer = undefined;
                     creep.memory.droppedResource = undefined;
                     creep.memory.tombstone = undefined;
-                    creep.memory.ruin = undefinied;
+                    creep.memory.ruin = undefined;
                     ROLES["recyclable"].run(creep);
                     runningRole = true;
                 }
@@ -1562,7 +1589,12 @@ module.exports.loop = function () {
         TODO: Incorporate this into proper bootstrapping code
     */
     _.set(Memory.rooms, ["W28N5", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W28N5", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W28N5", "creepCounts", "adaptable"], -1) == 0)
+        (_.get(Memory.rooms, ["W28N5", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W28N5", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["W12S26", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W12S26", "creepCounts", "adaptable"], -1) == 0)
+    ) ? 1 : 0));
+    _.set(Memory.rooms, ["W12S26", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W12S26", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W12S26", "creepCounts", "adaptable"], -1) == 0)
+        || (_.get(Memory.rooms, ["W28N5", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W28N5", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

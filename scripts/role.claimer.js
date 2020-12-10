@@ -4,6 +4,7 @@ let roleClaimer = {
         
         let reservedControllerIDs = [
             "5fb29bef0d314f7d0888d2a0" // W27N5
+            , "5fb29dfe0d314f7d0888e8ed" // W12S27
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
             ROLES["recyclable"].run(creep);
@@ -18,9 +19,10 @@ let roleClaimer = {
                     && _.get(Memory.controllers, [creep.memory.controllerID, "unblockedAt"], Game.time) > Game.time) { // TODO: Add additional checks to make sure we're not accidently attacking an ally
                     creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
                 }
-                else if (false) { // NOTE: Any controllers that require waypoints to get to should be added here
+                else if (creep.memory.controllerID == "5fb29dfd0d314f7d0888e8ea") { // NOTE: Any controllers that require waypoints to get to should be added here
                     switch (creep.memory.controllerID) {
-                        default: creep.memory.roomSentTo = creep.memory.roomID; break;
+                        case "5fb29dfd0d314f7d0888e8ea": creep.memory.roomSentTo = "W12S26";
+                        //default: creep.memory.roomSentTo = creep.memory.roomID; break;
                     }
                     ROLES["scout"].run(creep);
                 }
@@ -32,6 +34,14 @@ let roleClaimer = {
             else if (creep.memory.controllerID == "5fb29bef0d314f7d0888d2a0") { // TODO: Store controller.pos in memory for controllers in harvest rooms
                 creep.travelTo(new RoomPosition(41, 35, "W27N5"));
                 creep.say(travelToIcons(creep) + "W27N5", true);
+            }
+            else if (creep.memory.controllerID == "5fb29dfe0d314f7d0888e8ed") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(15, 27, "W12S27"));
+                creep.say(travelToIcons(creep) + "W12S27", true);
+            }
+            else if (creep.memory.controllerID == "5fb29dfd0d314f7d0888e8ea") {
+                creep.memory.roomSentTo = "W12S26";
+                ROLES["scout"].run(creep);
             }
             else {
                 incrementConfusedCreepCount(creep);

@@ -145,6 +145,7 @@ let roleRepairer = {
             let source = undefined;
             switch (creep.memory.roomID) {
                 case "W28N5": source = Game.getObjectById("5fb29bce0d314f7d0888d151"); break;
+                case "W12S26": source = Game.getObjectById("5fb29dfd0d314f7d0888e8e9"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);

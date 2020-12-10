@@ -13,7 +13,8 @@ let roleAdaptable = {
         let sentTo = creep.memory.roomSentTo;
         if (_.isString(sentTo) == false) {
             switch (creep.memory.roomID) {
-                //case "W28N5": sentTo = "W28N5"; break; // TODO: Update when bootstrapping network reconfigured
+                case "W28N5": sentTo = "W12S26"; break;
+                case "W12S26": sentTo = "W28N5"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {
@@ -88,7 +89,10 @@ let roleAdaptable = {
                     _.set(Memory.rooms, [sentFrom, "creepCounts", "adaptables"], _.get(Memory.rooms, [sentFrom, "creepCounts", "adaptables"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "adaptables"], _.get(Memory.rooms, [sentTo, "creepCounts", "adaptables"], 0) + 1);
                 }
-                if (false) { // NOTE: Any rooms that require waypoints to get to should be added here
+                if ((sentFrom == "W28N5" 
+                        && sentTo == "W12S26")
+                    || (sentFrom == "W12S26" 
+                        && sentTo == "W28N5")) { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {

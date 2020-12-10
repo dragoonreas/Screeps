@@ -64,6 +64,24 @@ let roleMiner = {
                             creep.say(travelToIcons(creep) + "W28N5", true);
                             return;
                         }
+                        else if (sourceID == "5fb29dfe0d314f7d0888e8ef") { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            creep.travelTo(new RoomPosition(25, 31, "W12S27"));
+                            creep.say(travelToIcons(creep) + "W12S27", true);
+                            return;
+                        }
+                        else if (sourceID == "5fb29dda0d314f7d0888e7a0") { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            creep.travelTo(new RoomPosition(16, 12, "W13S26"));
+                            creep.say(travelToIcons(creep) + "W13S26", true);
+                            return;
+                        }
+                        else if (sourceID == "5fb29dfd0d314f7d0888e8e9") { // TODO: Remove this after the source has been added to memory
+                            creep.memory.sourceID = sourceID;
+                            creep.travelTo(new RoomPosition(38, 4, "W12S26"));
+                            creep.say(travelToIcons(creep) + "W12S26", true);
+                            return;
+                        }
                     }
                 }
             }
