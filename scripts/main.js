@@ -532,13 +532,20 @@ module.exports.loop = function () {
                 c.say(ICONS["sleep"], true);
             }
         });
-        if (Game.cpu.bucket >= 7500 || CAN_REFILL_BUCKET === false) {
+        if (Game.cpu.tickLimit >= 500 || CAN_REFILL_BUCKET === false) {
             _.set(Memory, ["refillBucket"], false);
         }
         else if (Game.cpu.tickLimit < 500 && CAN_REFILL_BUCKET === true) {
             _.set(Memory, ["refillBucket"], true);
         }
         screepsPlus.collect_stats(); // Put stats generated at start of loop in memory for agent to collect and push to Grafana dashboard
+        if (typeof Game.cpu.getHeapStatistics === "function") {
+            Memory.stats.heap = Game.cpu.getHeapStatistics();
+        }
+        else {
+            Memory.stats.heap = undefined;
+        }
+        Memory.stats.cpu.pixelsGenerated = 0;
         Memory.stats.tickSlept = 1;
         Memory.stats.cpu.used = Game.cpu.getUsed();
         let statsStr = JSON.stringify(Memory.stats);
@@ -2135,7 +2142,8 @@ module.exports.loop = function () {
     
     // Generate pixel
     let pixelsGenerated = 0;
-    if (Math.min(Game.cpu.bucket - (Game.cpu.getUsed() - Game.cpu.limit), 10000) > 7500) {
+    if (CAN_REFILL_BUCKET == true
+        && Math.min((Game.cpu.bucket + Game.cpu.limit) - Game.cpu.getUsed(), 10000) == 10000) {
         pixelsGenerated = ((Game.cpu.generatePixel() === OK) ? 1 : 0);
     }
     
