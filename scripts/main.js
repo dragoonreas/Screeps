@@ -119,14 +119,14 @@ for (let roomID in Game.rooms) {
 
 /*
     Room Decoration Themes:
-    - W85N23:	Desert
-    - W26N29:	Mono
-    - W64N31:	Fire
-    - W53N39:	Winter
-    - W52N47:	Nature
-    - W46N41:	Alien
-    - W64N18:	Sea
-    - W9N45:	Nature
+    - W85N23:   Desert
+    - W26N29:   Mono
+    - W64N31:   Fire
+    - W53N39:   Winter
+    - W52N47:   Nature
+    - W46N41:   Alien
+    - W64N18:   Sea
+    - W9N45:    Nature
 */
 
 // Setup room memory objects for owned rooms
