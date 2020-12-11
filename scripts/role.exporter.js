@@ -19,7 +19,8 @@ let roleExporter = {
         let sentTo = creep.memory.roomSentTo;
         if (_.isString(sentTo) == false) {
             switch (creep.memory.roomID) {
-                //case "W28N5": sentTo = "W28N5"; break; // NOTE: Update when bootstrapping network reconfigured
+                case "W28N5": sentTo = "W12S26"; break;
+                case "W12S26": sentTo = "W28N5"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {
@@ -37,6 +38,8 @@ let roleExporter = {
             creep.say("?", true);
             return;
         }
+        
+        let type = creep.memory.type || "E";
         
         let safeRooms = [
         ];
@@ -70,12 +73,67 @@ let roleExporter = {
                 }
                 let theStorage = _.get(Game.rooms, [sentFrom, "storage"], undefined);
                 let theTerminal = _.get(Game.rooms, [sentFrom, "terminal"], undefined);
+                let theRecycleContainer = _.get(Game.rooms, [sentFrom, "recycleContainer"], undefined);
                 let thePowerSpawn = _.get(Game.rooms, [sentFrom, "powerSpawn"], undefined);
                 let requiredPower = Math.floor(_.get(thePowerSpawn, ["energy"], 0) / POWER_SPAWN_ENERGY_RATIO) - (_.get(thePowerSpawn, ["power"], 0) + (creep.carry[RESOURCE_POWER] || 0));
                 if ((_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
                         && _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") 
                     || _.any(safeRooms, (r) => (creep.room.name)) == true) {
-                    if (sentFrom == sentTo 
+                    if (type == "S_P_B-S") {
+                        let structureID = _.get(creep.memory, ["withdrawStructure", "id"], undefined);
+                        if (structureID == undefined) {
+                            if (_.get(theRecycleContainer, ["store", RESOURCE_SCORE], 0) > 0) {
+                                creep.memory.withdrawStructure = { 
+                                    id: theRecycleContainer.id
+                                    , pos: theRecycleContainer.pos
+                                };
+                            }
+                            else if (_.get(theTerminal, ["store", RESOURCE_SCORE], 0) > 0) {
+                                creep.memory.withdrawStructure = { 
+                                    id: theTerminal.id
+                                    , pos: theTerminal.pos
+                                };
+                            }
+                            else if (_.get(theStorage, ["store", RESOURCE_SCORE], 0) > 0) {
+                                creep.memory.withdrawStructure = { 
+                                    id: theStorage.id
+                                    , pos: theStorage.pos
+                                };
+                            }
+                            
+                            structureID = _.get(creep.memory, ["withdrawStructure", "id"], undefined);
+                        }
+                        
+                        let structure = Game.getObjectById(structureID);
+                        let structureMemPos = _.get(creep.memory, ["withdrawStructure", "pos"], undefined);
+                        let structureMemRoomName = _.get(creep.memory, ["withdrawStructure", "pos", "roomName"], undefined);
+                        if (structure == undefined 
+                            && structureMemPos != undefined 
+                            && Game.rooms[structureMemRoomName] == undefined) {
+                            let structurePos = RoomPositionFromObject(structureMemPos);
+                            creep.travelTo(structurePos);
+                            creep.say(travelToIcons(creep) + structurePos.roomName, true);
+                            return;
+                        }
+                        
+                        let err = creep.withdraw(structure, RESOURCE_SCORE);
+                        if (err == ERR_NOT_IN_RANGE) {
+                            creep.travelTo(structure);
+                            creep.say(travelToIcons(creep) + ICONS[structure.structureType], true);
+                        }
+                        else if (err == OK) {
+                            creep.say(ICONS["withdraw"] + ICONS[structure.structureType], true);
+                        }
+                        else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                            _.set(creep.memory, ["withdrawStructure"], undefined);
+                        }
+                        else {
+                            console.log(creep.name + " (exporter) is confused withdrawing " + RESOURCE_SCORE + " from " + structure.structureType + ": " + err);
+                            incrementConfusedCreepCount(creep);
+                            creep.say(ICONS[structure.structureType] + "?", true);
+                        }
+                    }
+                    else if (sentFrom == sentTo 
                         && _.get(creep.room.memory, ["isShuttingDown"], false) == true 
                         && _.get(creep.room, ["controller", "level"], 0) == 8 
                         && _.get(creep.room, ["controller", "owner", "username"], undefined) == "dragoonreas" 
@@ -149,7 +207,8 @@ let roleExporter = {
                             && s.my == false 
                             && s.isPublic == false)) < 1) {
                         let resourceType = _.max(_.keys(theTerminal.store), (r) => (resourceWorth(r)));
-                        if (_.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true                                            || _.get(creep.room, ["controller", "level"], 0) < 8 
+                        if (_.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true 
+                            || _.get(creep.room, ["controller", "level"], 0) < 8 
                             && _.get(creep.room, ["controller", "level"], 0) >= 6 
                             && _.get(creep.room, ["controller", "owner", "username"], undefined) == "dragoonreas" 
                             && theTerminal.my == true 
@@ -318,7 +377,8 @@ let roleExporter = {
         else {
             if (creep.room.name != sentTo 
                 && creep.memory.transferStructure == undefined) {
-                if (creep.memory.roomID != sentTo) {
+                if (creep.memory.roomID != sentTo 
+                    && type != "S_P_B-S") {
                     _.set(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], _.get(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
                     creep.memory.roomID = sentTo;
@@ -338,7 +398,54 @@ let roleExporter = {
                 let tripEndTime = _.get(creep.memory, ["stopExporting"], Game.time + 1);
                 let returnTripTime = (tripEndTime - tripStartTime) * 2;
                 let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
-                if (sentFrom == sentTo 
+                if (type == "S_P_B-S") {
+                    let scoreCollector = _.first(creep.room.find(FIND_SCORE_COLLECTORS));
+                    let taxContainer = _.first(scoreCollector.pos.findInRange(FIND_CONTAINERS, 5));
+                    if (scoreCollector == undefined 
+                        && taxContainer == undefined) {
+                        console.log("Exporter " + creep.name + " couldn't find " + ((scoreCollector == undefined) ? "score collector" : "tax container") + " in " + creep.room.name);
+                        creep.memory.role = "recyclable";
+                        ROLES["recyclable"].run(creep);
+                        return;
+                    }
+                    
+                    const TAX_RATE = 0.25;
+                    if (_.get(creep.memory, ["taxPaid"], false) == false) {
+                        let err = creep.transfer(taxContainer, RESOURCE_SCORE, Math.ceil(creep.store[RESOURCE_SCORE] * TAX_RATE));
+                        if (err == ERR_NOT_IN_RANGE) {
+                            creep.travelTo(taxContainer, {
+                                allowHostile: true
+                            });
+                            creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                        }
+                        else if (err == OK) {
+                            _.set(creep.memory, ["taxPaid"], true);
+                            creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER], true);
+                        }
+                        else {
+                            incrementConfusedCreepCount(creep);
+                            creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER] + "?", true);
+                        }
+                    }
+                    else {
+                        let err = creep.transfer(scoreCollector, RESOURCE_SCORE);
+                        if (err == ERR_NOT_IN_RANGE) {
+                            creep.travelTo(scoreCollector, {
+                                allowHostile: true
+                            });
+                            creep.say(travelToIcons(creep) + ICONS["scoreCollector"], true);
+                        }
+                        else if (err == OK) {
+                            _.set(creep.memory, ["taxPaid"], false);
+                            creep.say(ICONS["transfer"] + ICONS["scoreCollector"], true);
+                        }
+                        else {
+                            incrementConfusedCreepCount(creep);
+                            creep.say(ICONS["transfer"] + ICONS["scoreCollector"] + "?", true);
+                        }
+                    }
+                }
+                else if (sentFrom == sentTo 
                     || tripsLeft > 0) {
                     let thePowerSpawn = _.get(Game.rooms, [sentFrom, "powerSpawn"], undefined);
                     if (creep.carryTotal > creep.carry[RESOURCE_ENERGY]) {

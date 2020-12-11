@@ -86,6 +86,7 @@ let prototypeSpawn = function() {
         else if (roleName == "exporter") {
             options.memory.roomSentFrom = _.get(this.room.nextExporter, "from", this.room.name);
             options.memory.roomSentTo = _.get(this.room.nextExporter, "to", this.room.name);
+            options.memory.type = _.get(this.room.nextExporter, "type", "E");
             if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentFrom", this.room.name)) > 1
                 || Game.map.getRoomLinearDistance(_.get(options.memory, "roomSentFrom", this.room.name), _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
                 needsHeal = true;

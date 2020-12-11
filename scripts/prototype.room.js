@@ -545,11 +545,14 @@ let prototypeRoom = function() {
             return _.chain(Game.flags)
                 .filter((f) => (
                     f.color == COLOR_ORANGE 
+                    && (f.secondaryColor == COLOR_ORANGE 
+                        || f.secondaryColor == COLOR_WHITE) 
                     && _.startsWith(f.name, r.name)))
                 .map((f) => { 
                     let nameInfo = f.name.split('_'); 
                     return { 
                         priority: _.parseInt(_.get(nameInfo, 1, 0))
+                        , type: f.secondaryColor == COLOR_WHITE ? "S_P_B-S" : "E" // NOTE: COLOR_WHITE = Sneaky_Polar_Bear Scorer (S_P_B-S), COLOR_ORANGE = Export (R)
                         , count: _.parseInt(_.get(nameInfo, 2, 1))
                         , from: _.get(nameInfo, 3, f.pos.roomName)
                         , to: _.get(nameInfo, 4, _.get(nameInfo, 0, r.name)) 
@@ -578,10 +581,10 @@ let prototypeRoom = function() {
                     c.roomID == r.name 
                     && c.role == "exporter"))
                 .countBy((c) => (
-                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", "")))
+                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", ""))) + _.get(c, "type", "")
                 .value();
             return _.chain(r.exportersToSpawn)
-                .filter((eTS) => (_.get(exporterCounts, (eTS.from + eTS.to), 0) < eTS.count))
+                .filter((eTS) => (_.get(exporterCounts, (eTS.from + eTS.to + eTS.type), 0) < eTS.count))
                 .first()
                 .value();
         });
@@ -630,7 +633,7 @@ let prototypeRoom = function() {
                     c.roomID == r.name 
                     && c.role == "demolisher"))
                 .countBy((c) => (
-                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", "") + _.get(c, ["target", "id"], "")))
+                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", "") + _.get(c, ["target", "id"], ""))) // TODO: Take into account type
                 .value();
             return _.chain(r.demolishersToSpawn)
                 .filter((dTS) => (_.get(demolisherCounts, _.get(dTS, "from", "") + _.get(dTS, "to", "") + _.get(dTS, ["target", "id"], ""), 0) < dTS.count))
