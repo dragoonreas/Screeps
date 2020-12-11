@@ -991,7 +991,11 @@ module.exports.loop = function () {
                         && c.memory.role != "scout"
                         && c.memory.role != "claimer" 
                         && c.memory.role != "recyclable" 
-                        && c.carryCapacityAvailable > 0
+                        && c.carryCapacityAvailable > 0 
+                        && c.memory.working != true
+                        //&& _.sum(_.get(Game.rooms, [c.memory.roomID, "recycleContainer", "store"], [CONTAINER_CAPACITY])) < CONTAINER_CAPACITY 
+                        //&& _.sum(_.get(Game.rooms, [c.memory.roomID, "storage", "store"], [STORAGE_CAPACITY])) < STORAGE_CAPACITY 
+                        //&& _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY
                 )});
                 
                 if (scoreContainers.length > 0) {
@@ -1006,6 +1010,9 @@ module.exports.loop = function () {
                                     _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                     && c.carryCapacityAvailable >= _.sum(scoreContainer.store)
                                     && c.pos.inRangeTo(scoreContainer.pos, scoreContainer.ticksToDecay + _.max(scoreContainer.store))
+                                    && _.sum(_.get(Game.rooms, [c.memory.roomID, "recycleContainer", "store"], [CONTAINER_CAPACITY])) < CONTAINER_CAPACITY 
+                                    && _.sum(_.get(Game.rooms, [c.memory.roomID, "storage", "store"], [STORAGE_CAPACITY])) < STORAGE_CAPACITY 
+                                    && _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY
                             )});
                             if (creep == undefined) {
                                 creep = scoreContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
