@@ -32,7 +32,7 @@ let roleScout = {
                 sentTo = _.get(creep.memory, ["roomSentFrom"], creep.memory.roomID);
             } // TODO: May need to account for when neither from nor to rooms match room spawned in
             
-            if (sentFrom == "W28N5" 
+            /*if (sentFrom == "W28N5" 
                 || sentTo == "W12S26") {
                 let waypoints = [
                     "W15S25"
@@ -99,10 +99,10 @@ let roleScout = {
                         Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
                     }
                 }
-            } else {
+            } else {*/
                 incrementConfusedCreepCount(creep);
                 creep.say("?", true);
-            }
+            // }
         }
         else {
             creep.say(ICONS["testFinished"], true);

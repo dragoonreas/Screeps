@@ -1597,11 +1597,11 @@ module.exports.loop = function () {
     */
     _.set(Memory.rooms, ["W28N5", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W28N5", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W28N5", "creepCounts", "adaptable"], -1) == 0) 
-        || (_.get(Memory.rooms, ["W12S26", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W12S26", "creepCounts", "adaptable"], -1) == 0)
+        // || (_.get(Memory.rooms, ["W12S26", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W12S26", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));
     _.set(Memory.rooms, ["W12S26", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W12S26", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W12S26", "creepCounts", "adaptable"], -1) == 0)
-        || (_.get(Memory.rooms, ["W28N5", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W28N5", "creepCounts", "adaptable"], -1) == 0)
+        // || (_.get(Memory.rooms, ["W28N5", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W28N5", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

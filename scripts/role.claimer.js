@@ -19,10 +19,10 @@ let roleClaimer = {
                     && _.get(Memory.controllers, [creep.memory.controllerID, "unblockedAt"], Game.time) > Game.time) { // TODO: Add additional checks to make sure we're not accidently attacking an ally
                     creep.memory.role = "recyclable"; // recycle this creep so we can spawn another with more parts
                 }
-                else if (creep.memory.controllerID == "5fb29dfd0d314f7d0888e8ea") { // NOTE: Any controllers that require waypoints to get to should be added here
+                else if (false) { // NOTE: Any controllers that require waypoints to get to should be added here
                     switch (creep.memory.controllerID) {
-                        case "5fb29dfd0d314f7d0888e8ea": creep.memory.roomSentTo = "W12S26";
-                        //default: creep.memory.roomSentTo = creep.memory.roomID; break;
+                        // case "5fb29dfd0d314f7d0888e8ea": creep.memory.roomSentTo = "W12S26";
+                        default: creep.memory.roomSentTo = creep.memory.roomID; break;
                     }
                     ROLES["scout"].run(creep);
                 }
@@ -40,8 +40,8 @@ let roleClaimer = {
                 creep.say(travelToIcons(creep) + "W12S27", true);
             }
             else if (creep.memory.controllerID == "5fb29dfd0d314f7d0888e8ea") {
-                creep.memory.roomSentTo = "W12S26";
-                ROLES["scout"].run(creep);
+                // creep.memory.roomSentTo = "W12S26";
+                // ROLES["scout"].run(creep);
             }
             else {
                 incrementConfusedCreepCount(creep);

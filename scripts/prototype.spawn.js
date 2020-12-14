@@ -67,17 +67,17 @@ let prototypeSpawn = function() {
                 if (Memory.rooms.W28N5.creepCounts.builder == 0 && Memory.rooms.W28N5.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W28N5";
                 }
-                else if (Memory.rooms.W12S26.creepCounts.builder == 0 && Memory.rooms.W12S26.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W12S26";
-                }
+                // else if (Memory.rooms.W12S26.creepCounts.builder == 0 && Memory.rooms.W12S26.creepCounts.adaptable == 0) {
+                //     options.memory.roomSentTo = "W12S26";
+                // }
             }
             else if (this.room.name == "W12S26") {
                 if (Memory.rooms.W12S26.creepCounts.builder == 0 && Memory.rooms.W12S26.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "W12S26";
                 }
-                else if (Memory.rooms.W28N5.creepCounts.builder == 0 && Memory.rooms.W28N5.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "W28N5";
-                }
+                // else if (Memory.rooms.W28N5.creepCounts.builder == 0 && Memory.rooms.W28N5.creepCounts.adaptable == 0) {
+                //     options.memory.roomSentTo = "W28N5";
+                // }
             }
             if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
                 needsHeal = true;
@@ -110,9 +110,9 @@ let prototypeSpawn = function() {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     options.memory.controllerID = "5fb29bef0d314f7d0888d2a0"; // harvest room W27N5
                 }
-                else {
-                    options.memory.controllerID = "5fb29dfd0d314f7d0888e8ea"; // W12S26
-                }
+                // else {
+                //     options.memory.controllerID = "5fb29dfd0d314f7d0888e8ea"; // W12S26
+                // }
             }
             else if (this.room.name == "W12S26") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving

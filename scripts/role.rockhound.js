@@ -42,7 +42,7 @@ let roleRockhound = {
                     creep.memory.extractor = undefined;
                     
                     if (creep.room.name != sentTo) {
-                        if (sentTo == "") { // NOTE: Any rooms that require waypoints to get to should be added here
+                        if (false) { // NOTE: Any rooms that require waypoints to get to should be added here
                             ROLES["scout"].run(creep);
                         }
                         else {
