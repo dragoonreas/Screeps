@@ -36,50 +36,53 @@ let roleMiner = {
                             creep.say(travelToIcons(creep) + sourceMem.pos.roomName, true);
                             return;
                         }
-                        else if (sourceID == "5fb29bef0d314f7d0888d29f") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5fb2a3e60d314f7d088923c4") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
-                            creep.travelTo(new RoomPosition(22, 12, "W27N5"));
-                            creep.say(travelToIcons(creep) + "W27N5", true);
+                            creep.travelTo(new RoomPosition(10, 10, "E32S11"));
+                            creep.say(travelToIcons(creep) + "E32S11", true);
                             return;
                         }
-                        else if (sourceID == "5fb29bac0d314f7d0888d006") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5fb2a3c40d314f7d08892288") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
-                            creep.travelTo(new RoomPosition(16, 19, "W29N5"));
-                            creep.say(travelToIcons(creep) + "W29N5", true);
+                            creep.travelTo(new RoomPosition(3, 4, "E31S12"));
+                            creep.say(travelToIcons(creep) + "E31S12", true);
                             return;
                         }
-                        else if (sourceID == "5fb29bcd0d314f7d0888d14f") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5fb2a3c30d314f7d08892286") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
-                            creep.travelTo(new RoomPosition(28, 15, "W28N6"));
-                            creep.say(travelToIcons(creep) + "W28N6", true);
+                            creep.travelTo(new RoomPosition(16, 44, "E31S11"));
+                            creep.say(travelToIcons(creep) + "E31S11", true);
                             return;
                         }
-                        else if (sourceID == "5fb29bce0d314f7d0888d151") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5fb2a44c0d314f7d0889288b") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
                             sourceMem.minerName = creep.name;
-                            creep.travelTo(new RoomPosition(30, 22, "W28N5"));
-                            creep.say(travelToIcons(creep) + "W28N5", true);
+                            creep.travelTo(new RoomPosition(25, 46, "E35S12"));
+                            creep.say(travelToIcons(creep) + "E35S12", true);
                             return;
                         }
-                        else if (sourceID == "5fb29dfe0d314f7d0888e8ef") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5fb2a42a0d314f7d088926bc") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
-                            creep.travelTo(new RoomPosition(25, 31, "W12S27"));
-                            creep.say(travelToIcons(creep) + "W12S27", true);
+                            sourceMem.minerName = creep.name;
+                            creep.travelTo(new RoomPosition(25, 40, "E34S13"));
+                            creep.say(travelToIcons(creep) + "E34S13", true);
                             return;
                         }
-                        else if (sourceID == "5fb29dda0d314f7d0888e7a0") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5fb2a44d0d314f7d0889289a") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
-                            creep.travelTo(new RoomPosition(16, 12, "W13S26"));
-                            creep.say(travelToIcons(creep) + "W13S26", true);
+                            sourceMem.minerName = creep.name;
+                            creep.travelTo(new RoomPosition(36, 6, "E35S15"));
+                            creep.say(travelToIcons(creep) + "E35S15", true);
                             return;
                         }
-                        else if (sourceID == "5fb29dfd0d314f7d0888e8e9") { // TODO: Remove this after the source has been added to memory
+                        else if (sourceID == "5fb2a44d0d314f7d0889288f") { // TODO: Remove this after the source has been added to memory
                             creep.memory.sourceID = sourceID;
-                            creep.travelTo(new RoomPosition(38, 4, "W12S26"));
-                            creep.say(travelToIcons(creep) + "W12S26", true);
+                            sourceMem.minerName = creep.name;
+                            creep.travelTo(new RoomPosition(24, 44, "E35S13"));
+                            creep.say(travelToIcons(creep) + "E35S13", true);
                             return;
                         }
                     }

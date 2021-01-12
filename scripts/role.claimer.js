@@ -3,8 +3,11 @@ let roleClaimer = {
         creep.memory.executingRole = "claimer";
         
         let reservedControllerIDs = [
-            "5fb29bef0d314f7d0888d2a0" // W27N5
-            , "5fb29dfe0d314f7d0888e8ed" // W12S27
+            "5fb2a3e60d314f7d088923c5" // E32S11
+            //, "5fb2a44c0d314f7d08892889" // E35S12 -remote mined by Donatzor
+            , "5fb2a42a0d314f7d088926bb" // E34S13
+            , "5fb2a4090d314f7d0889251a" // E33S15
+            , "5fb2a4090d314f7d0889251e" // E33S16
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
             ROLES["recyclable"].run(creep);
@@ -21,7 +24,7 @@ let roleClaimer = {
                 }
                 else if (false) { // NOTE: Any controllers that require waypoints to get to should be added here
                     switch (creep.memory.controllerID) {
-                        // case "5fb29dfd0d314f7d0888e8ea": creep.memory.roomSentTo = "W12S26";
+                        // case "5fb2a44d0d314f7d0889288d": creep.memory.roomSentTo = "E35S13";
                         default: creep.memory.roomSentTo = creep.memory.roomID; break;
                     }
                     ROLES["scout"].run(creep);
@@ -31,18 +34,42 @@ let roleClaimer = {
                     creep.say(travelToIcons(creep) + controllerMem.pos.roomName, true);
                 }
             }
-            else if (creep.memory.controllerID == "5fb29bef0d314f7d0888d2a0") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(41, 35, "W27N5"));
-                creep.say(travelToIcons(creep) + "W27N5", true);
+            else if (creep.memory.controllerID == "5fb2a3e60d314f7d088923c5") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(39, 38, "E32S11"));
+                creep.say(travelToIcons(creep) + "E32S11", true);
             }
-            else if (creep.memory.controllerID == "5fb29dfe0d314f7d0888e8ed") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(15, 27, "W12S27"));
-                creep.say(travelToIcons(creep) + "W12S27", true);
+            else if (creep.memory.controllerID == "5fb2a44c0d314f7d08892889") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(28, 28, "E35S12"));
+                creep.say(travelToIcons(creep) + "E35S12", true);
             }
-            else if (creep.memory.controllerID == "5fb29dfd0d314f7d0888e8ea") {
-                // creep.memory.roomSentTo = "W12S26";
-                // ROLES["scout"].run(creep);
+            else if (creep.memory.controllerID == "5fb2a42a0d314f7d088926bb") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(39, 24, "E34S13"));
+                creep.say(travelToIcons(creep) + "E34S13", true);
             }
+            else if (creep.memory.controllerID == "5fb2a4090d314f7d0889251a") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(30, 21, "E33S15"));
+                creep.say(travelToIcons(creep) + "E33S15", true);
+            }
+            else if (creep.memory.controllerID == "5fb2a4090d314f7d0889251e") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(9, 24, "E33S16"));
+                creep.say(travelToIcons(creep) + "E33S16", true);
+            }
+            else if (creep.memory.controllerID == "5fb2a44d0d314f7d0889288d") {
+                creep.travelTo(new RoomPosition(10, 9, "E35S13"));
+                creep.say(travelToIcons(creep) + "E35S13", true);
+            }
+            else if (creep.memory.controllerID == "5fb2a4090d314f7d08892516") {
+                creep.travelTo(new RoomPosition(29, 11, "E33S14"));
+                creep.say(travelToIcons(creep) + "E33S14", true);
+            }
+            else if (creep.memory.controllerID == "5fb2a3e80d314f7d088923d6") {
+                creep.travelTo(new RoomPosition(31, 11, "E32S16"));
+                creep.say(travelToIcons(creep) + "E32S16", true);
+            }
+            /*else if (creep.memory.controllerID == "5fb2a44d0d314f7d0889288d") {
+                creep.memory.roomSentTo = "E35S13";
+                ROLES["scout"].run(creep);
+            }*/
             else {
                 incrementConfusedCreepCount(creep);
                 creep.say(ICONS[STRUCTURE_CONTROLLER] + "?", true);
