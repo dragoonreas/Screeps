@@ -1048,10 +1048,13 @@ module.exports.loop = function () {
                         && c.memory.role != "claimer" 
                         && c.memory.role != "recyclable" 
                         && c.carryCapacityAvailable > 0 
-                        && c.memory.working != true
-                        //&& _.sum(_.get(Game.rooms, [c.memory.roomID, "recycleContainer", "store"], [CONTAINER_CAPACITY])) < CONTAINER_CAPACITY 
-                        //&& _.sum(_.get(Game.rooms, [c.memory.roomID, "storage", "store"], [STORAGE_CAPACITY])) < STORAGE_CAPACITY 
-                        //&& _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY
+                        && ((c.memory.role == "exporter" 
+                                && (c.memory.type != "S_P_B-S" 
+                                    || c.memory.taxPaid == false)
+                            || c.memory.working != true))
+                        && (_.sum(_.get(Game.rooms, [c.memory.roomID, "recycleContainer", "store"], [CONTAINER_CAPACITY])) < CONTAINER_CAPACITY 
+                            || _.sum(_.get(Game.rooms, [c.memory.roomID, "storage", "store"], [STORAGE_CAPACITY])) < STORAGE_CAPACITY 
+                            || _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY)
                 )});
                 
                 if (scoreContainers.length > 0) {
