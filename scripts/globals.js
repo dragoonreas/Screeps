@@ -47,10 +47,10 @@ let globals = function() {
         , constructionSite: "\uD83C\uDFD7" // building construction
         , resource: "\uD83D\uDEE2" // oil drum
         , creep: "\uD83E\uDD16" // robot face
-        , moveTo: "\u27A1" // right arrow
+        , moveTo: "\u27A1" // right arrow NOTE: Same as move3
         , ["move" + TOP]: "\u2B06" // up arrow
         , ["move" + TOP_RIGHT]: "\u2197" // up-right arrow
-        , ["move" + RIGHT]: "\u27A1" // right arrow
+        , ["move" + RIGHT]: "\u27A1" // right arrow NOTE: Same as moveTo
         , ["move" + BOTTOM_RIGHT]: "\u2198" // down-right arrow
         , ["move" + BOTTOM]: "\u2B07" // down arrow
         , ["move" + BOTTOM_LEFT]: "\u2199" // down-left arrow
@@ -106,7 +106,19 @@ let globals = function() {
         , sleep: "\uD83D\uDCA4" // zzz NOTE: Used for when script is terminated early to refill bucket
         , testPassed: "\uD83C\uDF89" // party popper NOTE: Used for when scout reaches its goal location
         , testFinished: "\uD83C\uDFC1" // chequered flag NOTE: Used for when scout has finished its test run
+        , emoji: "\uFE0F" // Variation Selector-16 NOTE: Append when proceding charater defaults to text instead of emoji representation (e.g. move1 to move8)
     };
+    
+    global.DIRECTIONS = [
+        TOP
+        , TOP_RIGHT
+        , RIGHT
+        , BOTTOM_RIGHT
+        , BOTTOM
+        , BOTTOM_LEFT
+        , LEFT
+        , TOP_LEFT
+    ];
     
     global.travelToIcons = function(creep) {
         let travelStatusIcon = "";
@@ -114,13 +126,18 @@ let globals = function() {
             if (creep.fatigue > 0) {
                 travelStatusIcon = ICONS["tired"];
             } else {
-                let stuckCount = _.get(creep, ["memory", "_travel", "stuck"], 0);
+                let stuckCount = _.get(creep.memory, ["_travel", "stuck"], 0);
                 travelStatusIcon = _.get(ICONS, ["stuck" + (stuckCount - 1)], "");
             }
         }
-        return (travelStatusIcon + ICONS["moveTo"]);
+        let travelDirection = parseInt(_.get(creep.memory, ["_travel", "path", 0], 0), 10);
+        let travelDirectionIcon = ICONS["moveTo"];
+        if (_.includes(DIRECTIONS, travelDirection)) {
+            travelDirectionIcon = ICONS["move" + travelDirection] + ICONS["emoji"];
+        }
+        return (travelStatusIcon + travelDirectionIcon);
     };
-
+    
     global.incrementConfusedCreepCount = function(creep) {
         if (creep instanceof Creep) {
             let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);
