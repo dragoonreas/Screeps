@@ -102,7 +102,17 @@ let roleHauler = {
                             //, "5fb2a3e80d314f7d088923d7" // E32S16
                         ]
                     };
+                    let upgraderCount = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "creepCounts", "upgrader"], 0);
+                    let builderCount = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "creepCounts", "builder"], 0);
+                    let constructionSiteCount = _.size(Game.constructionSites) == 0 ? 0 : creep.room.find(FIND_MY_CONSTRUCTION_SITES).length;
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
+                        if ((sourceIndex == 0 
+                                && builderCount > 0 
+                                && constructionSiteCount == 0) 
+                            || (sourceIndex == 1 
+                                && upgraderCount > 0)) {
+                            continue;
+                        }
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);
                         if (source != undefined) {
