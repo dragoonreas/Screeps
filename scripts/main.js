@@ -467,6 +467,7 @@ module.exports.loop = function () {
     let privateRamparts = {};
     
     let ignoredRooms = [
+        
     ];
     
     let balancedResources = [];
@@ -1685,7 +1686,8 @@ module.exports.loop = function () {
         let privateState = privateRamparts[r.id] || false;
         if (privateState == false && _.filter(r.pos.lookFor(LOOK_STRUCTURES), (s) => (
             s.structureType != STRUCTURE_RAMPART 
-            && s.structureType != STRUCTURE_ROAD
+            && s.structureType != STRUCTURE_ROAD 
+            && _.includes(ignoredRooms, s.room.name) != true
         )).length > 0) { // TODO: Allow members of alliance to withdraw from storage/terminal/etc...
             privateState = true;
         }
