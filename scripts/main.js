@@ -1625,7 +1625,7 @@ module.exports.loop = function () {
                         if (_.isString(creepName) == true) {
                             console.log("Spawning " + creepType + " (" + Memory.rooms[roomID].creepCounts[creepType] + "/" + creepMins[creepType] + ") in " + roomID + ": " + creepName);
                         }
-                        else if (creepName == -6.5 || creepName == -10.5) { // TODO: Just check for -#.5
+                        else if (creepName == -6.1 || creepName == -10.1 || creepName == -10.2) { // TODO: Just check for -#.#
                             continue;
                         }
                         break; // NOTE: Need to either wait till the creep can start spawning or be spawned, so no need to check the rest

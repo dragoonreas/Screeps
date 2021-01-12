@@ -132,7 +132,11 @@ let prototypeSpawn = function() {
                 needsHeal = true;
             }
             if (Game.time < _.get(Memory.rooms, [options.memory.roomSentFrom, "avoidTravelUntil"], 0)) {
-                return -10.5; // NOTE: Fake error for when an exporter would just die to a hostile in the room they're going to export from
+                return -10.1; // NOTE: Fake error for when an exporter would just die to a hostile in the room they're going to export from
+            }
+            if (options.memory.type == "S_P_B-S" 
+                && _.get(Game.rooms, [options.memory.roomSentFrom, "ownedScore"], 1) <= 0) {
+                return -10.2; // NOTE: Fake error for when there is no score for the exporter to export
             }
         }
         else if (roleName == "demolisher") {
@@ -142,7 +146,7 @@ let prototypeSpawn = function() {
                 needsHeal = true;
             }
             if (Game.time < _.get(Memory.rooms, [options.memory.roomSentTo, "avoidTravelUntil"], 0)) {
-                return -10.5; // NOTE: Fake error for when a demolisher would just die to a hostile in the room they're going to demolish
+                return -10.1; // NOTE: Fake error for when a demolisher would just die to a hostile in the room they're going to demolish
             }
         }
         else if (roleName == "claimer") {
@@ -177,7 +181,7 @@ let prototypeSpawn = function() {
             }
             let controllerRoom = _.get(Memory.controllers, [options.memory.controllerID, "pos", "roomName"], "");
             if (_.includes(_.get(Memory.rooms, [this.room.name, "harvestRooms"], []), controllerRoom) == true && Game.time < _.get(Memory.rooms, [controllerRoom, "avoidTravelUntil"], 0)) {
-                return -10.5; // NOTE: Fake error for when a claimer would just die to an invader in the room they're going to reserve
+                return -10.1; // NOTE: Fake error for when a claimer would just die to an invader in the room they're going to reserve
             }
         }
         else if (roleName == "powerHarvester") {
@@ -428,8 +432,9 @@ let prototypeSpawn = function() {
         
         body = _.flattenDeep(body);
         
-        if (body.length < 1) {
-            return -6.5; // NOTE: Fake error for if spawn can't scale this creep to the rooms energy capacity
+        if (body.length < 1 
+            || partMultiplier < 1) {
+            return -6.1; // NOTE: Fake error for if spawn can't scale this creep to the rooms energy capacity
         }
         
         bodyPartCounts = _.countBy(body);

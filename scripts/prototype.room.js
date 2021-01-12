@@ -183,6 +183,16 @@ let prototypeRoom = function() {
             return (r.ownedPower - r.requiredPower);
         });
     }
+    
+    if (Room.prototype.ownedScore == undefined) { // NOTE: Must be defined after Room.recycleContainer
+        defineCachedGetter(Room.prototype, "ownedScore", (r) => {
+            let recycleConatinerScore = _.get(r, ["recycleContainer", RESOURCE_SCORE], 0);
+            let storageScore = _.get(r, ["storage", "store", RESOURCE_SCORE], 0);
+            let terminalScore = _.get(r, ["terminal", "store", RESOURCE_SCORE], 0);
+            // TODO: Check for score in containers
+            return (recycleConatinerScore + storageScore + terminalScore);
+        });
+    }
 
     if (Room.prototype.myActiveTowers == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, "myActiveTowers", (r) => {
@@ -540,6 +550,20 @@ let prototypeRoom = function() {
         });
     }
     
+    /*
+        Exporter flag options:
+            Colours:
+                Primary: Orange
+                Secondary:
+                    Orange: Export
+                    White: Sneaky_Polar_Bear Scorer
+            Name format: spawnRoom_priority_count_fromRoom_toRoom
+            Defaults:
+                Priority: 0
+                Count: 1
+                From: <Flag Room>
+                To: <Spawn Room>
+    */
     if (Room.prototype.exporterInfo == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'exporterInfo', (r) => {
             return _.chain(Game.flags)
@@ -581,7 +605,7 @@ let prototypeRoom = function() {
                     c.roomID == r.name 
                     && c.role == "exporter"))
                 .countBy((c) => (
-                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", ""))) + _.get(c, "type", "")
+                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", "") + _.get(c, "type", "")))
                 .value();
             return _.chain(r.exportersToSpawn)
                 .filter((eTS) => (_.get(exporterCounts, (eTS.from + eTS.to + eTS.type), 0) < eTS.count))
@@ -590,6 +614,21 @@ let prototypeRoom = function() {
         });
     }
     
+    /*
+        Demolisher flag options:
+            Colours:
+                Primary: Blue
+                Secondary:
+                    Red: Demolish
+                    Yellow: Harvest
+            Name format: spawnRoom_priority_targetID_count_fromRoom_toRoom
+            Defaults:
+                Priority: 0
+                Target: undefined
+                Count: 1
+                From: <Flag Room>
+                To: <Spawn Room>
+    */
     if (Room.prototype.demolisherInfo == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'demolisherInfo', (r) => {
             return _.chain(Game.flags)

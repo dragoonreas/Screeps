@@ -116,6 +116,19 @@ let roleExporter = {
                             return;
                         }
                         
+                        if (structure == undefined) {
+                            if (creep.carryTotal == 0) {
+                                creep.memory.role = "recyclable";
+                                ROLES["recyclable"].run(creep);
+                            }
+                            else {
+                                creep.memory.working = true;
+                                creep.memory.waypoint = 0;
+                                ROLES["exporter"].run(creep);
+                            }
+                            return;
+                        }
+                        
                         let err = creep.withdraw(structure, RESOURCE_SCORE);
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(structure);
@@ -398,11 +411,14 @@ let roleExporter = {
                 let tripEndTime = _.get(creep.memory, ["stopExporting"], Game.time + 1);
                 let returnTripTime = (tripEndTime - tripStartTime) * 2;
                 let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
-                if (type == "S_P_B-S") {
+                if (type == "S_P_B-S" 
+                    && creep.store[RESOURCE_SCORE] > 0) {
                     let scoreCollector = _.first(creep.room.find(FIND_SCORE_COLLECTORS));
-                    let taxContainer = _.first(scoreCollector.pos.findInRange(FIND_CONTAINERS, 5));
+                    let taxContainer = _.first(scoreCollector.pos.findInRange(FIND_STRUCTURES, 5, { filter: (s) => (
+                        s.structureType == STRUCTURE_CONTAINER
+                    )}));
                     if (scoreCollector == undefined 
-                        && taxContainer == undefined) {
+                        /*&& taxContainer == undefined*/) {
                         console.log("Exporter " + creep.name + " couldn't find " + ((scoreCollector == undefined) ? "score collector" : "tax container") + " in " + creep.room.name);
                         creep.memory.role = "recyclable";
                         ROLES["recyclable"].run(creep);
@@ -410,11 +426,12 @@ let roleExporter = {
                     }
                     
                     const TAX_RATE = 0.25;
-                    if (_.get(creep.memory, ["taxPaid"], false) == false) {
+                    if (taxContainer != undefined && _.get(creep.memory, ["taxPaid"], false) == false) {
                         let err = creep.transfer(taxContainer, RESOURCE_SCORE, Math.ceil(creep.store[RESOURCE_SCORE] * TAX_RATE));
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(taxContainer, {
                                 allowHostile: true
+                                , ignoreHostileCreeps: true
                             });
                             creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
                         }
@@ -432,6 +449,7 @@ let roleExporter = {
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(scoreCollector, {
                                 allowHostile: true
+                                , ignoreHostileCreeps: true
                             });
                             creep.say(travelToIcons(creep) + ICONS["scoreCollector"], true);
                         }
