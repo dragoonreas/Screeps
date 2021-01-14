@@ -65,8 +65,8 @@ let roleHauler = {
                             , "5fb2a3c30d314f7d08892285" // E31S11
                             , "5fb2a3e60d314f7d088923c4" // E32S11
                             , "5fb2a3e60d314f7d088923c6" // E32S11
-                            // , "5fb2a3c40d314f7d08892288" // E31S12 // remote mined by Donatzor
-                            // , "5fb2a3c40d314f7d0889228a" // E31S12 // remote mined by Donatzor
+                            , "5fb2a3c40d314f7d08892288" // E31S12
+                            , "5fb2a3c40d314f7d0889228a" // E31S12
                             , "5fb2a3c30d314f7d08892286" // E31S11
                             //, "5fb2a3c30d314f7d08892285" // E31S11
                         ]
@@ -107,8 +107,9 @@ let roleHauler = {
                     let constructionSiteCount = _.size(Game.constructionSites) == 0 ? 0 : creep.room.find(FIND_MY_CONSTRUCTION_SITES).length;
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
                         if ((sourceIndex == 0 
-                                && builderCount > 0 
-                                && constructionSiteCount == 0) 
+                                && (_.get(creep.memory, ["roomID"], creep.room.name) == "E35S13" 
+                                    || (builderCount > 0 
+                                        && constructionSiteCount == 0))) 
                             || (sourceIndex == 1 
                                 && upgraderCount > 0)) {
                             continue;

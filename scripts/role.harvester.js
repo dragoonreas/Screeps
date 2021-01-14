@@ -64,8 +64,8 @@ let roleHarvester = {
                             , "5fb2a3c30d314f7d08892285" // E31S11
                             , "5fb2a3e60d314f7d088923c4" // E32S11
                             , "5fb2a3e60d314f7d088923c6" // E32S11
-                            // , "5fb2a3c40d314f7d08892288" // E31S12 // remote mined by Donatzor
-                            // , "5fb2a3c40d314f7d0889228a" // E31S12 // remote mined by Donatzor
+                            , "5fb2a3c40d314f7d08892288" // E31S12
+                            , "5fb2a3c40d314f7d0889228a" // E31S12
                             , "5fb2a3c30d314f7d08892286" // E31S11
                             //, "5fb2a3c30d314f7d08892285" // E31S11
                         ]
