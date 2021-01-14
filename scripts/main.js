@@ -653,7 +653,7 @@ module.exports.loop = function () {
                 else if ((bodyPartCounts[ATTACK] || 0) > 0) {
                     avoidanceRange = 2; // 1 range + 1 incase it moves closer this tick
                 }
-                if (aPriorityTarget.owner.username == "Source Keeper" || aPriorityTarget.fatigue > 0) { // TODO: Check if the source keeper is next to a source or mineral before assuming they won't move
+                if (aPriorityTarget.fatigue > 0) {
                     --avoidanceRange;
                 }
                 if (avoidanceRange > 0) {
@@ -735,7 +735,11 @@ module.exports.loop = function () {
                 else if ((bodyPartCounts[ATTACK] || 0) > 0) {
                     avoidanceRange = 2; // 1 range + 1 incase it moves closer this tick
                 }
-                if (aNonPriorityTarget.owner.username == "Source Keeper" || aNonPriorityTarget.fatigue > 0) { // TODO: Check if the source keeper is next to a source or mineral before assuming they won't move
+                let isStationarySourceKeeper = (aNonPriorityTarget.owner.username == "Source Keeper" 
+                    && (aNonPriorityTarget.pos.findInRange(FIND_SOURCES, 1).length <= 0 
+                        || aNonPriorityTarget.pos.findInRange(FIND_MINERALS, 1).length <= 0));
+                if (aNonPriorityTarget.fatigue > 0 
+                    || isStationarySourceKeeper) {
                     --avoidanceRange;
                 }
                 if (avoidanceRange > 0) {
@@ -764,6 +768,9 @@ module.exports.loop = function () {
                                 || (_.includes(Memory.nonAggressivePlayers, s.structure.owner.username) == true 
                                     && s.structure.isPublic == true))
                             ));
+                        }
+                        if (isStationarySourceKeeper) {
+                            _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "isStationarySourceKeeper"], true);
                         }
                         _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "pos"], aNonPriorityTarget.pos);
                         _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "avoidanceRange"], avoidanceRange);
@@ -812,7 +819,7 @@ module.exports.loop = function () {
                         , expiresAt: (Game.time + aPowerfulTarget.ticksToLive)
                     }); // TODO: Store the weightings somewhere else since weighting data is duplicated for each room an invader enters
                 }
-
+                
                 // Save ID of new highest target if applicable
                 if (targetWeighting > highestTargetWeighting) {
                     highestTargetWeighting = targetWeighting;
