@@ -67,58 +67,58 @@ let prototypeSpawn = function() {
                 if (Memory.rooms.E31S11.creepCounts.builder == 0 && Memory.rooms.E31S11.creepCounts.adaptable == 0) {
                     options.memory.roomSentTo = "E31S11";
                 }
-                else if (Memory.rooms.E35S13.creepCounts.builder == 0 && Memory.rooms.E35S13.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E35S13";
-                }
-                else if (Memory.rooms.E33S14.creepCounts.builder == 0 && Memory.rooms.E33S14.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E33S14";
-                }
-                else if (Memory.rooms.E32S16.creepCounts.builder == 0 && Memory.rooms.E32S16.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E32S16";
-                }
+                // else if (Memory.rooms.E35S13.creepCounts.builder == 0 && Memory.rooms.E35S13.creepCounts.adaptable == 0) {
+                //     options.memory.roomSentTo = "E35S13";
+                // }
+                // else if (Memory.rooms.E33S14.creepCounts.builder == 0 && Memory.rooms.E33S14.creepCounts.adaptable == 0) {
+                //     options.memory.roomSentTo = "E33S14";
+                // }
+                // else if (Memory.rooms.E32S16.creepCounts.builder == 0 && Memory.rooms.E32S16.creepCounts.adaptable == 0) {
+                //     options.memory.roomSentTo = "E32S16";
+                // }
             }
-            else if (this.room.name == "E35S13") {
-                if (Memory.rooms.E35S13.creepCounts.builder == 0 && Memory.rooms.E35S13.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E35S13";
-                }
-                else if (Memory.rooms.E31S11.creepCounts.builder == 0 && Memory.rooms.E31S11.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E31S11";
-                }
-                else if (Memory.rooms.E33S14.creepCounts.builder == 0 && Memory.rooms.E33S14.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E33S14";
-                }
-                else if (Memory.rooms.E32S16.creepCounts.builder == 0 && Memory.rooms.E32S16.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E32S16";
-                }
-            }
-            else if (this.room.name == "E33S14") {
-                if (Memory.rooms.E33S14.creepCounts.builder == 0 && Memory.rooms.E33S14.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E33S14";
-                }
-                else if (Memory.rooms.E31S11.creepCounts.builder == 0 && Memory.rooms.E31S11.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E31S11";
-                }
-                else if (Memory.rooms.E35S13.creepCounts.builder == 0 && Memory.rooms.E35S13.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E35S13";
-                }
-                else if (Memory.rooms.E32S16.creepCounts.builder == 0 && Memory.rooms.E32S16.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E32S16";
-                }
-            }
-            else if (this.room.name == "E32S16") {
-                if (Memory.rooms.E32S16.creepCounts.builder == 0 && Memory.rooms.E32S16.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E32S16";
-                }
-                else if (Memory.rooms.E31S11.creepCounts.builder == 0 && Memory.rooms.E31S11.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E31S11";
-                }
-                else if (Memory.rooms.E35S13.creepCounts.builder == 0 && Memory.rooms.E35S13.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E35S13";
-                }
-                else if (Memory.rooms.E33S14.creepCounts.builder == 0 && Memory.rooms.E33S14.creepCounts.adaptable == 0) {
-                    options.memory.roomSentTo = "E33S14";
-                }
-            }
+            // else if (this.room.name == "E35S13") {
+            //     if (Memory.rooms.E35S13.creepCounts.builder == 0 && Memory.rooms.E35S13.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E35S13";
+            //     }
+            //     else if (Memory.rooms.E31S11.creepCounts.builder == 0 && Memory.rooms.E31S11.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E31S11";
+            //     }
+            //     // else if (Memory.rooms.E33S14.creepCounts.builder == 0 && Memory.rooms.E33S14.creepCounts.adaptable == 0) {
+            //     //     options.memory.roomSentTo = "E33S14";
+            //     // }
+            //     // else if (Memory.rooms.E32S16.creepCounts.builder == 0 && Memory.rooms.E32S16.creepCounts.adaptable == 0) {
+            //     //     options.memory.roomSentTo = "E32S16";
+            //     // }
+            // }
+            // else if (this.room.name == "E33S14") {
+            //     if (Memory.rooms.E33S14.creepCounts.builder == 0 && Memory.rooms.E33S14.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E33S14";
+            //     }
+            //     else if (Memory.rooms.E31S11.creepCounts.builder == 0 && Memory.rooms.E31S11.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E31S11";
+            //     }
+            //     else if (Memory.rooms.E35S13.creepCounts.builder == 0 && Memory.rooms.E35S13.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E35S13";
+            //     }
+            //     else if (Memory.rooms.E32S16.creepCounts.builder == 0 && Memory.rooms.E32S16.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E32S16";
+            //     }
+            // }
+            // else if (this.room.name == "E32S16") {
+            //     if (Memory.rooms.E32S16.creepCounts.builder == 0 && Memory.rooms.E32S16.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E32S16";
+            //     }
+            //     else if (Memory.rooms.E31S11.creepCounts.builder == 0 && Memory.rooms.E31S11.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E31S11";
+            //     }
+            //     else if (Memory.rooms.E35S13.creepCounts.builder == 0 && Memory.rooms.E35S13.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E35S13";
+            //     }
+            //     else if (Memory.rooms.E33S14.creepCounts.builder == 0 && Memory.rooms.E33S14.creepCounts.adaptable == 0) {
+            //         options.memory.roomSentTo = "E33S14";
+            //     }
+            // }
             if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
                 needsHeal = true;
             }
