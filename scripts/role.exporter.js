@@ -64,6 +64,7 @@ let roleExporter = {
                     creep.say(travelToIcons(creep) + sentFrom, true);
                     creep.travelTo(new RoomPosition(25, 25, sentFrom), {
                         range: 23
+                        , ignoreHostileCreeps: (creep.pos.findInRange(FIND_SCORE_COLLECTORS, WALLS_RADIUS - 1).length > 0 ? true : false)
                     });
                 }
             }
@@ -430,8 +431,7 @@ let roleExporter = {
                         let err = creep.transfer(taxContainer, RESOURCE_SCORE, Math.ceil(creep.store[RESOURCE_SCORE] * TAX_RATE));
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(taxContainer, {
-                                allowHostile: true
-                                , ignoreHostileCreeps: true
+                                ignoreHostileCreeps: true
                             });
                             creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
                         }
@@ -448,8 +448,7 @@ let roleExporter = {
                         let err = creep.transfer(scoreCollector, RESOURCE_SCORE);
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(scoreCollector, {
-                                allowHostile: true
-                                , ignoreHostileCreeps: true
+                                ignoreHostileCreeps: (creep.pos.findInRange(FIND_SCORE_COLLECTORS, WALLS_RADIUS).length > 0 ? true : false)
                             });
                             creep.say(travelToIcons(creep) + ICONS["scoreCollector"], true);
                         }
