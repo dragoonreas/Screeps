@@ -306,7 +306,7 @@ let prototypeSpawn = function() {
             RCL     Room.energyCapacityAvaliable    Creep.carryCapacity energyToSpawn   totalNumberOfParts
             1-6:      300-2300          ( 50/50)*3= 150*5=               750/5/50*4=    12
             7:       5600               (100/50)*3= 300*5=              1500/5/50*4=    24
-            1-6:    12900               (200/50)*3= 600*5=              3000/5/50*4=    48
+            8:      12900               (200/50)*3= 600*5=              3000/5/50*4=    48
         */
         //const GENERAL_WORKER_CARRY_PART_CAP = (EXTENSION_ENERGY_CAPACITY[this.room.controller.level] / CARRY_CAPACITY) * 3;
         /*
