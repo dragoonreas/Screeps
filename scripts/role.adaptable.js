@@ -13,10 +13,6 @@ let roleAdaptable = {
         let sentTo = creep.memory.roomSentTo;
         if (_.isString(sentTo) == false) {
             switch (creep.memory.roomID) {
-                // case "E31S11": sentTo = "E35S13"; break;
-                // case "E35S13": sentTo = "E31S11"; break;
-                // case "E33S14": sentTo = "E31S11"; break;
-                // case "E32S16": sentTo = "E31S11"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {

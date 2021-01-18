@@ -3,11 +3,10 @@ let roleClaimer = {
         creep.memory.executingRole = "claimer";
         
         let reservedControllerIDs = [
-            "5fb2a3e60d314f7d088923c5" // E32S11
-            //, "5fb2a44c0d314f7d08892889" // E35S12 -remote mined by Donatzor
-            , "5fb2a42a0d314f7d088926bb" // E34S13
-            , "5fb2a4090d314f7d0889251a" // E33S15
-            , "5fb2a4090d314f7d0889251e" // E33S16
+            "5fb29a5d0d314f7d0888c2b6" // W39S19
+            , "5fb29a5d0d314f7d0888c2b2" // W39S18
+            , "5fb29ac20d314f7d0888c6d5" // W36S13
+            , "5fb29b740d314f7d0888cea6" // W31S16
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
             ROLES["recyclable"].run(creep);
@@ -24,7 +23,7 @@ let roleClaimer = {
                 }
                 else if (false) { // NOTE: Any controllers that require waypoints to get to should be added here
                     switch (creep.memory.controllerID) {
-                        // case "5fb2a44d0d314f7d0889288d": creep.memory.roomSentTo = "E35S13";
+                        // case "5fb29a5d0d314f7d0888c2af": creep.memory.roomSentTo = "W39S17";
                         default: creep.memory.roomSentTo = creep.memory.roomID; break;
                     }
                     ROLES["scout"].run(creep);
@@ -34,40 +33,36 @@ let roleClaimer = {
                     creep.say(travelToIcons(creep) + controllerMem.pos.roomName, true);
                 }
             }
-            else if (creep.memory.controllerID == "5fb2a3e60d314f7d088923c5") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(39, 38, "E32S11"));
-                creep.say(travelToIcons(creep) + "E32S11", true);
+            else if (creep.memory.controllerID == "5fb29a5d0d314f7d0888c2b4") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(16, 21, "W39S19"));
+                creep.say(travelToIcons(creep) + "W39S19", true);
             }
-            else if (creep.memory.controllerID == "5fb2a44c0d314f7d08892889") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(28, 28, "E35S12"));
-                creep.say(travelToIcons(creep) + "E35S12", true);
+            else if (creep.memory.controllerID == "5fb29a5d0d314f7d0888c2b2") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(18, 33, "W39S18"));
+                creep.say(travelToIcons(creep) + "W39S18", true);
             }
-            else if (creep.memory.controllerID == "5fb2a42a0d314f7d088926bb") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(39, 24, "E34S13"));
-                creep.say(travelToIcons(creep) + "E34S13", true);
+            else if (creep.memory.controllerID == "5fb29ac20d314f7d0888c6d5") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(34, 6, "W36S13"));
+                creep.say(travelToIcons(creep) + "W36S13", true);
             }
-            else if (creep.memory.controllerID == "5fb2a4090d314f7d0889251a") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(30, 21, "E33S15"));
-                creep.say(travelToIcons(creep) + "E33S15", true);
+            else if (creep.memory.controllerID == "5fb29b740d314f7d0888cea6") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(6, 23, "W31S16"));
+                creep.say(travelToIcons(creep) + "W31S16", true);
             }
-            else if (creep.memory.controllerID == "5fb2a4090d314f7d0889251e") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(9, 24, "E33S16"));
-                creep.say(travelToIcons(creep) + "E33S16", true);
+            else if (creep.memory.controllerID == "5fb29a5d0d314f7d0888c2af") {
+                creep.travelTo(new RoomPosition(44, 44, "W39S17"));
+                creep.say(travelToIcons(creep) + "W39S17", true);
             }
-            else if (creep.memory.controllerID == "5fb2a44d0d314f7d0889288d") {
-                creep.travelTo(new RoomPosition(10, 9, "E35S13"));
-                creep.say(travelToIcons(creep) + "E35S13", true);
+            else if (creep.memory.controllerID == "5fb29ae40d314f7d0888c8a4") {
+                creep.travelTo(new RoomPosition(39, 10, "W35S13"));
+                creep.say(travelToIcons(creep) + "W35S13", true);
             }
-            else if (creep.memory.controllerID == "5fb2a4090d314f7d08892516") {
-                creep.travelTo(new RoomPosition(29, 11, "E33S14"));
-                creep.say(travelToIcons(creep) + "E33S14", true);
+            else if (creep.memory.controllerID == "5fb29b510d314f7d0888cd61") {
+                creep.travelTo(new RoomPosition(23, 21, "W32S16"));
+                creep.say(travelToIcons(creep) + "W32S16", true);
             }
-            else if (creep.memory.controllerID == "5fb2a3e80d314f7d088923d6") {
-                creep.travelTo(new RoomPosition(31, 11, "E32S16"));
-                creep.say(travelToIcons(creep) + "E32S16", true);
-            }
-            /*else if (creep.memory.controllerID == "5fb2a44d0d314f7d0889288d") {
-                creep.memory.roomSentTo = "E35S13";
+            /*else if (creep.memory.controllerID == "5fb29a7f0d314f7d0888c3fb") {
+                creep.memory.roomSentTo = "W38S19";
                 ROLES["scout"].run(creep);
             }*/
             else {
