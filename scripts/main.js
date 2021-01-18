@@ -71,6 +71,10 @@ _.defaultsDeep(Memory, { // TODO: Implement the LOAN alliance import script pinn
         , "vrs" // open to negotiations
         , "a2coder" // indiscriminately aggressive towards PINK alliance members
         , "GiantDwarf" // uses nukes, open to negotiations
+        , "Geir1983" // automated to be aggressive
+        , "likeafox" // doesn't handle public ramparts well
+        , "Sneaky_Polar_Bear" // uses nukes, open to negotiations
+        , "Cub"
     ]
     , "nonAggressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-aggressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
         SYSTEM_USERNAME
