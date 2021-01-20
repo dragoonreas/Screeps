@@ -64,58 +64,74 @@ let prototypeSpawn = function() {
             options.memory.roomSentFrom = this.room.name;
             // TODO: Update when bootstrapping network is reconfigured
             if (this.room.name == "W38S19") {
-                if (Memory.rooms.W38S19.creepCounts.builder == 0 && Memory.rooms.W38S19.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W38S19";
                 }
-                else if (Memory.rooms.W39S17.creepCounts.builder == 0 && Memory.rooms.W39S17.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W39S17";
                 }
-                else if (Memory.rooms.W32S16.creepCounts.builder == 0 && Memory.rooms.W32S16.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W32S16";
                 }
-                else if (Memory.rooms.W35S13.creepCounts.builder == 0 && Memory.rooms.W35S13.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W35S13";
                 }
             }
             else if (this.room.name == "W39S17") {
-                if (Memory.rooms.W39S17.creepCounts.builder == 0 && Memory.rooms.W39S17.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W39S17";
                 }
-                else if (Memory.rooms.W38S19.creepCounts.builder == 0 && Memory.rooms.W38S19.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W38S19";
                 }
-                else if (Memory.rooms.W35S13.creepCounts.builder == 0 && Memory.rooms.W35S13.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W35S13";
                 }
-                else if (Memory.rooms.W32S16.creepCounts.builder == 0 && Memory.rooms.W32S16.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W32S16";
                 }
             }
             else if (this.room.name == "W35S13") {
-                if (Memory.rooms.W35S13.creepCounts.builder == 0 && Memory.rooms.W35S13.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W35S13";
                 }
-                else if (Memory.rooms.W39S17.creepCounts.builder == 0 && Memory.rooms.W39S17.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W39S17";
                 }
-                else if (Memory.rooms.W32S16.creepCounts.builder == 0 && Memory.rooms.W32S16.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W32S16";
                 }
-                else if (Memory.rooms.W38S19.creepCounts.builder == 0 && Memory.rooms.W38S19.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W38S19";
                 }
             }
             else if (this.room.name == "W32S16") {
-                if (Memory.rooms.W32S16.creepCounts.builder == 0 && Memory.rooms.W32S16.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W32S16";
                 }
-                else if (Memory.rooms.W38S19.creepCounts.builder == 0 && Memory.rooms.W38S19.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W38S19";
                 }
-                else if (Memory.rooms.W35S13.creepCounts.builder == 0 && Memory.rooms.W35S13.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W35S13";
                 }
-                else if (Memory.rooms.W39S17.creepCounts.builder == 0 && Memory.rooms.W39S17.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W39S17";
                 }
             }
