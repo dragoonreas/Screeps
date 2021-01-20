@@ -1046,7 +1046,7 @@ module.exports.loop = function () {
                     _.sum(r.store) > 0
             )});
             if (scoreContainers.length > 0 || droppedResources.length > 0 || tombstones.length > 0 || ruins.length > 0) {
-                let collectorCreeps = theRoom.find(FIND_MY_CREEPS, {
+                let energyCollectorCreeps = theRoom.find(FIND_MY_CREEPS, {
                     filter: (c) => (
                         c.spawning == false 
                         && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
@@ -1064,10 +1064,12 @@ module.exports.loop = function () {
                                 && (c.memory.type != "S_P_B-S" 
                                     || c.memory.taxPaid == false)
                             || c.memory.working != true))
-                        && (_.sum(_.get(Game.rooms, [c.memory.roomID, "recycleContainer", "store"], [CONTAINER_CAPACITY])) < CONTAINER_CAPACITY 
-                            || _.sum(_.get(Game.rooms, [c.memory.roomID, "storage", "store"], [STORAGE_CAPACITY])) < STORAGE_CAPACITY 
-                            || _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY)
                 )});
+                let collectorCreeps = _.filter(energyCollectorCreeps, (c) => (
+                    _.sum(_.get(Game.rooms, [c.memory.roomID, "recycleContainer", "store"], [CONTAINER_CAPACITY])) < CONTAINER_CAPACITY 
+                        || _.sum(_.get(Game.rooms, [c.memory.roomID, "storage", "store"], [STORAGE_CAPACITY])) < STORAGE_CAPACITY 
+                        || _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY
+                ));
                 
                 if (scoreContainers.length > 0) {
                     scoreContainers = _.sortByOrder(scoreContainers, (t) => (_.sum(t.store, (a, r) => (resourceWorth(r) * a))), "desc");
@@ -1120,21 +1122,22 @@ module.exports.loop = function () {
                             _.get(c.memory, ["droppedResource", "id"], undefined) == droppedResource.id
                         ));
                         if (hasAssignedCreep == false) {
-                            let creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                            let theCollectorCreeps = (droppedResource.resourceType == RESOURCE_ENERGY) ? energyCollectorCreeps : collectorCreeps;
+                            let creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                     _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && c.carryCapacityAvailable >= droppedResource.amount
                                     && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                             )});
                             if (creep == undefined) {
-                                creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                         _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && c.carryTotal == 0
                                         && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                 )});
                                 if (creep == undefined) {
-                                    creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                    creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                             _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                             && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
@@ -1164,7 +1167,8 @@ module.exports.loop = function () {
                             _.get(c.memory, ["tombstone", "id"], undefined) == tombstone.id
                         ));
                         if (hasAssignedCreep == false) {
-                            let creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                            let theCollectorCreeps = (tombstone.store[RESOURCE_ENERGY] > 0) ? energyCollectorCreeps : collectorCreeps;
+                            let creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                     _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
@@ -1172,7 +1176,7 @@ module.exports.loop = function () {
                                     && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
                             )});
                             if (creep == undefined) {
-                                creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                         _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
@@ -1180,7 +1184,7 @@ module.exports.loop = function () {
                                         && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
                                 )});
                                 if (creep == undefined) {
-                                    creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                    creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                             _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
@@ -1211,7 +1215,8 @@ module.exports.loop = function () {
                             _.get(c.memory, ["ruin", "id"], undefined) == ruin.id
                         ));
                         if (hasAssignedCreep == false) {
-                            let creep = ruin.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                            let theCollectorCreeps = (ruin.store[RESOURCE_ENERGY] > 0) ? energyCollectorCreeps : collectorCreeps;
+                            let creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                     _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
@@ -1220,7 +1225,7 @@ module.exports.loop = function () {
                                     && c.pos.inRangeTo(ruin.pos, ruin.ticksToDecay + _.max(ruin.store))
                             )});
                             if (creep == undefined) {
-                                creep = ruin.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                         _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
@@ -1229,7 +1234,7 @@ module.exports.loop = function () {
                                         && c.pos.inRangeTo(ruin.pos, ruin.ticksToDecay + _.max(ruin.store))
                                 )});
                                 if (creep == undefined) {
-                                    creep = ruin.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                    creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
                                             _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
