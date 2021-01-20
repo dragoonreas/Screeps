@@ -473,10 +473,6 @@ module.exports.loop = function () {
     let privateRamparts = {};
     
     let ignoredRooms = [
-        "E31S11"
-        , "E35S13"
-        , "E33S14"
-        , "E32S16"
     ];
     
     let balancedResources = [];
@@ -1674,27 +1670,27 @@ module.exports.loop = function () {
     _.set(Memory.rooms, ["W38S19", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) 
          || (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
-        //  || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
-        //  || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
+         || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
+         || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));
     _.set(Memory.rooms, ["W39S17", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
          || (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0)
-        //  || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
-        //  || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
+         || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
+         || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
     ) ? 1 : 0));
-    // _.set(Memory.rooms, ["W35S13", "creepMins", "adaptable"], ((
-    //     (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) 
-    //      || (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
-    //     //  || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
-    //      || (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0)
-    // ) ? 1 : 0));
-    // _.set(Memory.rooms, ["W32S16", "creepMins", "adaptable"], ((
-    //     (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) 
-    //      || (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0)
-    //      || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
-    //      || (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
-    // ) ? 1 : 0));
+    _.set(Memory.rooms, ["W35S13", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) 
+         || (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
+         || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
+         || (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0)
+    ) ? 1 : 0));
+    _.set(Memory.rooms, ["W32S16", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) 
+         || (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0)
+         || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
+         || (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
+    ) ? 1 : 0));
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
