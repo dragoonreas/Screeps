@@ -20,6 +20,13 @@ let roleBuilder = {
         }
         
         if (creep.memory.working == true) {
+            // if (_.get(creep.room, ["controller", "my"], false) == true 
+            //     && (creep.room.controller.ticksToDowngrade <= (CONTROLLER_DOWNGRADE[creep.room.controller.level] - Math.max(CONTROLLER_DOWNGRADE_SAFEMODE_THRESHOLD - creep.ticksToLive, 0))) 
+            //     && _.get(creep.memory, ["role"], "exporter") != "exporter") { // TODO: Also check that there are no harvesters to do this
+            //     ROLES["upgrader"].run(creep);
+            //     return;
+            // }
+            
             let constructionSiteID = _.get(creep.memory, ["constructionSite", "id"], undefined);
             let constructionSite = Game.getObjectById(constructionSiteID);
             let constructionSiteMemPos = _.get(creep.memory, ["constructionSite", "pos"], undefined);
