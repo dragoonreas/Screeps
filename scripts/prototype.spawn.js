@@ -208,6 +208,9 @@ let prototypeSpawn = function() {
             else if (this.room.name == "W38S19") {
                 options.memory.roomSentTo = "W32S16";
             }
+            else if (this.room.name == "W35S13") {
+                options.memory.roomSentTo = "E32N18";
+            }
         }
         
         let energyAvaliable = this.room.energyCapacityAvailable;
