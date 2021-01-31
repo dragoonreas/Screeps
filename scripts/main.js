@@ -71,7 +71,7 @@ _.defaultsDeep(Memory, { // TODO: Implement the LOAN alliance import script pinn
         , "vrs" // open to negotiations
         , "a2coder" // indiscriminately aggressive towards PINK alliance members
         , "GiantDwarf" // uses nukes, open to negotiations
-        , "Geir1983" // automated to be aggressive
+        , "Geir1983" // automated to be aggressive, can be open to negotiations
         , "likeafox" // doesn't handle public ramparts well
         , "Sneaky_Polar_Bear" // uses nukes, open to negotiations
         , "Cub"
