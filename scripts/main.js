@@ -1498,6 +1498,54 @@ module.exports.loop = function () {
                         let err = theTerminal.send(RESOURCE_ENERGY, sendAmount, storeRoom.roomID, "Balance " + RESOURCE_ENERGY);
                         if (err == OK) {
                             console.log("Sent " + sendAmount + " " + RESOURCE_ENERGY + " from " + roomID + " to " + storeRoom.roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to balance terminal resources");
+                            //madeTransaction = true; // TODO: Store tick of last transaction made in memory instead, and use it to filter out terminals
+                        }
+                    }
+                }
+            }
+            
+            let nonScoreExporters = ["W39S17", "W35S13"];
+            if (madeTransaction == false 
+                && _.includes(nonScoreExporters, roomID) == true // NOTE: Include rooms that can't use exporters to deposit score
+                && theTerminal.store[RESOURCE_SCORE] > 0) {
+                let balanceAmount = theTerminal.store[RESOURCE_SCORE];
+                let storeRoom = { 
+                    roomID: roomID
+                    , amount: (TERMINAL_CAPACITY / 2)
+                    , free: 0
+                };
+                // console.log("Starting rebalance of " + balanceAmount + " " + RESOURCE_SCORE + " in " + roomID);
+                _.forEach(Game.rooms, (r, rn) => {
+                    if (rn != storeRoom.roomID 
+                        && _.includes(nonScoreExporters, rn) == false 
+                        && _.get(r, ["controller", "my"], false) == true 
+                        && _.get(r, ["controller", "level"], 0) >= 6 
+                        && _.get(r, ["terminal", "my"], false) == true 
+                        && _.get(r.memory, ["isShuttingDown"], false) == false
+                        && _.get(r, ["terminal", "store", RESOURCE_SCORE], 0) < (TERMINAL_CAPACITY / 2) 
+                        && ((TERMINAL_CAPACITY / 2) - _.get(r, ["terminal", "store", RESOURCE_SCORE], 0)) > 0 
+                        && (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0)) > 0) {
+                        if (_.get(r, ["terminal", "store", RESOURCE_SCORE], 0) < storeRoom.amount 
+                            || (_.get(r, ["terminal", "store", RESOURCE_SCORE], 0) == storeRoom.amount 
+                                && (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0)) > storeRoom.free) 
+                            || _.get(Memory.rooms, [storeRoom.roomID, "isShuttingDown"], false) == true 
+                            || storeRoom.amount == (TERMINAL_CAPACITY / 2)) {
+                            storeRoom = { 
+                                roomID: rn
+                                , amount: _.get(r, ["terminal", "store", RESOURCE_SCORE], 0)
+                                , free: (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0))
+                            };
+                            // console.log("\tConsidering " + rn + " with " + storeRoom.amount + " " + RESOURCE_SCORE + " and " + storeRoom.free + " free space");
+                        }
+                    }
+                });
+                if (storeRoom.roomID != roomID) {
+                    let sendAmount = Math.min(balanceAmount, ((TERMINAL_CAPACITY / 2) - storeRoom.amount, storeRoom.free));
+                    let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, storeRoom.roomID);
+                    if (energyCost <= terminalEnergy) {
+                        let err = theTerminal.send(RESOURCE_SCORE, sendAmount, storeRoom.roomID, RESOURCE_SCORE + " to export");
+                        if (err == OK) {
+                            console.log("Sent " + sendAmount + " " + RESOURCE_SCORE + " from " + roomID + " to " + storeRoom.roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to export score");
                             madeTransaction = true;
                         }
                     }
