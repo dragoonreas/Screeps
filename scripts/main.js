@@ -212,7 +212,7 @@ _.set(Memory.rooms, ["W39S17", "creepMins"], {
     attacker: 0
     , harvester: 4
     , powerHarvester: 0
-    , upgrader: 1
+    , upgrader: 2
     , miner: 0//_.size(_.get(Game.rooms, ["W39S17", "minerSources"], {}))
     , adaptable: 0
     , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W39S17", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
