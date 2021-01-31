@@ -169,7 +169,8 @@ let globals = function() {
     global.resourceWorth = function(resourceType) {
         switch (resourceType) {
             case RESOURCE_SCORE: return 100000000; // 10^8
-            case RESOURCE_POWER: return 10000000; // 10^7
+            case RESOURCE_ENERGY: return 10000000; // 10^7
+            case RESOURCE_POWER: return 1000000; // 10^6
             case RESOURCE_CATALYZED_UTRIUM_ACID:
             case RESOURCE_CATALYZED_UTRIUM_ALKALIDE:
             case RESOURCE_CATALYZED_KEANIUM_ACID:
@@ -179,7 +180,7 @@ let globals = function() {
             case RESOURCE_CATALYZED_ZYNTHIUM_ACID:
             case RESOURCE_CATALYZED_ZYNTHIUM_ALKALIDE:
             case RESOURCE_CATALYZED_GHODIUM_ACID:
-            case RESOURCE_CATALYZED_GHODIUM_ALKALIDE: return 1000000; // 10^6
+            case RESOURCE_CATALYZED_GHODIUM_ALKALIDE: return 100000; // 10^5
             case RESOURCE_UTRIUM_ACID:
             case RESOURCE_UTRIUM_ALKALIDE:
             case RESOURCE_KEANIUM_ACID:
@@ -189,7 +190,7 @@ let globals = function() {
             case RESOURCE_ZYNTHIUM_ACID:
             case RESOURCE_ZYNTHIUM_ALKALIDE:
             case RESOURCE_GHODIUM_ACID:
-            case RESOURCE_GHODIUM_ALKALIDE: return 100000; // 10^5
+            case RESOURCE_GHODIUM_ALKALIDE: return 10000; // 10^4
             case RESOURCE_UTRIUM_HYDRIDE:
             case RESOURCE_UTRIUM_OXIDE:
             case RESOURCE_KEANIUM_HYDRIDE:
@@ -199,19 +200,18 @@ let globals = function() {
             case RESOURCE_ZYNTHIUM_HYDRIDE:
             case RESOURCE_ZYNTHIUM_OXIDE:
             case RESOURCE_GHODIUM_HYDRIDE:
-            case RESOURCE_GHODIUM_OXIDE: return 10000; // 10^4
-            case RESOURCE_GHODIUM: return 1000; // 10^3
+            case RESOURCE_GHODIUM_OXIDE: return 1000; // 10^3
+            case RESOURCE_GHODIUM: return 100; // 10^2
             case RESOURCE_HYDROXIDE:
             case RESOURCE_ZYNTHIUM_KEANITE:
-            case RESOURCE_UTRIUM_LEMERGITE: return 100; // 10^2
+            case RESOURCE_UTRIUM_LEMERGITE: return 10; // 10^1
             case RESOURCE_HYDROGEN:
             case RESOURCE_OXYGEN:
             case RESOURCE_UTRIUM:
             case RESOURCE_LEMERGIUM:
             case RESOURCE_KEANIUM:
             case RESOURCE_ZYNTHIUM:
-            case RESOURCE_CATALYST: return 10; // 10^1
-            case RESOURCE_ENERGY:
+            case RESOURCE_CATALYST: 
             default: return 1; // 10^0
         }
     };
