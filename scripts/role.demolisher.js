@@ -4,7 +4,7 @@ let roleDemolisher = {
         
         if (creep.memory.working == false && creep.carryTotal == (creep.carryCapacity || -1)) {
             creep.memory.working = true;
-            creep.memory.demolishStructure = undefined;
+            creep.memory.demolishStructure = undefined; // TODO: Don't clear demolish structure when harvesting
             creep.memory.waypoint = 0; // TODO: Ensure waypoints reset when at destination in called roles
         }
         else if (creep.memory.working == true && creep.carry[RESOURCE_ENERGY] == 0) {

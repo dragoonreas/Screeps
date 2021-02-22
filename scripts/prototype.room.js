@@ -394,7 +394,7 @@ let prototypeRoom = function() {
         });
     }
     
-    if (Room.prototype.invaderCoreMem == undefined) { // NOTE: Must be defined after global.invaderCore
+    if (Room.prototype.invaderCoreMem == undefined) { // NOTE: Must be defined after Room.invaderCore
         Object.defineProperty(Room.prototype, "invaderCoreMem", {
             get: function() {
                 if (this === Room.prototype || this == undefined) { return; }
