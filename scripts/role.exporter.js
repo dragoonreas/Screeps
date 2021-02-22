@@ -67,7 +67,7 @@ let roleExporter = {
                     || sentFrom == "W48N42" 
                     || sentFrom == "W47N44" 
                     || sentFrom == "W42N51"
-                    || sentFrom == "W23N48") { // NOTE: Any rooms that require waypoints to get to should be added here
+                    || sentFrom == "W22N47") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else if (structureMemPos != undefined 
@@ -359,7 +359,7 @@ let roleExporter = {
                     || sentFrom == "W47N44" 
                     || sentTo == "W42N51"
                     || (sentTo == "W9N45"
-                        && sentFrom == "W23N48")) { // NOTE: Any rooms that require waypoints to get to should be added here
+                        && sentFrom == "W22N47")) { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {

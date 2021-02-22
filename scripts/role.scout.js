@@ -752,10 +752,10 @@ let roleScout = {
                 }
             }
             else if (sentFrom == "W9N45" 
-                || sentTo == "W23N48") {
+                || sentTo == "W22N47") {
                 let waypoints = [
                     "W20N47"
-                    , "W23N48"
+                    , "W22N47"
                 ];
                 if (creep.memory.waypoint > 0 
                     && creep.room.name == "W10N47") { // back-tracked through portal
@@ -771,9 +771,9 @@ let roleScout = {
                     creep.say(travelToIcons(creep) + "W10N47", true);
                 }
                 else if (creep.memory.waypoint == 1 
-                    || creep.pos.isNearTo(21, 11) == false) {
-                    creep.travelTo(new RoomPosition(21, 11, "W23N48"));
-                    creep.say(travelToIcons(creep) + "W23N48", true);
+                    || creep.pos.isNearTo(32, 38) == false) {
+                    creep.travelTo(new RoomPosition(32, 38, "W22N47"));
+                    creep.say(travelToIcons(creep) + "W22N47", true);
                 }
                 else if (creep.memory.goalReached != true) {
                     creep.say(ICONS["testPassed"], true);
@@ -785,7 +785,7 @@ let roleScout = {
                     }
                 }
             }
-            else if (sentFrom == "W23N48" 
+            else if (sentFrom == "W22N47" 
                 || sentTo == "W9N45") {
                 let waypoints = [
                     "W10N47"
