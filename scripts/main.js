@@ -1667,9 +1667,9 @@ module.exports.loop = function () {
             }
             
             const MAX_POWER_PRICE = 15;
-            let requiredPower = theRoom.requiredPower;
+            let powerDeficit = theRoom.powerDeficit;
             if (madeTransaction == false 
-                && requiredPower > 0 
+                && powerDeficit > 0 
                 && theTerminal.storeCapacityFree > 0) {
                 let powerRoomID = roomID;
                 let excessPower = 0;
@@ -1680,8 +1680,8 @@ module.exports.loop = function () {
                     if (_.get(Game.rooms, [managedRoomID, "excessPower"], 0) > excessPower 
                         && _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0) > excessPower) {
                         powerRoomID = managedRoomID;
-                        excessPower = Math.min(requiredPower, _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0));
-                        if (excessPower == requiredPower) {
+                        excessPower = Math.min(powerDeficit, _.get(Game.rooms, [managedRoomID, "excessPower"], 0), _.get(Game.rooms, [managedRoomID, "terminal", "store", RESOURCE_POWER], 0));
+                        if (excessPower == powerDeficit) {
                             break;
                         }
                     }
@@ -1708,9 +1708,9 @@ module.exports.loop = function () {
                     sellOrders = _.groupBy(sellOrders, (o) => (o.price));
                     sellOrders = _.min(sellOrders, (v, k) => (k))
                     let sellOrder = _.min(sellOrders, (o) => (
-                        Game.market.calcTransactionCost(requiredPower, roomID, o.roomName)
+                        Game.market.calcTransactionCost(powerDeficit, roomID, o.roomName)
                     ));
-                    let amountToBuy = Math.min(requiredPower, theTerminal.storeCapacityFree, sellOrder.amount, Math.floor((Game.market.credits - requiredCredits) / sellOrder.price));
+                    let amountToBuy = Math.min(powerDeficit, theTerminal.storeCapacityFree, sellOrder.amount, Math.floor((Game.market.credits - requiredCredits) / sellOrder.price));
                     if (amountToBuy > 0) {
                         let energyCost = Game.market.calcTransactionCost(amountToBuy, roomID, sellOrder.roomName);
                         if (energyCost <= terminalEnergy) {
@@ -1720,8 +1720,8 @@ module.exports.loop = function () {
                                 console.log("Buying " + amountToBuy + " " + RESOURCE_POWER + " from " + sellOrder.roomName + " to " + roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " for " + (sellOrder.price * amountToBuy).toFixed(3) + " (" + sellOrder.price + " each) credits");
                             }
                         }
-                    } else if (Math.floor((Game.market.credits - requiredCredits) / sellOrder.price) < requiredPower) {
-                        requiredCredits += (requiredPower * sellOrder.price) - Math.max(0, Game.market.credits - requiredCredits);
+                    } else if (Math.floor((Game.market.credits - requiredCredits) / sellOrder.price) < powerDeficit) {
+                        requiredCredits += (powerDeficit * sellOrder.price) - Math.max(0, Game.market.credits - requiredCredits);
                     }
                 }
                 else {
@@ -1737,7 +1737,7 @@ module.exports.loop = function () {
                     ));
                     if (buyOrders.length > 0) {
                         let buyPrice = _.get(_.max(buyOrders, (o) => (o.price)), ["price"], MAX_POWER_PRICE);
-                        let amountToBuy = requiredPower;
+                        let amountToBuy = powerDeficit;
                         if (buyOrder == undefined) {
                             let deposit = buyPrice * amountToBuy * 0.05;
                             if (deposit <= Game.market.credits) {

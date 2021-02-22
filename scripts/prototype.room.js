@@ -166,7 +166,7 @@ let prototypeRoom = function() {
         });
     }
     
-    if (Room.prototype.requiredPower == undefined) { // NOTE: Must be defined after Room.ownedPower
+    if (Room.prototype.requiredPower == undefined) { // NOTE: Must be defined after Room.powerSpawn
         defineCachedGetter(Room.prototype, "requiredPower", (r) => {
             if (_.get(r, ["controller", "my"], false) == false 
                 || _.get(r, ["controller", "level"], 0) < 8 
@@ -174,16 +174,22 @@ let prototypeRoom = function() {
                 || _.get(r, ["powerSpawn", "energy"], 0) < POWER_SPAWN_ENERGY_RATIO) {
                 return 0;
             }
-            return (Math.floor(r.powerSpawn.energy / POWER_SPAWN_ENERGY_RATIO) - r.ownedPower);
+            return Math.floor(r.powerSpawn.energy / POWER_SPAWN_ENERGY_RATIO);
         });
     }
-
-    if (Room.prototype.excessPower == undefined) { // NOTE: Must be defined after Room.requiredPower
+    
+    if (Room.prototype.powerDeficit == undefined) { // NOTE: Must be defined after Room.ownedPower and Room.requiredPower
+        defineCachedGetter(Room.prototype, "powerDeficit", (r) => {
+            return Math.max(r.requiredPower - r.ownedPower, 0);
+        });
+    }
+    
+    if (Room.prototype.excessPower == undefined) { // NOTE: Must be defined after Room.ownedPower and Room.requiredPower
         defineCachedGetter(Room.prototype, "excessPower", (r) => {
-            return (r.ownedPower - r.requiredPower);
+            return Math.max(r.ownedPower - r.requiredPower, 0);
         });
     }
-
+    
     if (Room.prototype.myActiveTowers == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, "myActiveTowers", (r) => {
             if (r.controller == undefined) { return []; }
