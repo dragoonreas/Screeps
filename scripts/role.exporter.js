@@ -53,6 +53,7 @@ let roleExporter = {
             "W91N42"
             , "W53N38"
             , "W88N27"
+            , "W87N21"
         ];
         
         if (creep.memory.working == false) {
