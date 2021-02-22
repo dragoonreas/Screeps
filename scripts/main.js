@@ -1504,7 +1504,7 @@ module.exports.loop = function () {
                 }
             }
             
-            let nonScoreExporters = ["W39S17", "W35S13"];
+            let nonScoreExporters = ["W38S19", "W39S17", "W35S13"];
             if (madeTransaction == false 
                 && _.includes(nonScoreExporters, roomID) == true // NOTE: Include rooms that can't use exporters to deposit score
                 && theTerminal.store[RESOURCE_SCORE] > 0) {
