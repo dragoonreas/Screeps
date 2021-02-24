@@ -546,6 +546,18 @@ let prototypeRoom = function() {
         });
     }
     
+    /*
+        Exporter flag options:
+            Colours:
+                Primary: Orange
+                Secondary: Orange (Optional)
+            Name format: spawnRoom_priority_count_fromRoom_toRoom
+            Defaults:
+                Priority: 0
+                Count: 1
+                From: <Flag Room>
+                To: <Spawn Room>
+    */
     if (Room.prototype.exporterInfo == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'exporterInfo', (r) => {
             return _.chain(Game.flags)
@@ -593,6 +605,21 @@ let prototypeRoom = function() {
         });
     }
     
+    /*
+        Demolisher flag options:
+            Colours:
+                Primary: Blue
+                Secondary:
+                    Red: Demolish
+                    Yellow: Harvest
+            Name format: spawnRoom_priority_targetID_count_fromRoom_toRoom
+            Defaults:
+                Priority: 0
+                Target: undefined
+                Count: 1
+                From: <Flag Room>
+                To: <Spawn Room>
+    */
     if (Room.prototype.demolisherInfo == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'demolisherInfo', (r) => {
             return _.chain(Game.flags)
@@ -636,7 +663,7 @@ let prototypeRoom = function() {
                     c.roomID == r.name 
                     && c.role == "demolisher"))
                 .countBy((c) => (
-                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", "") + _.get(c, ["target", "id"], "")))
+                    _.get(c, "roomSentFrom", "") + _.get(c, "roomSentTo", "") + _.get(c, ["target", "id"], ""))) // TODO: Take into account type
                 .value();
             return _.chain(r.demolishersToSpawn)
                 .filter((dTS) => (_.get(demolisherCounts, _.get(dTS, "from", "") + _.get(dTS, "to", "") + _.get(dTS, ["target", "id"], ""), 0) < dTS.count))
