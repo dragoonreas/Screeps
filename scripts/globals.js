@@ -286,6 +286,21 @@ let globals = function() {
         listTerminalContents();
     };
     
+    global.canMakeTrip = function(creepName) {
+        if (_.get(Game.creeps, [creepName], undefined) == undefined) {
+            console.log("Creep " + creepName + " doesn't exist");
+        }
+        else if (_.get(Memory.creeps, [creepName, "_travel", "path", "length"], 0) == 0) {
+            console.log("Creep " + creepName + " isn't on a trip");
+        }
+        else if (_.get(Game.creeps, [creepName, "ticksToLive"], -1) >= _.get(Memory.creeps, [creepName, "_travel", "path", "length"], 0)) {
+            console.log("Creep " + creepName + " will make the trip with " + (_.get(Game.creeps, [creepName, "ticksToLive"], -1) - _.get(Memory.creeps, [creepName, "_travel", "path", "length"], 0)) + " ticks to spare");
+        }
+        else {
+            console.log("Creep " + creepName + " will fail to make the trip by " + (_.get(Memory.creeps, [creepName, "_travel", "path", "length"], 0) - _.get(Game.creeps, [creepName, "ticksToLive"], -1)) + " ticks");
+        }
+    }
+    
     global.relocateRoom = function(fromRoomName, toRoomName) {
         // TODO: Add room name validation
         let theController = _.get(Game.rooms, [fromRoomName, "controller"], undefined);
