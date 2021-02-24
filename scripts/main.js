@@ -1473,32 +1473,33 @@ module.exports.loop = function () {
         for (let towerID in towers) {
             let tower = towers[towerID];
             
-            let target = priorityTarget;
-            /*
-            // TODO: Maybe group PC and NPC targets seperatly so the same weightings can be applied to each, rather than the NPCs having no weighting
-            if (target == undefined && priorityTargets != undefined) {
-                target = tower.pos.findClosestByRange(priorityTargets);
-            }
-            */
-            
-            if (target != undefined) { // Attack a creep if needed
-                tower.attack(target);
-                towerTargets.push(target.owner.username);
-                if (justNPCs == false) {
-                    Game.notify("Tower in " + roomID + " attacking hostile from " + target.owner.username, target.ticksToLive / EST_TICKS_PER_MIN);
-                }
-            }
-            else { // Else heal a creep if needed
-                target = tower.pos.findClosestByRange(FIND_MY_POWER_CREEPS, { 
+            // Heal a creep if needed
+            let target = tower.pos.findClosestByRange(FIND_MY_POWER_CREEPS, { 
+                filter: (c) => (c.hits < c.hitsMax
+            )}); // TODO: Also heal ally power creeps
+            if (target == undefined) {
+                target = tower.pos.findClosestByRange(FIND_MY_CREEPS, { 
                     filter: (c) => (c.hits < c.hitsMax
-                )}); // TODO: Also heal ally power creeps
-                if (target == undefined) {
-                    target = tower.pos.findClosestByRange(FIND_MY_CREEPS, { 
-                        filter: (c) => (c.hits < c.hitsMax
-                    )}); // TODO: Also heal ally creeps
+                )}); // TODO: Also heal ally creeps
+            }
+            if (target != undefined) {
+                tower.heal(target);
+            }
+            else { // Else attack priority target
+                target = priorityTarget;
+                /*
+                // TODO: Maybe group PC and NPC targets separately so the same weightings can be applied to each, rather than the NPCs having no weighting
+                if (target == undefined && priorityTargets != undefined) {
+                    target = tower.pos.findClosestByRange(priorityTargets);
                 }
-                if (target != undefined) {
-                    tower.heal(target);
+                */
+                
+                if (target != undefined) { // Attack a creep if needed
+                    tower.attack(target);
+                    towerTargets.push(target.owner.username);
+                    if (justNPCs == false) {
+                        Game.notify("Tower in " + roomID + " attacking hostile from " + target.owner.username, target.ticksToLive / EST_TICKS_PER_MIN);
+                    }
                 }
                 else { // Else repair a non-decaying structure if needed
                     target = tower.pos.findClosestByRange(theRoom.towerRepairStructures);
