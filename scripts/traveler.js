@@ -595,6 +595,7 @@ module.exports = function(globalOpts = {}){
             };
             // Get the path
             let path = [[stepPos.x, stepPos.y]];
+            let prevDirection = -1;
             _.each(pathData, (d) => {
                 // Get the next step position
                 switch (Number(d)) {
@@ -613,7 +614,12 @@ module.exports = function(globalOpts = {}){
                     return false; // stop the loop if the path goes into a new room
                 }
                 else {
-                    path.push([stepPos.x, stepPos.y]);
+                    if (d != prevDirection) {
+                        path.push([stepPos.x, stepPos.y]);
+                    }
+                    else {
+                        path[path.length - 1] = [stepPos.x, stepPos.y];
+                    }
                 }
             });
             // Draw the path
