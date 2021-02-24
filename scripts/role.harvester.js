@@ -10,7 +10,8 @@ let roleHarvester = {
             creep.memory.sourceID = undefined;
         }
         else if (creep.memory.working == true
-            && creep.carry[RESOURCE_ENERGY] == 0) {
+            && creep.carry[RESOURCE_ENERGY] == 0 
+            && creep.carryCapacityAvailable > 0) {
             creep.memory.working = false;
             creep.memory.depositStructure = undefined;
             creep.memory.constructionSite = undefined; // can be a builder when working
