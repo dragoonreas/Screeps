@@ -91,6 +91,7 @@ let roleExporter = {
                 }
                 let theStorage = _.get(Game.rooms, [sentFrom, "storage"], undefined);
                 let theTerminal = _.get(Game.rooms, [sentFrom, "terminal"], undefined);
+                // let theRecycleContainer = _.get(Game.rooms, [sentFrom, "recycleContainer"], undefined);
                 let thePowerSpawn = _.get(Game.rooms, [sentFrom, "powerSpawn"], undefined);
                 let requiredPower = Math.floor(_.get(thePowerSpawn, ["energy"], 0) / POWER_SPAWN_ENERGY_RATIO) - (_.get(thePowerSpawn, ["power"], 0) + (creep.carry[RESOURCE_POWER] || 0));
                 if ((_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
@@ -295,8 +296,8 @@ let roleExporter = {
                                 _.set(Memory.rooms, [_.first(this.name.split("_")), "creepMins", "exporter"], 0);
                                 return this.remove();
                             });
-                            console.log("Finished exporting from " + sentFrom);
-                            Game.notify("Finished exporting from " + sentFrom, 60);
+                            console.log("Finished exporting from " + sentFrom + ": Source room empty");
+                            Game.notify("Finished exporting from " + sentFrom + ": Source room empty", 60);
                             if (creep.carryTotal == 0) {
                                 creep.memory.role = "recyclable";
                                 ROLES["recyclable"].run(creep);
@@ -323,8 +324,8 @@ let roleExporter = {
                         _.set(Memory.rooms, [_.first(this.name.split("_")), "creepMins", "exporter"], 0);
                         return this.remove();
                     });
-                    console.log("Finished exporting from " + sentFrom);
-                    Game.notify("Finished exporting from " + sentFrom, 60);
+                    console.log("Finished exporting from " + sentFrom + ": Source room hostile");
+                    Game.notify("Finished exporting from " + sentFrom + ": Source room hostile", 60);
                     if (creep.carryTotal == 0) {
                         creep.memory.role = "recyclable";
                         ROLES["recyclable"].run(creep);
@@ -524,8 +525,8 @@ let roleExporter = {
                                     _.set(Memory.rooms, [_.first(flagInfo), "creepMins", "exporter"], 0);
                                     return this.remove(); // NOTE: May not update immidiatly when room not visible
                                 }, sentTo);
-                                console.log("Stopped exporting from " + sentFrom + " to " + sentTo);
-                                Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo, 60);
+                                console.log("Stopped exporting from " + sentFrom + " to " + sentTo + ": Destination room full");
+                                Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo + ": Destination room full", 60);
                                 creep.memory.role = "recyclable";
                                 ROLES["recyclable"].run(creep);
                             }
