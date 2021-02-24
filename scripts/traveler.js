@@ -243,13 +243,15 @@ module.exports = function(globalOpts = {}){
             }
             // register hostile rooms entered
             let creepPos = creep.pos, destPos = (destination.pos || destination);
-            if ((_.get(creep.room, ["controller", "owner", "username"], undefined) != undefined) && (!creep.room.controller.my) && (!_.includes(_.difference(Memory.nonAgressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), creep.room.controller.owner.username))) {
+            if ((_.get(creep.room, ["controller", "owner", "username"], undefined) != undefined) && (!creep.room.controller.my) && (!_.includes(_.difference(Memory.nonAggressivePlayers, ["InfiniteJoe", "Cade", "KermitFrog"]), creep.room.controller.owner.username))) {
                 if (_.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0) < Game.time && creep.room.controller.level >= 1) {
                     console.log("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                     Game.notify("Restricting travel to RCL" + creep.room.controller.level + " room " + creep.room.name + " owned by " + creep.room.controller.owner.username);
                 }
-                console.log("Setting avoidTravelUntil in " + creep.room.name + " to " + Math.max(_.get(creep.room, ["controllerMem", "neutralAt"], 0), _.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0)));
-                _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], Math.max(_.get(creep.room, ["controllerMem", "neutralAt"], 0), _.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0)));
+                if (_.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0) < Math.max(_.get(creep.room, ["controllerMem", "neutralAt"], 0))) {
+                    console.log("Setting avoidTravelUntil in " + creep.room.name + " to " + Math.max(_.get(creep.room, ["controllerMem", "neutralAt"], 0), _.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0)));
+                    _.set(Memory.rooms, [creep.room.name, "avoidTravelUntil"], Math.max(_.get(creep.room, ["controllerMem", "neutralAt"], 0), _.get(Memory.rooms, [creep.room.name, "avoidTravelUntil"], 0)));
+                }
             }
             // initialize data object
             if (!creep.memory._travel) {
