@@ -1293,13 +1293,22 @@ module.exports.loop = function () {
         
         if (theRoom.checkForDrops == true || (checkingForDrops == true && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
             theRoom.checkForDrops = false;
-            let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES);
+            let recycleContainer = _.get(Game.rooms, [roomID, "recycleContainer"], undefined);
+            let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES, {
+                filter: (dr) => (
+                    (recycleContainer == undefined) 
+                    || (dr.pos.isEqualTo(recycleContainer) != true)
+            )});
             let tombstones = theRoom.find(FIND_TOMBSTONES, { 
                 filter: (t) => (
                     _.sum(t.store) > 0
             )});
-            if (droppedResources.length > 0 || tombstones.length > 0) {
-                let collectorCreeps = theRoom.find(FIND_MY_CREEPS, {
+            let ruins = theRoom.find(FIND_RUINS, {
+                filter: (r) => (
+                    _.sum(r.store) > 0
+            )});
+            if (droppedResources.length > 0 || tombstones.length > 0 || ruins.length > 0) {
+                let energyCollectorCreeps = theRoom.find(FIND_MY_CREEPS, {
                     filter: (c) => (
                         c.spawning == false 
                         && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
@@ -1312,8 +1321,15 @@ module.exports.loop = function () {
                         && c.memory.role != "scout"
                         && c.memory.role != "claimer" 
                         && c.memory.role != "recyclable" 
-                        && c.carryCapacityAvailable > 0
+                        && c.carryCapacityAvailable > 0 
+                        && (c.memory.role != "exporter"
+                            || c.memory.working != true)
                 )});
+                let collectorCreeps = _.filter(energyCollectorCreeps, (c) => (
+                    _.sum(_.get(Game.rooms, [c.memory.roomID, "recycleContainer", "store"], [CONTAINER_CAPACITY])) < CONTAINER_CAPACITY 
+                        || _.sum(_.get(Game.rooms, [c.memory.roomID, "storage", "store"], [STORAGE_CAPACITY])) < STORAGE_CAPACITY 
+                        || _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY
+                ));
                 
                 if (droppedResources.length > 0) {
                     droppedResources = _.sortByOrder(droppedResources, (dr) => (resourceWorth(dr.resourceType) * dr.amount), "desc");
@@ -1322,20 +1338,21 @@ module.exports.loop = function () {
                             _.get(c.memory, ["droppedResource", "id"], undefined) == droppedResource.id
                         ));
                         if (hasAssignedCreep == false) {
-                            let creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                            let theCollectorCreeps = (droppedResource.resourceType == RESOURCE_ENERGY) ? energyCollectorCreeps : collectorCreeps;
+                            let creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
                                     && c.carryCapacityAvailable >= droppedResource.amount
                                     && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                             )});
                             if (creep == undefined) {
-                                creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
                                         && c.carryTotal == 0
                                         && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                 )});
                                 if (creep == undefined) {
-                                    creep = droppedResource.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                    creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
                                             && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                     )});
                                 }
@@ -1363,22 +1380,23 @@ module.exports.loop = function () {
                             _.get(c.memory, ["tombstone", "id"], undefined) == tombstone.id
                         ));
                         if (hasAssignedCreep == false) {
-                            let creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                            let theCollectorCreeps = (tombstone.store[RESOURCE_ENERGY] > 0) ? energyCollectorCreeps : collectorCreeps;
+                            let creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
                                     && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                     && c.carryCapacityAvailable >= _.sum(tombstone.store)
                                     && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
                             )});
                             if (creep == undefined) {
-                                creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
                                         && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                         && c.carryTotal == 0
                                         && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
                                 )});
                                 if (creep == undefined) {
-                                    creep = tombstone.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
+                                    creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
                                             && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                             && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
                                     )});
@@ -1392,7 +1410,55 @@ module.exports.loop = function () {
                                 console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(_.sum(tombstone.store), creep.carryCapacityAvailable) + " resources from tombstone of " + tombstone.creep.name + " in " + roomID);
                             }
                             else {
-                                //console.log("No creeps avaliable to pickup " + _.sum(tombstone.store) + " resources from tombstone of " + tombstone.creep.name + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                //console.log("No creeps available to pickup " + _.sum(tombstone.store) + " resources from tombstone of " + tombstone.creep.name + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                theRoom.checkForDrops = true;
+                            }
+                        }
+                    }
+                }
+                
+                if (ruins.length > 0) {
+                    ruins = _.sortByOrder(ruins, (t) => (_.sum(t.store, (a, r) => (resourceWorth(r) * a))), "desc");
+                    toStr(ruins);
+                    for (let ruin of ruins) {
+                        let hasAssignedCreep = _.some(Game.creeps, (c) => (
+                            _.get(c.memory, ["ruin", "id"], undefined) == ruin.id
+                        ));
+                        if (hasAssignedCreep == false) {
+                            let theCollectorCreeps = (ruin.store[RESOURCE_ENERGY] > 0) ? energyCollectorCreeps : collectorCreeps;
+                            let creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                    _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
+                                    && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                    && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
+                                    && c.carryCapacityAvailable >= _.sum(ruin.store)
+                                    && c.pos.inRangeTo(ruin.pos, ruin.ticksToDecay + _.max(ruin.store))
+                            )});
+                            if (creep == undefined) {
+                                creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                        _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
+                                        && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                        && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
+                                        && c.carryTotal == 0
+                                        && c.pos.inRangeTo(ruin.pos, ruin.ticksToDecay + _.max(ruin.store))
+                                )});
+                                if (creep == undefined) {
+                                    creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
+                                            _.get(c.memory, ["droppedResource", "id"], undefined) == undefined
+                                            && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
+                                            && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
+                                            && c.pos.inRangeTo(ruin.pos, ruin.ticksToDecay + _.max(ruin.store))
+                                    )});
+                                }
+                            }
+                            if (creep != undefined) {
+                                creep.memory.ruin = {
+                                    id: ruin.id
+                                    , pos: ruin.pos
+                                };
+                                console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(_.sum(ruin.store), creep.carryCapacityAvailable) + " resources from ruin in " + roomID);
+                            }
+                            else {
+                                //console.log("No creeps available to pickup " + _.sum(ruin.store) + " resources from ruin in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
                                 theRoom.checkForDrops = true;
                             }
                         }
@@ -1955,8 +2021,9 @@ module.exports.loop = function () {
             } // TODO: Add default for closest active spawn/room to be set as creep.memory.spawnID/creep.memory.roomID, and also set energyAvaliableOnSpawn & spawnTick to a default like in the creep garbage collection
         });
         
-        let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined); // Get home room storage if avaliable
-        let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined); // Get home room terminal if avaliable
+        let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined); // Get home room storage if available
+        let theTerminal = _.get(Game.rooms, [creep.memory.roomID, "terminal"], undefined); // Get home room terminal if available
+        let recycleContainer = _.get(Game.rooms, [creep.memory.roomID, "recycleContainer"], undefined); // Get home room recycle container if avaliable
         
         // Run a role that's not stored in creep.memory.role
         let runningRole = false;
@@ -1969,13 +2036,15 @@ module.exports.loop = function () {
                 if (creep.memory.role != "adaptable") {
                     creep.memory.droppedResource = undefined;
                     creep.memory.tombstone = undefined;
+                    creep.memory.ruin = undefined;
                     ROLES["recyclable"].run(creep);
                     runningRole = true;
                 }
             }
             else if (creep.carryCapacityAvailable > 0
                 && (_.get(creep.memory, ["droppedResource", "id"], undefined) != undefined 
-                    || _.get(creep.memory, ["tombstone", "id"], undefined) != undefined)) {
+                    || _.get(creep.memory, ["tombstone", "id"], undefined) != undefined 
+                    || _.get(creep.memory, ["ruin", "id"], undefined) != undefined)) {
                 ROLES["collector"].run(creep);
                 runningRole = true;
             }
@@ -1989,7 +2058,8 @@ module.exports.loop = function () {
                         && _.sum(theStorage.store) < theStorage.storeCapacity) 
                     || (theTerminal != undefined 
                         && theTerminal.my == true 
-                        && theTerminal.storeCapacityFree > 0))) {
+                        && theTerminal.storeCapacityFree > 0) 
+                    || (recycleContainer != undefined))) {
                 ROLES["hoarder"].run(creep);
                 runningRole = true;
             }
