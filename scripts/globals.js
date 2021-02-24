@@ -36,18 +36,21 @@ let globals = function() {
         , [STRUCTURE_OBSERVER]: "\uD83D\uDCE1" // satellite antenna
         , [STRUCTURE_POWER_SPAWN]: "\u2668" // hot springs
         , [STRUCTURE_NUKER]: "\u2622" // radioactive
-        , [STRUCTURE_KEEPER_LAIR]: "\uD83C\uDFDB" // classical building
+        , [STRUCTURE_KEEPER_LAIR]: "\uD83D\uDD73" // hole
         , [STRUCTURE_PORTAL]: "\uD83C\uDF00" // cyclone
         , [STRUCTURE_POWER_BANK]: "\uD83C\uDF0B" // volcano
         , tombstone: "\u26b1" // funeral urn
+        , ruin: "\uD83C\uDFDB" // classical building
+        , scoreContainer: "\u2736" // six pointed black star
+        , scoreCollector: "\uD83D\uDFCC" // heavy six pointed black star
         , source: "\uD83C\uDF04" // sunrise over mountains
         , constructionSite: "\uD83C\uDFD7" // building construction
         , resource: "\uD83D\uDEE2" // oil drum
         , creep: "\uD83E\uDD16" // robot face
-        , moveTo: "\u27A1" // right arrow
+        , moveTo: "\u27A1" // right arrow NOTE: Same as move3
         , ["move" + TOP]: "\u2B06" // up arrow
         , ["move" + TOP_RIGHT]: "\u2197" // up-right arrow
-        , ["move" + RIGHT]: "\u27A1" // right arrow
+        , ["move" + RIGHT]: "\u27A1" // right arrow NOTE: Same as moveTo
         , ["move" + BOTTOM_RIGHT]: "\u2198" // down-right arrow
         , ["move" + BOTTOM]: "\u2B07" // down arrow
         , ["move" + BOTTOM_LEFT]: "\u2199" // down-left arrow
@@ -103,7 +106,19 @@ let globals = function() {
         , sleep: "\uD83D\uDCA4" // zzz NOTE: Used for when script is terminated early to refill bucket
         , testPassed: "\uD83C\uDF89" // party popper NOTE: Used for when scout reaches its goal location
         , testFinished: "\uD83C\uDFC1" // chequered flag NOTE: Used for when scout has finished its test run
+        , emoji: "\uFE0F" // Variation Selector-16 NOTE: Append when proceding character defaults to text instead of emoji representation (e.g. move1 to move8)
     };
+    
+    global.DIRECTIONS = [
+        TOP
+        , TOP_RIGHT
+        , RIGHT
+        , BOTTOM_RIGHT
+        , BOTTOM
+        , BOTTOM_LEFT
+        , LEFT
+        , TOP_LEFT
+    ];
     
     global.travelToIcons = function(creep) {
         let travelStatusIcon = "";
@@ -111,13 +126,18 @@ let globals = function() {
             if (creep.fatigue > 0) {
                 travelStatusIcon = ICONS["tired"];
             } else {
-                let stuckCount = _.get(creep, ["memory", "_travel", "stuck"], 0);
+                let stuckCount = _.get(creep.memory, ["_travel", "stuck"], 0);
                 travelStatusIcon = _.get(ICONS, ["stuck" + (stuckCount - 1)], "");
             }
         }
-        return (travelStatusIcon + ICONS["moveTo"]);
+        let travelDirection = parseInt(_.get(creep.memory, ["_travel", "path", 0], 0), 10);
+        let travelDirectionIcon = ICONS["moveTo"];
+        if (_.includes(DIRECTIONS, travelDirection)) {
+            travelDirectionIcon = ICONS["move" + travelDirection] + ICONS["emoji"];
+        }
+        return (travelStatusIcon + travelDirectionIcon);
     };
-
+    
     global.incrementConfusedCreepCount = function(creep) {
         if (creep instanceof Creep) {
             let creepRoomID = _.get(creep.memory, ["roomID"], creep.room.name);
