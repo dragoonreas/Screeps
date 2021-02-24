@@ -196,6 +196,7 @@ module.exports = function(globalOpts = {}){
                 }
                 let room = Game.rooms[roomName];
                 if (!room) {
+                    // TODO: Take into account source keeper danger zones
                     return;
                 }
                 let matrix;
