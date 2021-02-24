@@ -95,7 +95,7 @@ let roleBuilder = {
                                              STRUCTURE_TERMINAL, 
                                              STRUCTURE_OBSERVER, 
                                              STRUCTURE_POWER_SPAWN, 
-                                             STRUCTURE_NUKER];
+                                             STRUCTURE_NUKER]; // TODO: Add STRUCTURE_FACTORY
                         let i = 0;
                         do {
                             constructionSite = creep.pos.findClosestByRange(roomConstructionSites, {
