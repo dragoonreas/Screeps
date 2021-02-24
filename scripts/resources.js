@@ -94,7 +94,7 @@ function summarize_room_internal(room) {
     const num_extractors = extractors.length;
     const creeps = _.filter(Game.creeps, c => c.memory.roomID == room.name && c.my);
     const num_creeps = creeps ? creeps.length : 0;
-    const enemy_creeps = room.find(FIND_HOSTILE_CREEPS, { filter: (i) => (_.includes(Memory.nonAgressivePlayers, i.owner.username) == false) });
+    const enemy_creeps = room.find(FIND_HOSTILE_CREEPS, { filter: (i) => (_.includes(Memory.nonAggressivePlayers, i.owner.username) == false) });
     const creep_energy = _.sum(Game.creeps, c => c.memory.roomID == room.name ? c.carry[RESOURCE_ENERGY] : 0);
     const num_enemies = enemy_creeps ? enemy_creeps.length : 0;
     const spawns = room.find(FIND_MY_SPAWNS);

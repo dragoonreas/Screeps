@@ -105,7 +105,7 @@ let roleBuilder = {
                             ++i;
                         }
                         while (i < priorityQueue.length
-                            && constructionSite == undefined) // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined
+                            && constructionSite == undefined); // TODO: Change this to a for...of loop with a break case for when constructionSite != undefined
                         
                         if (constructionSite != undefined) {
                             creep.memory.constructionSite = { 

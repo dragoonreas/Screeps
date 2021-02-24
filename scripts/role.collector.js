@@ -50,7 +50,6 @@ let roleCollector = {
                     creep.say(travelToIcons(creep) + ICONS["tombstone"], true);
                 }
                 else {
-                    toStr(tombstone.store);
                     let amountPickedUp = Math.min(tombstone.store[resourceType], creep.carryCapacityAvailable);
                     console.log(creep.name + " picked up " + amountPickedUp + " " + resourceType + " of " + _.sum(tombstone.store) + " resources from tombstone of " + tombstone.creep.name + " in " + tombstone.room.name);
                     creep.say(ICONS["withdraw"] + ICONS["tombstone"], true);

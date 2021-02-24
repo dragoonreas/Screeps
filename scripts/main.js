@@ -53,7 +53,7 @@ const screepsPlus = require("screepsplus"); // Used to put stats in memory/segme
 // TODO: Only do all the following memory initialisation on code commits instead of global resets
 
 // Make sure all required root memory objects exist
-_.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngel AI users, potentual agressive players, potential allies and allies
+_.defaultsDeep(Memory, { // TODO: Implement the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngel AI users, potentual aggressive players, potential allies and allies
     "creeps": {}
     , "rooms": {}
     , "spawns": {}
@@ -64,7 +64,7 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
     , "TooAngelDealings": { // can pay a friend tax to opt into this AIs non-agressive list (wish more people did this...)
         "idiotRating": 0 // stay below 0 to be friendly with this AI (value needs to be entered manually based on what their creep by the controller says)
     }
-    , "agressivePlayers": [ // these players attack first and ask questions later (if at all)
+    , "aggressivePlayers": [ // these players attack first and ask questions later (if at all)
         "rysade"
         , "roncli" // uses players with no RCL 8 rooms as testing grounds to improve their combat code with
         , "rudykocur" // uses nukes
@@ -75,7 +75,7 @@ _.defaultsDeep(Memory, { // TODO: Impliment the LOAN alliance import script pinn
         , "a2coder" // indiscriminately agressive towards PINK alliance members
         , "GiantDwarf" // uses nukes, open to negotiations
     ]
-    , "nonAgressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-agressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
+    , "nonAggressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-aggressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
         SYSTEM_USERNAME
         , "Bovius" // allows passage through their remote mining rooms
         , "Cade" // PINK alliance (not yet added to their whitelist)
@@ -846,10 +846,10 @@ module.exports.loop = function () {
         
         // Get invader info
         let invaders = theRoom.find(FIND_HOSTILE_CREEPS, {
-            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
+            filter: (i) => (_.includes(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
         });
         let powerfulInvaders = theRoom.find(FIND_HOSTILE_POWER_CREEPS, {
-            filter: (i) => (_.includes(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
+            filter: (i) => (_.includes(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == false)
         });
         if (invaders.length > 0 
             || powerfulInvaders.length > 0) {
@@ -949,7 +949,7 @@ module.exports.loop = function () {
                             theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
                                 s.structure.structureType == STRUCTURE_RAMPART 
                                 && (s.structure.my == true 
-                                || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                || (_.includes(Memory.nonAggressivePlayers, s.structure.owner.username) == true 
                                     && s.structure.isPublic == true))
                             ));
                         }
@@ -979,7 +979,7 @@ module.exports.loop = function () {
                     let rampartsNearInvader = aPriorityTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
                         s.structureType == STRUCTURE_RAMPART 
                         && s.my == true
-                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    )); // TODO: Filter theRamparts variable above if available instead
                     _.forEach(rampartsNearInvader, (rni) => {
                         privateRamparts[rni.id] = true; // Make ramparts near priority target private
                         if (targetWeighting > 0 && rni.pos.isNearTo(aPriorityTarget) == true && _.some(rampartsToUse, rni.id) == false) {
@@ -1058,7 +1058,7 @@ module.exports.loop = function () {
                     let rampartsNearInvader = aNonPriorityTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
                         s.structureType == STRUCTURE_RAMPART 
                         && s.my == true
-                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    )); // TODO: Filter theRamparts variable above if available instead
                     _.forEach(rampartsNearInvader, (rni) => {
                         privateRamparts[rni.id] = true;
                     });
@@ -1079,7 +1079,7 @@ module.exports.loop = function () {
                         , expiresAt: (Game.time + aPowerfulTarget.ticksToLive)
                     }); // TODO: Store the weightings somewhere else since weighting data is duplicated for each room an invader enters
                 }
-
+                
                 // Save ID of new highest target if applicable
                 if (targetWeighting > highestTargetWeighting) {
                     highestTargetWeighting = targetWeighting;
@@ -1114,7 +1114,7 @@ module.exports.loop = function () {
                             theRamparts = _.filter(theRoom.lookForAtArea(LOOK_STRUCTURES, topRange, leftRange, bottomRange, rightRange, true), (s) => (
                                 s.structure.structureType == STRUCTURE_RAMPART 
                                 && (s.structure.my == true 
-                                || (_.includes(Memory.nonAgressivePlayers, s.structure.owner.username) == true 
+                                || (_.includes(Memory.nonAggressivePlayers, s.structure.owner.username) == true 
                                     && s.structure.isPublic == true))
                             ));
                         }
@@ -1144,7 +1144,7 @@ module.exports.loop = function () {
                     let rampartsNearInvader = aPowerfulTarget.pos.findInRange(FIND_MY_STRUCTURES, 2, (s) => (
                         s.structureType == STRUCTURE_RAMPART 
                         && s.my == true
-                    )); // TODO: Filter theRamparts variable above if avaliable instead
+                    )); // TODO: Filter theRamparts variable above if available instead
                     _.forEach(rampartsNearInvader, (rni) => {
                         privateRamparts[rni.id] = true; // Make ramparts near priority target private
                         if (targetWeighting > 0 && rni.pos.isNearTo(aPowerfulTarget) == true && _.some(rampartsToUse, rni.id) == false) {
@@ -1168,7 +1168,7 @@ module.exports.loop = function () {
                 }
             }
             
-            // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an agressive players creep being present
+            // Only activate safemode when the base is in real trouble, the current definition of which is either a spawn taking damage or an aggressive players creep being present
             if (theController != undefined 
                 && theController.my == true 
                 && theController.safeMode == undefined 
@@ -1182,7 +1182,7 @@ module.exports.loop = function () {
                         && s.hits < s.hitsMax 
                         && s.isActive() == true)) == true // TODO: Calculate the maximum damage output of hostile creeps within range a spawn, and activate safemode if the combined HP of the spawn and rampart covering it is <= x2 the damage output calculated (x2 to account for damage taken this turn if their attacks get run before our safemode)
                     || _.some(invaders, (i) => (
-                        _.some(Memory.agressivePlayers, (aP) => (
+                        _.some(Memory.aggressivePlayers, (aP) => (
                             i.owner.username == aP)))) == true)) { // TODO: Check that this is all working
                 //console.log("Attempting to activate Safe Mode in: " + roomID);
                 //Game.notify("Attempting to activate Safe Mode in: " + roomID, 30);
@@ -1192,7 +1192,7 @@ module.exports.loop = function () {
                     Game.notify("Activated Safe Mode in: " + roomID);
                 }
             }
-            else if (_.get(theRoom, ["controller", "my"], false) == true && justNPCs == false && highestTargetWeighting > 0) { // TODO: Remove after defences have been properly tested
+            else if (_.get(theRoom, ["controller", "my"], false) == true && justNPCs == false && highestTargetWeighting > 0) { // TODO: Remove after defenses have been properly tested
                 //console.log("Attempting to activate (backup) Safe Mode in: " + roomID);
                 //Game.notify("Attempting to activate (backup) Safe Mode in: " + roomID, 30);
                 let err = theController.activateSafeMode();
@@ -1205,7 +1205,7 @@ module.exports.loop = function () {
         else if (theRoom.hasHostileCreep == true) {
             theRoom.clearPathCaches = false;
             theRoom.hasHostileCreep = false;
-            theRoom.checkForDrops = true; // TODO: If the invaders were players, consider drops near the exits as suspisious as they may just be trying to lure creeps outside walls/ramparts to attack them
+            theRoom.checkForDrops = true; // TODO: If the invaders were players, consider drops near the exits as suspicious as they may just be trying to lure creeps outside walls/ramparts to attack them
             
             // Make sure we're not spawning attacker creeps needlessly
             if (theRoom.memory.creepMins != undefined) {
@@ -1260,7 +1260,7 @@ module.exports.loop = function () {
         else if ((theController == undefined) // NOTE: Invader Strongholds don't require a controller
             || (theController.my == false 
                 && theController.level >= _.findKey(CONTROLLER_STRUCTURES[STRUCTURE_TOWER], (maxBuildable) => maxBuildable > 0))) {
-            let hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER && _.includes(Memory.nonAgressivePlayers, s.owner.username) == false); // TODO: Figure out if it's also worth checking if the towers are empty or not
+            let hostileTowers = theRoom.find(FIND_HOSTILE_STRUCTURES, (s) => s.structureType == STRUCTURE_TOWER && _.includes(Memory.nonAggressivePlayers, s.owner.username) == false); // TODO: Figure out if it's also worth checking if the towers are empty or not
             if (hostileTowers.length > 0) {
                 theRoom.hasHostileTower = true;
                 theRoom.checkForDrops = false;
@@ -1337,7 +1337,7 @@ module.exports.loop = function () {
                                 console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(droppedResource.amount, creep.carryCapacityAvailable) + " of " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID);
                             }
                             else {
-                                //console.log("No creeps avaliable to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                //console.log("No creeps available to pickup " + droppedResource.amount + " dropped " + droppedResource.resourceType + " in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
                                 theRoom.checkForDrops = true;
                             }
                         }
@@ -1389,7 +1389,7 @@ module.exports.loop = function () {
                 }
             }
         }
-        // TODO: Else case for unassigning dropped resources and tombstones from creeps in a room when it's unsafe to try and collect them
+        // TODO: Else case for unassigned dropped resources and tombstones from creeps in a room when it's unsafe to try and collect them
         
         // Run towers in the room
         let towerTargets = [];
@@ -2082,7 +2082,7 @@ module.exports.loop = function () {
     }
     
     /*
-        TODO: Incorporate this into propper bootstrapping code
+        TODO: Incorporate this into proper bootstrapping code
     */
     _.set(Memory.rooms, ["W86N29", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) 

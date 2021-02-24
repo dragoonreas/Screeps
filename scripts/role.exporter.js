@@ -170,7 +170,8 @@ let roleExporter = {
                             && s.my == false 
                             && s.isPublic == false)) < 1) {
                         let resourceType = _.max(_.keys(theTerminal.store), (r) => (resourceWorth(r)));
-                        if (_.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true                                            || _.get(creep.room, ["controller", "level"], 0) < 8 
+                        if (_.get(Memory.rooms, [sentFrom, "isShuttingDown"], false) == true 
+                            || _.get(creep.room, ["controller", "level"], 0) < 8 
                             && _.get(creep.room, ["controller", "level"], 0) >= 6 
                             && _.get(creep.room, ["controller", "owner", "username"], undefined) == "dragoonreas" 
                             && theTerminal.my == true 

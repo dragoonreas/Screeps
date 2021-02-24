@@ -78,7 +78,7 @@ let roleDemolisher = {
                         
                         demoTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: (cs) => (
                             _.get(cs, "my", false) == false 
-                            && _.some(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), _.get(cs, ["owner", "username"], "")) == false 
+                            && _.some(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), _.get(cs, ["owner", "username"], "")) == false 
                             && cs.structureType != STRUCTURE_ROAD 
                             && cs.structureType != STRUCTURE_CONTAINER
                         )});
@@ -87,7 +87,7 @@ let roleDemolisher = {
                     if (demoTarget == undefined) {
                         demoTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, { filter: (s) => (
                             _.get(s, "my", false) == false 
-                            && _.some(_.difference(Memory.nonAgressivePlayers, [SYSTEM_USERNAME]), _.get(s, ["owner", "username"], "")) == false 
+                            && _.some(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), _.get(s, ["owner", "username"], "")) == false 
                             && s.structureType != STRUCTURE_ROAD 
                             && s.structureType != STRUCTURE_CONTAINER
                             && s.structureType != STRUCTURE_PORTAL 
