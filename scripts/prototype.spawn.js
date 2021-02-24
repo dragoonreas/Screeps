@@ -568,7 +568,8 @@ let prototypeSpawn = function() {
         
         body = _.flattenDeep(body);
         
-        if (body.length < 1) {
+        if (body.length < 1 
+            || partMultiplier < 1) {
             return -6.5; // NOTE: Fake error for if spawn can't scale this creep to the rooms energy capacity
         }
         
