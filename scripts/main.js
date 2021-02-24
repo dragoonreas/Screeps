@@ -573,7 +573,7 @@ module.exports.loop = function () {
             Memory.rooms[roomID].creepCounts[creepType] = _.sum(Game.creeps, (c) => (
                 c.memory.roomID == roomID 
                 && c.memory.role == creepType
-            ));
+            )) || 0;
         }
         
         _.set(Memory, ["rooms", roomID, "repairerTypeCounts"], {});
@@ -581,7 +581,7 @@ module.exports.loop = function () {
             Memory.rooms[roomID].repairerTypeCounts[repairerType] = _.sum(Game.creeps, (c) => (
                 c.memory.roomID == roomID 
                 && c.memory.repairerType == repairerType
-            ));
+            )) || 0;
         }
     }
     

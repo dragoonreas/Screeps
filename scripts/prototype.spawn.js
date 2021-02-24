@@ -64,77 +64,96 @@ let prototypeSpawn = function() {
             options.memory.roomSentFrom = this.room.name;
             // TODO: Update when bootstrapping network is reconfigured
             /*if (this.room.name == "W87N29") {
-                if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W86N29";
                 }
-                else if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W85N23";
                 }
             }
             else */if (this.room.name == "W86N29") {
-                /*if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
+                /*if (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W87N29";
                 }
-                else */if (Memory.rooms.W85N23.creepCounts.builder == 0 && Memory.rooms.W85N23.creepCounts.adaptable == 0) {
+                else */if (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W85N23";
                 }
-                /*else if (Memory.rooms.W81N29.creepCounts.builder == 0 && Memory.rooms.W81N29.creepCounts.adaptable == 0) {
+                /*else if (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W81N29";
                 }*/
-                /*else if (Memory.rooms.W72N28.creepCounts.builder == 0 && Memory.rooms.W72N28.creepCounts.adaptable == 0) {
+                /*else if (_.get(Memory.rooms, ["W72N28", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W72N28", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W72N28";
                 }*/
-                else if (Memory.rooms.W64N31.creepCounts.builder == 0 && Memory.rooms.W64N31.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W64N31", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W64N31", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W64N31";
                 }
             }
             else if (this.room.name == "W85N23") {
-                /*if (Memory.rooms.W87N29.creepCounts.builder == 0 && Memory.rooms.W87N29.creepCounts.adaptable == 0) {
+                /*if (_.get(Memory.rooms, ["W87N29", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W87N29";
                 }
-                else */if (Memory.rooms.W86N29.creepCounts.builder == 0 && Memory.rooms.W86N29.creepCounts.adaptable == 0) {
+                else */if (_.get(Memory.rooms, ["W86N29", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W86N29", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W86N29";
                 }
             }
             else if (this.room.name == "W86N43") {
-                if (Memory.rooms.W86N43.creepCounts.builder == 0 && Memory.rooms.W86N43.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W86N43", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W86N43", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W86N43";
                 }
             }
             else if (this.room.name == "W9N45") {
-                if (Memory.rooms.W9N45.creepCounts.builder == 0 && Memory.rooms.W9N45.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W9N45", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W9N45", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W9N45";
                 }
             }
             else if (this.room.name == "W64N31") {
-                /*if (Memory.rooms.W55N31.creepCounts.builder == 0 && Memory.rooms.W55N31.creepCounts.adaptable == 0) {
+                /*if (_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W55N31";
                 }
-                else */if (Memory.rooms.W53N39.creepCounts.builder == 0 && Memory.rooms.W53N39.creepCounts.adaptable == 0) {
+                else */if (_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W53N39", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W53N39";
                 }
             }
             else if (this.room.name == "W53N39") {
-                /*if (Memory.rooms.W53N42.creepCounts.builder == 0 && Memory.rooms.W53N42.creepCounts.adaptable == 0) {
+                /*if (_.get(Memory.rooms, ["W53N42", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W53N42", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W53N42";
                 }
-                else */if (Memory.rooms.W52N47.creepCounts.builder == 0 && Memory.rooms.W52N47.creepCounts.adaptable == 0) {
+                else */if (_.get(Memory.rooms, ["W52N47", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W52N47", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W52N47";
                 }
-                else if (Memory.rooms.W46N41.creepCounts.builder == 0 && Memory.rooms.W46N41.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W46N41", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W46N41", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W46N41";
                 }
             }
             else if (this.room.name == "W46N41") {
-                if (Memory.rooms.W46N18.creepCounts.builder == 0 && Memory.rooms.W46N18.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W46N18", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W46N18", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W46N18";
                 }
             }/*
             else if (this.room.name == "W52N47") {
-                if (Memory.rooms.W48N52.creepCounts.builder == 0 && Memory.rooms.W48N52.creepCounts.adaptable == 0) {
+                if (_.get(Memory.rooms, ["W48N52", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W48N52", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W48N52";
                 }
-                else if (Memory.rooms.W42N51.creepCounts.builder == 0 && Memory.rooms.W42N51.creepCounts.adaptable == 0) {
+                else if (_.get(Memory.rooms, ["W42N51", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["W42N51", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W42N51";
                 }
             }*/
