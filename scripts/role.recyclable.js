@@ -15,6 +15,10 @@ let roleRecyclable = {
             if (theSpawn == undefined) {
                 theSpawn = creep.pos.findClosestByRange(theSpawns);
             }
+            if (theSpawn == undefined
+                && theSpawns.length > 0) {
+                theSpawn = _.first(theSpawns);
+            }
             if (theSpawn != undefined) {
                 creep.memory.recycleSpawnID = theSpawn.id;
             }
