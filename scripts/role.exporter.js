@@ -62,7 +62,6 @@ let roleExporter = {
                     creep.say(travelToIcons(creep) + sentFrom, true);
                     creep.travelTo(new RoomPosition(25, 25, sentFrom), {
                         range: 23
-                        , ignoreHostileCreeps: (creep.pos.findInRange(FIND_SCORE_COLLECTORS, WALLS_RADIUS - 1).length > 0 ? true : false)
                     });
                 }
             }
@@ -78,29 +77,39 @@ let roleExporter = {
                 if ((_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
                         && _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") 
                     || _.any(safeRooms, (r) => (creep.room.name)) == true) {
-                    if (type == "S_P_B-S") {
+                    if (type == "S_S") {
                         let structureID = _.get(creep.memory, ["withdrawStructure", "id"], undefined);
-                        if (structureID == undefined) {
-                            if (_.get(theRecycleContainer, ["store", RESOURCE_SCORE], 0) > 0) {
-                                creep.memory.withdrawStructure = { 
-                                    id: theRecycleContainer.id
-                                    , pos: theRecycleContainer.pos
-                                };
-                            }
-                            else if (_.get(theTerminal, ["store", RESOURCE_SCORE], 0) > 0) {
-                                creep.memory.withdrawStructure = { 
-                                    id: theTerminal.id
-                                    , pos: theTerminal.pos
-                                };
-                            }
-                            else if (_.get(theStorage, ["store", RESOURCE_SCORE], 0) > 0) {
-                                creep.memory.withdrawStructure = { 
-                                    id: theStorage.id
-                                    , pos: theStorage.pos
-                                };
-                            }
-                            
+                        let structureResource = _.get(creep.memory, ["withdrawStructure", "resource"], undefined);
+                        if (structureID == undefined 
+                            || structureResource == undefined) {
+                            _.each(SYMBOLS, (s) => {
+                                if (_.get(theRecycleContainer, ["store", s], 0) > 0) {
+                                    creep.memory.withdrawStructure = { 
+                                        id: theRecycleContainer.id
+                                        , pos: theRecycleContainer.pos
+                                        , resource: s
+                                    };
+                                    return false;
+                                }
+                                else if (_.get(theTerminal, ["store", s], 0) > 0) {
+                                    creep.memory.withdrawStructure = { 
+                                        id: theTerminal.id
+                                        , pos: theTerminal.pos
+                                        , resource: s
+                                    };
+                                    return false;
+                                }
+                                else if (_.get(theStorage, ["store", s], 0) > 0) {
+                                    creep.memory.withdrawStructure = { 
+                                        id: theStorage.id
+                                        , pos: theStorage.pos
+                                        , resource: s
+                                    };
+                                    return false;
+                                }
+                            });
                             structureID = _.get(creep.memory, ["withdrawStructure", "id"], undefined);
+                            structureResource = _.get(creep.memory, ["withdrawStructure", "resource"], undefined);
                         }
                         
                         let structure = Game.getObjectById(structureID);
@@ -128,7 +137,7 @@ let roleExporter = {
                             return;
                         }
                         
-                        let err = creep.withdraw(structure, RESOURCE_SCORE);
+                        let err = creep.withdraw(structure, structureResource);
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(structure);
                             creep.say(travelToIcons(creep) + ICONS[structure.structureType], true);
@@ -140,7 +149,7 @@ let roleExporter = {
                             _.set(creep.memory, ["withdrawStructure"], undefined);
                         }
                         else {
-                            console.log(creep.name + " (exporter) is confused withdrawing " + RESOURCE_SCORE + " from " + structure.structureType + ": " + err);
+                            console.log(creep.name + " (exporter) is confused withdrawing " + structureResource + " from " + structure.structureType + ": " + err);
                             incrementConfusedCreepCount(creep);
                             creep.say(ICONS[structure.structureType] + "?", true);
                         }
@@ -390,7 +399,7 @@ let roleExporter = {
             if (creep.room.name != sentTo 
                 && creep.memory.transferStructure == undefined) {
                 if (creep.memory.roomID != sentTo 
-                    && type != "S_P_B-S") {
+                    && type != "S_S") {
                     _.set(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], _.get(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
                     creep.memory.roomID = sentTo;
@@ -410,15 +419,15 @@ let roleExporter = {
                 let tripEndTime = _.get(creep.memory, ["stopExporting"], Game.time + 1);
                 let returnTripTime = (tripEndTime - tripStartTime) * 2;
                 let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
-                if (type == "S_P_B-S" 
-                    && creep.store[RESOURCE_SCORE] > 0) {
-                    let scoreCollector = _.first(creep.room.find(FIND_SCORE_COLLECTORS));
-                    let taxContainer = _.first(scoreCollector.pos.findInRange(FIND_STRUCTURES, 5, { filter: (s) => (
-                        s.structureType == STRUCTURE_CONTAINER
-                    )}));
-                    if (scoreCollector == undefined 
+                if (type == "S_S" 
+                    && _.sum(SYMBOLS, (s) => { return creep.store[s]; }) > 0) {
+                    let symbolDecoder = _.first(creep.room.find(FIND_SYMBOL_DECODERS)); // TODO: Check for SymbolDecoder.resourceType
+                    let taxContainer = undefined;//_.first(symbolDecoder.pos.findInRange(FIND_STRUCTURES, 5, { filter: (s) => (
+                    //     s.structureType == STRUCTURE_CONTAINER
+                    // )})); // TODO: Check if tax containers are needed
+                    if (symbolDecoder == undefined 
                         /*&& taxContainer == undefined*/) {
-                        console.log("Exporter " + creep.name + " couldn't find " + ((scoreCollector == undefined) ? "score collector" : "tax container") + " in " + creep.room.name);
+                        console.log("Exporter " + creep.name + " couldn't find " + ((symbolDecoder == undefined) ? "symbol decoder" : "tax container") + " in " + creep.room.name);
                         creep.memory.role = "recyclable";
                         ROLES["recyclable"].run(creep);
                         return;
@@ -426,38 +435,36 @@ let roleExporter = {
                     
                     const TAX_RATE = 0.25;
                     if (taxContainer != undefined && _.get(creep.memory, ["taxPaid"], false) == false) {
-                        let err = creep.transfer(taxContainer, RESOURCE_SCORE, Math.ceil(creep.store[RESOURCE_SCORE] * TAX_RATE));
-                        if (err == ERR_NOT_IN_RANGE) {
-                            creep.travelTo(taxContainer, {
-                                ignoreHostileCreeps: true
-                            });
-                            creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
-                        }
-                        else if (err == OK) {
-                            _.set(creep.memory, ["taxPaid"], true);
-                            creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER], true);
-                        }
-                        else {
+                        // let err = creep.transfer(taxContainer, RESOURCE_SCORE, Math.ceil(creep.store[RESOURCE_SCORE] * TAX_RATE));
+                        // if (err == ERR_NOT_IN_RANGE) {
+                        //     creep.travelTo(taxContainer, {
+                        //         ignoreHostileCreeps: true
+                        //     });
+                        //     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                        // }
+                        // else if (err == OK) {
+                        //     _.set(creep.memory, ["taxPaid"], true);
+                        //     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER], true);
+                        // }
+                        // else {
                             incrementConfusedCreepCount(creep);
                             creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER] + "?", true);
-                        }
+                        // }
                     }
                     else {
-                        let err = creep.transfer(scoreCollector, RESOURCE_SCORE);
-                        if (err == ERR_NOT_IN_RANGE) {
-                            creep.travelTo(scoreCollector, {
-                                ignoreHostileCreeps: (creep.pos.findInRange(FIND_SCORE_COLLECTORS, WALLS_RADIUS).length > 0 ? true : false)
-                            });
-                            creep.say(travelToIcons(creep) + ICONS["scoreCollector"], true);
-                        }
-                        else if (err == OK) {
-                            _.set(creep.memory, ["taxPaid"], false);
-                            creep.say(ICONS["transfer"] + ICONS["scoreCollector"], true);
-                        }
-                        else {
+                        // let err = creep.transfer(symbolDecoder, RESOURCE_SCORE);
+                        // if (err == ERR_NOT_IN_RANGE) {
+                        //     creep.travelTo(symbolDecoder);
+                        //     creep.say(travelToIcons(creep) + ICONS["symbolDecoder"], true);
+                        // }
+                        // else if (err == OK) {
+                        //     _.set(creep.memory, ["taxPaid"], false);
+                        //     creep.say(ICONS["transfer"] + ICONS["symbolDecoder"], true);
+                        // }
+                        // else {
                             incrementConfusedCreepCount(creep);
-                            creep.say(ICONS["transfer"] + ICONS["scoreCollector"] + "?", true);
-                        }
+                            creep.say(ICONS["transfer"] + ICONS["symbolDecoder"] + "?", true);
+                        // }
                     }
                 }
                 else if (sentFrom == sentTo 

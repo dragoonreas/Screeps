@@ -184,13 +184,14 @@ let prototypeRoom = function() {
         });
     }
     
-    if (Room.prototype.ownedScore == undefined) { // NOTE: Must be defined after Room.recycleContainer
-        defineCachedGetter(Room.prototype, "ownedScore", (r) => {
-            let recycleConatinerScore = _.get(r, ["recycleContainer", RESOURCE_SCORE], 0);
-            let storageScore = _.get(r, ["storage", "store", RESOURCE_SCORE], 0);
-            let terminalScore = _.get(r, ["terminal", "store", RESOURCE_SCORE], 0);
-            // TODO: Check for score in containers
-            return (recycleConatinerScore + storageScore + terminalScore);
+    if (Room.prototype.ownedSymbols == undefined) { // NOTE: Must be defined after Room.recycleContainer
+        defineCachedGetter(Room.prototype, "ownedSymbols", (r) => {
+            let totalSymbols = 0;
+            _.each(SYMBOLS, (s) => {
+                totalSymbols += _.get(r, ["recycleContainer", s], 0) +  _.get(r, ["storage", "store", s], 0) +  _.get(r, ["terminal", "store", s], 0);
+            });
+            // TODO: Check for symbols in containers
+            return totalSymbols;
         });
     }
 
@@ -556,7 +557,7 @@ let prototypeRoom = function() {
                 Primary: Orange
                 Secondary:
                     Orange: Export
-                    White: Sneaky_Polar_Bear Scorer
+                    White: Symbol Scorer
             Name format: spawnRoom_priority_count_fromRoom_toRoom
             Defaults:
                 Priority: 0
@@ -576,7 +577,7 @@ let prototypeRoom = function() {
                     let nameInfo = f.name.split('_'); 
                     return { 
                         priority: _.parseInt(_.get(nameInfo, 1, 0))
-                        , type: f.secondaryColor == COLOR_WHITE ? "S_P_B-S" : "E" // NOTE: COLOR_WHITE = Sneaky_Polar_Bear Scorer (S_P_B-S), COLOR_ORANGE = Export (R)
+                        , type: f.secondaryColor == COLOR_WHITE ? "S_S" : "E" // NOTE: COLOR_WHITE = Symbol Scorer (S_S), COLOR_ORANGE = Export (E)
                         , count: _.parseInt(_.get(nameInfo, 2, 1))
                         , from: _.get(nameInfo, 3, f.pos.roomName)
                         , to: _.get(nameInfo, 4, _.get(nameInfo, 0, r.name)) 

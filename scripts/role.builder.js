@@ -175,10 +175,7 @@ let roleBuilder = {
         else {
             let source = undefined;
             switch (creep.memory.roomID) {
-                case "W38S19": source = Game.getObjectById("5fb29a7f0d314f7d0888c3fd"); break;
-                case "W39S17": source = Game.getObjectById("5fb29a5d0d314f7d0888c2ad"); break;
-                case "W35S13": source = Game.getObjectById("5fb29ae40d314f7d0888c8a3"); break;
-                case "W32S16": source = Game.getObjectById("5fb29b510d314f7d0888cd62"); break;
+                case "E11S18": source = Game.getObjectById("6027a9fc992216018438d9e1"); break;
             }
             
             let theStorage = _.get(Game.rooms, [creep.memory.roomID, "storage"], undefined);

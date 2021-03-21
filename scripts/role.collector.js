@@ -2,34 +2,34 @@ let roleCollector = {
     run: function(creep) {
         creep.memory.executingRole = "collector";
         
-        if (creep.memory.scoreContainer != undefined) {
-            let scoreContainer = Game.getObjectById(creep.memory.scoreContainer.id);
-            let scoreContainerPos = _.get(creep.memory, ["scoreContainer", "pos"], undefined);
-            if (scoreContainer == undefined) {
-                if (creep.room.name != _.get(scoreContainerPos, ["roomName"], creep.room.name)) {
-                    creep.travelTo(RoomPositionFromObject(scoreContainerPos));
-                    creep.say(travelToIcons(creep) + scoreContainerPos.roomName, true);
+        if (creep.memory.symbolContainer != undefined) {
+            let symbolContainer = Game.getObjectById(creep.memory.symbolContainer.id);
+            let symbolContainerPos = _.get(creep.memory, ["symbolContainer", "pos"], undefined);
+            if (symbolContainer == undefined) {
+                if (creep.room.name != _.get(symbolContainerPos, ["roomName"], creep.room.name)) {
+                    creep.travelTo(RoomPositionFromObject(symbolContainerPos));
+                    creep.say(travelToIcons(creep) + symbolContainerPos.roomName, true);
                 }
                 else {
-                    console.log(creep.name + " failed to pickup the resources from score container in " + creep.room.name);
-                    creep.memory.scoreContainer = undefined;
+                    console.log(creep.name + " failed to pickup the resources from symbol container in " + creep.room.name);
+                    creep.memory.symbolContainer = undefined;
                     Memory.rooms[creep.room.name].checkForDrops = true;
-                    creep.say(ICONS["scoreContainer"] + "?", true);
+                    creep.say(ICONS["symbolContainer"] + "?", true);
                 }
             }
             else {
-                let resourceType = _.max(_.keys(scoreContainer.store), (r) => (resourceWorth(r)));
-                if (creep.withdraw(scoreContainer, resourceType) == ERR_NOT_IN_RANGE) {
-                    creep.travelTo(scoreContainer);
-                    creep.say(travelToIcons(creep) + ICONS["scoreContainer"], true);
+                let resourceType = _.max(_.keys(symbolContainer.store), (r) => (resourceWorth(r)));
+                if (creep.withdraw(symbolContainer, resourceType) == ERR_NOT_IN_RANGE) {
+                    creep.travelTo(symbolContainer);
+                    creep.say(travelToIcons(creep) + ICONS["symbolContainer"], true);
                 }
                 else {
-                    let amountPickedUp = Math.min(scoreContainer.store[resourceType], creep.carryCapacityAvailable);
-                    console.log(creep.name + " picked up " + amountPickedUp + " " + resourceType + " of " + _.sum(scoreContainer.store) + " resources from score container in " + scoreContainer.room.name);
-                    creep.say(ICONS["withdraw"] + ICONS["scoreContainer"], true);
-                    if (((_.sum(scoreContainer.store) - amountPickedUp) == 0) 
+                    let amountPickedUp = Math.min(symbolContainer.store[resourceType], creep.carryCapacityAvailable);
+                    console.log(creep.name + " picked up " + amountPickedUp + " " + resourceType + " of " + _.sum(symbolContainer.store) + " resources from symbol container in " + symbolContainer.room.name);
+                    creep.say(ICONS["withdraw"] + ICONS["symbolContainer"], true);
+                    if (((_.sum(symbolContainer.store) - amountPickedUp) == 0) 
                         || ((creep.carryTotal + amountPickedUp) == creep.carryCapacity)) {
-                        creep.memory.scoreContainer = undefined;
+                        creep.memory.symbolContainer = undefined;
                         Memory.rooms[creep.room.name].checkForDrops = true;
                     }
                 }

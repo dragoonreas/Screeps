@@ -59,43 +59,13 @@ let roleHarvester = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     let sourceIDs = {
-                        "W38S19": [
-                            "5fb29a7f0d314f7d0888c3fd" // W38S19
-                            , "5fb29a7f0d314f7d0888c3fc" // W38S19
-                            , "5fb29a5d0d314f7d0888c2b4" // W39S19
-                            , "5fb29a5d0d314f7d0888c2b5" // W39S19
-                            , "5fb29a7f0d314f7d0888c3fd" // W38S19
-                            //, "5fb29a7f0d314f7d0888c3fc" // W38S19
-                        ]
-                        , "W39S17": [
-                            "5fb29a5d0d314f7d0888c2ad" // W39S17
-                            , "5fb29a5d0d314f7d0888c2ae" // W39S17
-                            , "5fb29a5d0d314f7d0888c2b1" // W39S18
-                            , "5fb29a5c0d314f7d0888c2aa" // W39S16
-                            , "5fb29a5d0d314f7d0888c2ad" // W39S17
-                            //, "5fb29a5d0d314f7d0888c2ae" // W39S17
-                        ]
-                        , "W35S13": [
-                            "5fb29ae40d314f7d0888c8a3" // W35S13
-                            , "5fb29ae40d314f7d0888c8a5" // W35S13
-                            , "5fb29ac20d314f7d0888c6d6" // W36S13
-                            , "5fb29ae40d314f7d0888c8a0" // W35S12
-                            , "5fb29ae50d314f7d0888c8b0" // W35S15
-                            , "5fb29ae50d314f7d0888c8b2" // W35S15
-                            , "5fb29ae50d314f7d0888c8b3" // W35S15
-                            , "5fb29ae40d314f7d0888c8a3" // W35S13
-                            //, "5fb29ae40d314f7d0888c8a5" // W35S13
-                        ]
-                        , "W32S16": [
-                            "5fb29b510d314f7d0888cd62" // W32S16
-                            , "5fb29b510d314f7d0888cd60" // W32S16
-                            , "5fb29b740d314f7d0888cea5" // W31S16
-                            , "5fb29b510d314f7d0888cd64" // W32S17
-                            , "5fb29b500d314f7d0888cd5d" // W32S15
-                            , "5fb29b500d314f7d0888cd5c" // W32S15
-                            , "5fb29b2d0d314f7d0888cc1e" // W33S16
-                            , "5fb29b510d314f7d0888cd62" // W32S16
-                            //, "5fb29b510d314f7d0888cd60" // W32S16
+                        "E11S18": [
+                            "6027a9fc992216018438d9e1" // E11S18
+                            , "6027a9fc992216018438d9e3" // E11S18
+                            , "6027a9fc992216018438d9e6" // E11S19
+                            , "6027a9fc992216018438d9df" // E11S17
+                            , "6027a9fc992216018438d9e1" // E11S18
+                            //, "6027a9fc992216018438d9e3" // E11S18
                         ]
                     };
                     let upgraderCount = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "creepCounts", "upgrader"], 0);
@@ -155,88 +125,22 @@ let roleHarvester = {
                                     }
                                 }
                             }
-                            else if (sourceID == "5fb29a5d0d314f7d0888c2b4") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "6027a9fc992216018438d9e1") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(16, 21, "W39S19"));
-                                creep.say(travelToIcons(creep) + "W39S19", true);
+                                creep.travelTo(new RoomPosition(21, 4, "E11S18"));
+                                creep.say(travelToIcons(creep) + "E11S18", true);
                                 return;
                             }
-                            else if (sourceID == "5fb29a7f0d314f7d0888c3fd") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "6027a9fc992216018438d9e6") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(40, 22, "W38S19"));
-                                creep.say(travelToIcons(creep) + "W38S19", true);
+                                creep.travelTo(new RoomPosition(22, 21, "E11S19"));
+                                creep.say(travelToIcons(creep) + "E11S19", true);
                                 return;
                             }
-                            else if (sourceID == "5fb29a5d0d314f7d0888c2b1") { // TODO: Remove this after the source has been added to memory
+                            else if (sourceID == "6027a9fc992216018438d9df") { // TODO: Remove this after the source has been added to memory
                                 creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(4, 31, "W39S18"));
-                                creep.say(travelToIcons(creep) + "W39S18", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29a5c0d314f7d0888c2aa") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(35, 3, "W39S16"));
-                                creep.say(travelToIcons(creep) + "W39S16", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29a5d0d314f7d0888c2ad") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(42, 5, "W39S17"));
-                                creep.say(travelToIcons(creep) + "W39S17", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29ac20d314f7d0888c6d6") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(32, 18, "W36S13"));
-                                creep.say(travelToIcons(creep) + "W36S13", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29ae40d314f7d0888c8a0") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(27, 16, "W35S12"));
-                                creep.say(travelToIcons(creep) + "W35S12", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29ae50d314f7d0888c8b0") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(34, 6, "W35S15"));
-                                creep.say(travelToIcons(creep) + "W35S15", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29ae40d314f7d0888c8a3") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(9, 7, "W35S13"));
-                                creep.say(travelToIcons(creep) + "W35S13", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29b740d314f7d0888cea5") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(6, 13, "W31S16"));
-                                creep.say(travelToIcons(creep) + "W31S16", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29b510d314f7d0888cd64") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(23, 10, "W32S17"));
-                                creep.say(travelToIcons(creep) + "W32S17", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29b500d314f7d0888cd5d") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(32, 26, "W32S15"));
-                                creep.say(travelToIcons(creep) + "W32S15", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29b2d0d314f7d0888cc1e") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(38, 27, "W33S16"));
-                                creep.say(travelToIcons(creep) + "W33S16", true);
-                                return;
-                            }
-                            else if (sourceID == "5fb29b510d314f7d0888cd62") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(36, 43, "W32S16"));
-                                creep.say(travelToIcons(creep) + "W32S16", true);
+                                creep.travelTo(new RoomPosition(43, 40, "E11S17"));
+                                creep.say(travelToIcons(creep) + "E11S17", true);
                                 return;
                             }
                         }

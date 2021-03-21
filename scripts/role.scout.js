@@ -56,7 +56,7 @@ let roleScout = {
             //             Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
             //         }
             //     }
-            /*} else */if (sentFrom == "W35S13" 
+            /*} else if (sentFrom == "W35S13" 
                 && sentTo == "E32N18") {
                 let waypoints = [
                     "E35N15"
@@ -123,10 +123,10 @@ let roleScout = {
                         Memory.rooms[creep.memory.roomID].creepMins.scout = 0;
                     }
                 }
-            } else {
+            } else {*/
                 incrementConfusedCreepCount(creep);
                 creep.say("?", true);
-            }
+            //}
         }
         else {
             creep.say(ICONS["testFinished"], true);

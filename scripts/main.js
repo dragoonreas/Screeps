@@ -113,32 +113,16 @@ for (let roomID in Game.rooms) {
 }
 
 // Setup room memory objects for owned rooms
-_.set(Memory.rooms, ["W38S19", "harvestRooms"], [
-    "W39S19"
-]);
-_.set(Memory.rooms, ["W39S17", "harvestRooms"], [
-    "W39S18"
-    , "W39S16"
-]);
-_.set(Memory.rooms, ["W35S13", "harvestRooms"], [
-    "W36S13"
-    , "W35S12"
-    , "W35S15"
-]);
-_.set(Memory.rooms, ["W32S16", "harvestRooms"], [
-    "W31S16"
-    , "W32S17"
-    , "W32S15"
-    , "W33S16"
+_.set(Memory.rooms, ["E11S18", "harvestRooms"], [
+    "E11S19"
+    , "E11S17"
 ]);
 /*
     Future Expansion Candidates:
-    From W38S19:
-        - W39S17
-    From W39S17:
+    From E11S18:
+        - E15S13
+    From E15S13:
         - W35S13
-    From W35S13:
-        - W33S16
 */
 
 /*
@@ -146,28 +130,7 @@ _.set(Memory.rooms, ["W32S16", "harvestRooms"], [
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["W38S19", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W39S17", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W35S13", "repairerTypeMins"], {
-    [STRUCTURE_CONTAINER]: 0
-    , [STRUCTURE_ROAD]: 1
-    , [STRUCTURE_RAMPART]: 0
-    , [STRUCTURE_WALL]: 0
-    , all: 1
-});
-_.set(Memory.rooms, ["W33S16", "repairerTypeMins"], {
+_.set(Memory.rooms, ["E11S18", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
@@ -193,65 +156,20 @@ for (let roomID in Memory.rooms) {
     These should be stored in an array instead of an object since their order also defines the build priority.
     Also be sure to use for...of instead of for..in where their order is important
 */
-_.set(Memory.rooms, ["W38S19", "creepMins"], {
+_.set(Memory.rooms, ["E11S18", "creepMins"], {
     attacker: 0
     , harvester: 4
     , powerHarvester: 0
     , upgrader: 1
-    , miner: 0//_.size(_.get(Game.rooms, ["W38S19", "minerSources"], {}))
+    , miner: 0//_.size(_.get(Game.rooms, ["E11S18", "minerSources"], {}))
     , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W38S19", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E11S18", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
     , scout: 0
     , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W38S19", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E11S18", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
     , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W38S19", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W38S19", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W39S17", "creepMins"], {
-    attacker: 0
-    , harvester: 4
-    , powerHarvester: 0
-    , upgrader: 2
-    , miner: 0//_.size(_.get(Game.rooms, ["W39S17", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W39S17", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W39S17", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W39S17", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W39S17", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W35S13", "creepMins"], {
-    attacker: 0
-    , harvester: 4
-    , powerHarvester: 0
-    , upgrader: 2
-    , miner: 0//_.size(_.get(Game.rooms, ["W35S13", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W35S13", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W35S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W35S13", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W35S13", "canHarvestMineral"], false) ? 1 : 0)
-});
-_.set(Memory.rooms, ["W32S16", "creepMins"], {
-    attacker: 0
-    , harvester: 4
-    , powerHarvester: 0
-    , upgrader: 2
-    , miner: 0//_.size(_.get(Game.rooms, ["W32S16", "minerSources"], {}))
-    , adaptable: 0
-    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["W32S16", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
-    , scout: 0
-    , claimer: 1
-    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["W32S16", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
-    , builder: 1
-    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["W32S16", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
-    , rockhound: (_.get(Game.rooms, ["W32S16", "canHarvestMineral"], false) ? 1 : 0)
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E11S18", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
+    , rockhound: (_.get(Game.rooms, ["E11S18", "canHarvestMineral"], false) ? 1 : 0)
 });
 
 if (Memory.MonCPU == true) { console.log("init>loopStart:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -1025,11 +943,11 @@ module.exports.loop = function () {
             _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));
         }
         
-        let scoreContainers = theRoom.find(FIND_SCORE_CONTAINERS, {
+        let symbolContainers = theRoom.find(FIND_SYMBOL_CONTAINERS, {
                 filter: (sc) => (
                     _.sum(sc.store) > 0
             )});
-        if (theRoom.checkForDrops == true || ((scoreContainers.length > 0 || checkingForDrops == true) && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
+        if (theRoom.checkForDrops == true || ((symbolContainers.length > 0 || checkingForDrops == true) && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
             theRoom.checkForDrops = false;
             let recycleContainer = _.get(Game.rooms, [roomID, "recycleContainer"], undefined);
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES, {
@@ -1045,7 +963,7 @@ module.exports.loop = function () {
                 filter: (r) => (
                     _.sum(r.store) > 0
             )});
-            if (scoreContainers.length > 0 || droppedResources.length > 0 || tombstones.length > 0 || ruins.length > 0) {
+            if (symbolContainers.length > 0 || droppedResources.length > 0 || tombstones.length > 0 || ruins.length > 0) {
                 let energyCollectorCreeps = theRoom.find(FIND_MY_CREEPS, {
                     filter: (c) => (
                         c.spawning == false 
@@ -1061,7 +979,7 @@ module.exports.loop = function () {
                         && c.memory.role != "recyclable" 
                         && c.carryCapacityAvailable > 0 
                         && ((c.memory.role == "exporter" 
-                                && (c.memory.type != "S_P_B-S" 
+                                && (c.memory.type != "S_S" 
                                     || c.memory.taxPaid == false)
                             || c.memory.working != true))
                 )});
@@ -1071,44 +989,43 @@ module.exports.loop = function () {
                         || _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY
                 ));
                 
-                if (scoreContainers.length > 0) {
-                    scoreContainers = _.sortByOrder(scoreContainers, (t) => (_.sum(t.store, (a, r) => (resourceWorth(r) * a))), "desc");
-                    toStr(scoreContainers);
-                    for (let scoreContainer of scoreContainers) {
+                if (symbolContainers.length > 0) {
+                    symbolContainers = _.sortByOrder(symbolContainers, (t) => (_.sum(t.store, (a, r) => (resourceWorth(r) * a))), "desc");
+                    for (let symbolContainer of symbolContainers) {
                         let hasAssignedCreep = _.some(Game.creeps, (c) => (
-                            _.get(c.memory, ["scoreContainer", "id"], undefined) == scoreContainer.id
+                            _.get(c.memory, ["symbolContainer", "id"], undefined) == symbolContainer.id
                         ));
                         if (hasAssignedCreep == false) {
-                            let creep = scoreContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                    _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
-                                    && c.carryCapacityAvailable >= _.sum(scoreContainer.store)
-                                    && c.pos.inRangeTo(scoreContainer.pos, scoreContainer.ticksToDecay + _.max(scoreContainer.store))
+                            let creep = symbolContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                    _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
+                                    && c.carryCapacityAvailable >= _.sum(symbolContainer.store)
+                                    && c.pos.inRangeTo(symbolContainer.pos, symbolContainer.ticksToDecay + _.max(symbolContainer.store))
                                     && _.sum(_.get(Game.rooms, [c.memory.roomID, "recycleContainer", "store"], [CONTAINER_CAPACITY])) < CONTAINER_CAPACITY 
                                     && _.sum(_.get(Game.rooms, [c.memory.roomID, "storage", "store"], [STORAGE_CAPACITY])) < STORAGE_CAPACITY 
                                     && _.sum(_.get(Game.rooms, [c.memory.roomID, "terminal", "store"], [TERMINAL_CAPACITY])) < TERMINAL_CAPACITY
                             )});
                             if (creep == undefined) {
-                                creep = scoreContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                        _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                creep = symbolContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                        _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                         && c.carryTotal == 0
-                                        && c.pos.inRangeTo(scoreContainer.pos, scoreContainer.ticksToDecay + _.max(scoreContainer.store))
+                                        && c.pos.inRangeTo(symbolContainer.pos, symbolContainer.ticksToDecay + _.max(symbolContainer.store))
                                 )});
                                 if (creep == undefined) {
-                                    creep = scoreContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
-                                            _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
-                                            && c.pos.inRangeTo(scoreContainer.pos, scoreContainer.ticksToDecay + _.max(scoreContainer.store))
+                                    creep = symbolContainer.pos.findClosestByRange(collectorCreeps, { filter: (c) => (
+                                            _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
+                                            && c.pos.inRangeTo(symbolContainer.pos, symbolContainer.ticksToDecay + _.max(symbolContainer.store))
                                     )});
                                 }
                             }
                             if (creep != undefined) {
-                                creep.memory.scoreContainer = {
-                                    id: scoreContainer.id
-                                    , pos: scoreContainer.pos
+                                creep.memory.symbolContainer = {
+                                    id: symbolContainer.id
+                                    , pos: symbolContainer.pos
                                 };
-                                console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(_.sum(scoreContainer.store), creep.carryCapacityAvailable) + " resources from score container in " + roomID);
+                                console.log("Sending " + creep.name + " (" + creep.memory.role + ") to pickup " + Math.min(_.sum(symbolContainer.store), creep.carryCapacityAvailable) + " resources from symbol container in " + roomID);
                             }
                             else {
-                                //console.log("No creeps available to pickup " + _.sum(scoreContainer.store) + " resources from score container in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
+                                //console.log("No creeps available to pickup " + _.sum(symbolContainer.store) + " resources from symbol container in " + roomID); // TODO: Put this back in after adding a check to make sure it's only displayed once per drop instead of each tick
                                 theRoom.checkForDrops = true;
                             }
                         }
@@ -1124,21 +1041,21 @@ module.exports.loop = function () {
                         if (hasAssignedCreep == false) {
                             let theCollectorCreeps = (droppedResource.resourceType == RESOURCE_ENERGY) ? energyCollectorCreeps : collectorCreeps;
                             let creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                    _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                    _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && c.carryCapacityAvailable >= droppedResource.amount
                                     && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                             )});
                             if (creep == undefined) {
                                 creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                        _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                        _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && c.carryTotal == 0
                                         && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                 )});
                                 if (creep == undefined) {
                                     creep = droppedResource.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                            _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                            _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                             && c.pos.inRangeTo(droppedResource.pos, droppedResource.amount)
                                     )});
@@ -1169,7 +1086,7 @@ module.exports.loop = function () {
                         if (hasAssignedCreep == false) {
                             let theCollectorCreeps = (tombstone.store[RESOURCE_ENERGY] > 0) ? energyCollectorCreeps : collectorCreeps;
                             let creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                    _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                    _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                     && c.carryCapacityAvailable >= _.sum(tombstone.store)
@@ -1177,7 +1094,7 @@ module.exports.loop = function () {
                             )});
                             if (creep == undefined) {
                                 creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                        _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                        _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                         && c.carryTotal == 0
@@ -1185,7 +1102,7 @@ module.exports.loop = function () {
                                 )});
                                 if (creep == undefined) {
                                     creep = tombstone.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                            _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                            _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                             && c.pos.inRangeTo(tombstone.pos, tombstone.ticksToDecay + _.max(tombstone.store))
@@ -1217,7 +1134,7 @@ module.exports.loop = function () {
                         if (hasAssignedCreep == false) {
                             let theCollectorCreeps = (ruin.store[RESOURCE_ENERGY] > 0) ? energyCollectorCreeps : collectorCreeps;
                             let creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                    _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                    _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                     && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
@@ -1226,7 +1143,7 @@ module.exports.loop = function () {
                             )});
                             if (creep == undefined) {
                                 creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                        _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                        _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                         && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
@@ -1235,7 +1152,7 @@ module.exports.loop = function () {
                                 )});
                                 if (creep == undefined) {
                                     creep = ruin.pos.findClosestByRange(theCollectorCreeps, { filter: (c) => (
-                                            _.get(c.memory, ["scoreContainer", "id"], undefined) == undefined 
+                                            _.get(c.memory, ["symbolContainer", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["droppedResource", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["tombstone", "id"], undefined) == undefined 
                                             && _.get(c.memory, ["ruin", "id"], undefined) == undefined 
@@ -1367,8 +1284,7 @@ module.exports.loop = function () {
                     let resourceCount = theTerminal.store[resourceName];
                     if (resourceCount <= 0 
                         || resourceName == RESOURCE_ENERGY 
-                        || resourceName == RESOURCE_POWER 
-                        || resourceName == RESOURCE_SCORE) {
+                        || resourceName == RESOURCE_POWER) { // TODO: Exclude Symbols
                         continue;
                     }
                     if ((madeTransaction == false) 
@@ -1504,53 +1420,53 @@ module.exports.loop = function () {
                 }
             }
             
-            let nonScoreExporters = ["W38S19", "W39S17", "W35S13"];
-            if (madeTransaction == false 
-                && _.includes(nonScoreExporters, roomID) == true // NOTE: Include rooms that can't use exporters to deposit score
-                && theTerminal.store[RESOURCE_SCORE] > 0) {
-                let balanceAmount = theTerminal.store[RESOURCE_SCORE];
-                let storeRoom = { 
-                    roomID: roomID
-                    , amount: (TERMINAL_CAPACITY / 2)
-                    , free: 0
-                };
-                // console.log("Starting rebalance of " + balanceAmount + " " + RESOURCE_SCORE + " in " + roomID);
-                _.forEach(Game.rooms, (r, rn) => {
-                    if (rn != storeRoom.roomID 
-                        && _.includes(nonScoreExporters, rn) == false 
-                        && _.get(r, ["controller", "my"], false) == true 
-                        && _.get(r, ["controller", "level"], 0) >= 6 
-                        && _.get(r, ["terminal", "my"], false) == true 
-                        && _.get(r.memory, ["isShuttingDown"], false) == false
-                        && _.get(r, ["terminal", "store", RESOURCE_SCORE], 0) < (TERMINAL_CAPACITY / 2) 
-                        && ((TERMINAL_CAPACITY / 2) - _.get(r, ["terminal", "store", RESOURCE_SCORE], 0)) > 0 
-                        && (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0)) > 0) {
-                        if (_.get(r, ["terminal", "store", RESOURCE_SCORE], 0) < storeRoom.amount 
-                            || (_.get(r, ["terminal", "store", RESOURCE_SCORE], 0) == storeRoom.amount 
-                                && (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0)) > storeRoom.free) 
-                            || _.get(Memory.rooms, [storeRoom.roomID, "isShuttingDown"], false) == true 
-                            || storeRoom.amount == (TERMINAL_CAPACITY / 2)) {
-                            storeRoom = { 
-                                roomID: rn
-                                , amount: _.get(r, ["terminal", "store", RESOURCE_SCORE], 0)
-                                , free: (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0))
-                            };
-                            // console.log("\tConsidering " + rn + " with " + storeRoom.amount + " " + RESOURCE_SCORE + " and " + storeRoom.free + " free space");
-                        }
-                    }
-                });
-                if (storeRoom.roomID != roomID) {
-                    let sendAmount = Math.min(balanceAmount, ((TERMINAL_CAPACITY / 2) - storeRoom.amount, storeRoom.free));
-                    let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, storeRoom.roomID);
-                    if (energyCost <= terminalEnergy) {
-                        let err = theTerminal.send(RESOURCE_SCORE, sendAmount, storeRoom.roomID, RESOURCE_SCORE + " to export");
-                        if (err == OK) {
-                            console.log("Sent " + sendAmount + " " + RESOURCE_SCORE + " from " + roomID + " to " + storeRoom.roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to export score");
-                            madeTransaction = true;
-                        }
-                    }
-                }
-            }
+            // let nonsymbolExporters = [];
+            // if (madeTransaction == false 
+            //     && _.includes(nonsymbolExporters, roomID) == true // NOTE: Include rooms that can't use exporters to deposit symbol
+            //     && theTerminal.store[RESOURCE_symbol] > 0) {
+            //     let balanceAmount = theTerminal.store[RESOURCE_symbol];
+            //     let storeRoom = { 
+            //         roomID: roomID
+            //         , amount: (TERMINAL_CAPACITY / 2)
+            //         , free: 0
+            //     };
+            //     // console.log("Starting rebalance of " + balanceAmount + " " + RESOURCE_symbol + " in " + roomID);
+            //     _.forEach(Game.rooms, (r, rn) => {
+            //         if (rn != storeRoom.roomID 
+            //             && _.includes(nonsymbolExporters, rn) == false 
+            //             && _.get(r, ["controller", "my"], false) == true 
+            //             && _.get(r, ["controller", "level"], 0) >= 6 
+            //             && _.get(r, ["terminal", "my"], false) == true 
+            //             && _.get(r.memory, ["isShuttingDown"], false) == false
+            //             && _.get(r, ["terminal", "store", RESOURCE_symbol], 0) < (TERMINAL_CAPACITY / 2) 
+            //             && ((TERMINAL_CAPACITY / 2) - _.get(r, ["terminal", "store", RESOURCE_symbol], 0)) > 0 
+            //             && (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0)) > 0) {
+            //             if (_.get(r, ["terminal", "store", RESOURCE_symbol], 0) < storeRoom.amount 
+            //                 || (_.get(r, ["terminal", "store", RESOURCE_symbol], 0) == storeRoom.amount 
+            //                     && (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0)) > storeRoom.free) 
+            //                 || _.get(Memory.rooms, [storeRoom.roomID, "isShuttingDown"], false) == true 
+            //                 || storeRoom.amount == (TERMINAL_CAPACITY / 2)) {
+            //                 storeRoom = { 
+            //                     roomID: rn
+            //                     , amount: _.get(r, ["terminal", "store", RESOURCE_symbol], 0)
+            //                     , free: (_.get(r, ["terminal", "storeCapacityFree"], 0) - _.get(r, ["terminal", "energyCapacityFree"], 0))
+            //                 };
+            //                 // console.log("\tConsidering " + rn + " with " + storeRoom.amount + " " + RESOURCE_symbol + " and " + storeRoom.free + " free space");
+            //             }
+            //         }
+            //     });
+            //     if (storeRoom.roomID != roomID) {
+            //         let sendAmount = Math.min(balanceAmount, ((TERMINAL_CAPACITY / 2) - storeRoom.amount, storeRoom.free));
+            //         let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, storeRoom.roomID);
+            //         if (energyCost <= terminalEnergy) {
+            //             let err = theTerminal.send(RESOURCE_symbol, sendAmount, storeRoom.roomID, RESOURCE_symbol + " to export");
+            //             if (err == OK) {
+            //                 console.log("Sent " + sendAmount + " " + RESOURCE_symbol + " from " + roomID + " to " + storeRoom.roomID + " using " + energyCost + " " + RESOURCE_ENERGY + " to export symbol");
+            //                 madeTransaction = true;
+            //             }
+            //         }
+            //     }
+            // }
         }
     }
 
@@ -1587,7 +1503,7 @@ module.exports.loop = function () {
                 && creep.memory.role != "healer") { // TODO: Check if creep has active heal parts instead
                 creep.heal(creep);
                 if (creep.memory.role != "adaptable") {
-                    creep.memory.scoreContainer = undefined;
+                    creep.memory.symbolContainer = undefined;
                     creep.memory.droppedResource = undefined;
                     creep.memory.tombstone = undefined;
                     creep.memory.ruin = undefined;
@@ -1596,7 +1512,7 @@ module.exports.loop = function () {
                 }
             }
             else if (creep.carryCapacityAvailable > 0
-                && (_.get(creep.memory, ["scoreContainer", "id"], undefined) != undefined 
+                && (_.get(creep.memory, ["symbolContainer", "id"], undefined) != undefined 
                     || _.get(creep.memory, ["droppedResource", "id"], undefined) != undefined 
                     || _.get(creep.memory, ["tombstone", "id"], undefined) != undefined 
                     || _.get(creep.memory, ["ruin", "id"], undefined) != undefined)) {
@@ -1720,29 +1636,8 @@ module.exports.loop = function () {
     /*
         TODO: Incorporate this into proper bootstrapping code
     */
-    _.set(Memory.rooms, ["W38S19", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) 
-         || (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));
-    _.set(Memory.rooms, ["W39S17", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));
-    _.set(Memory.rooms, ["W35S13", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) 
-         || (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0)
-    ) ? 1 : 0));
-    _.set(Memory.rooms, ["W32S16", "creepMins", "adaptable"], ((
-        (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) 
-         || (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0)
-         || (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0)
+    _.set(Memory.rooms, ["E11S18", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0));
     
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }

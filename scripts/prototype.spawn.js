@@ -63,76 +63,10 @@ let prototypeSpawn = function() {
         else if (roleName == "adaptable") {
             options.memory.roomSentFrom = this.room.name;
             // TODO: Update when bootstrapping network is reconfigured
-            if (this.room.name == "W38S19") {
-                if (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W38S19";
-                }
-                else if (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W39S17";
-                }
-                else if (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W32S16";
-                }
-                else if (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W35S13";
-                }
-            }
-            else if (this.room.name == "W39S17") {
-                if (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W39S17";
-                }
-                else if (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W38S19";
-                }
-                else if (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W35S13";
-                }
-                else if (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W32S16";
-                }
-            }
-            else if (this.room.name == "W35S13") {
-                if (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W35S13";
-                }
-                else if (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W39S17";
-                }
-                else if (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W32S16";
-                }
-                else if (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W38S19";
-                }
-            }
-            else if (this.room.name == "W32S16") {
-                if (_.get(Memory.rooms, ["W32S16", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W32S16", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W32S16";
-                }
-                else if (_.get(Memory.rooms, ["W38S19", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W38S19", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W38S19";
-                }
-                else if (_.get(Memory.rooms, ["W35S13", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W35S13", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W35S13";
-                }
-                else if (_.get(Memory.rooms, ["W39S17", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W39S17", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W39S17";
+            if (this.room.name == "E11S18") {
+                if (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E11S18";
                 }
             }
             if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
@@ -150,9 +84,9 @@ let prototypeSpawn = function() {
             if (Game.time < _.get(Memory.rooms, [options.memory.roomSentFrom, "avoidTravelUntil"], 0)) {
                 return -10.1; // NOTE: Fake error for when an exporter would just die to a hostile in the room they're going to export from
             }
-            if (options.memory.type == "S_P_B-S" 
-                && _.get(Game.rooms, [options.memory.roomSentFrom, "ownedScore"], 1) <= 0) {
-                return -10.2; // NOTE: Fake error for when there is no score for the exporter to export
+            if (options.memory.type == "S_S" 
+                && _.get(Game.rooms, [options.memory.roomSentFrom, "ownedSymbols"], 1) <= 0) {
+                return -10.2; // NOTE: Fake error for when there is no symbols for the exporter to export
             }
         }
         else if (roleName == "demolisher") {
@@ -166,31 +100,9 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "claimer") {
-            if (this.room.name == "W38S19") {
+            if (this.room.name == "E11S18") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    options.memory.controllerID = "5fb29a5d0d314f7d0888c2b6"; // harvest room W39S19
-                }
-                else {
-                    // options.memory.controllerID = "5fb29a5d0d314f7d0888c2af"; // W39S17
-                    options.memory.controllerID = "5fb29b510d314f7d0888cd61"; // W32S16
-                }
-            }
-            else if (this.room.name == "W39S17") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    options.memory.controllerID = "5fb29a5d0d314f7d0888c2b2"; // harvest room W39S18
-                }
-                else {
-                    options.memory.controllerID = "5fb29ae40d314f7d0888c8a4"; // W35S13
-                }
-            }
-            else if (this.room.name == "W35S13") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    options.memory.controllerID = "5fb29ac20d314f7d0888c6d5"; // harvest room W36S13
-                }
-            }
-            else if (this.room.name == "W32S16") {
-                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    options.memory.controllerID = "5fb29b740d314f7d0888cea6"; // harvest room W31S16
+                    options.memory.controllerID = "6027a9fc992216018438d9e5"; // harvest room E11S19
                 }
             }
             let controllerRoom = _.get(Memory.controllers, [options.memory.controllerID, "pos", "roomName"], "");
@@ -200,17 +112,6 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "powerHarvester") {
             options.memory.harvestRoom = { id: this.room.name, x: 25, y: 25 }; // TODO: Populate this automatically
-        }
-        else if (roleName == "scout") {
-            if (this.room.name == "W39S17") {
-                options.memory.roomSentTo = "W35S13";
-            }
-            else if (this.room.name == "W38S19") {
-                options.memory.roomSentTo = "W32S16";
-            }
-            else if (this.room.name == "W35S13") {
-                options.memory.roomSentTo = "E32N18";
-            }
         }
         
         let energyAvaliable = this.room.energyCapacityAvailable;
@@ -255,7 +156,7 @@ let prototypeSpawn = function() {
             bodyTemplate = [CARRY, ATTACK, HEAL];
         }
         else if (roleName == "upgrader") {
-            if (this.room.name == "W38S19") { // these rooms have a source in range of the controller
+            if (this.room.name == "E11S18") { // these rooms have a source in range of the controller
                 moveRatio = ONE_MOVE_RATIO;
                 bodyTemplate = [WORK]; // these upgraders also have at least one carry part that gets multiplied dynamically with avaliable energy later
             }

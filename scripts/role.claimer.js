@@ -3,10 +3,7 @@ let roleClaimer = {
         creep.memory.executingRole = "claimer";
         
         let reservedControllerIDs = [
-            "5fb29a5d0d314f7d0888c2b6" // W39S19
-            , "5fb29a5d0d314f7d0888c2b2" // W39S18
-            , "5fb29ac20d314f7d0888c6d5" // W36S13
-            , "5fb29b740d314f7d0888cea6" // W31S16
+            "6027a9fc992216018438d9e5" // E11S19
         ]; // TODO: Get an array of controller.id from harvest rooms to check against here instead of hard coding the array
         if (_.includes(reservedControllerIDs, creep.memory.controllerID) == true && (Game.time < _.get(Memory.rooms, [_.get(Memory.controllers, [creep.memory.controllerID, "pos", "roomName"], ""), "avoidTravelUntil"], 0))) {
             ROLES["recyclable"].run(creep);
@@ -33,33 +30,9 @@ let roleClaimer = {
                     creep.say(travelToIcons(creep) + controllerMem.pos.roomName, true);
                 }
             }
-            else if (creep.memory.controllerID == "5fb29a5d0d314f7d0888c2b4") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(16, 21, "W39S19"));
-                creep.say(travelToIcons(creep) + "W39S19", true);
-            }
-            else if (creep.memory.controllerID == "5fb29a5d0d314f7d0888c2b2") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(18, 33, "W39S18"));
-                creep.say(travelToIcons(creep) + "W39S18", true);
-            }
-            else if (creep.memory.controllerID == "5fb29ac20d314f7d0888c6d5") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(34, 6, "W36S13"));
-                creep.say(travelToIcons(creep) + "W36S13", true);
-            }
-            else if (creep.memory.controllerID == "5fb29b740d314f7d0888cea6") { // TODO: Store controller.pos in memory for controllers in harvest rooms
-                creep.travelTo(new RoomPosition(6, 23, "W31S16"));
-                creep.say(travelToIcons(creep) + "W31S16", true);
-            }
-            else if (creep.memory.controllerID == "5fb29a5d0d314f7d0888c2af") {
-                creep.travelTo(new RoomPosition(44, 44, "W39S17"));
-                creep.say(travelToIcons(creep) + "W39S17", true);
-            }
-            else if (creep.memory.controllerID == "5fb29ae40d314f7d0888c8a4") {
-                creep.travelTo(new RoomPosition(39, 10, "W35S13"));
-                creep.say(travelToIcons(creep) + "W35S13", true);
-            }
-            else if (creep.memory.controllerID == "5fb29b510d314f7d0888cd61") {
-                creep.travelTo(new RoomPosition(23, 21, "W32S16"));
-                creep.say(travelToIcons(creep) + "W32S16", true);
+            else if (creep.memory.controllerID == "6027a9fc992216018438d9e5") { // TODO: Store controller.pos in memory for controllers in harvest rooms
+                creep.travelTo(new RoomPosition(21, 6, "E11S19"));
+                creep.say(travelToIcons(creep) + "E11S19", true);
             }
             /*else if (creep.memory.controllerID == "5fb29a7f0d314f7d0888c3fb") {
                 creep.memory.roomSentTo = "W38S19";

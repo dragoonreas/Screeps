@@ -167,8 +167,30 @@ let globals = function() {
     };
     
     global.resourceWorth = function(resourceType) {
+        // TODO: Add symbol weighting
         switch (resourceType) {
-            case RESOURCE_SCORE: return 100000000; // 10^8
+            case RESOURCE_SYMBOL_ALEPH:
+            case RESOURCE_SYMBOL_BETH:
+            case RESOURCE_SYMBOL_GIMMEL:
+            case RESOURCE_SYMBOL_DALETH:
+            case RESOURCE_SYMBOL_HE:
+            case RESOURCE_SYMBOL_WAW:
+            case RESOURCE_SYMBOL_ZAYIN:
+            case RESOURCE_SYMBOL_HETH:
+            case RESOURCE_SYMBOL_TETH:
+            case RESOURCE_SYMBOL_YODH:
+            case RESOURCE_SYMBOL_KAPH:
+            case RESOURCE_SYMBOL_LAMEDH:
+            case RESOURCE_SYMBOL_MEM:
+            case RESOURCE_SYMBOL_NUN:
+            case RESOURCE_SYMBOL_SAMEKH:
+            case RESOURCE_SYMBOL_AYIN:
+            case RESOURCE_SYMBOL_PE:
+            case RESOURCE_SYMBOL_TSADE:
+            case RESOURCE_SYMBOL_QOPH:
+            case RESOURCE_SYMBOL_RES:
+            case RESOURCE_SYMBOL_SIN:
+            case RESOURCE_SYMBOL_TAW: return 100000000; // 10^8
             case RESOURCE_ENERGY: return 10000000; // 10^7
             case RESOURCE_POWER: return 1000000; // 10^6
             case RESOURCE_CATALYZED_UTRIUM_ACID:
