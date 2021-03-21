@@ -106,7 +106,7 @@ let globals = function() {
         , sleep: "\uD83D\uDCA4" // zzz NOTE: Used for when script is terminated early to refill bucket
         , testPassed: "\uD83C\uDF89" // party popper NOTE: Used for when scout reaches its goal location
         , testFinished: "\uD83C\uDFC1" // chequered flag NOTE: Used for when scout has finished its test run
-        , emoji: "\uFE0F" // Variation Selector-16 NOTE: Append when proceding charater defaults to text instead of emoji representation (e.g. move1 to move8)
+        , emoji: "\uFE0F" // Variation Selector-16 NOTE: Append when proceding character defaults to text instead of emoji representation (e.g. move1 to move8)
     };
     
     global.DIRECTIONS = [

@@ -53,7 +53,7 @@ const screepsPlus = require("screepsplus"); // Used to put stats in memory/segme
 // TODO: Only do all the following memory initialisation on code commits instead of global resets
 
 // Make sure all required root memory objects exist
-_.defaultsDeep(Memory, { // TODO: Implement the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngel AI users, potentual agressive players, potential allies and allies
+_.defaultsDeep(Memory, { // TODO: Implement the LOAN alliance import script pinned in the #share-thy-code channel of the Screeps Slack, and use it to help figure out TooAngel AI users, potentual aggressive players, potential allies and allies
     "creeps": {}
     , "rooms": {}
     , "spawns": {}
