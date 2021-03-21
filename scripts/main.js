@@ -1985,6 +1985,7 @@ module.exports.loop = function () {
         }
     }
 
+    // TODO: Add min pixel sell price (e.g. 500 credits)
     if (requiredCredits > Game.market.credits 
         && _.get(Game.resources, [PIXEL], 0) > 0) {
         let buyOrders = Game.market.orderCache(ORDER_BUY, PIXEL);
