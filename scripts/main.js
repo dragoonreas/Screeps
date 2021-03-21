@@ -78,6 +78,7 @@ _.defaultsDeep(Memory, { // TODO: Implement the LOAN alliance import script pinn
     ]
     , "nonAggressivePlayers": [ // alliance members or nice players that have added "dragoonreas" to their own non-aggressive list and which won't be considered 'invaders' when looping through Game.rooms (so turrents won't fire on them and such)
         SYSTEM_USERNAME
+        , "Donatzor"
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
 }); // TODO: Get alliance data from user "LeagueOfAutomatedNations" public segment every 6hrs
 
