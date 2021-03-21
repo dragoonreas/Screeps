@@ -236,7 +236,7 @@ module.exports = function(globalOpts = {}){
                 return matrix;
             };
             return PathFinder.search(origPos, goals, {
-                maxOps: options.maxOps,
+                maxOps: Math.max(1, Math.floor(options.maxOps * (Game.cpu.tickLimit - Game.cpu.getUsed()) / Math.max(Game.cpu.tickLimit, 1))),
                 plainCost: options.ignoreRoads ? 1 : 2,
                 roomCallback: callback,
                 swampCost: options.ignoreRoads ? 5 : 10
