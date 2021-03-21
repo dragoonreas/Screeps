@@ -43,6 +43,8 @@ let globals = function() {
         , ruin: "\uD83C\uDFDB" // classical building
         , scoreContainer: "\u2736" // six pointed black star
         , scoreCollector: "\uD83D\uDFCC" // heavy six pointed black star
+        , symbolContainer: "\u2B1F" // black pentagon
+        , symbolDecoder: "\u2B20" // white pentagon
         , source: "\uD83C\uDF04" // sunrise over mountains
         , constructionSite: "\uD83C\uDFD7" // building construction
         , resource: "\uD83D\uDEE2" // oil drum
