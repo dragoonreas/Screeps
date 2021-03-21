@@ -355,6 +355,7 @@ let roleHauler = {
                 }
             }
             else if (theStorage != undefined 
+                    && _.get(Game.rooms, [creep.memory.roomID, "controller", "level"], 0) >= 8 
                     && storageEnergy < Math.min((theStorage.storeCapacity / 2), (theStorage.storeCapacity - _.sum(theStorage.store) + storageEnergy)) 
                     && theStorage.my == true 
                     && _.get(Memory.rooms, [creep.memory.roomID, "isShuttingDown"], false) == false) {
