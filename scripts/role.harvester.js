@@ -167,7 +167,19 @@ let roleHarvester = {
                             , "579fa8f80700be0674d2e929" // W42N51
                         ]
                     };
+                    let upgraderCount = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "creepCounts", "upgrader"], 0);
+                    let builderCount = _.get(Memory.rooms, [_.get(creep.memory, ["roomID"], creep.room.name), "creepCounts", "builder"], 0);
+                    let constructionSiteCount = _.size(Game.constructionSites) == 0 ? 0 : creep.room.find(FIND_MY_CONSTRUCTION_SITES).length;
                     for (let sourceIndex in sourceIDs[creep.memory.roomID]) {
+                        if ((sourceIndex == 0 
+                                && (builderCount > 0 
+                                    && (constructionSiteCount == 0 
+                                        || _.includes(["W87N29"], creep.memory.roomID) == true))) // Source has limited harvest spots
+                            || (sourceIndex == 1 
+                                && (upgraderCount > 0 
+                                    || _.includes(["W87N29", "W9N45", "W46N41"], creep.memory.roomID) == true))) { // Source has limited harvest spots
+                            continue;
+                        }
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
                         source = Game.getObjectById(sourceID);
                         if (source != undefined) {
