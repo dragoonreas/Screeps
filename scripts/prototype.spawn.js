@@ -68,6 +68,42 @@ let prototypeSpawn = function() {
                     && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "E11S18";
                 }
+                else if (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E15S13";
+                }
+                else if (_.get(Memory.rooms, ["E12S12", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E12S12", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E12S12";
+                }
+            }
+            else if (this.room.name == "E15S13") {
+                if (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E15S13";
+                }
+                else if (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E11S18";
+                }
+                else if (_.get(Memory.rooms, ["E12S12", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E12S12", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E12S12";
+                }
+            }
+            else if (this.room.name == "E12S12") {
+                if (_.get(Memory.rooms, ["E12S12", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E12S12", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E12S12";
+                }
+                else if (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E11S18";
+                }
+                else if (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 
+                    && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) {
+                    options.memory.roomSentTo = "E15S13";
+                }
             }
             if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
                 needsHeal = true;
@@ -104,6 +140,22 @@ let prototypeSpawn = function() {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     options.memory.controllerID = "6027a9fc992216018438d9e5"; // harvest room E11S19
                 }
+                else {
+                    options.memory.controllerID = "6027aa36992216018438dfd6"; // E15S13
+                }
+            }
+            else if (this.room.name == "E15S13") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    options.memory.controllerID = "6027aa27992216018438de02"; // harvest room E14S13
+                }
+                else {
+                    options.memory.controllerID = "6027aa0a992216018438db17"; // E12S12
+                }
+            }
+            else if (this.room.name == "E12S12") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
+                    options.memory.controllerID = "6027aa0a992216018438db13"; // harvest room E12S11
+                }
             }
             let controllerRoom = _.get(Memory.controllers, [options.memory.controllerID, "pos", "roomName"], "");
             if (_.includes(_.get(Memory.rooms, [this.room.name, "harvestRooms"], []), controllerRoom) == true && Game.time < _.get(Memory.rooms, [controllerRoom, "avoidTravelUntil"], 0)) {
@@ -112,6 +164,11 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "powerHarvester") {
             options.memory.harvestRoom = { id: this.room.name, x: 25, y: 25 }; // TODO: Populate this automatically
+        }
+        else if (roleName == "scout") {
+            if (this.room.name == "E11S18") {
+                options.memory.roomSentTo = "E15S13";
+            }
         }
         
         let energyAvaliable = this.room.energyCapacityAvailable;
@@ -156,7 +213,8 @@ let prototypeSpawn = function() {
             bodyTemplate = [CARRY, ATTACK, HEAL];
         }
         else if (roleName == "upgrader") {
-            if (this.room.name == "E11S18") { // these rooms have a source in range of the controller
+            if (this.room.name == "E11S18" 
+                || this.room.name == "E15S13") { // these rooms have a source in range of the controller
                 moveRatio = ONE_MOVE_RATIO;
                 bodyTemplate = [WORK]; // these upgraders also have at least one carry part that gets multiplied dynamically with avaliable energy later
             }

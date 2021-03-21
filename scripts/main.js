@@ -118,6 +118,15 @@ _.set(Memory.rooms, ["E11S18", "harvestRooms"], [
     "E11S19"
     , "E11S17"
 ]);
+_.set(Memory.rooms, ["E15S13", "harvestRooms"], [
+    "E14S13"
+    , "E15S15"
+]);
+_.set(Memory.rooms, ["E12S12", "harvestRooms"], [
+    "E12S11"
+    , "E13S12"
+    , "E12S13"
+]);
 /*
     Future Expansion Candidates:
     From E11S18:
@@ -132,6 +141,20 @@ _.set(Memory.rooms, ["E11S18", "harvestRooms"], [
     Also be sure to use for...of instead of for..in where their order is important
 */
 _.set(Memory.rooms, ["E11S18", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+_.set(Memory.rooms, ["E15S13", "repairerTypeMins"], {
+    [STRUCTURE_CONTAINER]: 0
+    , [STRUCTURE_ROAD]: 1
+    , [STRUCTURE_RAMPART]: 0
+    , [STRUCTURE_WALL]: 0
+    , all: 1
+});
+_.set(Memory.rooms, ["E12S12", "repairerTypeMins"], {
     [STRUCTURE_CONTAINER]: 0
     , [STRUCTURE_ROAD]: 1
     , [STRUCTURE_RAMPART]: 0
@@ -171,6 +194,36 @@ _.set(Memory.rooms, ["E11S18", "creepMins"], {
     , builder: 1
     , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E11S18", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
     , rockhound: (_.get(Game.rooms, ["E11S18", "canHarvestMineral"], false) ? 1 : 0)
+});
+_.set(Memory.rooms, ["E15S13", "creepMins"], {
+    attacker: 0
+    , harvester: 4
+    , powerHarvester: 0
+    , upgrader: 1
+    , miner: 0//_.size(_.get(Game.rooms, ["E15S13", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E15S13", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
+    , scout: 0
+    , claimer: 1
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E15S13", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
+    , builder: 1
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E15S13", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
+    , rockhound: (_.get(Game.rooms, ["E15S13", "canHarvestMineral"], false) ? 1 : 0)
+});
+_.set(Memory.rooms, ["E12S12", "creepMins"], {
+    attacker: 0
+    , harvester: 4
+    , powerHarvester: 0
+    , upgrader: 2
+    , miner: 0//_.size(_.get(Game.rooms, ["E12S12", "minerSources"], {}))
+    , adaptable: 0
+    , demolisher: _.parseInt(_.reduce(_.get(Game.rooms, ["E12S12", "demolishersToSpawn"], [ { count: 0 } ]), (sum, dTS) => (sum + dTS.count), 0))
+    , scout: 0
+    , claimer: 1
+    , repairer: _.parseInt(_.reduce(_.get(Memory.rooms, ["E12S12", "repairerTypeMins"], { all:0 }), (sum, count) => (sum + count), 0))
+    , builder: 1
+    , exporter: _.parseInt(_.reduce(_.get(Game.rooms, ["E12S12", "exportersToSpawn"], [ { count: 0 } ]), (sum, eTS) => (sum + eTS.count), 0))
+    , rockhound: (_.get(Game.rooms, ["E12S12", "canHarvestMineral"], false) ? 1 : 0)
 });
 
 if (Memory.MonCPU == true) { console.log("init>loopStart:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
@@ -1639,8 +1692,20 @@ module.exports.loop = function () {
     */
     _.set(Memory.rooms, ["E11S18", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["E12S12", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E12S12", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0));
     
+    _.set(Memory.rooms, ["E15S13", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["E12S12", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E12S12", "creepCounts", "adaptable"], -1) == 0) 
+    ) ? 1 : 0));
+    _.set(Memory.rooms, ["E12S12", "creepMins", "adaptable"], ((
+        (_.get(Memory.rooms, ["E12S12", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E12S12", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) 
+        || (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) 
+    ) ? 1 : 0));
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     // Update ramparts public/private state
