@@ -78,11 +78,11 @@ let prototypeSpawn = function() {
                     && _.get(Memory.rooms, ["W87N29", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W87N29";
                 }
-                else */if (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0 
+                else if (_.get(Memory.rooms, ["W85N23", "creepCounts", "builder"], -1) == 0
                     && _.get(Memory.rooms, ["W85N23", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W85N23";
                 }
-                /*else if (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 
+                else if (_.get(Memory.rooms, ["W81N29", "creepCounts", "builder"], -1) == 0 
                     && _.get(Memory.rooms, ["W81N29", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W81N29";
                 }*/
