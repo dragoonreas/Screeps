@@ -2,6 +2,16 @@ let roleAttacker = {
     run: function(creep) {
         creep.memory.executingRole = "attacker";
         
+        if (creep.room.name != _.get(creep.memory, ["roomSentTo"], creep.room.name)) {
+            creep.travelTo(RoomPositionFromObject({x: 25, y:25, name: creep.memory.roomSentTo}), {
+                /* allowHostile: true
+                , ignoreHostileCreeps: true
+                ,*/ range: 23
+            });
+            creep.say(travelToIcons(creep) + creep.memory.roomSentTo, true);
+            return;
+        }
+        
         /*if (creep.room.name != creep.memory.roomID) { // TODO: Allow attacker to move in and out of the room if required
             creep.travelTo(new RoomPosition(25, 25, creep.memory.roomID), {
                 allowHostile: true

@@ -170,6 +170,16 @@ let prototypeSpawn = function() {
                 options.memory.roomSentTo = "E15S13";
             }
         }
+        else if (roleName == "attacker") {
+            if (this.room.name == "E11S18") {
+                if (_.get(Memory.rooms, [this.room.name, "creepCounts", "attacker"], 0) >= _.get(Memory.rooms, [this.room.name, "creepMins", "attacker"], 0)) {
+                    options.memory.roomSentTo = "E15S13";
+                }
+            }
+            if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {
+                needsHeal = true;
+            }
+        }
         
         let energyAvaliable = this.room.energyCapacityAvailable;
         if ((Memory.rooms[this.room.name].creepCounts.harvester / Memory.rooms[this.room.name].creepMins.harvester) < 0.5) {
@@ -199,7 +209,12 @@ let prototypeSpawn = function() {
         */
         let bodyTemplate = [WORK, CARRY];
         if (roleName == "attacker") {
-            moveRatio = 0.5;
+            if (_.get(options.memory, ["roomSentTo"], this.room.name) == this.room.name) {
+                moveRatio = 0.5;
+            }
+            else {
+                moveRatio = 1;
+            }
             bodyTemplate = [ATTACK];
         }
         else if (roleName == "hauler" || roleName == "exporter") {
@@ -307,6 +322,10 @@ let prototypeSpawn = function() {
         let partMultiplier = Math.min(Math.floor(energyAvaliable / bodyCost), GENERAL_WORKER_CARRY_PART_CAP);
         if (roleName == "miner") {
             partMultiplier = Math.floor(Math.min(energyAvaliable, bodyCost * MINER_WORK_PART_CAP) / bodyCost);
+        }
+        else if (roleName == "attacker" 
+            && (_.get(options.memory, ["roomSentTo"], this.room.name) != this.room.name)) {
+            partMultiplier = 1;
         }
         else if (roleName == "rockhound" 
             || roleName == "exporter" 
