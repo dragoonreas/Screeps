@@ -332,7 +332,7 @@ module.exports.loop = function () {
     }
     
     if (Memory.MonCPU == true) { console.log("stats>gc:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
-
+    
     let checkingForDrops = false;
     
     // Garbage collection for creep memory
@@ -1698,7 +1698,6 @@ module.exports.loop = function () {
         || (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["E12S12", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E12S12", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0));
-    
     _.set(Memory.rooms, ["E15S13", "creepMins", "adaptable"], ((
         (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) 
@@ -1709,6 +1708,7 @@ module.exports.loop = function () {
         || (_.get(Memory.rooms, ["E11S18", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E11S18", "creepCounts", "adaptable"], -1) == 0) 
         || (_.get(Memory.rooms, ["E15S13", "creepCounts", "builder"], -1) == 0 && _.get(Memory.rooms, ["E15S13", "creepCounts", "adaptable"], -1) == 0) 
     ) ? 1 : 0));
+
     if (Memory.MonCPU == true) { console.log("spawn>ramparts:",Game.cpu.getUsed().toFixed(2).toLocaleString()); }
     
     // Update ramparts public/private state
