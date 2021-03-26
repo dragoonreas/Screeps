@@ -1870,7 +1870,7 @@ module.exports.loop = function () {
                 }
             }
             
-            const MAX_ENERGY_PRICE = 1.25;
+            const MAX_ENERGY_PRICE = 1.5;
             if (theTerminal.needsEnergy == true 
                 && theTerminal.energyCapacityFree > 0 
                 && _.get(theTerminal.room.memory, ["isShuttingDown"], false) == false) {
