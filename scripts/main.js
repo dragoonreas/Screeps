@@ -1004,7 +1004,16 @@ module.exports.loop = function () {
                 filter: (sc) => (
                     _.sum(sc.store) > 0
             )});
-        if (theRoom.checkForDrops == true || ((symbolContainers.length > 0 || checkingForDrops == true) && (dangerousToCreeps == false || (theController != undefined && theController.my == true && theController.safeMode != undefined)) && theRoom.hasHostileTower == false)) { // TODO: Check that we're not in someone elses room
+        if ((_.includes(Memory.nonAggressivePlayers, _.get(theController, ["owner", "username"], "dragoonreas")) == false 
+                &&  _.includes(Memory.nonAggressivePlayers, _.get(theController, ["reservation", "username"], "dragoonreas")) == false) 
+            && (theRoom.checkForDrops == true 
+                || ((symbolContainers.length > 0 
+                        || checkingForDrops == true) 
+                    && (dangerousToCreeps == false 
+                        || (theController != undefined 
+                            && theController.my == true 
+                            && theController.safeMode != undefined)) 
+                    && theRoom.hasHostileTower == false))) { // TODO: Check that we're not in someone elses room
             theRoom.checkForDrops = false;
             let recycleContainer = _.get(Game.rooms, [roomID, "recycleContainer"], undefined);
             let droppedResources = theRoom.find(FIND_DROPPED_RESOURCES, {
