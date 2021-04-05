@@ -199,14 +199,24 @@ module.exports = function(globalOpts = {}){
                 else if (_.get(Memory.rooms, [roomName, "avoidTravelUntil"], 0) >= Game.time && !options.allowHostile && origPos.roomName != roomName && destPos.roomName != roomName) {
                     return false;
                 }
+                let matrix;
                 let room = Game.rooms[roomName];
                 if (!room) {
-                    // TODO: Take into account source keeper danger zones
-                    return;
+                    matrix = this.getBorderMatrix(roomName).clone();
+                    if (!options.ignoreHostileCreeps) {
+                        _.forEach(_.get(Memory.rooms, [roomName, "invaderWeightings"], []), (t) => {
+                            if (_.get(t, ["isStationarySourceKeeper"], false) == false) { return; }
+                            for (let dangerZone of _.get(t, ["dangerZones"], [])) {
+                                if (matrix.get(dangerZone.x, dangerZone.y) < 0xfe) {
+                                    matrix.set(dangerZone.x, dangerZone.y, 0xfe); // NOTE: Don't use 0xff since that stops creeps trying to escape when they're surrounded by danger zones
+                                }
+                            }
+                        });
+                    }
+                    return matrix;
                 }
-                let matrix;
                 if (options.ignoreStructures) {
-                    matrix = this.getBorderMatrix(room).clone();
+                    matrix = this.getBorderMatrix(roomName).clone();
                     if (!options.ignoreCreeps) {
                         Traveler.addCreepsToMatrix(room, matrix);
                     }
@@ -437,7 +447,7 @@ module.exports = function(globalOpts = {}){
         getStructureMatrix(room) {
             this.refreshMatrices();
             if (!this.structureMatrixCache[room.name]) {
-                this.structureMatrixCache[room.name] = Traveler.addStructuresToMatrix(room, this.getBorderMatrix(room).clone(), 1);
+                this.structureMatrixCache[room.name] = Traveler.addStructuresToMatrix(room, this.getBorderMatrix(room.name).clone(), 1);
             }
             return this.structureMatrixCache[room.name];
         }
@@ -484,19 +494,19 @@ module.exports = function(globalOpts = {}){
             room.find(FIND_POWER_CREEPS).forEach((creep) => matrix.set(creep.pos.x, creep.pos.y, 0xff));
             return matrix;
         }
-        getBorderMatrix(room) {
-            if (_.get(this, ["borderMatrixCache", room.name], undefined) == undefined) {
+        getBorderMatrix(roomName) {
+            if (_.get(this, ["borderMatrixCache", roomName], undefined) == undefined) {
                 let matrix = new PathFinder.CostMatrix();
-                _.set(this, ["borderMatrixCache", room.name], Traveler.addBorderToMatrix(room, matrix));
+                _.set(this, ["borderMatrixCache", roomName], Traveler.addBorderToMatrix(roomName, matrix));
             }
-            return this.borderMatrixCache[room.name];
+            return this.borderMatrixCache[roomName];
         }
-        static addBorderToMatrix(room, matrix) {
-            let exits = Game.map.describeExits(room.name);
+        static addBorderToMatrix(roomName, matrix) {
+            let exits = Game.map.describeExits(roomName);
             if (exits == undefined) {
                 return matrix;
             }
-            const terrain = Game.map.getRoomTerrain(room.name);
+            const terrain = Game.map.getRoomTerrain(roomName);
             let top = ((_.get(exits, TOP, undefined) == undefined) ? 1 : 0);
             let right = ((_.get(exits, RIGHT, undefined) == undefined) ? 48 : 49);
             let bottom = ((_.get(exits, BOTTOM, undefined) == undefined) ? 48 : 49);
