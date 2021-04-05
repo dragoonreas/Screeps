@@ -581,10 +581,8 @@ module.exports.loop = function () {
                 Creeps with RANGED_ATTACK/HEAL parts (hopefully) shouldn't do enough ranged damage/healing to worry about while blinking.
             */
             priorityTargets = _.filter(invaders, (i) => (
-                i.owner.username == "Invader" 
-                || i.owner.username == "Source Keeper" 
-                || (i.pos.x % 49 != 0 
-                && i.pos.y % 49 != 0)
+                i.pos.x % 49 != 0 
+                && i.pos.y % 49 != 0
             ));
             
             let rampartsToUse = []; // Ramparts for melee creeps (role.attacker) to sit in to attack invaders
@@ -599,7 +597,9 @@ module.exports.loop = function () {
                 // Apply target weightings to the invaders
                 let targetWeighting = 0;
                 let bodyPartCounts = _.countBy(aPriorityTarget.body, "type");
-                if (justNPCs == true || (aPriorityTarget.owner.username != "Invader" && aPriorityTarget.owner.username != "Source Keeper")) { // Only give NPCs a weighting of more than 0 if they're the only hostiles in the room
+                if (justNPCs == true 
+                    || (aPriorityTarget.owner.username != "Invader" 
+                        && aPriorityTarget.owner.username != "Source Keeper")) { // Only give NPCs a weighting of more than 0 if they're the only hostiles in the room
                     targetWeighting = _.get(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "weighting"], undefined);
                     if (targetWeighting == undefined) {
                         targetWeighting = 0 + (
@@ -633,7 +633,11 @@ module.exports.loop = function () {
                 else if ((bodyPartCounts[ATTACK] || 0) > 0) {
                     avoidanceRange = 2; // 1 range + 1 incase it moves closer this tick
                 }
-                if (aPriorityTarget.fatigue > 0) {
+                let isStationarySourceKeeper = (aPriorityTarget.owner.username == "Source Keeper" 
+                    && (aPriorityTarget.pos.findInRange(FIND_SOURCES, 1).length <= 0 
+                        || aPriorityTarget.pos.findInRange(FIND_MINERALS, 1).length <= 0));
+                if (aPriorityTarget.fatigue > 0 
+                    || isStationarySourceKeeper) {
                     --avoidanceRange;
                 }
                 if (avoidanceRange > 0) {
@@ -665,6 +669,9 @@ module.exports.loop = function () {
                                 || (_.includes(Memory.nonAggressivePlayers, s.structure.owner.username) == true 
                                     && s.structure.isPublic == true))
                             ));
+                        }
+                        if (isStationarySourceKeeper) {
+                            _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "isStationarySourceKeeper"], true);
                         }
                         _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "pos"], aPriorityTarget.pos);
                         _.set(Memory.rooms[aPriorityTarget.room.name], ["invaderWeightings", aPriorityTarget.id, "avoidanceRange"], avoidanceRange);
@@ -715,11 +722,7 @@ module.exports.loop = function () {
                 else if ((bodyPartCounts[ATTACK] || 0) > 0) {
                     avoidanceRange = 2; // 1 range + 1 incase it moves closer this tick
                 }
-                let isStationarySourceKeeper = (aNonPriorityTarget.owner.username == "Source Keeper" 
-                    && (aNonPriorityTarget.pos.findInRange(FIND_SOURCES, 1).length <= 0 
-                        || aNonPriorityTarget.pos.findInRange(FIND_MINERALS, 1).length <= 0));
-                if (aNonPriorityTarget.fatigue > 0 
-                    || isStationarySourceKeeper) {
+                if (aNonPriorityTarget.fatigue > 0) {
                     --avoidanceRange;
                 }
                 if (avoidanceRange > 0) {
@@ -748,9 +751,6 @@ module.exports.loop = function () {
                                 || (_.includes(Memory.nonAggressivePlayers, s.structure.owner.username) == true 
                                     && s.structure.isPublic == true))
                             ));
-                        }
-                        if (isStationarySourceKeeper) {
-                            _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "isStationarySourceKeeper"], true);
                         }
                         _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "pos"], aNonPriorityTarget.pos);
                         _.set(Memory.rooms[aNonPriorityTarget.room.name], ["invaderWeightings", aNonPriorityTarget.id, "avoidanceRange"], avoidanceRange);
