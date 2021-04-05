@@ -60,7 +60,7 @@ let roleHauler = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     let sourceIDs = {
-                        , "W9N45": [
+                        "W9N45": [
                             "577b935b0f9d51615fa48074" // W9N45 - Builder
                             , "577b935b0f9d51615fa48075" // W9N45 - Upgrader
                             , "577b935b0f9d51615fa48078" // W9N44
