@@ -120,8 +120,8 @@ let prototypeSpawn = function() {
             if (Game.time < _.get(Memory.rooms, [options.memory.roomSentFrom, "avoidTravelUntil"], 0)) {
                 return -10.1; // NOTE: Fake error for when an exporter would just die to a hostile in the room they're going to export from
             }
-            if (options.memory.type == "S_S" 
-                && _.get(Game.rooms, [options.memory.roomSentFrom, "ownedSymbols"], 1) <= 0) {
+            if (options.memory.type != "E" 
+                && _.get(Game.rooms, [options.memory.roomSentFrom, "ownedSymbols", options.memory.type], 0) <= 0) {
                 return -10.2; // NOTE: Fake error for when there is no symbols for the exporter to export
             }
         }

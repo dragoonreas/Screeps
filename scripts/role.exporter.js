@@ -77,37 +77,35 @@ let roleExporter = {
                 if ((_.get(creep.room, ["controller", "owner", "username"], "dragoonreas") == "dragoonreas" 
                         && _.get(creep.room, ["controller", "reservation", "username"], "dragoonreas") == "dragoonreas") 
                     || _.any(safeRooms, (r) => (creep.room.name)) == true) {
-                    if (type == "S_S") {
+                    if (type != "E") {
                         let structureID = _.get(creep.memory, ["withdrawStructure", "id"], undefined);
                         let structureResource = _.get(creep.memory, ["withdrawStructure", "resource"], undefined);
                         if (structureID == undefined 
                             || structureResource == undefined) {
-                            _.each(SYMBOLS, (s) => {
-                                if (_.get(theRecycleContainer, ["store", s], 0) > 0) {
-                                    creep.memory.withdrawStructure = { 
-                                        id: theRecycleContainer.id
-                                        , pos: theRecycleContainer.pos
-                                        , resource: s
-                                    };
-                                    return false;
-                                }
-                                else if (_.get(theTerminal, ["store", s], 0) > 0) {
-                                    creep.memory.withdrawStructure = { 
-                                        id: theTerminal.id
-                                        , pos: theTerminal.pos
-                                        , resource: s
-                                    };
-                                    return false;
-                                }
-                                else if (_.get(theStorage, ["store", s], 0) > 0) {
-                                    creep.memory.withdrawStructure = { 
-                                        id: theStorage.id
-                                        , pos: theStorage.pos
-                                        , resource: s
-                                    };
-                                    return false;
-                                }
-                            });
+                            if (_.get(theRecycleContainer, ["store", type], 0) > 0) {
+                                creep.memory.withdrawStructure = { 
+                                    id: theRecycleContainer.id
+                                    , pos: theRecycleContainer.pos
+                                    , resource: type
+                                };
+                                return false;
+                            }
+                            else if (_.get(theTerminal, ["store", type], 0) > 0) {
+                                creep.memory.withdrawStructure = { 
+                                    id: theTerminal.id
+                                    , pos: theTerminal.pos
+                                    , resource: type
+                                };
+                                return false;
+                            }
+                            else if (_.get(theStorage, ["store", type], 0) > 0) {
+                                creep.memory.withdrawStructure = { 
+                                    id: theStorage.id
+                                    , pos: theStorage.pos
+                                    , resource: type
+                                };
+                                return false;
+                            }
                             structureID = _.get(creep.memory, ["withdrawStructure", "id"], undefined);
                             structureResource = _.get(creep.memory, ["withdrawStructure", "resource"], undefined);
                         }
@@ -399,7 +397,7 @@ let roleExporter = {
             if (creep.room.name != sentTo 
                 && creep.memory.transferStructure == undefined) {
                 if (creep.memory.roomID != sentTo 
-                    && type != "S_S") {
+                    && type == "E") {
                     _.set(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], _.get(Memory.rooms, [creep.memory.roomID, "creepCounts", "exporter"], 1) - 1);
                     _.set(Memory.rooms, [sentTo, "creepCounts", "exporter"], _.get(Memory.rooms, [sentTo, "creepCounts", "exporter"], 0) + 1);
                     creep.memory.roomID = sentTo;
@@ -419,8 +417,8 @@ let roleExporter = {
                 let tripEndTime = _.get(creep.memory, ["stopExporting"], Game.time + 1);
                 let returnTripTime = (tripEndTime - tripStartTime) * 2;
                 let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
-                if (type == "S_S" 
-                    && _.sum(SYMBOLS, (s) => { return creep.store[s]; }) > 0) {
+                if (type != "E" 
+                    && creep.store[type] > 0) {
                     let symbolDecoder = _.first(creep.room.find(FIND_SYMBOL_DECODERS)); // TODO: Check for SymbolDecoder.resourceType
                     let taxContainer = undefined;//_.first(symbolDecoder.pos.findInRange(FIND_STRUCTURES, 5, { filter: (s) => (
                     //     s.structureType == STRUCTURE_CONTAINER
@@ -433,38 +431,70 @@ let roleExporter = {
                         return;
                     }
                     
+                    if (_.get(symbolDecoder, ["resourceType"], "") != type) {
+                        _.invoke(_.filter(Game.flags, (f) => (
+                            f.pos.roomName = sentFrom 
+                            && f.color == COLOR_WHIITE
+                        )), function(sentTo) {
+                            let flagInfo = this.name.split("_");
+                            if (_.get(flagInfo, 4, _.get(flagInfo, 0, "")) != sentTo) { return false; }
+                            _.set(Memory.rooms, [_.first(flagInfo), "creepMins", "exporter"], 0);
+                            return this.remove(); // NOTE: May not update immidiatly when room not visible
+                        }, sentTo);
+                        console.log("Stopped exporting from " + sentFrom + " to " + sentTo + ": Destination room symbol decoder is for " + _.get(symbolDecoder, ["resourceType"], "<none>") + " not " + type);
+                        Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo + ": Destination room symbol decoder is for " + _.get(symbolDecoder, ["resourceType"], "<none>") + " not " + type, 60);
+                        creep.memory.role = "recyclable";
+                        ROLES["recyclable"].run(creep);
+                    }
+                    
+                    if (_.get(symbolDecoder, ["scoreMultiplier"], 0) < _.max(CONTROLLER_LEVEL_SCORE_MULTIPLIERS)) {
+                        _.invoke(_.filter(Game.flags, (f) => (
+                            f.pos.roomName = sentFrom 
+                            && f.color == COLOR_WHIITE
+                        )), function(sentTo) {
+                            let flagInfo = this.name.split("_");
+                            if (_.get(flagInfo, 4, _.get(flagInfo, 0, "")) != sentTo) { return false; }
+                            _.set(Memory.rooms, [_.first(flagInfo), "creepMins", "exporter"], 0);
+                            return this.remove(); // NOTE: May not update immidiatly when room not visible
+                        }, sentTo);
+                        console.log("Stopped exporting from " + sentFrom + " to " + sentTo + ": Destination room symbol decoder multiplyer is " + _.get(symbolDecoder, ["scoreMultiplier"], 0) + " not " + _.max(CONTROLLER_LEVEL_SCORE_MULTIPLIERS));
+                        Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo + ": Destination room symbol decoder multiplyer is " + _.get(symbolDecoder, ["scoreMultiplier"], 0) + " not " + _.max(CONTROLLER_LEVEL_SCORE_MULTIPLIERS), 60);
+                        creep.memory.role = "recyclable";
+                        ROLES["recyclable"].run(creep);
+                    }
+                    
                     const TAX_RATE = 0.25;
                     if (taxContainer != undefined && _.get(creep.memory, ["taxPaid"], false) == false) {
-                        // let err = creep.transfer(taxContainer, RESOURCE_SCORE, Math.ceil(creep.store[RESOURCE_SCORE] * TAX_RATE));
-                        // if (err == ERR_NOT_IN_RANGE) {
-                        //     creep.travelTo(taxContainer, {
-                        //         ignoreHostileCreeps: true
-                        //     });
-                        //     creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
-                        // }
-                        // else if (err == OK) {
-                        //     _.set(creep.memory, ["taxPaid"], true);
-                        //     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER], true);
-                        // }
-                        // else {
+                        let err = creep.transfer(taxContainer, type, Math.ceil(creep.store[type] * TAX_RATE));
+                        if (err == ERR_NOT_IN_RANGE) {
+                            creep.travelTo(taxContainer, {
+                                ignoreHostileCreeps: true
+                            });
+                            creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                        }
+                        else if (err == OK) {
+                            _.set(creep.memory, ["taxPaid"], true);
+                            creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER], true);
+                        }
+                        else {
                             incrementConfusedCreepCount(creep);
                             creep.say(ICONS["transfer"] + ICONS[STRUCTURE_CONTAINER] + "?", true);
-                        // }
+                        }
                     }
                     else {
-                        // let err = creep.transfer(symbolDecoder, RESOURCE_SCORE);
-                        // if (err == ERR_NOT_IN_RANGE) {
-                        //     creep.travelTo(symbolDecoder);
-                        //     creep.say(travelToIcons(creep) + ICONS["symbolDecoder"], true);
-                        // }
-                        // else if (err == OK) {
-                        //     _.set(creep.memory, ["taxPaid"], false);
-                        //     creep.say(ICONS["transfer"] + ICONS["symbolDecoder"], true);
-                        // }
-                        // else {
+                        let err = creep.transfer(symbolDecoder, type);
+                        if (err == ERR_NOT_IN_RANGE) {
+                            creep.travelTo(symbolDecoder);
+                            creep.say(travelToIcons(creep) + ICONS["symbolDecoder"], true);
+                        }
+                        else if (err == OK) {
+                            _.set(creep.memory, ["taxPaid"], false);
+                            creep.say(ICONS["transfer"] + ICONS["symbolDecoder"], true);
+                        }
+                        else {
                             incrementConfusedCreepCount(creep);
                             creep.say(ICONS["transfer"] + ICONS["symbolDecoder"] + "?", true);
-                        // }
+                        }
                     }
                 }
                 else if (sentFrom == sentTo 

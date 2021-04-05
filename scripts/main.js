@@ -1045,7 +1045,7 @@ module.exports.loop = function () {
                         && c.memory.role != "recyclable" 
                         && c.carryCapacityAvailable > 0 
                         && ((c.memory.role == "exporter" 
-                                && (c.memory.type != "S_S" 
+                                && (c.memory.type == "E" 
                                     || c.memory.taxPaid == false)
                             || c.memory.working != true))
                 )});

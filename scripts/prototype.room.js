@@ -186,12 +186,12 @@ let prototypeRoom = function() {
     
     if (Room.prototype.ownedSymbols == undefined) { // NOTE: Must be defined after Room.recycleContainer
         defineCachedGetter(Room.prototype, "ownedSymbols", (r) => {
-            let totalSymbols = 0;
+            let storedSymbols = [];
             _.each(SYMBOLS, (s) => {
-                totalSymbols += _.get(r, ["recycleContainer", s], 0) +  _.get(r, ["storage", "store", s], 0) +  _.get(r, ["terminal", "store", s], 0);
+                storedSymbols[s] = _.get(r, ["recycleContainer", "store", s], 0) +  _.get(r, ["storage", "store", s], 0) +  _.get(r, ["terminal", "store", s], 0);
             });
             // TODO: Check for symbols in containers
-            return totalSymbols;
+            return storedSymbols;
         });
     }
 
@@ -558,12 +558,13 @@ let prototypeRoom = function() {
                 Secondary:
                     Orange: Export
                     White: Symbol Scorer
-            Name format: spawnRoom_priority_count_fromRoom_toRoom
+            Name format: spawnRoom_priority_count_fromRoom_toRoom_symbol
             Defaults:
                 Priority: 0
                 Count: 1
                 From: <Flag Room>
                 To: <Spawn Room>
+                Symbol: ''
     */
     if (Room.prototype.exporterInfo == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'exporterInfo', (r) => {
@@ -577,10 +578,10 @@ let prototypeRoom = function() {
                     let nameInfo = f.name.split('_'); 
                     return { 
                         priority: _.parseInt(_.get(nameInfo, 1, 0))
-                        , type: f.secondaryColor == COLOR_WHITE ? "S_S" : "E" // NOTE: COLOR_WHITE = Symbol Scorer (S_S), COLOR_ORANGE = Export (E)
+                        , type: f.secondaryColor == COLOR_WHITE ? ("symbol_" + _.get(nameInfo, 5, "")) : "E" // NOTE: COLOR_WHITE = Symbol Scorer (symbol_<symbol> || symbol_), COLOR_ORANGE = Export (E)
                         , count: _.parseInt(_.get(nameInfo, 2, 1))
                         , from: _.get(nameInfo, 3, f.pos.roomName)
-                        , to: _.get(nameInfo, 4, _.get(nameInfo, 0, r.name)) 
+                        , to: _.get(nameInfo, 4, _.get(nameInfo, 0, r.name))
                     }; })
                 .value();
         });
