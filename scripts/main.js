@@ -82,6 +82,7 @@ _.defaultsDeep(Memory, { // TODO: Implement the LOAN alliance import script pinn
         , "ManVsRice"
         , "PythonBeatJava"
         , "PolarJ"
+        , "Kanduras"
     ] // TODO: Make new list for high-trust players (like fellow alliance members) to have ramparts on storage/terminal lowered when they're near to allow them to withdraw & deposit freely
 }); // TODO: Get alliance data from user "LeagueOfAutomatedNations" public segment every 6hrs
 
