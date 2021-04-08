@@ -419,6 +419,19 @@ let roleExporter = {
                 let tripsLeft = Math.floor(creep.ticksToLive / returnTripTime);
                 if (type != "E" 
                     && creep.store[type] > 0) {
+                    let structureID = _.get(creep.memory, ["transferStructure", "id"], undefined);
+                    let structure = Game.getObjectById(structureID);
+                    let structureMemPos = _.get(creep.memory, ["transferStructure", "pos"], undefined);
+                    let structureMemRoomName = _.get(creep.memory, ["transferStructure", "pos", "roomName"], undefined);
+                    if (structure == undefined 
+                        && structureMemPos != undefined 
+                        && Game.rooms[structureMemRoomName] == undefined) {
+                        let structurePos = RoomPositionFromObject(structureMemPos);
+                        creep.travelTo(structurePos);
+                        creep.say(travelToIcons(creep) + structurePos.roomName, true);
+                        return;
+                    }
+                    
                     let symbolDecoder = _.first(creep.room.find(FIND_SYMBOL_DECODERS)); // TODO: Check for SymbolDecoder.resourceType
                     let taxContainer = undefined;//_.first(symbolDecoder.pos.findInRange(FIND_STRUCTURES, 5, { filter: (s) => (
                     //     s.structureType == STRUCTURE_CONTAINER
@@ -430,7 +443,7 @@ let roleExporter = {
                         ROLES["recyclable"].run(creep);
                         return;
                     }
-                    
+
                     if (_.get(symbolDecoder, ["resourceType"], "") != type) {
                         _.invoke(_.filter(Game.flags, (f) => (
                             f.pos.roomName = sentFrom 
@@ -471,6 +484,10 @@ let roleExporter = {
                                 ignoreHostileCreeps: true
                             });
                             creep.say(travelToIcons(creep) + ICONS[STRUCTURE_CONTAINER], true);
+                            creep.memory.transferStructure = { 
+                                id: taxContainer.id
+                                , pos: taxContainer.pos
+                            };
                         }
                         else if (err == OK) {
                             _.set(creep.memory, ["taxPaid"], true);
@@ -486,6 +503,10 @@ let roleExporter = {
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.travelTo(symbolDecoder);
                             creep.say(travelToIcons(creep) + ICONS["symbolDecoder"], true);
+                            creep.memory.transferStructure = { 
+                                id: symbolDecoder.id
+                                , pos: symbolDecoder.pos
+                            };
                         }
                         else if (err == OK) {
                             _.set(creep.memory, ["taxPaid"], false);
