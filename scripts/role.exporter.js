@@ -474,6 +474,7 @@ let roleExporter = {
                         Game.notify("Stopped exporting from " + sentFrom + " to " + sentTo + ": Destination room symbol decoder multiplyer is " + _.get(symbolDecoder, ["scoreMultiplier"], 0) + " not " + _.max(CONTROLLER_LEVEL_SCORE_MULTIPLIERS), 60);
                         creep.memory.role = "recyclable";
                         ROLES["recyclable"].run(creep);
+                        return;
                     }
                     
                     const TAX_RATE = 0.25;
