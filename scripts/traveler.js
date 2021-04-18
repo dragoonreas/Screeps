@@ -231,12 +231,23 @@ module.exports = function(globalOpts = {}){
                     for (let dangerZone of room.dangerZones) {
                         if (matrix.get(dangerZone.x, dangerZone.y) < 0xfe) {
                             matrix.set(dangerZone.x, dangerZone.y, 0xfe); // NOTE: Don't use 0xff since that stops creeps trying to escape when they're surrounded by danger zones
+                            // if (roomName == "E13S15") { room.visual.rect(dangerZone.x - 0.5, dangerZone.x - 0.5, 1, 1, { fill: "red" }); }
                         }
                     }
                 }
                 for (let obstacle of options.obstacles) {
                     matrix.set(obstacle.pos.x, obstacle.pos.y, 0xff);
+                    // if (roomName == "E13S15") { room.visual.rect(obstacle.pos.x - 0.5, obstacle.pos.y - 0.5, 1, 1, { fill: "red" }); }
                 }
+                // if (roomName == "E13S15") {
+                //     for (let posX = 0; posX < 50; ++posX) {
+                //         for (let posY = 0; posY < 50; ++posX) {
+                //             if (matrix.get(posX, posY) > 0x00) {
+                //                 room.visual.rect(posX - 0.5, posY - 0.5, 1, 1, { fill: "red" }); 
+                //             }
+                //         }
+                //     }
+                // }
                 return matrix;
             };
             return PathFinder.search(origPos, goals, {
@@ -371,8 +382,8 @@ module.exports = function(globalOpts = {}){
                         console.log(`TRAVELER: heavy cpu use: ${creep.name}, cpu: ${_.round(travelData.cpu, 2)}, origin: ${creepPos}, dest: ${destination.pos}`);
                     }*/
                     if (ret.incomplete) {
-                        //console.log(toStr(_.last(ret.path)));
-                        //console.log(`TRAVELER: incomplete path for ${creep.name}`);
+                        // console.log(toStr(_.last(ret.path)));
+                        // console.log(`TRAVELER: incomplete path for ${creep.name}`);
                         global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
                         if (options.useFindRoute === undefined 
                             && travelData.stuck < gOpts.defaultStuckValue) {
@@ -387,9 +398,9 @@ module.exports = function(globalOpts = {}){
                             global.summarized_rooms[creepRoomID].traveler[creepRole].cpu += (Game.cpu.getUsed() - cpu);
                             if (ret.incomplete) {
                                 global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
-                                //console.log(toStr(_.last(ret.path)));
+                                // console.log(toStr(_.last(ret.path)));
                             }
-                            //console.log(`attempting path with ${options.useFindRoute ? "" : "out"} findRoute was ${ret.incomplete ? "not" : ""} successful`);
+                            console.log(`attempting path with ${options.useFindRoute ? "" : "out"} findRoute was ${ret.incomplete ? "not" : ""} successful`);
                             options.useFindRoute = undefined;
                         }
                         if (ret.incomplete 
@@ -403,7 +414,7 @@ module.exports = function(globalOpts = {}){
                                 global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
                                 //console.log(toStr(_.last(ret.path)));
                             }
-                            //console.log(`attempting path ignoring hostile creeps was ${ret.incomplete ? "not" : ""} successful`);
+                            // console.log(`attempting path ignoring hostile creeps was ${ret.incomplete ? "not" : ""} successful`);
                         }
                         if (ret.incomplete 
                             && creepPos.roomName != destPos.roomName 
@@ -419,7 +430,7 @@ module.exports = function(globalOpts = {}){
                                 global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
                                 //console.log(toStr(_.last(ret.path)));
                             }
-                            //console.log(`attempting path to room was ${ret.incomplete ? "not" : ""} successful`);
+                            // console.log(`attempting path to room was ${ret.incomplete ? "not" : ""} successful`);
                         }
                     }
                     //if (ret.incomplete != true) {
