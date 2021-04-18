@@ -118,6 +118,19 @@ let prototypeRoom = function() {
             }
         });
     }
+
+    if (Room.prototype.harvestRoomsWithLvl0InvaderCore == undefined) { // NOTE: Must be defined after global.harvestRooms
+        defineCachedGetter(Room.prototype, 'harvestRoomsWithLvl0InvaderCore', (r) => {
+            let invadedRooms = [];
+            let harvestRooms = r.harvestRooms;
+            _.each(harvestRooms, (hr) => {
+                if (_.get(Memory.rooms, ["hr", "invaderCore", "level"], -1) == 0) {
+                    invadedRooms.push(hr);
+                }
+            });
+            return invadedRooms;
+        });
+    }
     
     if (Room.prototype.minerSources == undefined) { // NOTE: Must be defined after global.defineCachedGetter
         defineCachedGetter(Room.prototype, 'minerSources', (r) => {

@@ -171,9 +171,11 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "attacker") {
-            if (this.room.name == "E11S18") {
+            if ((this.room.hasHostileCreeps == false) 
+                && (this.room.harvestRoomsWithLvl0InvaderCore.length > 0)) {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "attacker"], 0) >= _.get(Memory.rooms, [this.room.name, "creepMins", "attacker"], 0)) {
-                    options.memory.roomSentTo = "E15S13";
+                    options.memory.roomSentTo = _.first(this.room.harvestRoomsWithLvl0InvaderCore);
+                    options.memory.structureID = _.get(Memory.rooms, [options.memory.roomSentTo, "invaderCore", "id"], undefined);
                 }
             }
             if (Game.map.getRoomLinearDistance(this.room.name, _.get(options.memory, "roomSentTo", this.room.name)) > 1) {

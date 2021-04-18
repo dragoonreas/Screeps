@@ -930,11 +930,24 @@ module.exports.loop = function () {
             
             // Make sure we're not spawning attacker creeps needlessly
             if (theRoom.memory.creepMins != undefined) {
-                theRoom.memory.creepMins.attacker = 0;
+                if (theRoom.harvestRoomsWithLvl0InvaderCore.length > 0) {
+                    theRoom.memory.creepMins.attacker = 1;
+                } else {
+                    theRoom.memory.creepMins.attacker = 0;
+                }
             }
         }
         else {
             theRoom.clearPathCaches = false;
+
+            // Spawn an attacker to deal with any defenceless invader cores in harvest rooms
+            if (theRoom.memory.creepMins != undefined) {
+                if (theRoom.harvestRoomsWithLvl0InvaderCore.length > 0) {
+                    theRoom.memory.creepMins.attacker = 1;
+                } else {
+                    theRoom.memory.creepMins.attacker = 0;
+                }
+            }
         }
         
         let dangerousToCreeps = (theRoom.dangerZones.length > 0) ? true : false;

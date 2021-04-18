@@ -99,7 +99,23 @@ let roleAttacker = {
                     creep.memory.structureID = structure.id;
                 }
                 else {
-                    creep.memory.structureID = undefined;
+                    let nextInvadedRoom = _.first(_.get(Game.rooms, [_.get(creep.memory, ["roomID"], creep.room), "harvestRoomsWithLvl0InvaderCore"], []));
+                    creep.memory.structureID = _.get(Memory.rooms, [creep.memory.roomSentTo, "invaderCore", "id"], undefined);
+
+                    if (creep.memory.structureID != undefined) {
+                        if (creep.room.name != _.get(creep.memory, ["roomSentTo"], creep.room.name)) {
+                            creep.travelTo(RoomPositionFromObject({x: 25, y:25, name: creep.memory.roomSentTo}), {
+                                /* allowHostile: true
+                                , ignoreHostileCreeps: true
+                                ,*/ range: 23
+                            });
+                            creep.say(travelToIcons(creep) + creep.memory.roomSentTo, true);
+                            return;
+                        }
+                        else {
+                            structure = Game.getObjectById(creep.memory.structureID);
+                        }
+                    }
                 }
             }
             

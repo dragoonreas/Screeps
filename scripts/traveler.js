@@ -400,7 +400,7 @@ module.exports = function(globalOpts = {}){
                                 global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
                                 // console.log(toStr(_.last(ret.path)));
                             }
-                            console.log(`attempting path with ${options.useFindRoute ? "" : "out"} findRoute was ${ret.incomplete ? "not" : ""} successful`);
+                            // console.log(`attempting path with ${options.useFindRoute ? "" : "out"} findRoute was ${ret.incomplete ? "not" : ""} successful`);
                             options.useFindRoute = undefined;
                         }
                         if (ret.incomplete 
@@ -412,7 +412,7 @@ module.exports = function(globalOpts = {}){
                             global.summarized_rooms[creepRoomID].traveler[creepRole].cpu += (Game.cpu.getUsed() - cpu);
                             if (ret.incomplete) {
                                 global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath = (global.summarized_rooms[creepRoomID].traveler[creepRole].incompletePath || 0) + 1;
-                                //console.log(toStr(_.last(ret.path)));
+                                // console.log(toStr(_.last(ret.path)));
                             }
                             // console.log(`attempting path ignoring hostile creeps was ${ret.incomplete ? "not" : ""} successful`);
                         }
