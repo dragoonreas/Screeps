@@ -1000,6 +1000,35 @@ module.exports.loop = function () {
         if (_.get(Memory, ["rooms", roomID, "creepMins", "rockhound"], -1) == 0) {
             _.set(Memory, ["rooms", roomID, "creepMins", "rockhound"], (_.get(Game.rooms, [roomID, "canHarvestMineral"], false) ? 1 : 0));
         }
+
+        let allies = theRoom.find(FIND_HOSTILE_CREEPS, {
+            filter: (i) => (_.includes(_.difference(Memory.nonAggressivePlayers, [SYSTEM_USERNAME]), i.owner.username) == true)
+        });
+        if ((theRoom.hasHostileCreep == false) 
+            && (allies.length > 0)) {
+            if (theRoom.storage != undefined) {
+                let posObjs = theRoom.lookAt(theRoom.storage);
+                posObjs.forEach((pO) => {
+                    if (pO.type == LOOK_STRUCTURES 
+                        && pO[LOOK_STRUCTURES].structureType == STRUCTURE_RAMPART 
+                        && pO[LOOK_STRUCTURES].my == true 
+                        && pO[LOOK_STRUCTURES].isActive == true) {
+                        privateRamparts[pO[LOOK_STRUCTURES].id] = false;
+                    }
+                })
+            }
+            if (theRoom.terminal != undefined) {
+                let posObjs = theRoom.lookAt(theRoom.terminal);
+                posObjs.forEach((pO) => {
+                    if (pO.type == LOOK_STRUCTURES 
+                        && pO[LOOK_STRUCTURES].structureType == STRUCTURE_RAMPART 
+                        && pO[LOOK_STRUCTURES].my == true 
+                        && pO[LOOK_STRUCTURES].isActive == true) {
+                        privateRamparts[pO[LOOK_STRUCTURES].id] = false;
+                    }
+                })
+            }
+        }
         
         let symbolContainers = theRoom.find(FIND_SYMBOL_CONTAINERS, {
                 filter: (sc) => (
@@ -1726,17 +1755,17 @@ module.exports.loop = function () {
         if (_.get(CONTROLLER_STRUCTURES[STRUCTURE_RAMPART], r.room.controller.level, 0) == 0) { return; } // NOTE: This should use less than the 0.2 CPU that a Rampart.isActive() check uses
         
         // If the rampart is protecting a structure, it should always be private
-        let privateState = privateRamparts[r.id] || false;
-        if (privateState == false && _.filter(r.pos.lookFor(LOOK_STRUCTURES), (s) => (
+        let privateState = privateRamparts[r.id];
+        if (privateState == undefined && _.filter(r.pos.lookFor(LOOK_STRUCTURES), (s) => (
             s.structureType != STRUCTURE_RAMPART 
             && s.structureType != STRUCTURE_ROAD 
             && _.includes(ignoredRooms, s.room.name) != true
-        )).length > 0) { // TODO: Allow members of alliance to withdraw from storage/terminal/etc...
+        )).length > 0) {
             privateState = true;
         }
         
         // Set the rampart to the new state if it's not already
-        if (r.isPublic == privateState) {
+        if (r.isPublic == (privateState || false)) {
             r.setPublic(privateState == false);
         }
     });
