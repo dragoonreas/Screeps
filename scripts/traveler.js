@@ -64,6 +64,10 @@ module.exports = function(globalOpts = {}){
                             return outcome;
                         }
                     }
+                    if (!options.allowHostile && _.get(Memory.rooms, [roomName, "avoidTravelUntil"], 0) >= Game.time &&
+                        roomName !== destination && roomName !== origin) {
+                        return Infinity;
+                    }
                     let parsed;
                     if (options.preferHighway) {
                         parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
@@ -84,10 +88,6 @@ module.exports = function(globalOpts = {}){
                         if (isSK) {
                             return 10;
                         }
-                    }
-                    if (!options.allowHostile && _.get(Memory.rooms, [roomName, "avoidTravelUntil"], 0) >= Game.time &&
-                        roomName !== destination && roomName !== origin) {
-                        return Infinity;
                     }
                     return 2.5;
                 }
