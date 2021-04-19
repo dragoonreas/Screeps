@@ -124,7 +124,7 @@ let prototypeRoom = function() {
             let invadedRooms = [];
             let harvestRooms = r.harvestRooms;
             _.each(harvestRooms, (hr) => {
-                if (_.get(Memory.rooms, ["hr", "invaderCore", "level"], -1) == 0) {
+                if (_.get(Memory.rooms, [hr, "invaderCore", "level"], -1) == 0) {
                     invadedRooms.push(hr);
                 }
             });
