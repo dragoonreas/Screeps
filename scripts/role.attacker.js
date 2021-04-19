@@ -159,6 +159,7 @@ let roleAttacker = {
                     _.set(creepMins, ["attacker"], 0);
                 }
                 //creep.say(ICONS["attack"] + "?", true);
+                creep.memory.roomSentTo = undefined;
                 ROLES["recyclable"].run(creep);
             }
         }
