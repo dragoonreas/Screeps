@@ -1024,8 +1024,7 @@ module.exports.loop = function () {
                 posObjs.forEach((pO) => {
                     if (pO.type == LOOK_STRUCTURES 
                         && pO[LOOK_STRUCTURES].structureType == STRUCTURE_RAMPART 
-                        && pO[LOOK_STRUCTURES].my == true 
-                        && pO[LOOK_STRUCTURES].isActive == true) {
+                        && pO[LOOK_STRUCTURES].my == true) {
                         privateRamparts[pO[LOOK_STRUCTURES].id] = false;
                     }
                 })
@@ -1035,8 +1034,7 @@ module.exports.loop = function () {
                 posObjs.forEach((pO) => {
                     if (pO.type == LOOK_STRUCTURES 
                         && pO[LOOK_STRUCTURES].structureType == STRUCTURE_RAMPART 
-                        && pO[LOOK_STRUCTURES].my == true 
-                        && pO[LOOK_STRUCTURES].isActive == true) {
+                        && pO[LOOK_STRUCTURES].my == true) {
                         privateRamparts[pO[LOOK_STRUCTURES].id] = false;
                     }
                 })
