@@ -39,6 +39,7 @@ let globals = function() {
         , [STRUCTURE_KEEPER_LAIR]: "\uD83D\uDD73" // hole
         , [STRUCTURE_PORTAL]: "\uD83C\uDF00" // cyclone
         , [STRUCTURE_POWER_BANK]: "\uD83C\uDF0B" // volcano
+        , [STRUCTURE_INVADER_CORE]: "\uD83D\uDD34" // large red circle
         , tombstone: "\u26b1" // funeral urn
         , ruin: "\uD83C\uDFDB" // classical building
         , scoreContainer: "\u2736" // six pointed black star
