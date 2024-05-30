@@ -301,6 +301,10 @@ let globals = function() {
         }
     }
     
+    global.completeEnergyExport = function(fromRoomName, toRoomName) {
+        return Game.rooms[fromRoomName].terminal.send(RESOURCE_ENERGY, Math.floor(Game.rooms[fromRoomName].terminal.store.getUsedCapacity(RESOURCE_ENERGY)/(2-Math.exp(-Game.map.getRoomLinearDistance(fromRoomName, toRoomName, true)/30))), toRoomName, "Complete energy export");
+    }
+    
     global.relocateRoom = function(fromRoomName, toRoomName) {
         // TODO: Add room name validation
         let theController = _.get(Game.rooms, [fromRoomName, "controller"], undefined);
