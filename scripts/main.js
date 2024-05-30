@@ -1636,7 +1636,7 @@ module.exports.loop = function () {
                 }
             }
             
-            const MAX_POWER_PRICE = 15;
+            const MAX_POWER_PRICE = 600;
             let powerDeficit = theRoom.powerDeficit;
             if (madeTransaction == false 
                 && powerDeficit > 0 
@@ -1762,7 +1762,7 @@ module.exports.loop = function () {
                 }
             }
             
-            const MAX_ENERGY_PRICE = 1.5;
+            const MAX_ENERGY_PRICE = 30;
             if (theTerminal.needsEnergy == true 
                 && theTerminal.energyCapacityFree > 0 
                 && _.get(theTerminal.room.memory, ["isShuttingDown"], false) == false) {
