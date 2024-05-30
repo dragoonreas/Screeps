@@ -1507,7 +1507,14 @@ module.exports.loop = function () {
                                 || _.get(Memory.rooms, [sellOrderRoom, "isShuttingDown"], false) == true)) {
                             Game.market.cancelOrder(sellOrder.id);
                             sellOrder = undefined;
-                            sellOrderRoom = roomID;
+                            if (_.get(Game.rooms, [sellOrderRoom, "controller", "my"], false) == true 
+                                || _.get(Game.rooms, [sellOrderRoom, "controller", "level"], 0) >= 6 
+                                || _.get(Game.rooms, [sellOrderRoom, "terminal", "my"], false) == true 
+                                || _.get(Memory.rooms, [sellOrderRoom, "isShuttingDown"], false) == false) {
+                                sellOrderRoom = roomID;
+                            } else {
+                                sellOrderRoom = "";
+                            }
                         }
                         if (sellOrderRoom == roomID 
                             && _.get(Memory.rooms, [roomID, "isShuttingDown"], false) == false) {
