@@ -26,11 +26,11 @@ let roleExporter = {
                 case "W72N28": sentTo = "W86N29"; break;
                 case "W64N31": sentTo = "W86N29"; break;
                 case "W55N31": sentTo = "W64N31"; break;
-                case "W53N39": sentTo = "W64N31"; break;
-                case "W53N42": sentTo = "W53N39"; break;
-                case "W46N41": sentTo = "W53N39"; break;
+                // case "W53N39": sentTo = "W64N31"; break;
+                // case "W53N42": sentTo = "W53N39"; break;
+                // case "W46N41": sentTo = "W53N39"; break;
                 case "W46N18": sentTo = "W46N41"; break;
-                case "W52N47": sentTo = "W53N39"; break;
+                // case "W52N47": sentTo = "W53N39"; break;
                 default: sentTo = creep.memory.roomID; break;
             }
             if (_.isString(sentTo) == true) {
@@ -349,7 +349,6 @@ let roleExporter = {
                 if (sentTo == "W94N49" 
                     || sentFrom == "W94N49" 
                     || sentFrom == "W91N42" 
-                    || sentFrom == "W9N45" 
                     || sentFrom == "W67N25" 
                     || (sentTo == "W53N39" 
                         && (sentFrom == "W64N31" 
@@ -360,9 +359,7 @@ let roleExporter = {
                         && sentFrom == "W46N18")
                     || sentFrom == "W48N42" 
                     || sentFrom == "W47N44" 
-                    || sentTo == "W42N51"
-                    || (sentTo == "W9N45"
-                        && sentFrom == "W22N47")) { // NOTE: Any rooms that require waypoints to get to should be added here
+                    || sentTo == "W42N51") { // NOTE: Any rooms that require waypoints to get to should be added here
                     ROLES["scout"].run(creep);
                 }
                 else {

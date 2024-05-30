@@ -59,28 +59,18 @@ let roleHarvester = {
                         Also make sure to use for...of instead of for...in since the order the sources are listed defines their priority
                     */
                     let sourceIDs = {
-                        "W9N45": [
-                            "577b935b0f9d51615fa48074" // W9N45 - Builder
-                            , "577b935b0f9d51615fa48075" // W9N45 - Upgrader
-                            , "577b935b0f9d51615fa48078" // W9N44
-                            , "577b935b0f9d51615fa48079" // W9N44
-                            , "577b935d0f9d51615fa480ba" // W8N45
-                            , "577b935b0f9d51615fa48071" // W9N46
-                            , "577b935b0f9d51615fa48074" // W9N45 - Builder
-                            , "577b935b0f9d51615fa48075" // W9N45 - Upgrader
-                        ]
-                        // , "W72N28": [
+                        // "W72N28": [
                         //     "5836b6eb8b8b9619519ef90a" // W72N29
                         //     , "5836b6eb8b8b9619519ef90c" // W72N29
                         //     , "5836b6d58b8b9619519ef709" // W73N28
                         //     , "5836b6eb8b8b9619519ef913" // W72N27
                         //     , "5836b6eb8b8b9619519ef90e" // W72N28
                         // ]
-                        , "W64N31": [
+                        "W64N31": [
                             "57ef9cad86f108ae6e60ca54" // W64N31 - Builder
                             , "57ef9cad86f108ae6e60ca56" // W64N31 - Upgrader
                             , "57ef9cad86f108ae6e60ca52" // W64N32
-                            , "57ef9cc386f108ae6e60ccb7" // W63N31
+                            // , "57ef9cc386f108ae6e60ccb7" // W63N31
                             //, "57ef9c9886f108ae6e60c7d9" // W65N31 Remote mined by Pimaco
                             , "57ef9cad86f108ae6e60ca50" // W64N32 (may cause blockages)
                             , "57ef9cad86f108ae6e60ca54" // W64N31 - Builder
@@ -94,22 +84,22 @@ let roleHarvester = {
                         //     , "579fa8a60700be0674d2e07c" // W54N31
                         //     , "579fa8950700be0674d2de53" // W55N31
                         // ]
-                        , "W53N39": [
-                            "579fa8b40700be0674d2e27d" // W53N39 - Builder
-                            , "579fa8b40700be0674d2e27e" // W53N39 - Upgrader
-                            , "579fa8a50700be0674d2e04c" // W54N39
-                            //, "579fa8b40700be0674d2e283" // W53N38 (owned by Donatzor)
-                            , "579fa8a50700be0674d2e04d" // W54N39
-                            //, "579fa8b40700be0674d2e281" // W53N38 (owned by Donatzor)
-                            //, "579fa8c50700be0674d2e400" // W52N39 (remote mined by Donatzor)
-                            //, "579fa8c50700be0674d2e402" // W52N39 (remote mined by Donatzor)
-                            , "579fa8b40700be0674d2e27d" // W53N39 - Builder
-                            , "579fa8b40700be0674d2e27e" // W53N39 - Upgrader
-                        ]
+                        // , "W53N39": [
+                        //     "579fa8b40700be0674d2e27d" // W53N39 - Builder
+                        //     , "579fa8b40700be0674d2e27e" // W53N39 - Upgrader
+                        //     , "579fa8a50700be0674d2e04c" // W54N39
+                        //     //, "579fa8b40700be0674d2e283" // W53N38 (owned by Donatzor)
+                        //     , "579fa8a50700be0674d2e04d" // W54N39
+                        //     //, "579fa8b40700be0674d2e281" // W53N38 (owned by Donatzor)
+                        //     //, "579fa8c50700be0674d2e400" // W52N39 (remote mined by Donatzor)
+                        //     //, "579fa8c50700be0674d2e402" // W52N39 (remote mined by Donatzor)
+                        //     , "579fa8b40700be0674d2e27d" // W53N39 - Builder
+                        //     , "579fa8b40700be0674d2e27e" // W53N39 - Upgrader
+                        // ]
                         , "W46N41": [
                             "577b92b30f9d51615fa46f1f" // W46N41 - Builder
                             , "577b92b30f9d51615fa46f1d" // W46N41 - Upgrader
-                            , "577b92a40f9d51615fa46dc9" // W47N41
+                            // , "577b92a40f9d51615fa46dc9" // W47N41 (remote mined by CrAzyDubC)
                             , "577b92b30f9d51615fa46f1a" // W46N42
                             , "577b92c20f9d51615fa47108" // W45N41
                             , "577b92b30f9d51615fa46f1f" // W46N41 - Builder
@@ -130,7 +120,7 @@ let roleHarvester = {
                             , "579fa8c40700be0674d2e3ea" // W52N47 - Upgrader
                             , "579fa8d40700be0674d2e574" // W51N47
                             , "579fa8d40700be0674d2e576" // W51N47
-                            , "579fa8b30700be0674d2e265" // W53N47
+                            // , "579fa8b30700be0674d2e265" // W53N47
                             , "579fa8c40700be0674d2e3e8" // W52N47 - Builder
                             , "579fa8c40700be0674d2e3ea" // W52N47 - Upgrader
                         ]
@@ -145,7 +135,7 @@ let roleHarvester = {
                                         || _.includes(["W87N29"], creep.memory.roomID) == true))) // Source has limited harvest spots
                             || (sourceIndex == 1 
                                 && (upgraderCount > 0 
-                                    || _.includes(["W87N29", "W9N45", "W46N41"], creep.memory.roomID) == true))) { // Source has limited harvest spots
+                                    || _.includes(["W87N29", "W46N41"], creep.memory.roomID) == true))) { // Source has limited harvest spots
                             continue;
                         }
                         let sourceID = sourceIDs[creep.memory.roomID][sourceIndex];
@@ -366,12 +356,12 @@ let roleHarvester = {
                                 creep.say(travelToIcons(creep) + "W51N47", true);
                                 return;
                             }
-                            else if (sourceID == "579fa8b30700be0674d2e265") { // TODO: Remove this after the source has been added to memory
-                                creep.memory.sourceID = sourceID;
-                                creep.travelTo(new RoomPosition(40, 34, "W53N47"));
-                                creep.say(travelToIcons(creep) + "W53N47", true);
-                                return;
-                            }
+                            // else if (sourceID == "579fa8b30700be0674d2e265") { // TODO: Remove this after the source has been added to memory
+                            //     creep.memory.sourceID = sourceID;
+                            //     creep.travelTo(new RoomPosition(40, 34, "W53N47"));
+                            //     creep.say(travelToIcons(creep) + "W53N47", true);
+                            //     return;
+                            // }
                         }
                     }
                 }
@@ -582,7 +572,7 @@ let roleHarvester = {
                     creep.say(ICONS["transfer"] + ICONS[STRUCTURE_TERMINAL] + "?", true);
                 }
             }
-            else if (creep.memory.roomID == "W9N45" 
+            else if (creep.memory.roomID == "W46N18" 
                     && theTerminal != undefined 
                     && Memory.TooAngelDealings.isFriendly == false 
                     && terminalEnergy < Memory.TooAngelDealings.totalCost 

@@ -63,18 +63,12 @@ let prototypeSpawn = function() {
         else if (roleName == "adaptable") {
             options.memory.roomSentFrom = this.room.name;
             // TODO: Update when bootstrapping network is reconfigured
-            if (this.room.name == "W9N45") {
-                if (_.get(Memory.rooms, ["W9N45", "creepCounts", "builder"], -1) == 0 
-                    && _.get(Memory.rooms, ["W9N45", "creepCounts", "adaptable"], -1) == 0) {
-                    options.memory.roomSentTo = "W9N45";
-                }
-            }
-            else if (this.room.name == "W64N31") {
-                /*if (_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 
+            /*if (this.room.name == "W64N31") {
+                if (_.get(Memory.rooms, ["W55N31", "creepCounts", "builder"], -1) == 0 
                     && _.get(Memory.rooms, ["W55N31", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W55N31";
                 }
-                else */if (_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 
+                else if (_.get(Memory.rooms, ["W53N39", "creepCounts", "builder"], -1) == 0 
                     && _.get(Memory.rooms, ["W53N39", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W53N39";
                 }
@@ -89,7 +83,7 @@ let prototypeSpawn = function() {
                     options.memory.roomSentTo = "W46N41";
                 }
             }
-            else if (this.room.name == "W46N41") {
+            else */if (this.room.name == "W46N41") {
                 if (_.get(Memory.rooms, ["W46N18", "creepCounts", "builder"], -1) == 0 
                     && _.get(Memory.rooms, ["W46N18", "creepCounts", "adaptable"], -1) == 0) {
                     options.memory.roomSentTo = "W46N18";
@@ -121,10 +115,7 @@ let prototypeSpawn = function() {
             }
         }
         else if (roleName == "claimer") {
-            if (this.room.name == "W9N45") {
-                options.memory.controllerID = "577b935b0f9d51615fa4807a"; // harvest room W9N44
-            }
-            else if (this.room.name == "W72N28") {
+            if (this.room.name == "W72N28") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
                     options.memory.controllerID = "5836b6eb8b8b9619519ef90b"; // harvest room W72N29
                 }
@@ -158,7 +149,8 @@ let prototypeSpawn = function() {
             }
             else if (this.room.name == "W46N41") {
                 if (_.get(Memory.rooms, [this.room.name, "creepCounts", "claimer"], 0) < _.get(Memory.rooms, [this.room.name, "creepMins", "claimer"], 0)) { // NOTE: Allows for easy, one time spawning of new claimer for a new room from console without distrupting claimers used for reserving
-                    options.memory.controllerID = "577b92a40f9d51615fa46dc8"; // harvest room W47N41
+                    // options.memory.controllerID = "577b92a40f9d51615fa46dc8"; // harvest room W47N41 (remote mined by CrAzYDubC)
+                    options.memory.controllerID = "577b92b30f9d51615fa46f1b"; // harvest room W46N42
                 }
                 else {
                     options.memory.controllerID = "577b92b60f9d51615fa46f88"; // W46N18
@@ -243,7 +235,6 @@ let prototypeSpawn = function() {
         }
         else if (roleName == "upgrader") {
             if (this.room.name == "W94N49" 
-                || this.room.name == "W9N45" 
                 || this.room.name == "W72N28" 
                 || this.room.name == "W64N31" 
                 || this.room.name == "W55N31" 

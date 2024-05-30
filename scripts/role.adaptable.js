@@ -18,8 +18,8 @@ let roleAdaptable = {
                 case "W85N23": sentTo = "W86N29"; break;
                 case "W81N29": sentTo = "W64N31"; break;
                 case "W72N28": sentTo = "W64N31"; break;
-                case "W64N31": sentTo = "W53N39"; break;
-                case "W53N39": sentTo = "W52N47"; break;
+                // case "W64N31": sentTo = "W53N39"; break;
+                // case "W53N39": sentTo = "W52N47"; break;
                 case "W53N42": sentTo = "W52N47"; break;
                 case "W46N41": sentTo = "W46N18"; break;
                 case "W52N47": sentTo = "W52N47"; break;
@@ -101,7 +101,6 @@ let roleAdaptable = {
                     || sentTo == "W91N45" 
                     || sentTo == "W94N49" 
                     || sentFrom == "W94N49" 
-                    || sentTo == "W9N45" 
                     || sentTo == "W53N39" 
                     || sentTo == "W52N47" 
                     || sentTo == "W46N18" 
