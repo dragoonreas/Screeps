@@ -70,6 +70,17 @@ let roleAttacker = {
                     allowHostile: true
                     , ignoreHostileCreeps: true
                 });
+                invader = creep.pos.findClosestByRange(FIND_HOSTILE_POWER_CREEPS, {
+                    filter: (i) => (_.includes(Memory.nonAggressivePlayers, i.owner.username) == false
+                )});
+                if (invader == undefined) {
+                    invader = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
+                        filter: (i) => (_.includes(Memory.nonAggressivePlayers, i.owner.username) == false
+                    )});
+                }
+                if (invader != undefined) {
+                    creep.attack(invader)
+                }
                 creep.say(travelToIcons(creep) + ICONS["attack"] + ICONS["creep"], true);
             }
             else if (err == OK) {
