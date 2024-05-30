@@ -1577,11 +1577,11 @@ module.exports.loop = function () {
                                 let sendAmount = Math.min(resourceCount, ((TERMINAL_CAPACITY / 3) - _.get(Game.rooms, [sellOrderRoom, "terminal", "store", resourceName], 0)), _.get(Game.rooms, [sellOrderRoom, "terminal", "storeCapacityFree"], 0));
                                 let energyCost = Game.market.calcTransactionCost(sendAmount, roomID, sellOrderRoom);
                                 if (energyCost <= terminalEnergy) {
-                                    let err = theTerminal.send(resourceName, sendAmount, sellOrderRoom, "To extend order " + sellOrder.id);
+                                    let err = theTerminal.send(resourceName, sendAmount, sellOrderRoom, "To extend order " + _.get(sellOrder, ["id"], "?"));
                                     if (err == OK) {
                                         balancedResources.push(resourceName);
                                         madeTransaction = true;
-                                        console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + sellOrderRoom + " using " + energyCost + " " + RESOURCE_ENERGY + " to extend order " + sellOrder.id);
+                                        console.log("Sent " + sendAmount + " " + resourceName + " from " + roomID + " to " + sellOrderRoom + " using " + energyCost + " " + RESOURCE_ENERGY + " to extend order " + _.get(sellOrder, ["id"], "?"));
                                         break;
                                     }
                                 }
